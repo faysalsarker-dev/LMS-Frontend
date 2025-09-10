@@ -1,6 +1,5 @@
 import { Footer } from "@/components/shared/Footer";
 import { Header } from "@/components/shared/Header";
-import { MobileAppBar } from "@/components/shared/MobileAppBar";
 import { Outlet } from "react-router";
 
 const Home = () => {
@@ -12,7 +11,6 @@ const Home = () => {
         <Outlet />
       </main>
       <Footer />
-      <MobileAppBar />
     </div>
 
 

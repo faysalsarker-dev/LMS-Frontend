@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star, Users, Clock, ArrowRight, Play, Check } from 'lucide-react';
 import { mockCourses, mockTestimonials } from '@/data/mockData';
+import CourseCard from '@/components/custom/CourseCard';
 
 const Home = () => {
   const featuredCourses = mockCourses.filter(course => course.featured).slice(0, 3);
@@ -82,64 +83,7 @@ const Home = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             {featuredCourses.map((course, index) => (
-              <Card key={course.id} className={`course-card animate-fade-in`} style={{animationDelay: `${index * 0.2}s`}}>
-                <div className="aspect-video bg-gradient-card rounded-t-xl relative overflow-hidden">
-                  <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">
-                    <Play className="h-12 w-12 text-primary/60" />
-                  </div>
-                  {course.originalPrice && (
-                    <Badge className="absolute top-3 left-3 bg-destructive">
-                      {Math.round(((course.originalPrice - course.price) / course.originalPrice) * 100)}% OFF
-                    </Badge>
-                  )}
-                </div>
-                
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="secondary">{course.category}</Badge>
-                    <Badge variant="outline">{course.level}</Badge>
-                  </div>
-                  
-                  <h3 className="font-semibold text-lg mb-2 line-clamp-2">{course.title}</h3>
-                  <p className="text-muted-foreground mb-4 line-clamp-2">{course.description}</p>
-                  
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                    <div className="flex items-center gap-1">
-                      <Users className="h-4 w-4" />
-                      {course.students.toLocaleString()}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      {course.duration}
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        {[1,2,3,4,5].map(star => (
-                          <Star key={star} className={`h-4 w-4 ${star <= course.rating ? 'fill-current text-secondary' : 'text-gray-300'}`} />
-                        ))}
-                      </div>
-                      <span className="text-sm font-medium">{course.rating}</span>
-                    </div>
-                    <div className="text-right">
-                      {course.originalPrice && (
-                        <div className="text-sm text-muted-foreground line-through">
-                          ${course.originalPrice}
-                        </div>
-                      )}
-                      <div className="font-bold text-lg">${course.price}</div>
-                    </div>
-                  </div>
-                  
-                  <Link to={`/courses/${course.id}`} className="mt-4 block">
-                    <Button className="w-full">
-                      View Course
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
+             <CourseCard key={course.id} />
             ))}
           </div>
 
