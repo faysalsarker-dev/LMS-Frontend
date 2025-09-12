@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Star, Users, Clock, ArrowRight, Play, Check } from 'lucide-react';
 import { mockCourses, mockTestimonials } from '@/data/mockData';
 import CourseCard from '@/components/custom/CourseCard';
+import Testimonial from '@/components/custom/Testimonial';
+import HeroSection from '@/components/custom/HeroSection';
 
 const Home = () => {
   const featuredCourses = mockCourses.filter(course => course.featured).slice(0, 3);
@@ -12,7 +14,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-hero text-primary-foreground py-20 lg:py-32">
+      {/* <section className="bg-gradient-hero text-primary-foreground py-20 lg:py-32">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="animate-fade-in">
@@ -69,8 +71,8 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
-
+      </section> */}
+<HeroSection/>
       {/* Featured Courses */}
       <section className="py-20">
         <div className="container mx-auto px-4">
@@ -153,41 +155,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">What Our Students Say</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Join thousands of successful learners who have transformed their careers
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {mockTestimonials.map((testimonial, index) => (
-              <Card key={testimonial.id} className={`p-6 animate-fade-in`} style={{animationDelay: `${index * 0.2}s`}}>
-                <div className="flex items-center gap-1 mb-4">
-                  {[1,2,3,4,5].map(star => (
-                    <Star key={star} className="h-4 w-4 fill-current text-secondary" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground mb-6 italic">"{testimonial.content}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center">
-                    <span className="text-primary-foreground font-semibold">
-                      {testimonial.name.charAt(0)}
-                    </span>
-                  </div>
-                  <div>
-                    <div className="font-semibold">{testimonial.name}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Testimonial />
 
       {/* CTA Section */}
       <section className="py-20 bg-gradient-primary text-primary-foreground">
