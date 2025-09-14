@@ -1,6 +1,8 @@
-import Home  from './../pages/Home';
-import  Register  from '@/pages/auth/Register';
-import  Login  from '@/pages/auth/Login';
+import Courses from '@/pages/course/Courses';
+import Home  from '../pages/home/Home';
+import CourseDetails from '@/pages/course/CourseDetails';
+import Contact from '@/pages/abouts/Contact';
+import About from '@/pages/abouts/About';
 
 const publicRoutes = [
   {
@@ -9,14 +11,25 @@ const publicRoutes = [
     name: 'Home'
   },
   {
-      Component: Register,
-    path: '/register',
-    name: 'Register'
+      Component: Courses,
+    path: '/courses',
+    name: 'Courses'
   },
   {
-    Component: Login,
-    path: '/login',
-    name: 'Login'
+      Component: CourseDetails,
+    path: '/courses/:slug',
+    name: 'Courses'
   },
+  {
+      Component: Contact,
+    path: '/contact',
+    name: 'Contact'
+  },
+  {
+      Component: About,
+    path: '/about',
+    name: 'About'
+  },
+
 ];
 export default publicRoutes;

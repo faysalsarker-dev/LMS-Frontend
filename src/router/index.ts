@@ -2,7 +2,9 @@ import Login from "@/pages/auth/Login";
 import Register from "@/pages/auth/Register";
 import { createBrowserRouter } from "react-router";
 import Layout from './../layout/home/Home';
-import Home  from './../pages/Home';
+import Home  from '../pages/home/Home';
+import { generateRoutes } from "./generateRoutes";
+import publicRoutes from "./publicRoutes";
 
 export const router = createBrowserRouter([
 
@@ -10,10 +12,7 @@ export const router = createBrowserRouter([
       Component: Layout,
             path: '/',
             children:[
-              {
-                Component: Home,
-               index:true,
-              }
+         ...generateRoutes(publicRoutes)
             ]
   },
   {

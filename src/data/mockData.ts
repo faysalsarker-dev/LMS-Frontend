@@ -57,7 +57,7 @@ export const mockCourses: Course[] = [
     description: 'Learn HTML, CSS, JavaScript, React, Node.js and more in this comprehensive web development course.',
     instructor: 'Angela Yu',
     instructorImage: '/placeholder.svg',
-    image: '/placeholder.svg',
+    image: 'https://s.udemycdn.com/career-academies/product-cards/career-card-fswd.png',
     price: 84.99,
     originalPrice: 199.99,
     rating: 4.6,
