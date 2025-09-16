@@ -1,9 +1,8 @@
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
 import { Star, Users, Clock, ArrowRight, Play, Check } from 'lucide-react';
-import { mockCourses, mockTestimonials } from '@/data/mockData';
+import { mockCourses } from '@/data/mockData';
 import CourseCard from '@/components/custom/CourseCard';
 import Testimonial from '@/components/custom/Testimonial';
 import HeroSection from '@/components/custom/HeroSection';
@@ -84,7 +83,7 @@ const Home = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {featuredCourses.map((course, index) => (
+            {featuredCourses.map((course) => (
              <CourseCard key={course.id} />
             ))}
           </div>

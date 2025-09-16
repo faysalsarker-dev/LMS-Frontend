@@ -1,53 +1,84 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { GraduationCap, User, Mail, Lock, Eye, EyeOff} from 'lucide-react';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { User, Mail, Lock, Eye, EyeOff, Phone } from "lucide-react";
+import { useRegisterMutation } from "@/redux/features/auth/auth.api";
+import { handleApiError } from "@/utils/errorHandler";
+
+type FormValues = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  agreeToTerms: boolean;
+  phone: number;
+};
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    agreeToTerms: false,
-    subscribeNewsletter: false
-  });
+  const [registerMutation] = useRegisterMutation();
+  const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle registration logic here
-    console.log('Registration attempt:', formData);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { isSubmitting },
+  } = useForm<FormValues>();
+
+  const passwordValue = watch("password", "");
+
+  const passwordChecks = {
+    hasUpper: /[A-Z]/.test(passwordValue),
+    hasLower: /[a-z]/.test(passwordValue),
+    hasNumber: /[0-9]/.test(passwordValue),
   };
+
+ 
+  const onSubmit = async (data: FormValues) => {
+  try {
+    const userInfo = {
+      name: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+      password: data.password,
+      phone: data.phone,
+    };
+
+    const res = await registerMutation(userInfo).unwrap();
+
+    toast.success(res?.message || "Account created successfully!");
+
+    if (res?.success) {
+      return navigate(`/verify-account/${data.email}`);
+    }
+  } catch (err: unknown) {
+    const apiError = err as { data?: { message?: string } };
+
+    if (apiError?.data?.message === "Account is not verified") {
+      return navigate(`/verify-account/${data.email}`);
+    }
+
+    handleApiError(err);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-background">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="bg-gradient-primary p-2 rounded-xl">
-              <GraduationCap className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <span className="text-2xl font-bold">EduPlatform</span>
-          </Link>
-          <h1 className="text-3xl font-bold mb-2">Create Your Account</h1>
-          <p className="text-muted-foreground">
-            Join millions of learners worldwide
-          </p>
-        </div>
-
         <Card className="animate-fade-in border border-muted shadow-primary/20 shadow-2xl">
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {/* First + Last Name */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First Name</Label>
@@ -56,10 +87,8 @@ const Register = () => {
                     <Input
                       id="firstName"
                       placeholder="John"
-                      value={formData.firstName}
-                      onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                      {...register("firstName", { required: true })}
                       className="pl-10"
-                      required
                     />
                   </div>
                 </div>
@@ -68,13 +97,12 @@ const Register = () => {
                   <Input
                     id="lastName"
                     placeholder="Doe"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-                    required
+                    {...register("lastName", { required: true })}
                   />
                 </div>
               </div>
 
+              {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
                 <div className="relative">
@@ -83,14 +111,27 @@ const Register = () => {
                     id="email"
                     type="email"
                     placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    {...register("email", { required: true })}
                     className="pl-10"
-                    required
+                  />
+                </div>
+              </div>
+              {/* Email */}
+              <div className="space-y-2">
+                <Label htmlFor="email">Phone Number</Label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                  <Input
+                    id="phone"
+                    type="phone"
+                    placeholder="Enter your phone"
+                    {...register("phone", { required: true })}
+                    className="pl-10"
                   />
                 </div>
               </div>
 
+              {/* Password */}
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
@@ -99,74 +140,90 @@ const Register = () => {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    {...register("password", { required: true })}
                     className="pl-10 pr-10"
-                    required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
-                    onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                    className="pl-10 pr-10"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
+              {/* Password Requirements */}
+              <div className="space-y-1 text-sm mt-2">
+                <p
+                  className={
+                    passwordChecks.hasUpper ? "text-green-600" : "text-red-500"
+                  }
+                >
+                  • At least one uppercase letter
+                </p>
+                <p
+                  className={
+                    passwordChecks.hasLower ? "text-green-600" : "text-red-500"
+                  }
+                >
+                  • At least one lowercase letter
+                </p>
+                <p
+                  className={
+                    passwordChecks.hasNumber ? "text-green-600" : "text-red-500"
+                  }
+                >
+                  • At least one number
+                </p>
               </div>
 
+              {/* Terms Checkbox */}
               <div className="space-y-3">
-                <div className="flex items-center space-x-2 ">
-                  <Checkbox 
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    className="bg-primary/10 shadow-2xl"
                     id="agreeToTerms"
-                    checked={formData.agreeToTerms}
-                    onCheckedChange={(checked) => setFormData({...formData, agreeToTerms: checked as boolean})}
-                    required
+                    {...register("agreeToTerms", { required: true })}
                   />
                   <Label htmlFor="agreeToTerms" className="text-sm">
-                    I agree to the{' '}
+                    I agree to the{" "}
                     <Link to="/terms" className="text-primary hover:underline">
                       Terms of Service
-                    </Link>{' '}
-                    and{' '}
-                    <Link to="/privacy" className="text-primary hover:underline">
+                    </Link>{" "}
+                    and{" "}
+                    <Link
+                      to="/privacy"
+                      className="text-primary hover:underline"
+                    >
                       Privacy Policy
                     </Link>
                   </Label>
                 </div>
               </div>
 
-              <Button type="submit" className="w-full bg-gradient-primary">
-                Create Account
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-gradient-primary"
+              >
+                {isSubmitting ? "Creating Account..." : "Create Account"}
               </Button>
             </form>
 
-       
+            {/* Already have account */}
             <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">Already have an account? </span>
-              <Link to="/login" className="text-primary hover:underline font-medium">
+              <span className="text-muted-foreground">
+                Already have an account?{" "}
+              </span>
+              <Link
+                to="/login"
+                className="text-primary hover:underline font-medium"
+              >
                 Sign in
               </Link>
             </div>

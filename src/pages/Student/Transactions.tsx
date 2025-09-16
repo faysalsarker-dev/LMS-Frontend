@@ -19,7 +19,6 @@ import {
   Calendar,
   DollarSign,
   TrendingUp,
-  Filter,
   Receipt,
   FileText,
   CheckCircle,

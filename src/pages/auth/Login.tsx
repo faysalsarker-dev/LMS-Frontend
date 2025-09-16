@@ -1,25 +1,56 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Checkbox } from '@/components/ui/checkbox';
-import { GraduationCap, Mail, Lock, Eye, EyeOff, Github, Chrome } from 'lucide-react';
+import { useState } from "react";
+import { Link } from "react-router";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { GraduationCap, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useLoginMutation } from "@/redux/features/auth/auth.api";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+
+type LoginFormValues = {
+  email: string;
+  password: string;
+  remember: boolean;
+};
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    remember: false
+  const [login, { isLoading }] = useLoginMutation();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    defaultValues: {
+      email: "",
+      password: "",
+      remember: false,
+    },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt:', formData);
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      const res = await login({
+        email: data.email,
+        password: data.password,
+        remember:data.remember
+      }).unwrap();
+
+      toast.success("Login successful!");
+      console.log("Response:", res);
+
+      if (data.remember) {
+        localStorage.setItem("auth", JSON.stringify(res));
+      } else {
+        sessionStorage.setItem("auth", JSON.stringify(res));
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Login failed!");
+    }
   };
 
   return (
@@ -43,7 +74,8 @@ const Login = () => {
             <CardTitle>Sign In</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
                 <div className="relative">
@@ -52,14 +84,16 @@ const Login = () => {
                     id="email"
                     type="email"
                     placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
                     className="pl-10"
-                    required
+                    {...register("email", { required: "Email is required" })}
                   />
                 </div>
+                {errors.email && (
+                  <p className="text-sm text-red-500">{errors.email.message}</p>
+                )}
               </div>
 
+              {/* Password */}
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
@@ -68,28 +102,32 @@ const Login = () => {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
                     className="pl-10 pr-10"
-                    required
+                    {...register("password", { required: "Password is required" })}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
+                {errors.password && (
+                  <p className="text-sm text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
 
+              {/* Remember me + Forgot password */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="remember"
-                    checked={formData.remember}
-                    onCheckedChange={(checked) => setFormData({...formData, remember: checked as boolean})}
-                  />
+                  <Checkbox id="remember" {...register("remember")} />
                   <Label htmlFor="remember" className="text-sm">
                     Remember me
                   </Label>
@@ -102,15 +140,23 @@ const Login = () => {
                 </Link>
               </div>
 
-              <Button type="submit" className="w-full bg-gradient-primary">
-                Sign In
+              <Button
+                type="submit"
+                className="w-full bg-gradient-primary"
+                disabled={isLoading}
+              >
+                {isLoading ? "Signing In..." : "Sign In"}
               </Button>
             </form>
 
-          
             <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">Don't have an account? </span>
-              <Link to="/register" className="text-primary hover:underline font-medium">
+              <span className="text-muted-foreground">
+                Don't have an account?{" "}
+              </span>
+              <Link
+                to="/register"
+                className="text-primary hover:underline font-medium"
+              >
                 Sign up
               </Link>
             </div>
@@ -119,11 +165,11 @@ const Login = () => {
 
         <div className="mt-8 text-center text-sm text-muted-foreground">
           <p>
-            By signing in, you agree to our{' '}
+            By signing in, you agree to our{" "}
             <Link to="/terms" className="text-primary hover:underline">
               Terms of Service
-            </Link>{' '}
-            and{' '}
+            </Link>{" "}
+            and{" "}
             <Link to="/privacy" className="text-primary hover:underline">
               Privacy Policy
             </Link>

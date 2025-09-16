@@ -32,6 +32,24 @@ export const authApi = baseApi.injectEndpoints({
      invalidatesTags: ["USER"],
 
     }),
+    sendOtp: builder.mutation({
+      query: (email) => ({
+        url: "/user/send-otp",
+        method: "POST",
+        data: email,
+      }),
+     invalidatesTags: ["USER"],
+
+    }),
+    verifyOtp: builder.mutation({
+      query: (payload) => ({
+        url: "/user//verify-otp",
+        method: "PUT",
+        data: payload,
+      }),
+     invalidatesTags: ["USER"],
+
+    }),
     changePassword: builder.mutation({
       query: (userInfo) => ({
         url: "/user/change-password",
@@ -64,5 +82,7 @@ export const {
   useLogoutMutation,
   useUpdateMutation,
   useChangePasswordMutation,
-  useDriverOnlineMutation
+  useDriverOnlineMutation,
+  useSendOtpMutation,
+  useVerifyOtpMutation
 } = authApi;

@@ -6,8 +6,15 @@ import { Link } from 'react-router';
 const CourseCard = () => {
   return (
     <Card
-      className="py-0 group overflow-hidden rounded-2xl border border-border shadow-sm hover:shadow-md transition-all duration-300"
+      className="py-0 relative group overflow-hidden rounded-2xl border border-border shadow-sm hover:shadow-md transition-all duration-300"
     >
+
+      <Link
+      to={`/courses/dfhasidufrrer`}
+
+      className='absolute inset-0'
+      />
+    
       {/* Image */}
       <div className="relative p-3">
         <img

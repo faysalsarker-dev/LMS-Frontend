@@ -50,6 +50,163 @@ export interface Testimonial {
   rating: number;
 }
 
+
+
+
+
+
+
+
+
+
+export const dummyCourse = {
+  id: "course-1",
+  title: "Complete JavaScript Developer Course",
+  milestones: [
+    {
+      id: "milestone-1",
+      title: "JavaScript Fundamentals",
+      progress: 85,
+      modules: [
+        {
+          id: "module-1",
+          title: "Variables and Data Types",
+          isCompleted: true,
+          lessons: [
+            {
+              id: "lesson-1",
+              title: "Introduction to Variables",
+              duration: "12:30",
+              status: "completed",
+            },
+            {
+              id: "lesson-2",
+              title: "String Data Type",
+              duration: "08:45",
+              status: "completed",
+            },
+            {
+              id: "lesson-3",
+              title: "Number Data Type",
+              duration: "10:15",
+              status: "completed",
+            },
+          ],
+        },
+        {
+          id: "module-2",
+          title: "Functions and Scope",
+          isCompleted: false,
+          lessons: [
+            {
+              id: "lesson-4",
+              title: "Function Declarations",
+              duration: "15:20",
+              status: "completed",
+            },
+            {
+              id: "lesson-5",
+              title: "Arrow Functions",
+              duration: "11:30",
+              status: "in-progress",
+            },
+            {
+              id: "lesson-6",
+              title: "Lexical Scope",
+              duration: "13:45",
+              status: "locked",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "milestone-2",
+      title: "DOM Manipulation",
+      progress: 40,
+      modules: [
+        {
+          id: "module-3",
+          title: "Selecting Elements",
+          isCompleted: false,
+          lessons: [
+            {
+              id: "lesson-7",
+              title: "querySelector and getElementById",
+              duration: "09:20",
+              status: "completed",
+            },
+            {
+              id: "lesson-8",
+              title: "Event Listeners",
+              duration: "14:10",
+              status: "locked",
+            },
+          ],
+        },
+        {
+          id: "module-4",
+          title: "Dynamic Content",
+          isCompleted: false,
+          lessons: [
+            {
+              id: "lesson-9",
+              title: "Creating Elements",
+              duration: "12:00",
+              status: "locked",
+            },
+            {
+              id: "lesson-10",
+              title: "Modifying Attributes",
+              duration: "08:30",
+              status: "locked",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "milestone-3",
+      title: "Advanced JavaScript",
+      progress: 0,
+      modules: [
+        {
+          id: "module-5",
+          title: "Async Programming",
+          isCompleted: false,
+          lessons: [
+            {
+              id: "lesson-11",
+              title: "Promises",
+              duration: "16:45",
+              status: "locked",
+            },
+            {
+              id: "lesson-12",
+              title: "Async/Await",
+              duration: "14:20",
+              status: "locked",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  currentModule: {
+    id: "module-2",
+    title: "Functions and Scope",
+    isCompleted: false,
+    lessons: [],
+  },
+};
+
+
+
+
+
+
+
+
 export const mockCourses: Course[] = [
   {
     id: '1',

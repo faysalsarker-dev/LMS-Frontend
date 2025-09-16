@@ -107,7 +107,7 @@ const Dashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {enrolledCourses.map((course, index) => (
+                {enrolledCourses.map((course) => (
                   <div key={course.id} className="border rounded-lg p-4 hover:bg-muted/50 transition-colors">
                     <div className="flex items-start gap-4">
                       <div className="w-16 h-12 bg-gradient-card rounded flex items-center justify-center flex-shrink-0">

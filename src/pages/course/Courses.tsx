@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Filter, Star, Users, Clock, Grid, List } from 'lucide-react';
+import { Search, Grid, List } from 'lucide-react';
 import { mockCourses, mockCategories } from '@/data/mockData';
 import CourseCard from '@/components/custom/CourseCard';
 
@@ -133,7 +131,7 @@ const Courses = () => {
 
         {/* Course Grid/List */}
         <div className={viewMode === 'grid' ? 'grid md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-6'}>
-          {filteredCourses.map((course, index) => (
+          {filteredCourses.map((_, index) => (
            <CourseCard key={index}/>
           ))}
         </div>

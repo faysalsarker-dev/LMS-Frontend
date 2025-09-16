@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { 
   Menu, 
-  X,
   GraduationCap,
   User,
   LogOut,
@@ -36,7 +35,7 @@ import {
 
 export const Header = () => {
   const location = useLocation();
-  const [isUser, setIsUser] = useState(false); 
+  const [isUser] = useState(false); 
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -64,13 +63,18 @@ export const Header = () => {
             <NavigationMenuList className="h-full gap-2">
               {navigation.map((link, index) => (
                 <NavigationMenuItem key={index} className="h-full">
-                  <NavigationMenuLink
+                  <Link
+                  to={link.href}
+                  >
+                         <NavigationMenuLink
                     active={isActive(link.href)}
-                    href={link.href}
+                  
                     className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary data-[active]:text-primary h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
                   >
                     {link.name}
                   </NavigationMenuLink>
+                  </Link>
+           
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
