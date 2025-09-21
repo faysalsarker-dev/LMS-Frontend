@@ -85,7 +85,7 @@ export default function OtpVerify() {
       try {
         const result = await verifyOtp({ email, otp: currentOtp }).unwrap();
         toast.success(result.message || "Verification successful!");
-        navigate("/dashboard");
+        navigate("/");
       } catch (error: any) {
         toast.error(error.data?.message || "Invalid OTP. Please try again.");
         setOtp("");

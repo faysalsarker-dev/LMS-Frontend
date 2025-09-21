@@ -8,6 +8,8 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         data: userInfo,
       }),
+    invalidatesTags: ["USER"],
+
     }),
     logout: builder.mutation({
       query: () => ({
@@ -43,20 +45,30 @@ export const authApi = baseApi.injectEndpoints({
     }),
     verifyOtp: builder.mutation({
       query: (payload) => ({
-        url: "/user//verify-otp",
+        url: "/user/verify-otp",
         method: "PUT",
         data: payload,
       }),
      invalidatesTags: ["USER"],
 
     }),
-    changePassword: builder.mutation({
-      query: (userInfo) => ({
-        url: "/user/change-password",
-        method: "PUT",
-        data: userInfo,
+    forgetPassword: builder.mutation({
+      query: (payload) => ({
+        url: "/user/forget-password",
+        method: "POST",
+        data: payload,
       }),
      invalidatesTags: ["USER"],
+
+    }),
+    resetPassword: builder.mutation({
+      query: (payload) => ({
+        url: "/user/reset-password",
+        method: "PUT",
+        data: payload,
+      }),
+     invalidatesTags: ["USER"],
+
     }),
     userInfo: builder.query({
       query: () => ({
@@ -65,13 +77,28 @@ export const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ["USER"],
     }),
-    driverOnline: builder.mutation({
-      query: () => ({
-        url: "/user/driver-online",
-        method: "PUT",
-      }),
-      invalidatesTags: ["USER"],
-    }),
+
+    getAll: builder.query({
+  query: (params) => {
+    const searchParams = new URLSearchParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== "") {
+          searchParams.append(key, String(value));
+        }
+      });
+    }
+
+    return {
+      url: `/user?${searchParams.toString()}`,
+      method: "GET",
+    };
+  },
+  providesTags: ["USER"],
+}),
+
+
   }),
 });
 
@@ -81,8 +108,9 @@ export const {
   useUserInfoQuery,
   useLogoutMutation,
   useUpdateMutation,
-  useChangePasswordMutation,
-  useDriverOnlineMutation,
   useSendOtpMutation,
-  useVerifyOtpMutation
+  useVerifyOtpMutation,
+  useForgetPasswordMutation,
+  useResetPasswordMutation,
+  useGetAllQuery
 } = authApi;

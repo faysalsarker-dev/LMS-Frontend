@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,7 @@ import { GraduationCap, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useLoginMutation } from "@/redux/features/auth/auth.api";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { handleApiError } from "@/utils/errorHandler";
 
 type LoginFormValues = {
   email: string;
@@ -19,6 +20,7 @@ type LoginFormValues = {
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [login, { isLoading }] = useLoginMutation();
+  const navigate = useNavigate()
 
   const {
     register,
@@ -34,22 +36,20 @@ const Login = () => {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      const res = await login({
+      await login({
         email: data.email,
         password: data.password,
         remember:data.remember
       }).unwrap();
 
       toast.success("Login successful!");
-      console.log("Response:", res);
-
-      if (data.remember) {
-        localStorage.setItem("auth", JSON.stringify(res));
-      } else {
-        sessionStorage.setItem("auth", JSON.stringify(res));
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Login failed!");
+    } catch (err) {
+          const apiError = err as { data?: { message?: string } };
+      
+          if (apiError?.data?.message === "Account is not verified") {
+            return navigate(`/verify-account/${data.email}`);
+          }
+          handleApiError(err);
     }
   };
 
@@ -133,7 +133,7 @@ const Login = () => {
                   </Label>
                 </div>
                 <Link
-                  to="/forgot-password"
+                  to="/forget-password"
                   className="text-sm text-primary hover:underline"
                 >
                   Forgot password?

@@ -1,89 +1,76 @@
+import axios, { type AxiosRequestConfig } from "axios";
 
-import axios  from "axios";
-
+// Create axios instance
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1",
-  withCredentials: true,
+  withCredentials: true, // cookies are sent automatically
 });
 
+// ------------------- Request Interceptor ------------------- //
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // You can add additional headers here if needed
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-// axiosInstance.interceptors.request.use(
-//   function (config) {
-//     // Do something before request is sent
+// ------------------- Refresh Token Logic ------------------- //
+let isRefreshing = false;
 
-//     return config;
-//   },
-//   function (error) {
-//     // Do something with request error
-//     return Promise.reject(error);
-//   }
-// );
+let pendingQueue: {
+  resolve: (value?: unknown) => void;
+  reject: (error?: unknown) => void;
+}[] = [];
 
-// let isRefreshing = false;
+const processQueue = (error: unknown) => {
+  pendingQueue.forEach((promise) => {
+    if (error) {
+      promise.reject(error);
+    } else {
+      promise.resolve(null);
+    }
+  });
+  pendingQueue = [];
+};
 
-// let pendingQueue: {
-//   resolve: (value: unknown) => void;
-//   reject: (value: unknown) => void;
-// }[] = [];
+// ------------------- Response Interceptor ------------------- //
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
-// const processQueue = (error: unknown) => {
-//   pendingQueue.forEach((promise) => {
-//     if (error) {
-//       promise.reject(error);
-//     } else {
-//       promise.resolve(null);
-//     }
-//   });
+    // If 401 Unauthorized, try refresh token
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-//   pendingQueue = [];
-// };
+      // If a refresh request is already running, queue this request
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          pendingQueue.push({ resolve, reject });
+        })
+          .then(() => axiosInstance(originalRequest))
+          .catch((err) => Promise.reject(err));
+      }
 
-// // Add a response interceptor
-// axiosInstance.interceptors.response.use(
-//   (response) => {
-//     return response;
-//   },
-//   async (error) => {
-//     // console.log("Request failed", error.response.data.message);
+      isRefreshing = true;
 
-//     const originalRequest = error.config as AxiosRequestConfig & {
-//       _retry: boolean;
-//     };
+      try {
+        // Call refresh token endpoint (cookies sent automatically)
+        await axiosInstance.post("/user/refresh-token");
 
-//     if (
-//       error.response.status === 500 &&
-//       error.response.data.message === "jwt expired" &&
-//       !originalRequest._retry
-//     ) {
-//       console.log("Your token is expired");
+        processQueue(null);
 
-//       originalRequest._retry = true;
+        // Retry original request
+        return axiosInstance(originalRequest);
+      } catch (err) {
+        processQueue(err);
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
+    }
 
-//       if (isRefreshing) {
-//         return new Promise((resolve, reject) => {
-//           pendingQueue.push({ resolve, reject });
-//         })
-//           .then(() => axiosInstance(originalRequest))
-//           .catch((error) => Promise.reject(error));
-//       }
-
-//       isRefreshing = true;
-//       try {
-//         const res = await axiosInstance.post("/auth/refresh-token");
-//         console.log("New Token arrived", res);
-
-//         processQueue(null);
-
-//         return axiosInstance(originalRequest);
-//       } catch (error) {
-//         processQueue(error);
-//         return Promise.reject(error);
-//       } finally {
-//         isRefreshing = false;
-//       }
-//     }
-
-//     //* For Everything
-//     return Promise.reject(error);
-//   }
-// );
+    return Promise.reject(error);
+  }
+);

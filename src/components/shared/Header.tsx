@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { 
@@ -32,10 +31,35 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { authApi, useLogoutMutation, useUserInfoQuery } from '@/redux/features/auth/auth.api';
+import { useAppDispatch } from '@/redux/hooks';
+import { useState } from 'react';
 
 export const Header = () => {
   const location = useLocation();
-  const [isUser] = useState(false); 
+   const { data: userInfo } = useUserInfoQuery(undefined);
+      const [logout] = useLogoutMutation();
+const [open,setOpen]=useState(false)
+
+
+
+  const dispatch = useAppDispatch();
+
+
+   const handleLogout = async () => {
+       await logout(undefined).unwrap();
+    dispatch(authApi.util.resetApiState());
+   }
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -82,19 +106,19 @@ export const Header = () => {
 
           {/* Right Side */}
           <div className="flex items-center space-x-4">
-            {isUser ? (
+            {userInfo?.data ? (
               // Avatar Dropdown (like Udemy)
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="w-9 h-9 rounded-full bg-gradient-primary text-white flex items-center justify-center font-semibold shadow hover:opacity-90 transition">
-                    U
+                         {userInfo?.data?.name?.split(" ").map((n:string) => n[0]).join("").toUpperCase()}
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-48" align="end">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/profile" className="flex items-center gap-2">
+                    <Link to="/dashboard/profile" className="flex items-center gap-2">
                       <User className="w-4 h-4" /> Profile
                     </Link>
                   </DropdownMenuItem>
@@ -104,7 +128,7 @@ export const Header = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-red-500 cursor-pointer">
+                  <DropdownMenuItem onClick={()=>setOpen(!open)} className="text-red-500 cursor-pointer">
                     <LogOut className="w-4 h-4" /> Log out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -154,16 +178,19 @@ export const Header = () => {
                   ))}
                 </nav>
                 <div className="mt-6">
-                  {isUser ? (
+                  {userInfo?.data ? (
                     <div className="flex flex-col gap-2">
-                      <Link to="/profile">
+                      <Link to="/dashboard/profile">
                         <Button variant="outline" className="w-full">
                           Profile
                         </Button>
                       </Link>
-                      <Button variant="destructive" className="w-full">
+                      <Button onClick={()=>setOpen(!open)} variant="destructive" className="w-full">
                         Log Out
                       </Button>
+
+
+
                     </div>
                   ) : (
                     <div className="flex flex-col gap-2">
@@ -185,6 +212,36 @@ export const Header = () => {
           </div>
         </div>
       </div>
+
+
+
+
+
+
+
+
+
+
+
+<AlertDialog open={open} onOpenChange={setOpen}>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+      <AlertDialogDescription>
+        This action cannot be undone. This will permanently delete your account
+        and remove your data from our servers.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction onClick={handleLogout}>Continue</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+
+
+
+
     </header>
   );
 };

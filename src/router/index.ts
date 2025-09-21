@@ -3,8 +3,8 @@ import Register from "@/pages/auth/Register";
 import { createBrowserRouter } from "react-router";
 import Layout from './../layout/home/Home';
 import { generateRoutes } from "./generateRoutes";
-import {invisibleRoutes, publicRoutes, studentRoutes} from "./allRoutes";
-import Student from "@/layout/student/Student";
+import {adminRoutes, invisibleRoutes, publicRoutes} from "./allRoutes";
+import { AdminLayout } from "@/layout/admin/AdminLayout";
 
 export const router = createBrowserRouter([
 
@@ -30,10 +30,10 @@ export const router = createBrowserRouter([
 
 
   {
-    Component:Student,
+    Component:AdminLayout,
     path:'/dashboard',
     children:[
-      ...generateRoutes(studentRoutes)
+      ...generateRoutes(adminRoutes)
     ]
   }
 

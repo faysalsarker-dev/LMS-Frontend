@@ -7,6 +7,11 @@ import Dashboard from '@/pages/Student/Dashboard';
 import Profile from '@/pages/Student/Profile';
 import { CoursePlayer } from '@/pages/Student/course/CoursePlayer';
 import OtpVerify from '@/pages/auth/OtpVerify';
+import ForgotPassword from '@/pages/auth/ForgotPassword';
+import ResetPassword from '@/pages/auth/ResetPassword';
+import AdminDashboard from '@/pages/admin/Dashboard';
+import Users from '@/pages/admin/Users';
+import CreateCourse from '@/pages/admin/CreateCourse';
 
 export const publicRoutes = [
   {
@@ -38,6 +43,29 @@ export const publicRoutes = [
 ];
 
 
+export const adminRoutes = [
+
+
+  {
+      Component: AdminDashboard,
+    path: '/dashboard',
+    name: 'Dashboard'
+  },
+  {
+      Component: Users,
+    path: '/dashboard/users',
+    name: 'Users'
+  },
+  {
+      Component: CreateCourse,
+    path: '/dashboard/Coures',
+    name: 'Copures'
+  },
+
+
+  
+
+];
 export const invisibleRoutes = [
 
   {
@@ -48,6 +76,16 @@ export const invisibleRoutes = [
   {
       Component: OtpVerify,
     path: '/verify-account/:email',
+    name: 'Courses'
+  },
+  {
+      Component: ForgotPassword,
+    path: '/forget-password',
+    name: 'Courses'
+  },
+  {
+      Component: ResetPassword,
+    path: '/reset-password',
     name: 'Courses'
   },
 
