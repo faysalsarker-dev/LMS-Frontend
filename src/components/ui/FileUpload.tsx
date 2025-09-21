@@ -1,133 +1,132 @@
-import { AlertCircleIcon, ImageIcon, UploadIcon, XIcon } from "lucide-react"
+import React, { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Upload, X, Image, FileText } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-import { useFileUpload } from "@/hooks/use-file-upload"
-import { Button } from "@/components/ui/button"
-import { useEffect } from "react"
-import type { SingleFileUploadProps } from "@/interface"
+interface FileUploadProps {
+  onChange: (file: File | null) => void;
+  accept?: string;
+  maxSize?: number;
+  className?: string;
+}
 
+const FileUpload: React.FC<FileUploadProps> = ({
+  onChange,
+  accept = 'image/*',
+  maxSize = 5 * 1024 * 1024, // 5MB
+  className,
+}) => {
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
 
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    if (file) {
+      setUploadedFile(file);
+      onChange(file);
+      
+      // Create preview for images
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = () => setPreview(reader.result as string);
+        reader.readAsDataURL(file);
+      }
+    }
+  }, [onChange]);
 
+  const removeFile = () => {
+    setUploadedFile(null);
+    setPreview(null);
+    onChange(null);
+  };
 
-
-
-
-
-
-
-export default function FileUpload({ onChange }: SingleFileUploadProps) {
-  const maxSizeMB = 5
-  const maxSize = maxSizeMB * 1024 * 1024 // 5MB default
-
-  const [
-    { files, isDragging, errors },
-    {
-      handleDragEnter,
-      handleDragLeave,
-      handleDragOver,
-      handleDrop,
-      openFileDialog,
-      removeFile,
-      getInputProps,
-    },
-  ] = useFileUpload({
-    accept: "image/svg+xml,image/png,image/jpeg,image/jpg,image/gif",
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { [accept]: [] },
     maxSize,
-  })
-  const previewUrl = files[0]?.preview || null
+    multiple: false,
+  });
 
-  const uploadedFile: File | null = files[0]?.file instanceof File ? files[0].file : null;
-
-
-
-  useEffect(() => {
-    onChange(uploadedFile);
-  }, [uploadedFile, onChange]);
-
-
-
-
-
-
-
+  if (uploadedFile) {
+    return (
+      <Card className="p-6 bg-gradient-card border border-border">
+        <div className="space-y-4">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-3">
+              {preview ? (
+                <img 
+                  src={preview} 
+                  alt="Preview" 
+                  className="w-16 h-16 object-cover rounded-lg border border-border"
+                />
+              ) : (
+                <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
+                  <FileText className="h-6 w-6 text-muted-foreground" />
+                </div>
+              )}
+              <div>
+                <p className="font-medium text-foreground text-sm">
+                  {uploadedFile.name}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+                </p>
+              </div>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={removeFile}
+              className="h-8 w-8 p-0 text-muted-foreground"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </Card>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-2 ">
-      <div className="relative ">
-        {/* Drop area */}
-        <div
-          onDragEnter={handleDragEnter}
-          onDragLeave={handleDragLeave}
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-          data-dragging={isDragging || undefined}
-          className="border-input h-full data-[dragging=true]:bg-accent/50 bg-card has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-[input:focus]:ring-[3px]"
-        >
-          <input
-            {...getInputProps()}
-            className="sr-only"
-            aria-label="Upload image file"
-          />
-          {previewUrl ? (
-            <div className="absolute inset-0 flex items-center justify-center p-4">
-              <img
-                src={previewUrl}
-                alt={files[0]?.file?.name || "Uploaded image"}
-                className="mx-auto max-h-full rounded object-contain"
-              />
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
-              <div
-                className="bg-background mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border"
-                aria-hidden="true"
-              >
-                <ImageIcon className="size-4 opacity-60" />
-              </div>
-              <p className="mb-1.5 text-sm font-medium">Drop your image here</p>
-              <p className="text-muted-foreground text-xs">
-                SVG, PNG, JPG or GIF (max. {maxSizeMB}MB)
-              </p>
-              <Button
-                variant="outline"
-                type="button"
-                className="mt-4"
-                onClick={openFileDialog}
-              >
-                <UploadIcon
-                  className="-ms-1 size-4 opacity-60"
-                  aria-hidden="true"
-                />
-                Select image
-              </Button>
-            </div>
-          )}
-        </div>
-
-        {previewUrl && (
-          <div className="absolute top-4 right-4">
-            <button
-              type="button"
-              className="focus-visible:border-ring focus-visible:ring-ring/50 z-50 flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-[color,box-shadow] outline-none hover:bg-black/80 focus-visible:ring-[3px]"
-              onClick={() => removeFile(files[0]?.id)}
-              aria-label="Remove image"
-            >
-              <XIcon className="size-4" aria-hidden="true" />
-            </button>
-          </div>
+    <Card className={cn("relative overflow-hidden hover:border-primary/50 hover:bg-primary/2", className)}>
+      <div
+        {...getRootProps()}
+        className={cn(
+          "p-8 border-2 border-dashed transition-all duration-200 cursor-pointer",
+          "bg-gradient-to-br from-surface to-muted/20",
+          isDragActive 
+            ? "border-primary bg-primary/5" 
+            : "border-muted/30 "
         )}
-      </div>
-
-      {errors.length > 0 && (
-        <div
-          className="text-destructive flex items-center gap-1 text-xs"
-          role="alert"
-        >
-          <AlertCircleIcon className="size-3 shrink-0" />
-          <span>{errors[0]}</span>
+      >
+        <input {...getInputProps()} />
+        <div className="flex flex-col items-center text-center space-y-4">
+          <div className="w-16 h-16 bg-gradient-primary rounded-xl flex items-center justify-center">
+            {isDragActive ? (
+              <Upload className="h-8 w-8 text-primary-foreground animate-bounce" />
+            ) : (
+              <Image className="h-8 w-8 text-primary-foreground" />
+            )}
+          </div>
+          
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-foreground">
+              {isDragActive ? "Drop your file here" : "Upload course thumbnail"}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Drag & drop or click to browse
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Max size: {(maxSize / 1024 / 1024).toFixed(0)}MB
+            </p>
+          </div>
         </div>
-      )}
+      </div>
+    </Card>
+  );
+};
 
- 
-    </div>
-  )
-}
+export default FileUpload;

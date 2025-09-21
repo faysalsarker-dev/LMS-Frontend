@@ -1,64 +1,42 @@
-"use client";
-
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { toast } from "react-hot-toast";
-import { Loader2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, User, Mail, Shield, Lock } from "lucide-react";
+import toast from "react-hot-toast";
+import { useRegisterMutation, useUpdateMutation } from "@/redux/features/auth/auth.api";
+import type { IUser } from "@/interface";
 import { handleApiError } from "@/utils/errorHandler";
-import { useRegisterMutation,useUpdateMutation } from "@/redux/features/auth/auth.api";
-// import { Image } from "@/components/ui/image"; 
-
-type UserRole = "student" | "instructor" | "admin";
-
-type BaseUserFormData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: UserRole;
-  phone: string;
-  password?: string;
-};
+import { Switch } from "@/components/ui/switch";
 
 interface UserDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
   mode?: "create" | "update";
-  user?: {
-    _id: string;
-    name: string;
-    email: string;
-    phone: string;
-    role: UserRole;
-    image?: string;
-    courses?: { _id: string; title: string; thumbnail?: string }[];
-  };
+  user?: IUser | null;
 }
 
-export function UserDialog({
-  open,
-  onOpenChange,
-  onSuccess,
-  mode = "create",
-  user,
-}: UserDialogProps) {
+
+type formData = {
+     firstName:string;
+      lastName: string;
+      email: string;
+      role: string;
+      phone: string;
+      password: string;
+      isActive:boolean;
+      isVerified:boolean
+
+}
+
+export default function UserDialog({ open, onOpenChange, onSuccess, mode = "create", user }: UserDialogProps) {
   const [registerMutation, { isLoading: isCreating }] = useRegisterMutation();
   const [updateUser, { isLoading: isUpdating }] = useUpdateMutation();
 
@@ -69,13 +47,16 @@ export function UserDialog({
     watch,
     formState: { errors },
     reset,
-  } = useForm<BaseUserFormData>({
+  } = useForm<formData>({
     defaultValues: {
-      firstName: user?.name?.split(" ")[0] || "",
-      lastName: user?.name?.split(" ")[1] || "",
-      email: user?.email || "",
-      role: user?.role || "student",
-      phone: user?.phone || "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: "student",
+      phone: "",
+      password: "",
+      isActive: true,
+      isVerified: false,
     },
   });
 
@@ -83,223 +64,352 @@ export function UserDialog({
   const isUpdate = mode === "update";
   const isLoading = isCreating || isUpdating;
 
-  const onSubmit = async (data: BaseUserFormData) => {
+  // Reset form when user changes or dialog opens/closes
+  useEffect(() => {
+    if (open) {
+      if (user && isUpdate) {
+        const [firstName = "", lastName = ""] = user.name?.split(" ") || [];
+        reset({
+          firstName,
+          lastName,
+          email: user.email,
+          role: user.role,
+          phone: user.phone || "",
+          isActive: user.isActive,
+          isVerified: user.isVerified,
+        });
+      } else {
+        reset({
+          firstName: "",
+          lastName: "",
+          email: "",
+          role: "student",
+          phone: "",
+          password: "",
+          isActive: true,
+          isVerified: false,
+        });
+      }
+    }
+  }, [open, user, isUpdate, reset]);
+
+  const onSubmit = async (data: formData) => {
     try {
       const payload = {
         name: `${data.firstName} ${data.lastName}`.trim(),
         email: data.email,
         phone: data.phone,
         role: data.role,
-        ...(isUpdate
-          ? {}
-          : { password: data.password, isVerified: true }),
+        isActive: data.isActive,
+        isVerified: data.isVerified,
+        ...(isUpdate ? {} : { password: data.password }),
       };
 
       if (isUpdate && user?._id) {
-        await updateUser({ id: user._id, data: payload }).unwrap();
+        await updateUser({ id: user._id, data: payload });
         toast.success("User updated successfully!");
       } else {
-        await registerMutation(payload).unwrap();
+        await registerMutation(payload);
         toast.success("User created successfully!");
       }
 
-      reset();
       onSuccess();
       onOpenChange(false);
     } catch (error) {
-      handleApiError(error);
+handleApiError(error)
     }
   };
 
-  return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="flex flex-col w-full sm:w-[600px] md:w-[720px]">
-        <SheetHeader>
-          <SheetTitle className="text-2xl font-semibold tracking-tight">
-            {isUpdate ? "Update User" : "Create User"}
-          </SheetTitle>
-          <SheetDescription className="text-sm text-muted-foreground">
-            {isUpdate
-              ? "Update user information below."
-              : "Add a new user to the system. They’ll get login credentials automatically."}
-          </SheetDescription>
-        </SheetHeader>
+  const getInitials = (name: string) =>
+    name?.split(" ")?.map((n) => n[0])?.join("")?.toUpperCase() || "?";
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex-1 overflow-auto py-6 px-4"
-        >
-          {/* User Image */}
-          {isUpdate && user?.image && (
-            <div className="flex flex-col items-center mb-6">
-              <img
-                src={user.image}
-                alt={user.name}
-                width={100}
-                height={100}
-                className="rounded-full object-cover"
-              />
-              <p className="text-sm text-muted-foreground mt-2">
-                Current profile image
-              </p>
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-semibold flex items-center gap-2">
+            <User className="h-6 w-6" />
+            {isUpdate ? "Update User" : "Create New User"}
+          </DialogTitle>
+          <DialogDescription>
+            {isUpdate
+              ? "Update user information and settings below."
+              : "Add a new user to your platform. They'll receive login credentials via email."}
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* User Avatar Section (Update mode only) */}
+          {isUpdate && user && (
+            <div className="flex flex-col items-center space-y-3 p-4 bg-muted/50 rounded-lg">
+              <Avatar className="h-20 w-20 ring-4 ring-background">
+                <AvatarImage src={user.profile} alt={user.name} />
+                <AvatarFallback className="bg-primary/10 text-primary font-semibold text-lg">
+                  {getInitials(user.name)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="text-center">
+                <h3 className="font-semibold">{user.name}</h3>
+                <div className="flex items-center gap-2 mt-2">
+                  <Badge variant={user.isActive ? "default" : "destructive"}>
+                    {user.isActive ? "Active" : "Blocked"}
+                  </Badge>
+                  <Badge variant={user.isVerified ? "default" : "secondary"}>
+                    {user.isVerified ? "Verified" : "Unverified"}
+                  </Badge>
+                </div>
+              </div>
             </div>
           )}
 
+          <Separator />
+
+          {/* Form Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* First Name */}
-            <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
-              <Input
-                id="firstName"
-                className="bg-card"
-                placeholder="First name..."
-                {...register("firstName", { required: "First name is required" })}
-              />
-              {errors.firstName && (
-                <p className="text-sm text-destructive">{errors.firstName.message}</p>
-              )}
-            </div>
+            {/* Personal Information */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-3">
+                <User className="h-4 w-4" />
+                <h4 className="font-medium">Personal Information</h4>
+              </div>
 
-            {/* Last Name */}
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input
-                id="lastName"
-                className="bg-card"
-                placeholder="Last name..."
-                {...register("lastName", { required: "Last name is required" })}
-              />
-              {errors.lastName && (
-                <p className="text-sm text-destructive">{errors.lastName.message}</p>
-              )}
-            </div>
-
-            {/* Email */}
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                className="bg-card"
-                placeholder="example@email.com"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Invalid email address",
-                  },
-                })}
-              />
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message}</p>
-              )}
-            </div>
-
-            {/* Phone */}
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                type="tel"
-                className="bg-card"
-                placeholder="Phone number..."
-                {...register("phone", {
-                  required: "Phone number is required",
-                  pattern: {
-                    value: /^[0-9]{10,15}$/,
-                    message: "Invalid phone number",
-                  },
-                })}
-              />
-              {errors.phone && (
-                <p className="text-sm text-destructive">{errors.phone.message}</p>
-              )}
-            </div>
-
-            {/* Role */}
-            <div className="space-y-2 w-full">
-              <Label htmlFor="role">Role</Label>
-              <Select
-                onValueChange={(value: UserRole) => setValue("role", value)}
-                value={selectedRole}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="student">Student</SelectItem>
-                  <SelectItem value="instructor">Instructor</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
-                </SelectContent>
-              </Select>
-              {errors.role && (
-                <p className="text-sm text-destructive">{errors.role.message}</p>
-              )}
-            </div>
-
-            {/* Password (Only in create mode) */}
-            {!isUpdate && (
               <div className="space-y-2">
-                <Label htmlFor="password">Temporary Password</Label>
+                <Label htmlFor="firstName">First Name *</Label>
                 <Input
-                  id="password"
-                  type="password"
-                  className="bg-card"
-                  placeholder="Enter temporary password"
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 8,
-                      message: "Password must be at least 8 characters",
+                  id="firstName"
+                  placeholder="Enter first name"
+                  {...register("firstName", { required: "First name is required" })}
+                  className="bg-background"
+                />
+                {errors.firstName && (
+                  <p className="text-sm text-destructive">{errors.firstName.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name *</Label>
+                <Input
+                  id="lastName"
+                  placeholder="Enter last name"
+                  {...register("lastName", { required: "Last name is required" })}
+                  className="bg-background"
+                />
+                {errors.lastName && (
+                  <p className="text-sm text-destructive">{errors.lastName.message}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Contact Information */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Mail className="h-4 w-4" />
+                <h4 className="font-medium">Contact Information</h4>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="user@example.com"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Invalid email address",
                     },
                   })}
+                  className="bg-background"
                 />
-                {errors.password && (
-                  <p className="text-sm text-destructive">
-                    {errors.password.message}
-                  </p>
+                {errors.email && (
+                  <p className="text-sm text-destructive">{errors.email.message}</p>
                 )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="Enter phone number"
+                  {...register("phone", {
+                    pattern: {
+                      value: /^[0-9+\-\s()]+$/,
+                      message: "Invalid phone number format",
+                    },
+                  })}
+                  className="bg-background"
+                />
+                {errors.phone && (
+                  <p className="text-sm text-destructive">{errors.phone.message}</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Role & Security Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Shield className="h-4 w-4" />
+                <h4 className="font-medium">Role & Permissions</h4>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="role">User Role *</Label>
+                <Select
+                  onValueChange={(value: IUser['role']) => setValue("role", value)}
+                  value={selectedRole}
+                >
+                  <SelectTrigger className="bg-background">
+                    <SelectValue placeholder="Select user role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="student">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                        Student
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="instructor">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                        Instructor
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="admin">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                        Administrator
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.role && (
+                  <p className="text-sm text-destructive">{errors.role.message}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Password Section (Create mode only) */}
+            {!isUpdate && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Lock className="h-4 w-4" />
+                  <h4 className="font-medium">Security</h4>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password">Temporary Password *</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter temporary password"
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 8,
+                        message: "Password must be at least 8 characters",
+                      },
+                    })}
+                    className="bg-background"
+                  />
+                  {errors.password && (
+                    <p className="text-sm text-destructive">{errors.password.message}</p>
+                  )}
+               
+                </div>
               </div>
             )}
           </div>
 
-          {/* Courses (Update mode only) */}
+          {/* Status & Verification Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Shield className="h-4 w-4" />
+                <h4 className="font-medium">Status Settings</h4>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between space-x-2">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="isActive">Account Status</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Enable or disable user login access
+                    </p>
+                  </div>
+                  <Switch
+                    id="isActive"
+                    checked={watch("isActive")}
+                    onCheckedChange={(checked) => setValue("isActive", checked)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between space-x-2">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="isVerified">Email Verification</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Mark email as verified or unverified
+                    </p>
+                  </div>
+                  <Switch
+                    id="isVerified"
+                    checked={watch("isVerified")}
+                    onCheckedChange={(checked) => setValue("isVerified", checked)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Empty space for layout balance */}
+            <div></div>
+          </div>
+
+          {/* Enrolled Courses (Update mode only) */}
           {isUpdate && user?.courses && user.courses.length > 0 && (
-            <div className="mt-6">
-              <Label>Enrolled Courses</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+            <div className="space-y-4">
+              <Separator />
+              <h4 className="font-medium">Enrolled Courses ({user.courses.length})</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {user.courses.map((course) => (
                   <div
                     key={course._id}
-                    className="flex items-center gap-3 border p-3 rounded-lg bg-card shadow-sm"
+                    className="flex items-center gap-3 p-3 border rounded-lg bg-card hover:shadow-sm transition-shadow"
                   >
                     {course.thumbnail && (
                       <img
-                        src={course?.thumbnail}
+                        src={course.thumbnail}
                         alt={course.title}
-                        width={50}
-                        height={50}
-                        className="rounded-md object-cover"
+                        className="w-12 h-12 rounded-md object-cover"
                       />
                     )}
-                    <p className="text-sm font-medium">{course.title}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{course.title}</p>
+                      <p className="text-xs text-muted-foreground">Course ID: {course._id.slice(-8)}</p>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Footer */}
-          <SheetFooter className="flex justify-end gap-3 border-t mt-8 pt-4">
+          <DialogFooter className="flex flex-col sm:flex-row gap-3">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
+              className="w-full sm:w-auto"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              disabled={isLoading}
+              className="w-full sm:w-auto bg-gradient-primary hover:opacity-90"
+            >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLoading
                 ? isUpdate
@@ -309,9 +419,9 @@ export function UserDialog({
                 ? "Update User"
                 : "Create User"}
             </Button>
-          </SheetFooter>
+          </DialogFooter>
         </form>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

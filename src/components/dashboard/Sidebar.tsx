@@ -28,13 +28,7 @@ import {
 } from "lucide-react";
 import { adminRoutes } from "@/router/allRoutes";
 
-// Interface for navigation items
-interface NavItem {
-  title: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  badge?: string | number;
-}
+
 
 
 export function AppSidebar() {

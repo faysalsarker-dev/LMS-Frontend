@@ -12,6 +12,9 @@ import ResetPassword from '@/pages/auth/ResetPassword';
 import AdminDashboard from '@/pages/admin/Dashboard';
 import Users from '@/pages/admin/Users';
 import CreateCourse from '@/pages/admin/CreateCourse';
+import AllCourses from '@/pages/admin/AllCourses';
+import MilestoneDashboardPage from '@/pages/admin/Milestone';
+import AdminDashboardTest from './../pages/test/AdminDashboard';
 
 export const publicRoutes = [
   {
@@ -59,7 +62,22 @@ export const adminRoutes = [
   {
       Component: CreateCourse,
     path: '/dashboard/Coures',
-    name: 'Copures'
+    name: 'Coures'
+  },
+  {
+      Component: AllCourses,
+    path: '/dashboard/all-courese',
+    name: 'Coures'
+  },
+  {
+      Component: MilestoneDashboardPage,
+    path: '/dashboard/miletsone',
+    name: 'Coures'
+  },
+  {
+      Component: AdminDashboardTest,
+    path: '/dashboard/testing',
+    name: 'Coures'
   },
 
 

@@ -14,12 +14,16 @@ export const courseApi = baseApi.injectEndpoints({
 
     // Get all courses
     getAllCourses: builder.query({
-      query: () => ({
-        url: "/course",
-        method: "GET",
-      }),
+      query: (params) => {
+        const queryParams = new URLSearchParams(params as any).toString();
+        return {
+          url: `/course?${queryParams}`,
+          method: "GET",
+        };
+      },
       providesTags: ["COURSE"],
     }),
+
 
     // Get single course
     getCourseById: builder.query({

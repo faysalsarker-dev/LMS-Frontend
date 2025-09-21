@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { UseFieldArrayReturn,  FieldValues, Path } from "react-hook-form";
+import type { UseFieldArrayReturn, FieldValues, Path } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FieldArrayProps<T extends FieldValues> {
@@ -26,36 +26,46 @@ export function FieldArray<T extends FieldValues>({
   const { fields, append, remove } = fieldArray;
 
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn("space-y-6", className)}>
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-foreground">{label}</label>
+        <div className="flex items-center gap-2">
+          <h4 className="text-sm font-medium text-foreground">{label}</h4>
+          <div className="px-2 py-0.5 bg-primary/10 text-primary text-xs font-medium rounded-lg">
+            {fields.length}
+          </div>
+        </div>
         <Button
           type="button"
           variant="outline"
           size="sm"
           onClick={() => append({ value: "" } as any)}
-          className="h-8 px-3 text-xs"
+          className="h-9 px-4 text-xs font-medium bg-surface-elevated hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-all duration-200"
         >
-          <Plus className="h-3 w-3 mr-1" />
+          <Plus className="h-3.5 w-3.5 mr-2" />
           Add {label.slice(0, -1)}
         </Button>
       </div>
 
       <div className="space-y-3">
         {fields.map((field, index) => (
-          <Card key={field.id} className="p-3 bg-gradient-card border border-border">
+          <Card 
+            key={field.id} 
+            className="group p-4 bg-surface-elevated border border-border hover:border-primary/30 hover:shadow-base transition-all duration-200"
+          >
             <div className="flex gap-3 items-center">
-              <Input
-                {...register(`${fieldName}.${index}.value` as Path<T>)}
-                placeholder={placeholder}
-                className="flex-1 bg-transparent"
-              />
+              <div className="flex-1">
+                <Input
+                  {...register(`${fieldName}.${index}.value` as Path<T>)}
+                  placeholder={placeholder}
+                  className="bg-card border-0 p-1  focus-visible:ring-0 placeholder:text-muted-foreground/60 text-sm"
+                />
+              </div>
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
                 onClick={() => remove(index)}
-                className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors duration-200 opacity-0 group-hover:opacity-100"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -64,16 +74,21 @@ export function FieldArray<T extends FieldValues>({
         ))}
 
         {fields.length === 0 && (
-          <Card className="p-6 border-2 border-dashed border-muted-foreground/25">
+          <Card className="p-8 border-2 border-dashed border-muted/30 bg-gradient-to-br from-surface to-muted/20">
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">No {label.toLowerCase()} added yet</p>
+              <div className="mx-auto w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center mb-4">
+                <Sparkles className="h-6 w-6 text-primary-foreground" />
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                No {label.toLowerCase()} added yet
+              </p>
               <Button
                 type="button"
-                variant="ghost"
+                variant="outline"
                 onClick={() => append({ value: "" } as any)}
-                className="mt-2 text-primary hover:text-primary"
+                className="bg-surface-elevated hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-all duration-200"
               >
-                <Plus className="h-4 w-4 mr-1" />
+                <Plus className="h-4 w-4 mr-2" />
                 Add your first {label.slice(0, -1).toLowerCase()}
               </Button>
             </div>
