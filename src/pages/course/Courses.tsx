@@ -12,7 +12,6 @@ const Courses = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedLevel, setSelectedLevel] = useState('all');
   const [sortBy, setSortBy] = useState('popularity');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   // Filter and sort courses
   const filteredCourses = mockCourses
@@ -101,24 +100,7 @@ const Courses = () => {
               </SelectContent>
             </Select>
 
-            <div className="flex ml-auto">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('grid')}
-                className="rounded-r-none"
-              >
-                <Grid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-                className="rounded-l-none"
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
+        
           </div>
         </div>
 
@@ -130,7 +112,7 @@ const Courses = () => {
         </div>
 
         {/* Course Grid/List */}
-        <div className={viewMode === 'grid' ? 'grid md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-6'}>
+        <div className={'grid md:grid-cols-2 lg:grid-cols-3 gap-6'}>
           {filteredCourses.map((_, index) => (
            <CourseCard key={index}/>
           ))}

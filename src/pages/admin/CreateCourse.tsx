@@ -29,6 +29,9 @@ import {
   Target,
   Users,
   Clock,
+  Timer,
+  List,
+  Copy,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -45,12 +48,17 @@ type FormValues = {
   status: "draft" | "archived";
   prerequisites: { value: string }[];
   requirements: { value: string }[];
+  resources: { value: string }[];
   price: number;
   currency: string;
   isDiscounted: boolean;
   discountPrice: number;
   certificateAvailable: boolean;
+  duration: string;
+  totalLectures: number;
+  isFeatured: boolean; 
 };
+
 
 const CreateCourse: React.FC = () => {
   const [createCourse, { isLoading }] = useCreateCourseMutation();
@@ -63,21 +71,26 @@ const CreateCourse: React.FC = () => {
     reset,
     watch,
   } = useForm<FormValues>({
-    defaultValues: {
-      title: "",
-      description: "",
-      tags: [{ value: "" }],
-      skills: [{ value: "" }],
-      level: "Beginner",
-      status: "draft",
-      prerequisites: [{ value: "" }],
-      requirements: [{ value: "" }],
-      price: 0,
-      currency: "USD",
-      isDiscounted: false,
-      discountPrice: 0,
-      certificateAvailable: false,
-    },
+defaultValues: {
+  title: "",
+  description: "",
+  tags: [{ value: "" }],
+  skills: [{ value: "" }],
+  level: "Beginner",
+  status: "draft",
+  prerequisites: [{ value: "" }],
+  requirements: [{ value: "" }],
+  resources: [{ value: "" }],
+  price: 0,
+  currency: "USD",
+  isDiscounted: false,
+  discountPrice: 0,
+  certificateAvailable: false,
+  duration: "",
+  totalLectures: 0,
+  isFeatured: false,
+},
+
   });
 
   // Field Arrays
@@ -85,6 +98,7 @@ const CreateCourse: React.FC = () => {
   const skillFieldArray = useFieldArray({ control, name: "skills" });
   const prereqFieldArray = useFieldArray({ control, name: "prerequisites" });
   const reqFieldArray = useFieldArray({ control, name: "requirements" });
+  const resourcesFieldArray = useFieldArray({ control, name: "resources" });
 
   const isDiscounted = watch("isDiscounted");
 
@@ -111,10 +125,17 @@ const CreateCourse: React.FC = () => {
         "requirements",
         JSON.stringify(data.requirements.map((r) => r.value).filter(Boolean))
       );
+      formData.append(
+        "resources",
+        JSON.stringify(data.resources.map((r) => r.value).filter(Boolean))
+      );
       formData.append("price", data.price.toString());
       formData.append("currency", data.currency);
       formData.append("isDiscounted", data.isDiscounted.toString());
       formData.append("discountPrice", data.discountPrice.toString());
+      formData.append("isFeatured", data.isFeatured.toString());
+      formData.append("duration", data.duration);
+      formData.append("totalLectures", data.totalLectures.toString());
       formData.append("certificateAvailable", data.certificateAvailable.toString());
       if (thumbnailFile) formData.append("file", thumbnailFile);
 
@@ -151,6 +172,11 @@ const CreateCourse: React.FC = () => {
             icon={<BookOpen className="h-6 w-6" />}
           >
    <div className="grid gap-6 mb-6">
+
+
+
+
+    
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <Target className="h-4 w-4 text-primary" />
@@ -193,6 +219,43 @@ const CreateCourse: React.FC = () => {
             icon={<Settings className="h-6 w-6" />}
           >
             <div className="grid grid-cols-2 gap-8">
+
+  <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Timer className="h-4 w-4 text-primary" />
+                    <Label className="text-sm font-medium">Course Duration</Label>
+                  </div>
+                  <Input
+                    {...register("duration")}
+                    placeholder="Enter course duration (e.g., 4 weeks)"
+                    className=" border-border  focus:border-primary/50 transition-colors resize-none"
+                  />
+                </div>
+
+
+  <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <List className="h-4 w-4 text-primary" />
+                    <Label className="text-sm font-medium">Total Lectures</Label>
+                  </div>
+                              <Input
+                  {...register("totalLectures", { required: true })}
+                  placeholder="Enter total number of lectures"
+                  type="number"
+                  className="h-12 border-border focus:border-primary/50 transition-colors"
+                />
+                </div>
+
+
+
+
+
+
+         
+
+
+
+
               <Controller
                 name="level"
                 control={control}
@@ -237,6 +300,32 @@ const CreateCourse: React.FC = () => {
                   </div>
                 )}
               />
+
+
+
+
+<div className="flex items-center gap-4">
+  <Controller
+    name="isFeatured"
+    control={control}
+    render={({ field }) => (
+      <Checkbox
+        id="isFeatured"
+        checked={field.value}
+        onCheckedChange={field.onChange}
+        className="data-[state=checked]:bg-primary bg-gray-300 data-[state=checked]:border-primary"
+      />
+    )}
+  />
+  <Label htmlFor="isFeatured" className="text-sm font-medium cursor-pointer flex items-center gap-2">
+    <Sparkles className="h-4 w-4 text-primary" />
+    Feature this course
+  </Label>
+</div>
+
+
+
+
             </div>
           </FormSection>
 
@@ -298,6 +387,19 @@ const CreateCourse: React.FC = () => {
                 fieldArray={reqFieldArray}
                 register={register}
                 fieldName="requirements"
+              />
+            </FormSection>
+            <FormSection
+              title="Resources"
+              description="What resources students will get?"
+              icon={<Copy className="h-6 w-6" />}
+            >
+              <FieldArray
+                label="resources"
+                placeholder="e.g., Doc Video premium access"
+                fieldArray={resourcesFieldArray}
+                register={register}
+                fieldName="resources"
               />
             </FormSection>
           </div>

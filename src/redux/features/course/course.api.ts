@@ -15,6 +15,7 @@ export const courseApi = baseApi.injectEndpoints({
     // Get all courses
     getAllCourses: builder.query({
       query: (params) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const queryParams = new URLSearchParams(params as any).toString();
         return {
           url: `/course?${queryParams}`,
@@ -26,9 +27,9 @@ export const courseApi = baseApi.injectEndpoints({
 
 
     // Get single course
-    getCourseById: builder.query({
-      query: (id) => ({
-        url: `/course/${id}`,
+    getCourseBySlug: builder.query({
+      query: (slug) => ({
+        url: `/course/${slug}`,
         method: "GET",
       }),
       providesTags: ["COURSE"],
@@ -58,7 +59,7 @@ export const courseApi = baseApi.injectEndpoints({
 export const {
   useCreateCourseMutation,
   useGetAllCoursesQuery,
-  useGetCourseByIdQuery,
+  useGetCourseBySlugQuery,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
 } = courseApi;

@@ -18,6 +18,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
+import UpdateCourse from "./dialogs/UpdateCourse";
 
 interface Course {
   _id: string;
@@ -52,14 +53,20 @@ export function CourseTable({
   onPageChange,
 }: CourseTableProps) {
   const [currentPage, setCurrentPage] = useState(meta.page || 1);
-
   const totalPages = Math.ceil(meta.total / meta.limit);
+  const [updateOpen,setUpdateOpen]=useState(false)
+  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     onPageChange?.(page);
   };
 
+
+  const onUpdate =(id:string)=>{
+    setUpdateOpen(true);
+    setSelectedCourseId(id);
+  }
   return (
     <div className="w-full space-y-4">
       {/* Table */}
@@ -136,7 +143,7 @@ export function CourseTable({
                   <TableCell>{course.totalEnrolled}</TableCell>
                   <TableCell>{course.averageRating.toFixed(1)}</TableCell>
                   <TableCell className="text-right space-x-2">
-                    <Button size="sm" variant="outline">
+                    <Button type="button" onClick={() => onUpdate(course._id)} size="sm" variant="outline">
                       Edit
                     </Button>
                     <Button size="sm" variant="destructive">
@@ -155,6 +162,14 @@ export function CourseTable({
           </TableBody>
         </Table>
       </div>
+
+
+
+{
+  updateOpen && <UpdateCourse onClose={()=>setUpdateOpen(false)} courseId={selectedCourseId} open={updateOpen} />
+}
+
+
 
       {/* Pagination */}
       {totalPages > 1 && (

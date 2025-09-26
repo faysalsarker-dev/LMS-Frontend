@@ -1,134 +1,107 @@
-import Courses from '@/pages/course/Courses';
-import Home  from '../pages/home/Home';
-import CourseDetails from '@/pages/course/CourseDetails';
-import Contact from '@/pages/abouts/Contact';
-import About from '@/pages/abouts/About';
-import Dashboard from '@/pages/Student/Dashboard';
-import Profile from '@/pages/Student/Profile';
-import { CoursePlayer } from '@/pages/Student/course/CoursePlayer';
-import OtpVerify from '@/pages/auth/OtpVerify';
-import ForgotPassword from '@/pages/auth/ForgotPassword';
-import ResetPassword from '@/pages/auth/ResetPassword';
-import AdminDashboard from '@/pages/admin/Dashboard';
-import Users from '@/pages/admin/Users';
-import CreateCourse from '@/pages/admin/CreateCourse';
-import AllCourses from '@/pages/admin/AllCourses';
-import MilestoneDashboardPage from '@/pages/admin/Milestone';
-import AdminDashboardTest from './../pages/test/AdminDashboard';
+import { lazy } from "react";
+import {
+  LayoutDashboard,
+  Users as UsersIcon,
+  BookOpen,
+  Layers,
+  Flag,
+  TestTube,
+} from "lucide-react";
 
+// ✅ Lazy loaded pages
+const Home = lazy(() => import("@/pages/home/Home"));
+const Courses = lazy(() => import("@/pages/course/Courses"));
+const CourseDetails = lazy(() => import("@/pages/course/CourseDetails"));
+const Contact = lazy(() => import("@/pages/abouts/Contact"));
+const About = lazy(() => import("@/pages/abouts/About"));
+
+const Dashboard = lazy(() => import("@/pages/Student/Dashboard"));
+const Profile = lazy(() => import("@/pages/Student/Profile"));
+const CoursePlayer = lazy(() =>
+  import("@/pages/Student/course/CoursePlayer").then((m) => ({
+    default: m.CoursePlayer,
+  }))
+);
+
+const OtpVerify = lazy(() => import("@/pages/auth/OtpVerify"));
+const ForgotPassword = lazy(() => import("@/pages/auth/ForgotPassword"));
+const ResetPassword = lazy(() => import("@/pages/auth/ResetPassword"));
+
+const AdminDashboard = lazy(() => import("@/pages/admin/Dashboard"));
+const Users = lazy(() => import("@/pages/admin/Users"));
+const CreateCourse = lazy(() => import("@/pages/admin/CreateCourse"));
+const AllCourses = lazy(() => import("@/pages/admin/AllCourses"));
+const MilestoneDashboardPage = lazy(() => import("@/pages/admin/Milestone"));
+const AdminDashboardTest = lazy(() => import("@/pages/test/AdminDashboard"));
+
+// 🌍 Public routes
 export const publicRoutes = [
-  {
-    Component: Home,
-    path: '/',
-    name: 'Home'
-  },
-  {
-      Component: Courses,
-    path: '/courses',
-    name: 'Courses'
-  },
-  {
-      Component: CourseDetails,
-    path: '/courses/:slug',
-    name: 'Courses'
-  },
-  {
-      Component: Contact,
-    path: '/contact',
-    name: 'Contact'
-  },
-  {
-      Component: About,
-    path: '/about',
-    name: 'About'
-  },
-
+  { Component: Home, path: "/", name: "Home" },
+  { Component: Courses, path: "/courses", name: "Courses" },
+  { Component: CourseDetails, path: "/courses/:slug", name: "Course Details" },
+  { Component: Contact, path: "/contact", name: "Contact" },
+  { Component: About, path: "/about", name: "About" },
 ];
 
-
+// 🔑 Admin routes (with icons)
 export const adminRoutes = [
-
-
   {
-      Component: AdminDashboard,
-    path: '/dashboard',
-    name: 'Dashboard'
+    Component: AdminDashboard,
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: LayoutDashboard,
   },
   {
-      Component: Users,
-    path: '/dashboard/users',
-    name: 'Users'
+    Component: Users,
+    path: "/dashboard/users",
+    name: "User Management",
+    icon: UsersIcon,
   },
   {
-      Component: CreateCourse,
-    path: '/dashboard/Coures',
-    name: 'Coures'
+    Component: CreateCourse,
+    path: "/dashboard/course/create",
+    name: "Create Course",
+    icon: BookOpen,
   },
   {
-      Component: AllCourses,
-    path: '/dashboard/all-courese',
-    name: 'Coures'
+    Component: AllCourses,
+    path: "/dashboard/courses",
+    name: "All Courses",
+    icon: Layers,
   },
   {
-      Component: MilestoneDashboardPage,
-    path: '/dashboard/miletsone',
-    name: 'Coures'
+    Component: MilestoneDashboardPage,
+    path: "/dashboard/milestone",
+    name: "Milestones",
+    icon: Flag,
   },
   {
-      Component: AdminDashboardTest,
-    path: '/dashboard/testing',
-    name: 'Coures'
+    Component: AdminDashboardTest,
+    path: "/dashboard/testing",
+    name: "Testing",
+    icon: TestTube,
   },
-
-
-  
-
 ];
+
+// 🕶 Invisible routes
 export const invisibleRoutes = [
-
   {
-      Component: CourseDetails,
-    path: '/courses/:slug',
-    name: 'Courses'
+    Component: CourseDetails,
+    path: "/courses/:slug",
+    name: "Course Details",
   },
-  {
-      Component: OtpVerify,
-    path: '/verify-account/:email',
-    name: 'Courses'
-  },
-  {
-      Component: ForgotPassword,
-    path: '/forget-password',
-    name: 'Courses'
-  },
-  {
-      Component: ResetPassword,
-    path: '/reset-password',
-    name: 'Courses'
-  },
-
-  
-
+  { Component: OtpVerify, path: "/verify-account/:email", name: "Verify Account" },
+  { Component: ForgotPassword, path: "/forget-password", name: "Forgot Password" },
+  { Component: ResetPassword, path: "/reset-password", name: "Reset Password" },
 ];
 
+// 🎓 Student routes
 export const studentRoutes = [
-
   {
-      Component: Dashboard,
-    path: '/dashboard/attention',
-    name: 'Courses'
+    Component: Dashboard,
+    path: "/dashboard/attention",
+    name: "Student Dashboard",
   },
-  {
-      Component: Profile,
-    path: '/dashboard/profile',
-    name: 'Profile'
-  },
-  {
-      Component: CoursePlayer,
-    path: '/dashboard/video',
-    name: 'Profile'
-  },
-
-  
-
+  { Component: Profile, path: "/dashboard/profile", name: "Profile" },
+  { Component: CoursePlayer, path: "/dashboard/video", name: "Course Player" },
 ];
