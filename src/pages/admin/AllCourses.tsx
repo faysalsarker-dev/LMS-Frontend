@@ -44,7 +44,7 @@ const AllCourses = () => {
   });
 
 
-
+console.log(data);
   const handleReset = () => {
     setStatus(undefined);
     setLevel(undefined);

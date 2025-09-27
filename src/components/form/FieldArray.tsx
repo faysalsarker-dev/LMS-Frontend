@@ -27,7 +27,6 @@ export function FieldArray<T extends FieldValues>({
   defaultValue = { value: "" },
 }: FieldArrayProps<T>) {
   const { fields, append, remove } = fieldArray;
-console.log(fields,fieldName);
   return (
     <div className={cn("space-y-6", className)}>
       {/* Header */}

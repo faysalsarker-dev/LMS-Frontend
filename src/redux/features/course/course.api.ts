@@ -36,14 +36,15 @@ export const courseApi = baseApi.injectEndpoints({
     }),
 
     // Update course
-    updateCourse: builder.mutation({
-      query: ({ id, formData }) => ({
-        url: `/course/${id}`,
-        method: "PUT",
-        data: formData,    
-      }),
-      invalidatesTags: ["COURSE"],
-    }),
+updateCourse: builder.mutation({
+  query: ({ courseId, formData }) => ({
+    url: `/course/${courseId}`,
+    method: "PUT",
+    data: formData,
+  }),
+  invalidatesTags: ["COURSE"],
+}),
+
 
     // Delete course
     deleteCourse: builder.mutation({

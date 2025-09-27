@@ -7,10 +7,10 @@ import {
   Flag,
   TestTube,
 } from "lucide-react";
+import Home from "@/pages/home/Home";
+import Courses from "@/pages/course/Courses";
 
 // ✅ Lazy loaded pages
-const Home = lazy(() => import("@/pages/home/Home"));
-const Courses = lazy(() => import("@/pages/course/Courses"));
 const CourseDetails = lazy(() => import("@/pages/course/CourseDetails"));
 const Contact = lazy(() => import("@/pages/abouts/Contact"));
 const About = lazy(() => import("@/pages/abouts/About"));

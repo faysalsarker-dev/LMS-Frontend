@@ -70,7 +70,7 @@ export interface ICourse  {
   averageRating: number;
   totalEnrolled: number;
   enrolledStudents:[];
-  totalDuration: number; 
+  duration: string; 
   totalLectures: number;
   certificateAvailable: boolean;
   resources: string[]; 

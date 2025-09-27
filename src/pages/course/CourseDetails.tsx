@@ -1,7 +1,10 @@
-import { Link } from 'react-router'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { motion } from "framer-motion";
+import { Link, useParams } from "react-router";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import {
   Clock,
   Download,
@@ -10,339 +13,514 @@ import {
   CheckCircle,
   PlayCircle,
   Star,
-} from 'lucide-react'
-import { mockCourses } from '@/data/mockData'
+  Users,
+  BookOpen,
+  ArrowLeft,
+  Shield,
+  Smartphone,
+  Monitor,
+  Crown,
+  Calendar
+} from "lucide-react";
+import { useState, memo } from "react";
+import type { ICourse } from "@/interface";
+import { useGetCourseBySlugQuery } from "@/redux/features/course/course.api";
 
-const CourseDetails = () => {
-  const id = '1'
-  const course = mockCourses.find((c) => c.id === id)
+// // Mock API call - replace with your actual API
+// const useGetCourseBySlugQuery = (slug: string) => {
+//   const mockCourse: ICourse = {
+//     title: "Complete React Development Course 2024",
+//     description: "Master React from beginner to advanced level with hands-on projects, hooks, context, and modern development practices.",
+//     slug,
+//     thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop&crop=top",
+//     instructor: { name: "Sarah Johnson", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face" },
+//     averageRating: 4.8,
+//     totalEnrolled: 12420,
+//     level: "Intermediate",
+//     duration: "42 hours",
+//     totalLectures: 156,
+//     price: 89,
+//     discountPrice: 39,
+//     isDiscounted: true,
+//     currency: "USD",
+//     isFeatured: true,
+//     certificateAvailable: true,
+//     skills: [
+//       "React Hooks & Context API",
+//       "Component Architecture",
+//       "State Management with Redux",
+//       "Testing with Jest & React Testing Library",
+//       "Performance Optimization",
+//       "Modern JavaScript ES6+",
+//       "API Integration & Async Programming",
+//       "Deployment & Production Best Practices"
+//     ],
+//     requirements: [
+//       "Basic knowledge of HTML, CSS, and JavaScript",
+//       "Familiarity with ES6+ JavaScript features",
+//       "A computer with internet connection",
+//       "Code editor (VS Code recommended)"
+//     ],
+//     prerequisites: [
+//       "6 months of JavaScript experience",
+//       "Understanding of DOM manipulation",
+//       "Basic Git knowledge"
+//     ],
+//     resources: [
+//       "Source code for all projects",
+//       "Downloadable lecture notes",
+//       "Bonus materials and cheat sheets",
+//       "Community access and support"
+//     ]
+//   };
+  
+//   return { data: { data: mockCourse }, isLoading: false, error: null };
+// };
 
-  if (!course) {
+const CourseDetails = memo(() => {
+  const { slug } = useParams<{ slug: string }>();
+  const { data, isLoading, error } = useGetCourseBySlugQuery(slug!);
+  const [activeTab, setActiveTab] = useState("overview");
+
+  const course = data?.data;
+console.log(data);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring" as const,
+        stiffness: 300,
+        damping: 30
+      }
+    }
+  };
+
+  const heroVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        type: "spring" as const,
+        stiffness: 200,
+        damping: 20,
+        duration: 0.6
+      }
+    }
+  };
+
+  if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold mb-4">Course not found</h1>
-        <Link to="/courses">
-          <Button>Back to Courses</Button>
-        </Link>
-      </div>
-    )
-  }
-
-  const curriculum = [
-    {
-      title: 'Getting Started',
-      lessons: [
-        { title: 'Course Introduction', duration: '5:30', type: 'video' as const },
-        { title: 'Setup Development Environment', duration: '12:45', type: 'video' as const },
-        { title: 'Course Resources', duration: '3:20', type: 'reading' as const },
-      ],
-    },
-    {
-      title: 'Fundamentals',
-      lessons: [
-        { title: 'Understanding the Basics', duration: '18:30', type: 'video' as const },
-        { title: 'Hands-on Practice', duration: '25:15', type: 'video' as const },
-        { title: 'Knowledge Check', duration: '10:00', type: 'quiz' as const },
-      ],
-    },
-    {
-      title: 'Advanced Concepts',
-      lessons: [
-        { title: 'Deep Dive into Advanced Topics', duration: '32:45', type: 'video' as const },
-        { title: 'Real-world Project', duration: '45:20', type: 'video' as const },
-        { title: 'Final Assessment', duration: '15:00', type: 'quiz' as const },
-      ],
-    },
-  ]
-
-  const reviews = [
-    {
-      name: 'Sarah Johnson',
-      rating: 5,
-      date: '2 weeks ago',
-      comment:
-        'Excellent course! Very well structured and easy to follow. The instructor explains everything clearly.',
-    },
-    {
-      name: 'Mike Chen',
-      rating: 5,
-      date: '1 month ago',
-      comment:
-        'This course exceeded my expectations. Great practical examples and real-world applications.',
-    },
-    {
-      name: 'Emily Rodriguez',
-      rating: 4,
-      date: '2 months ago',
-      comment:
-        'Good course overall. Could use more advanced topics but great for beginners.',
-    },
-  ]
-
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-primary/90 to-primary-dark/90 text-white p-10"
-      >
-
-
-
-        <div className="rounded-lg bg-card p-4 container mx-auto px-4 grid lg:grid-cols-2 gap-10 items-center text-black ">
-          {/* Left Content */}
-          <div>
-            <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
-              {course.title}
-            </h1>
-            <p className="mt-4 text-lg text-muted-foreground/90">
-              {course.description}
-            </p>
-
-            <div className="mt-6 flex flex-wrap items-center gap-6 text-sm">
-              <div>
-                ⭐ <span className="font-semibold">{course.rating}</span> rating
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <div className="container mx-auto px-4 py-20">
+          <div className="animate-pulse space-y-8">
+            <div className="h-64 bg-gray-200 rounded-2xl" />
+            <div className="grid lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 space-y-4">
+                <div className="h-8 bg-gray-200 rounded w-1/3" />
+                <div className="h-32 bg-gray-200 rounded" />
               </div>
-              <div>{course.level}</div>
-              <div>{course.duration} of content</div>
+              <div className="h-96 bg-gray-200 rounded-2xl" />
             </div>
-
-            <div className="mt-6 flex items-center gap-6">
-              <Button size="lg" className="rounded-full px-8">
-                Enroll Now
-              </Button>
-              <span className="text-xl font-bold">${course.price}</span>
-            </div>
-          </div>
-
-          {/* Right Thumbnail */}
-          <div className="relative rounded-xl overflow-hidden shadow-xl">
-            <img
-              src={course.image}
-              alt={course.title}
-              className="w-full h-full object-cover"
-            />
           </div>
         </div>
-      </section>
+      </div>
+    );
+  }
 
-      {/* Main Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 grid lg:grid-cols-3 gap-8">
-          {/* Left Tabs */}
-          <div className="lg:col-span-2">
-            <Tabs defaultValue="overview" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 rounded-lg">
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
-                <TabsTrigger value="reviews">Reviews</TabsTrigger>
-              </TabsList>
+  if (!course || error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center p-8"
+        >
+          <h1 className="text-3xl font-bold mb-4 text-foreground">Course Not Found</h1>
+          <p className="text-muted-foreground mb-6">The course you're looking for doesn't exist or has been removed.</p>
+          <Link to="/courses">
+            <Button className="bg-gradient-primary">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Courses
+            </Button>
+          </Link>
+        </motion.div>
+      </div>
+    );
+  }
 
-              {/* Overview */}
-              <TabsContent value="overview" className="mt-6 space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>What you'll learn</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      {[
-                        'Master the fundamentals',
-                        'Build real-world projects',
-                        'Industry best practices',
-                        'Advanced techniques',
-                        'Professional workflow',
-                        'Portfolio development',
-                      ].map((item, index) => (
-                        <div key={index} className="flex items-center gap-3">
-                          <CheckCircle className="h-5 w-5 text-green-500" />
-                          <span>{item}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+  const finalPrice = course.isDiscounted ? course.discountPrice : course.price;
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Requirements</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2 text-muted-foreground">
-                      <li>• No prior experience required</li>
-                      <li>• Computer with internet connection</li>
-                      <li>• Willingness to learn and practice</li>
-                    </ul>
-                  </CardContent>
-                </Card>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      {/* Hero Section */}
+      <motion.section 
+        className="relative py-12 lg:py-20"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="container mx-auto px-4">
+          <motion.div variants={heroVariants}>
+            <Card className="overflow-hidden bg-gradient-card backdrop-blur-glass border-glass shadow-glass">
+              <CardContent className="p-0">
+                <div className="grid lg:grid-cols-2 gap-0">
+                  {/* Left Content */}
+                  <div className="p-8 lg:p-12 flex flex-col justify-center">
+                    <motion.div variants={itemVariants}>
+                      <Link to="/courses" className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors mb-6 group">
+                        <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                        Back to Courses
+                      </Link>
+                    </motion.div>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Description</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">
-                      This comprehensive course is designed to take you from
-                      beginner to advanced. Learn through hands-on projects and
-                      real-world examples that will help you build a strong
-                      foundation and practical skills.
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed mt-4">
-                      Our experienced instructor guides you with clear
-                      explanations and practical demos. By the end, you’ll have
-                      the confidence to tackle real-world challenges.
-                    </p>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              {/* Curriculum */}
-              <TabsContent value="curriculum" className="mt-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Course Curriculum</CardTitle>
-                    <p className="text-muted-foreground text-sm">
-                      {curriculum.reduce(
-                        (acc, section) => acc + section.lessons.length,
-                        0,
-                      )}{' '}
-                      lectures • {course.duration} total length
-                    </p>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {curriculum.map((section, sectionIndex) => (
-                      <div
-                        key={sectionIndex}
-                        className="border rounded-lg p-4 bg-muted/30"
-                      >
-                        <h3 className="font-semibold mb-3">{section.title}</h3>
-                        <div className="space-y-2">
-                          {section.lessons.map((lesson, lessonIndex) => (
-                            <div
-                              key={lessonIndex}
-                              className="flex items-center justify-between py-2 px-3 hover:bg-muted/50 rounded"
-                            >
-                              <div className="flex items-center gap-3">
-                                {lesson.type === 'video' ? (
-                                  <PlayCircle className="h-4 w-4 text-primary" />
-                                ) : lesson.type === 'quiz' ? (
-                                  <CheckCircle className="h-4 w-4 text-secondary" />
-                                ) : (
-                                  <Clock className="h-4 w-4 text-muted-foreground" />
-                                )}
-                                <span className="text-sm">{lesson.title}</span>
-                              </div>
-                              <span className="text-xs text-muted-foreground">
-                                {lesson.duration}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
+                    <motion.div variants={itemVariants} className="space-y-6">
+                      {/* Badges */}
+                      <div className="flex flex-wrap gap-2">
+                        <Badge className="bg-gradient-to-r from-primary/20 to-primary-glow/20 text-primary border-primary/30">
+                          {course.level}
+                        </Badge>
+                        {course.isFeatured && (
+                          <Badge className="bg-gradient-to-r from-amber-400/20 to-orange-400/20 text-amber-700 border-amber-200/50">
+                            <Crown className="mr-1 h-3 w-3" />
+                            Featured
+                          </Badge>
+                        )}
                       </div>
-                    ))}
-                  </CardContent>
-                </Card>
-              </TabsContent>
 
-              {/* Reviews */}
-              <TabsContent value="reviews" className="mt-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Student Reviews</CardTitle>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="flex items-center gap-1 text-yellow-500">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star key={star} className="h-5 w-5 fill-current" />
-                        ))}
-                      </div>
-                      <span className="font-semibold">{course.rating}</span>
-                      <span className="text-muted-foreground text-sm">
-                        ({course.students.toLocaleString()} students)
-                      </span>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    {reviews.map((review, index) => (
-                      <div
-                        key={index}
-                        className="border-b pb-6 last:border-b-0"
-                      >
-                        <div className="flex items-start gap-4">
-                          <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-                            <span className="text-primary font-semibold text-sm">
-                              {review.name.charAt(0)}
-                            </span>
+                      {/* Title */}
+                      <h1 className="text-3xl lg:text-4xl font-bold leading-tight text-foreground">
+                        {course.title}
+                      </h1>
+                      
+                      {/* Description */}
+                      <p className="text-lg text-muted-foreground leading-relaxed">
+                        {course.description}
+                      </p>
+
+                      {/* Stats */}
+                      <div className="flex flex-wrap items-center gap-6 text-sm">
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                            <span className="font-bold text-foreground">{course.averageRating}</span>
                           </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-semibold">
-                                {review.name}
-                              </span>
-                              <div className="flex items-center gap-1">
-                                {[1, 2, 3, 4, 5].map((star) => (
-                                  <Star
-                                    key={star}
-                                    className={`h-3 w-3 ${
-                                      star <= review.rating
-                                        ? 'fill-current text-yellow-500'
-                                        : 'text-gray-300'
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                              <span className="text-xs text-muted-foreground">
-                                {review.date}
-                              </span>
-                            </div>
-                            <p className="text-muted-foreground text-sm">
-                              {review.comment}
-                            </p>
-                          </div>
+                          <span className="text-muted-foreground">({course.totalEnrolled.toLocaleString()} students)</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-blue-500" />
+                          <span>{course.duration}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <BookOpen className="w-4 h-4 text-emerald-500" />
+                          <span>{course.totalLectures} lectures</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-4 h-4 text-violet-500" />
+                          <span>Last updated 2024</span>
                         </div>
                       </div>
-                    ))}
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
 
-          {/* Right Sidebar */}
-          <div className="hidden lg:block">
-            <Card className="sticky top-24 shadow-xl">
-              <CardContent className="p-6 space-y-4">
-                <div className="relative rounded-lg overflow-hidden">
-                  <img
-                    src={course.image}
-                    alt={course.title}
-                    className="w-full h-48 object-cover"
-                  />
-                </div>
-                <h3 className="text-xl font-bold">${course.price}</h3>
-                <Button className="w-full rounded-full">Enroll Now</Button>
-                <div className="space-y-3 pt-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-primary" />
-                    {course.duration} on-demand video
+                      {/* Price & CTA */}
+                      <div className="flex flex-wrap items-center gap-6 pt-4">
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Button size="lg" className="bg-gradient-primary text-primary-foreground px-8 py-3 text-lg font-semibold">
+                            Enroll Now
+                          </Button>
+                        </motion.div>
+                        
+                        <div className="flex items-center gap-3">
+                          {course.isDiscounted ? (
+                            <>
+                              <span className="text-3xl font-bold text-primary">${finalPrice}</span>
+                              <span className="text-xl text-muted-foreground line-through">${course.price}</span>
+                              <Badge variant="destructive" className="animate-pulse">
+                                {Math.round((1 - finalPrice / course.price) * 100)}% OFF
+                              </Badge>
+                            </>
+                          ) : (
+                            <span className="text-3xl font-bold text-foreground">${course.price}</span>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Download className="h-5 w-5 text-primary" />
-                    Downloadable resources
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Globe className="h-5 w-5 text-primary" />
-                    Access on web and mobile
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Award className="h-5 w-5 text-primary" />
-                    Certificate of completion
-                  </div>
+
+                  {/* Right Image */}
+                  <motion.div 
+                    variants={itemVariants}
+                    className="relative overflow-hidden lg:min-h-[500px]"
+                  >
+                    <div className="relative w-full h-full bg-gradient-to-br from-gray-100 to-gray-200">
+                      <img
+                        src={course.thumbnail}
+                        alt={course.title}
+                        className="w-full h-full object-cover"
+                        loading="eager"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                      
+                      {/* Play Button Overlay */}
+                      <motion.div 
+                        className="absolute inset-0 flex items-center justify-center"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <div className="bg-white/20 backdrop-blur-sm rounded-full p-6 border border-white/30 cursor-pointer hover:bg-white/30 transition-colors">
+                          <PlayCircle className="h-12 w-12 text-white" />
+                        </div>
+                      </motion.div>
+                    </div>
+                  </motion.div>
                 </div>
               </CardContent>
             </Card>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Main Content */}
+      <section className="pb-20">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Main Content */}
+            <motion.div 
+              className="lg:col-span-2"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <motion.div variants={itemVariants}>
+                  <TabsList className="grid w-full grid-cols-2 mb-8 bg-gradient-card backdrop-blur-glass border-glass">
+                    <TabsTrigger 
+                      value="overview" 
+                      className="data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground"
+                    >
+                      Overview
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="curriculum"
+                      className="data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground"
+                    >
+                      Curriculum
+                    </TabsTrigger>
+                  </TabsList>
+                </motion.div>
+
+                <TabsContent value="overview" className="space-y-6">
+                  <motion.div variants={itemVariants}>
+                    <Card className="bg-gradient-card backdrop-blur-glass border-glass shadow-soft">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <CheckCircle className="h-5 w-5 text-emerald-500" />
+                          What You'll Learn
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          {course.skills?.map((skill: string, index: number) => (
+                            <motion.div 
+                              key={index}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.1 }}
+                              className="flex items-start gap-3 p-3 rounded-lg bg-gradient-glass border border-glass"
+                            >
+                              <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                              <span className="text-sm">{skill}</span>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+
+                  <motion.div variants={itemVariants}>
+                    <Card className="bg-gradient-card backdrop-blur-glass border-glass shadow-soft">
+                      <CardHeader>
+                        <CardTitle>Course Requirements</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <ul className="space-y-3">
+                          {course.requirements?.map((req: string, index: number) => (
+                            <motion.li 
+                              key={index}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.1 }}
+                              className="flex items-start gap-3 text-muted-foreground"
+                            >
+                              <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2.5 flex-shrink-0" />
+                              {req}
+                            </motion.li>
+                          ))}
+                        </ul>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+
+                  <motion.div variants={itemVariants}>
+                    <Card className="bg-gradient-card backdrop-blur-glass border-glass shadow-soft">
+                      <CardHeader>
+                        <CardTitle>Prerequisites</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <ul className="space-y-3">
+                          {course.prerequisites?.map((pre: string, index: number) => (
+                            <motion.li 
+                              key={index}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.1 }}
+                              className="flex items-start gap-3 text-muted-foreground"
+                            >
+                              <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2.5 flex-shrink-0" />
+                              {pre}
+                            </motion.li>
+                          ))}
+                        </ul>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </TabsContent>
+
+                <TabsContent value="curriculum">
+                  <motion.div variants={itemVariants}>
+                    <Card className="bg-gradient-card backdrop-blur-glass border-glass shadow-soft">
+                      <CardHeader>
+                        <CardTitle>Course Curriculum</CardTitle>
+                        <p className="text-muted-foreground">
+                          {course.totalLectures} lectures • {course.duration} total length
+                        </p>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-center py-12 text-muted-foreground">
+                          <BookOpen className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                          <p>Curriculum details will be available soon.</p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </TabsContent>
+              </Tabs>
+            </motion.div>
+
+            {/* Sidebar */}
+            <motion.div 
+              className="lg:col-span-1"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div variants={itemVariants} className="sticky top-24">
+                <Card className="bg-gradient-card backdrop-blur-glass border-glass shadow-glass overflow-hidden">
+                  <CardContent className="p-0">
+                    {/* Course Image */}
+                    <div className="relative aspect-video">
+                      <img
+                        src={course.thumbnail}
+                        alt={course.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <div className="text-white">
+                          <p className="text-sm opacity-90">Preview this course</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-6 space-y-6">
+                      {/* Price */}
+                      <div className="text-center">
+                        {course.isDiscounted ? (
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-center gap-2">
+                              <span className="text-3xl font-bold text-primary">${finalPrice}</span>
+                              <span className="text-lg text-muted-foreground line-through">${course.price}</span>
+                            </div>
+                            <Badge variant="destructive" className="animate-pulse">
+                              Limited Time Offer
+                            </Badge>
+                          </div>
+                        ) : (
+                          <span className="text-3xl font-bold">${course.price}</span>
+                        )}
+                      </div>
+
+                      {/* CTA Button */}
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Button className="w-full bg-gradient-primary text-primary-foreground py-3 text-lg font-semibold">
+                          Enroll Now
+                        </Button>
+                      </motion.div>
+
+                      <Separator />
+
+                      {/* Course Features */}
+                      <div className="space-y-4">
+                        <h4 className="font-semibold text-foreground">This course includes:</h4>
+                        <div className="space-y-3 text-sm">
+                          <div className="flex items-center gap-3">
+                            <Clock className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                            <span>{course.duration} on-demand video</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Download className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                            <span>{course.resources?.length || 0} downloadable resources</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Smartphone className="h-4 w-4 text-purple-500 flex-shrink-0" />
+                            <span>Access on mobile and TV</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Globe className="h-4 w-4 text-cyan-500 flex-shrink-0" />
+                            <span>Access anywhere, anytime</span>
+                          </div>
+                          {course.certificateAvailable && (
+                            <div className="flex items-center gap-3">
+                              <Award className="h-4 w-4 text-amber-500 flex-shrink-0" />
+                              <span>Certificate of completion</span>
+                            </div>
+                          )}
+                          <div className="flex items-center gap-3">
+                            <Shield className="h-4 w-4 text-red-500 flex-shrink-0" />
+                            <span>30-day money-back guarantee</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </section>
     </div>
-  )
-}
+  );
+});
 
-export default CourseDetails
+CourseDetails.displayName = 'CourseDetails';
+
+export default CourseDetails;

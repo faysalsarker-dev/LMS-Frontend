@@ -1,7 +1,7 @@
 
 
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, User, Mail, Shield, Lock, Phone } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import type { IUser } from "@/interface";
+import { useUpdateMutation } from "@/redux/features/auth/auth.api";
 
 interface UserDialogProps {
   open: boolean;
@@ -36,7 +37,7 @@ type FormData = {
 }
 
 export default function UserDialog({ open, onOpenChange, onSuccess, mode = "create", user ,isLoading }: UserDialogProps) {
-
+const [update]=useUpdateMutation();
   const {
     register,
     handleSubmit,
@@ -60,7 +61,6 @@ export default function UserDialog({ open, onOpenChange, onSuccess, mode = "crea
   const selectedRole = watch("role");
   const isUpdate = mode === "update";
 
-  // Reset form when user changes or dialog opens/closes
   useEffect(() => {
     if (open) {
       if (user && isUpdate) {
@@ -101,8 +101,7 @@ export default function UserDialog({ open, onOpenChange, onSuccess, mode = "crea
         ...(isUpdate ? {} : { password: data.password }),
       };
 
-      // Handle form submission here
-      console.log("Form data:", payload);
+      await update({id:user?._id||"",payload}).unwrap();
 
       onSuccess();
       onOpenChange(false);

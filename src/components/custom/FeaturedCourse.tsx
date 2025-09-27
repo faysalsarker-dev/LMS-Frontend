@@ -3,7 +3,10 @@ import  CourseCard  from '@/components/custom/CourseCard';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
 const FeaturedCourse = () => {
+  const {data }= useGetAllCoursesQuery({limit:3, page:1,isFeatured:true});
+  const FeaturedCourse   = data?.data?.data || [];
     return (
             <section className="py-20">
         <div className="container mx-auto px-4">
@@ -15,8 +18,8 @@ const FeaturedCourse = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {[1,2,3,4].map((course) => (
-             <CourseCard key={course} />
+            {FeaturedCourse?.map((course) => (
+             <CourseCard key={course._id} course={course} />
             ))}
           </div>
 

@@ -125,25 +125,56 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
     }
   }, [course, reset]);
 
-  const onSubmit = async (data: FormValues) => {
-    try {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          formData.append(key, JSON.stringify(value.map((v) => v.value)));
-        } else {
-          formData.append(key, String(value));
-        }
-      });
+const onSubmit = async (data: FormValues) => {
+  try {
+    const formData = new FormData();
+      formData.append("title", String(data.title));
+      formData.append("description", String(data.description));
+      formData.append(
+        "tags",
+        JSON.stringify(data.tags.map((t) => t.value).filter(Boolean))
+      );
+      formData.append(
+        "skills",
+        JSON.stringify(data.skills.map((s) => s.value).filter(Boolean))
+      );
+      formData.append("level", data.level);
+      formData.append("status", data.status);
+      formData.append(
+        "prerequisites",
+        JSON.stringify(data.prerequisites.map((p) => p.value).filter(Boolean))
+      );
+      formData.append(
+        "requirements",
+        JSON.stringify(data.requirements.map((r) => r.value).filter(Boolean))
+      );
+      formData.append(
+        "resources",
+        JSON.stringify(data.resources.map((r) => r.value).filter(Boolean))
+      );
+      formData.append("price", data.price.toString());
+      formData.append("currency", data.currency);
+      formData.append("isDiscounted", data.isDiscounted.toString());
+      formData.append("discountPrice", data.discountPrice.toString());
+      formData.append("isFeatured", data.isFeatured.toString());
+      formData.append("duration", data.duration);
+      formData.append("totalLectures", data.totalLectures.toString());
+      formData.append("certificateAvailable", data.certificateAvailable.toString());
       if (thumbnailFile) formData.append("file", thumbnailFile);
 
-      await updateCourse({ courseId, formData }).unwrap();
-      toast.success("✅ Course updated successfully!");
-      onClose();
-    } catch (err) {
-      handleApiError(err);
+
+    // ✅ Debug log
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
     }
-  };
+
+    await updateCourse({ courseId, formData }).unwrap();
+    toast.success("✅ Course updated successfully!");
+    onClose();
+  } catch (err) {
+    handleApiError(err);
+  }
+};
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
