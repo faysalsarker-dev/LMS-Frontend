@@ -102,51 +102,47 @@ defaultValues: {
 
   const isDiscounted = watch("isDiscounted");
 
-  const onSubmit = async (data: FormValues) => {
-    try {
-      const formData = new FormData();
-      formData.append("title", String(data.title));
-      formData.append("description", String(data.description));
-      formData.append(
-        "tags",
-        JSON.stringify(data.tags.map((t) => t.value).filter(Boolean))
-      );
-      formData.append(
-        "skills",
-        JSON.stringify(data.skills.map((s) => s.value).filter(Boolean))
-      );
-      formData.append("level", data.level);
-      formData.append("status", data.status);
-      formData.append(
-        "prerequisites",
-        JSON.stringify(data.prerequisites.map((p) => p.value).filter(Boolean))
-      );
-      formData.append(
-        "requirements",
-        JSON.stringify(data.requirements.map((r) => r.value).filter(Boolean))
-      );
-      formData.append(
-        "resources",
-        JSON.stringify(data.resources.map((r) => r.value).filter(Boolean))
-      );
-      formData.append("price", data.price.toString());
-      formData.append("currency", data.currency);
-      formData.append("isDiscounted", data.isDiscounted.toString());
-      formData.append("discountPrice", data.discountPrice.toString());
-      formData.append("isFeatured", data.isFeatured.toString());
-      formData.append("duration", data.duration);
-      formData.append("totalLectures", data.totalLectures.toString());
-      formData.append("certificateAvailable", data.certificateAvailable.toString());
-      if (thumbnailFile) formData.append("file", thumbnailFile);
+ const onSubmit = async (data: FormValues) => {
+  try {
+    const formData = new FormData();
 
-      await createCourse(formData);
-      toast.success("✨ Course created successfully!");
-      reset();
-      setThumbnailFile(null);
-    } catch (err) {
-      handleApiError(err);
+    formData.append("title", String(data.title));
+    formData.append("description", String(data.description));
+
+    // ✅ Send arrays properly
+    data.tags.forEach(tag => formData.append("tags", tag.value));
+    data.skills.forEach(skill => formData.append("skills", skill.value));
+    data.prerequisites.forEach(prereq => formData.append("prerequisites", prereq.value));
+    data.requirements.forEach(req => formData.append("requirements", req.value));
+    data.resources.forEach(res => formData.append("resources", res.value));
+
+    formData.append("level", data.level);
+    formData.append("status", data.status);
+
+    formData.append("price", data.price.toString());
+    formData.append("currency", data.currency);
+    formData.append("isDiscounted", data.isDiscounted.toString());
+    formData.append("discountPrice", data.discountPrice.toString());
+    formData.append("isFeatured", data.isFeatured.toString());
+    formData.append("duration", data.duration);
+    formData.append("totalLectures", data.totalLectures.toString());
+    formData.append("certificateAvailable", data.certificateAvailable.toString());
+
+    if (thumbnailFile) {
+      formData.append("file", thumbnailFile);
     }
-  };
+
+    await createCourse(formData);
+
+    toast.success("✨ Course created successfully!");
+    reset();
+    setThumbnailFile(null);
+  } catch (err) {
+    handleApiError(err);
+  }
+};
+
+
 
   return (
     <div className="min-h-screen bg-gradient-surface">

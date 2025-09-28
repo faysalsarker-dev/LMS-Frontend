@@ -26,56 +26,6 @@ import { useState, memo } from "react";
 import type { ICourse } from "@/interface";
 import { useGetCourseBySlugQuery } from "@/redux/features/course/course.api";
 
-// // Mock API call - replace with your actual API
-// const useGetCourseBySlugQuery = (slug: string) => {
-//   const mockCourse: ICourse = {
-//     title: "Complete React Development Course 2024",
-//     description: "Master React from beginner to advanced level with hands-on projects, hooks, context, and modern development practices.",
-//     slug,
-//     thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop&crop=top",
-//     instructor: { name: "Sarah Johnson", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face" },
-//     averageRating: 4.8,
-//     totalEnrolled: 12420,
-//     level: "Intermediate",
-//     duration: "42 hours",
-//     totalLectures: 156,
-//     price: 89,
-//     discountPrice: 39,
-//     isDiscounted: true,
-//     currency: "USD",
-//     isFeatured: true,
-//     certificateAvailable: true,
-//     skills: [
-//       "React Hooks & Context API",
-//       "Component Architecture",
-//       "State Management with Redux",
-//       "Testing with Jest & React Testing Library",
-//       "Performance Optimization",
-//       "Modern JavaScript ES6+",
-//       "API Integration & Async Programming",
-//       "Deployment & Production Best Practices"
-//     ],
-//     requirements: [
-//       "Basic knowledge of HTML, CSS, and JavaScript",
-//       "Familiarity with ES6+ JavaScript features",
-//       "A computer with internet connection",
-//       "Code editor (VS Code recommended)"
-//     ],
-//     prerequisites: [
-//       "6 months of JavaScript experience",
-//       "Understanding of DOM manipulation",
-//       "Basic Git knowledge"
-//     ],
-//     resources: [
-//       "Source code for all projects",
-//       "Downloadable lecture notes",
-//       "Bonus materials and cheat sheets",
-//       "Community access and support"
-//     ]
-//   };
-  
-//   return { data: { data: mockCourse }, isLoading: false, error: null };
-// };
 
 const CourseDetails = memo(() => {
   const { slug } = useParams<{ slug: string }>();
@@ -83,7 +33,7 @@ const CourseDetails = memo(() => {
   const [activeTab, setActiveTab] = useState("overview");
 
   const course = data?.data;
-console.log(data);
+console.log(course);
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -168,18 +118,18 @@ console.log(data);
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       {/* Hero Section */}
       <motion.section 
-        className="relative py-12 lg:py-20"
+        className="relative"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto p-6 bg-gradient-primary">
           <motion.div variants={heroVariants}>
-            <Card className="overflow-hidden bg-gradient-card backdrop-blur-glass border-glass shadow-glass">
+            <Card className="p-0 overflow-hidden bg-gradient-card backdrop-blur-glass border-glass shadow-glass">
               <CardContent className="p-0">
-                <div className="grid lg:grid-cols-2 gap-0">
+                <div className="grid lg:grid-cols-2  gap-0">
                   {/* Left Content */}
-                  <div className="p-8 lg:p-12 flex flex-col justify-center">
+                  <div className="p-8 lg:p-12 flex flex-col justify-center order-2 lg:order-1">
                     <motion.div variants={itemVariants}>
                       <Link to="/courses" className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors mb-6 group">
                         <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
@@ -262,10 +212,9 @@ console.log(data);
                     </motion.div>
                   </div>
 
-                  {/* Right Image */}
                   <motion.div 
                     variants={itemVariants}
-                    className="relative overflow-hidden lg:min-h-[500px]"
+                    className="relative overflow-hidden lg:min-h-[500px] order-1 lg:order-2"
                   >
                     <div className="relative w-full h-full bg-gradient-to-br from-gray-100 to-gray-200">
                       <img

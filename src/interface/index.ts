@@ -83,11 +83,12 @@ export interface ICourse  {
 export interface IMilestone {
     _id:string;
   title: string;
-  course: string;
+  course?:ICourse | string;
   order: number;
   status: "active" | "inactive";
-  createdAt: string;
-  upstringdAt: string;
+  lessons: string[];
+  createdAt:Date;
+  updatedAt:Date;
 }
 
 

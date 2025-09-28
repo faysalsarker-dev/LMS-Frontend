@@ -15,6 +15,7 @@ export const milestoneApi = baseApi.injectEndpoints({
     // Get all Milestones
     getAllMilestones: builder.query({
       query: (params) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const queryParams = new URLSearchParams(params as any).toString();
         return {
           url: `/milestone?${queryParams}`,
@@ -35,14 +36,15 @@ export const milestoneApi = baseApi.injectEndpoints({
     }),
 
     // Update Milestone
-    updateMilestone: builder.mutation({
-      query: ({ id, formData }) => ({
-        url: `/milestone/${id}`,
-        method: "PUT",
-        data: formData,    
-      }),
-      invalidatesTags: ["MILESTONE"],
-    }),
+updateMilestone: builder.mutation({
+  query: ({ id, ...values }) => ({
+    url: `/milestone/${id}`,
+    method: "PUT",
+    data: values,
+  }),
+  invalidatesTags: ["MILESTONE"],
+}),
+
 
     // Delete Milestone
     deleteMilestone: builder.mutation({
