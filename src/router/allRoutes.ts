@@ -5,7 +5,6 @@ import {
   BookOpen,
   Layers,
   Flag,
-  TestTube,
 } from "lucide-react";
 import Home from "@/pages/home/Home";
 import Courses from "@/pages/course/Courses";
@@ -32,7 +31,7 @@ const Users = lazy(() => import("@/pages/admin/Users"));
 const CreateCourse = lazy(() => import("@/pages/admin/CreateCourse"));
 const AllCourses = lazy(() => import("@/pages/admin/AllCourses"));
 const MilestoneDashboardPage = lazy(() => import("@/pages/admin/Milestone"));
-const AdminDashboardTest = lazy(() => import("@/pages/test/AdminDashboard"));
+const LessonPage = lazy(() => import("@/pages/admin/LessonPage"));
 
 // 🌍 Public routes
 export const publicRoutes = [
@@ -76,11 +75,12 @@ export const adminRoutes = [
     icon: Flag,
   },
   {
-    Component: AdminDashboardTest,
-    path: "/dashboard/testing",
-    name: "Testing",
-    icon: TestTube,
+    Component: LessonPage,
+    path: "/dashboard/lesson",
+    name: "Lessons",
+    icon: Flag,
   },
+
 ];
 
 // 🕶 Invisible routes

@@ -18,7 +18,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
-import UpdateCourse from "./dialogs/UpdateCourse";
+import UpdateCourse from "./UpdateCourse";
 
 interface Course {
   _id: string;

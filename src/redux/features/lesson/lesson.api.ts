@@ -15,6 +15,7 @@ export const lessonApi = baseApi.injectEndpoints({
     // Get all Lessons
     getAllLessons: builder.query({
       query: (params) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const queryParams = new URLSearchParams(params as any).toString();
         return {
           url: `/lesson?${queryParams}`,

@@ -28,7 +28,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { IUser, UserFilters } from '@/interface';
-import { UserProfileDrawer } from './dialogs/UserProfileDrawer';
+import { UserProfileDrawer } from './UserProfileDrawer';
 
 interface UserTableProps {
   data: IUser[];
@@ -73,8 +73,6 @@ const getVerifiedVariant = (isVerified: boolean) =>
 const formatDate = (date: Date | null | undefined) => 
   date ? format(new Date(date), "dd MMM yyyy") : "—";
 
-const formatCurrency = (amount: number | undefined) =>
-  amount ? `$${amount.toLocaleString()}` : "—";
 
 export function UserTable({ 
   data, 

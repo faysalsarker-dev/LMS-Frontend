@@ -45,6 +45,7 @@ import {
 } from "@/redux/features/milestone/milestone.api";
 import type { ICourse, IMilestone } from "@/interface";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MilestoneDashboardPage() {
   // filters
@@ -91,9 +92,7 @@ export default function MilestoneDashboardPage() {
     }
   };
 
-  if (isLoading) {
-    return <p className="text-center text-gray-500">Loading milestones...</p>;
-  }
+
 
   if (isError) {
     return <p className="text-center text-red-500">Failed to load milestones</p>;
@@ -183,77 +182,110 @@ export default function MilestoneDashboardPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <AnimatePresence>
-                    {milestones.length > 0 ? (
-                      milestones.map((milestone: IMilestone, idx: number) => (
-                        <motion.tr
-                          key={milestone._id}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={{ duration: 0.2, delay: idx * 0.03 }}
-                          className="hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-                        >
-                          <TableCell className="font-medium">
-                            {milestone.title}
-                          </TableCell>
-                          <TableCell>
-                           {typeof milestone.course === "object" && milestone.course !== null
-                              ? milestone.course.title
-                              : typeof milestone.course === "string"
-                              ? milestone.course
-                              : "Unknown"}
+                
+                <AnimatePresence>
+  {isLoading ? (
+    // Skeleton loading rows
+    [...Array(3)].map((_, idx) => (
+      <motion.tr
+        key={`skeleton-${idx}`}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.2, delay: idx * 0.03 }}
+        className="hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+      >
+        <TableCell className="font-medium">
+          <Skeleton className="h-4 w-32" />
+        </TableCell>
+        <TableCell>
+          <Skeleton className="h-4 w-32" />
+        </TableCell>
+        <TableCell>
+          <Skeleton className="h-4 w-32" />
+        </TableCell>
+        <TableCell>
+          <Skeleton className="h-4 w-32" />
+        </TableCell>
+        <TableCell className="text-right">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Skeleton className="h-4 w-8" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <Skeleton className="h-4 w-32" />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TableCell>
+      </motion.tr>
+    ))
+  ) : milestones.length > 0 ? (
+    // Render milestones
+    milestones.map((milestone: IMilestone, idx: number) => (
+      <motion.tr
+        key={milestone._id}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.2, delay: idx * 0.03 }}
+        className="hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+      >
+        <TableCell className="font-medium">{milestone.title}</TableCell>
+        <TableCell>
+          {typeof milestone.course === "object" && milestone.course !== null
+            ? milestone.course.title
+            : typeof milestone.course === "string"
+            ? milestone.course
+            : "Unknown"}
+        </TableCell>
+        <TableCell>{milestone.order}</TableCell>
+        <TableCell>
+          <Badge
+            className={`capitalize ${
+              milestone.status === "active"
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {milestone.status}
+          </Badge>
+        </TableCell>
+        <TableCell className="text-right">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm">
+                ⋮
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => handleEdit(milestone)}>
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-red-600"
+                onClick={() => handleDelete(milestone._id)}
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TableCell>
+      </motion.tr>
+    ))
+  ) : (
+    // Empty state
+    <TableRow>
+      <TableCell
+        colSpan={5}
+        className="text-center py-6 text-gray-500 dark:text-gray-400"
+      >
+        No milestones found
+      </TableCell>
+    </TableRow>
+  )}
+</AnimatePresence>
 
-                          </TableCell>
-                          <TableCell>{milestone.order}</TableCell>
-                          <TableCell>
-                            <Badge
-                              className={`capitalize  ${
-                                milestone.status === "active"
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-red-100 text-red-800"
-                              } `}
-                           
-                            >
-                              {milestone.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  ⋮
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem
-                                  onClick={() => handleEdit(milestone)}
-                                >
-                                  Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  className="text-red-600"
-                                  onClick={() => handleDelete(milestone._id)}
-                                >
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        </motion.tr>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell
-                          colSpan={5}
-                          className="text-center py-6 text-gray-500 dark:text-gray-400"
-                        >
-                          No milestones found
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </AnimatePresence>
                 </TableBody>
               </Table>
             </motion.div>

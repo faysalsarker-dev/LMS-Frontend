@@ -94,6 +94,7 @@ export interface IMilestone {
 
 export interface ILesson {
   _id:string;
+  slug:string;
   title: string;
   milestone: string; 
   order?: number;
@@ -101,4 +102,7 @@ export interface ILesson {
   videoUrl?: string;
   docContent?: string;
   status?: "active" | "inactive";
+  viewCount: number;
+  createdAt:Date;
+  updatedAt:Date;
 }

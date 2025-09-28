@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { CourseTable } from "@/components/dashboard/CourseTable";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
 import {
   Select,
@@ -12,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { CourseTable } from "@/components/modules/Course/CourseTable";
 
 const AllCourses = () => {
   const [page, setPage] = useState(1);
@@ -44,7 +44,6 @@ const AllCourses = () => {
   });
 
 
-console.log(data);
   const handleReset = () => {
     setStatus(undefined);
     setLevel(undefined);
