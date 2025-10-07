@@ -1,30 +1,27 @@
-import { useState} from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-
 import { Plus, Edit, Trash2, Eye, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ContentTypeBadge } from "@/components/modules/Lesson/content-type-badge";
-import { StatusBadge } from "@/components/modules/Lesson/badge-status";
-import { LessonForm } from "@/components/modules/Lesson/LessonForm";
+
+import { LessonForm, ContentTypeBadge, StatusBadge } from "@/components/modules/Lesson";
 import { useGetAllLessonsQuery } from "@/redux/features/lesson/lesson.api";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
-import type { ICourse, ILesson, IMilestone } from "@/interface";
 import { useGetAllMilestonesQuery } from "@/redux/features/milestone/milestone.api";
+import type { ICourse, ILesson, IMilestone } from "@/interface";
 
 export default function LessonPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingLesson, setEditingLesson] = useState();
+  const [editingLesson, setEditingLesson] = useState<ILesson | undefined>();
   const [formMode, setFormMode] = useState<"create" | "edit">("create");
 
-  const {data}=useGetAllLessonsQuery({});
-  const {data:courses}=useGetAllCoursesQuery({page:1,limit:10000});
-  const {data:milestones}=useGetAllMilestonesQuery({});
- const lesson = data?.data 
-
+  const { data } = useGetAllLessonsQuery({});
+  const { data: courses } = useGetAllCoursesQuery({ page: 1, limit: 10000 });
+  const { data: milestones } = useGetAllMilestonesQuery({});
+  const lessons = data?.data || [];
 
   // Filter states
   const [searchTitle, setSearchTitle] = useState("");
@@ -32,7 +29,6 @@ export default function LessonPage() {
   const [selectedContentType, setSelectedContentType] = useState("all");
   const [selectedCourse, setSelectedCourse] = useState("all");
   const [selectedMilestone, setSelectedMilestone] = useState("all");
-  
 
   const handleCreateLesson = () => {
     setEditingLesson(undefined);
@@ -40,26 +36,23 @@ export default function LessonPage() {
     setIsFormOpen(true);
   };
 
-  const handleEditLesson = (lesson) => {
+  const handleEditLesson = (lesson: ILesson) => {
     setEditingLesson(lesson);
     setFormMode("edit");
     setIsFormOpen(true);
   };
 
   const handleDeleteLesson = (lessonId: string) => {
-  console.log("Delete lesson with ID:", lessonId);
-
-  };
-
-  const handleFormSubmit = (data: any) => {
-    if (formMode === "create") {
-  console.log('Creating lesson:', data);
-    } else if (editingLesson) {
-    console.log('Updating lesson:', editingLesson.id, data);
- 
+    if (window.confirm("Are you sure you want to delete this lesson?")) {
+      console.log("Delete lesson with ID:", lessonId);
+      // TODO: Implement delete functionality
     }
   };
 
+  const handleFormSubmit = (data: any) => {
+    console.log("Form submitted:", data);
+    // Form submission is handled inside LessonForm component
+  };
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -82,83 +75,83 @@ export default function LessonPage() {
           </Button>
         </motion.div>
 
-     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="mb-6"
-    >
-      <Card className="p-6 border-border/50 shadow-xl bg-card">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          {/* Title Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder="Search lessons..."
-              value={searchTitle}
-              className="pl-10 focus-ring"
-            />
-          </div>
+        {/* Filters */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <Card className="p-6 border-border/50 shadow-xl bg-card">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              {/* Title Search */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input
+                  placeholder="Search lessons..."
+                  value={searchTitle}
+                  onChange={(e) => setSearchTitle(e.target.value)}
+                  className="pl-10 focus-ring"
+                />
+              </div>
 
-          {/* Status Filter */}
-          <Select value={selectedStatus} >
-            <SelectTrigger className="focus-ring">
-              <SelectValue placeholder="All Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="inactive">Inactive</SelectItem>
-            </SelectContent>
-          </Select>
+              {/* Status Filter */}
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger className="focus-ring">
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
 
-          {/* Content Type Filter */}
-          <Select value={selectedContentType}>
-            <SelectTrigger className="focus-ring">
-              <SelectValue placeholder="All Types" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="video">Video</SelectItem>
-              <SelectItem value="doc">Document</SelectItem>
-              <SelectItem value="quiz">Quiz</SelectItem>
-              <SelectItem value="assignment">Assignment</SelectItem>
-            </SelectContent>
-          </Select>
+              {/* Content Type Filter */}
+              <Select value={selectedContentType} onValueChange={setSelectedContentType}>
+                <SelectTrigger className="focus-ring">
+                  <SelectValue placeholder="All Types" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="video">Video</SelectItem>
+                  <SelectItem value="doc">Document</SelectItem>
+                  <SelectItem value="quiz">Quiz</SelectItem>
+                  <SelectItem value="assignment">Assignment</SelectItem>
+                </SelectContent>
+              </Select>
 
-          {/* Course Filter */}
-          <Select value={selectedCourse} onValueChange={(value) => {
-           
-          }}>
-            <SelectTrigger className="focus-ring">
-              <SelectValue placeholder="All Courses" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Courses</SelectItem>
-              {courses?.data?.data?.map((course: ICourse) => (
-                <SelectItem key={course._id} value={course._id}>
-                  {course.title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              {/* Course Filter */}
+              <Select value={selectedCourse} onValueChange={setSelectedCourse}>
+                <SelectTrigger className="focus-ring">
+                  <SelectValue placeholder="All Courses" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Courses</SelectItem>
+                  {courses?.data?.data?.map((course: ICourse) => (
+                    <SelectItem key={course._id} value={course._id}>
+                      {course.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-          {/* Milestone Filter */}
-          <Select value={selectedMilestone} >
-            <SelectTrigger className="focus-ring">
-              <SelectValue placeholder="All Milestones" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Milestones</SelectItem>
-              {milestones?.data?.map((milestone: IMilestone) => (
-                <SelectItem key={milestone._id} value={milestone._id}>
-                  {milestone.title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </Card>
-    </motion.div>
+              {/* Milestone Filter */}
+              <Select value={selectedMilestone} onValueChange={setSelectedMilestone}>
+                <SelectTrigger className="focus-ring">
+                  <SelectValue placeholder="All Milestones" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Milestones</SelectItem>
+                  {milestones?.data?.map((milestone: IMilestone) => (
+                    <SelectItem key={milestone._id} value={milestone._id}>
+                      {milestone.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </Card>
+        </motion.div>
 
         {/* Lessons Table */}
         <motion.div
@@ -184,7 +177,7 @@ export default function LessonPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {lesson?.map((lesson: ILesson, index: number) => (
+                {lessons.map((lesson: ILesson, index: number) => (
                   <motion.tr
                     key={lesson._id}
                     initial={{ opacity: 0, x: -20 }}
@@ -210,7 +203,7 @@ export default function LessonPage() {
                       <StatusBadge status={lesson.status || "inactive"} />
                     </TableCell>
                     <TableCell className="text-center">
-                      <span className="font-medium">{lesson.viewCount.toLocaleString()}</span>
+                      <span className="font-medium">{lesson.viewCount?.toLocaleString() || 0}</span>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end space-x-2">
@@ -237,17 +230,11 @@ export default function LessonPage() {
               </TableBody>
             </Table>
 
-            {data?.data?.length === 0 && (
+            {lessons.length === 0 && (
               <div className="text-center py-12">
                 <div className="text-muted-foreground">
-                  <p className="text-lg font-medium mb-2">
-                    {data?.data?.length === 0 ? "No lessons yet" : "No lessons match your filters"}
-                  </p>
-                  <p>
-                    {data?.data?.length === 0 
-                      ? "Create your first lesson to get started" 
-                      : "Try adjusting your search criteria"}
-                  </p>
+                  <p className="text-lg font-medium mb-2">No lessons yet</p>
+                  <p>Create your first lesson to get started</p>
                 </div>
               </div>
             )}

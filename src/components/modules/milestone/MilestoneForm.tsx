@@ -51,7 +51,7 @@ export default function MilestoneForm({
 }: MilestoneFormProps) {
   const { data, isLoading } = useGetAllCoursesQuery({ page: 1, limit: 100000 });
   const [createMilestone ,{isLoading: isCreating}] = useCreateMilestoneMutation();
-  const [updateMilestone] = useUpdateMilestoneMutation();
+  const [updateMilestone ,{isLoading: isUpdating}] = useUpdateMilestoneMutation();
 
   // 📝 Form
   const {
@@ -209,7 +209,7 @@ await updateMilestone({ id: initialData._id, ...values }).unwrap();
     
    </div>
           <SheetFooter>
-            <Button disabled={isCreating || isLoading} type="submit" className="w-full rounded-xl">
+            <Button disabled={isCreating || isLoading || isUpdating} type="submit" className="w-full rounded-xl">
               {mode === "update" ? "Update Milestone" : "Save Milestone"}
             </Button>
           </SheetFooter>

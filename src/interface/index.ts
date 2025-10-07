@@ -92,17 +92,88 @@ export interface IMilestone {
 }
 
 
+
+// ✅ Option structure for quiz questions
+export interface IQuizOption {
+  text: string;
+  isCorrect?: boolean; // optional if you allow marking answers
+}
+
+// ✅ Quiz structure
+export interface IQuiz {
+  question: string;
+  options: IQuizOption[];
+  correctAnswer: string;
+  explanation?: string;
+  timer?: number | null; 
+}
+
 export interface ILesson {
-  _id:string;
-  slug:string;
+  _id: string;
   title: string;
-  milestone: string; 
+  slug: string;
+  milestone: string;
+  course: string;
   order?: number;
-  contentType: "video" | "doc" | "quiz";
+  contentType: "video" | "doc" | "quiz" | "assignment";
   videoUrl?: string;
+  videoSourceType?: "link" | "upload";
   docContent?: string;
+  quiz?: IQuiz;
   status?: "active" | "inactive";
-  viewCount: number;
-  createdAt:Date;
-  updatedAt:Date;
+  viewCount?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+
+
+
+
+export type ContentType = "video" | "doc" | "quiz" | "assignment";
+export type LessonStatus = "active" | "inactive" | undefined;
+export type VideoSourceType = string | undefined;
+export type VideoStorageType = "cdn" | "external";
+
+export interface VideoMeta {
+  filename?: string;
+  size?: number;
+  mimeType?: string;
+  duration?: number;
+  storage: VideoStorageType;
+}
+
+export interface QuizOption {
+  text: string;
+  isCorrect?: boolean;
+}
+
+export interface QuizData {
+  question: string;
+  options: QuizOption[];
+  correctAnswer: string;
+  explanation?: string;
+  timer?: number | null; 
+}
+
+
+export interface LessonFormData {
+  title?: string;
+  order?: number;
+  contentType?: "video" | "doc" | "quiz" | "assignment";
+  status?: "active" | "inactive";
+  course?: string;
+  milestone?: string;
+  videoUrl?: string;
+  videoSourceType?: string;
+  docContent?: string;
+  quiz?: QuizData;
+  videoFile: File | string | null ;
+
+}
+
+export interface UploadProgress {
+  progress: number;
+  status: "idle" | "uploading" | "processing" | "success" | "error";
+  error?: string;
 }
