@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import UpdateCourse from "./UpdateCourse";
+import type { ICourse } from "@/interface";
 
 interface Course {
   _id: string;
@@ -143,7 +144,7 @@ export function CourseTable({
                   <TableCell>{course.totalEnrolled}</TableCell>
                   <TableCell>{course.averageRating.toFixed(1)}</TableCell>
                   <TableCell className="text-right space-x-2">
-                    <Button type="button" onClick={() => onUpdate(course._id)} size="sm" variant="outline">
+                    <Button type="button" onClick={() => onUpdate(course.slug)} size="sm" variant="outline">
                       Edit
                     </Button>
                     <Button size="sm" variant="destructive">

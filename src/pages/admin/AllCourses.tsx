@@ -7,7 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -18,37 +17,27 @@ const AllCourses = () => {
   const [limit] = useState(10);
 
   // 🔹 Filters
-  const [status, setStatus] = useState<string | undefined>(undefined);
-  const [level, setLevel] = useState<string | undefined>(undefined);
-  const [isDiscounted, setIsDiscounted] = useState<boolean | undefined>(
-    undefined
-  );
-  const [certificateAvailable, setCertificateAvailable] = useState<
-    boolean | undefined
-  >(undefined);
+  const [status, setStatus] = useState<string>('all');
+  const [level, setLevel] = useState<string>('all');
+
 
   // 🔹 Sorting
   const [sortBy, setSortBy] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-  // 🔹 API Call (filters trigger refetch automatically)
   const { data, isLoading, refetch } = useGetAllCoursesQuery({
     page,
     limit,
     status,
     level,
-    isDiscounted,
-    certificateAvailable,
     sortBy,
     sortOrder,
   });
 
 
   const handleReset = () => {
-    setStatus(undefined);
-    setLevel(undefined);
-    setIsDiscounted(undefined);
-    setCertificateAvailable(undefined);
+    setStatus('all');
+    setLevel('all');
     setSortBy("createdAt");
     setSortOrder("desc");
     setPage(1);
@@ -68,7 +57,7 @@ const AllCourses = () => {
           {/* Status Filter */}
           <div>
             <Label>Status</Label>
-            <Select onValueChange={(v) => setStatus(v || undefined)} value={status ?? ""}>
+            <Select onValueChange={(v) => setStatus(v)} value={status ?? ""}>
               <SelectTrigger>
                 <SelectValue placeholder="All" />
               </SelectTrigger>
@@ -84,7 +73,7 @@ const AllCourses = () => {
           {/* Level Filter */}
           <div>
             <Label>Level</Label>
-            <Select onValueChange={(v) => setLevel(v || undefined)} value={level ?? ""}>
+            <Select onValueChange={(v) => setLevel(v)} value={level ?? ""}>
               <SelectTrigger>
                 <SelectValue placeholder="All" />
               </SelectTrigger>
@@ -97,27 +86,7 @@ const AllCourses = () => {
             </Select>
           </div>
 
-          {/* Discount Toggle */}
-          <div className="flex items-center space-x-2 pt-6">
-            <Switch
-              checked={isDiscounted === true}
-              onCheckedChange={(checked) =>
-                setIsDiscounted(checked ? true : undefined)
-              }
-            />
-            <Label>Discounted</Label>
-          </div>
-
-          {/* Certificate Toggle */}
-          <div className="flex items-center space-x-2 pt-6">
-            <Switch
-              checked={certificateAvailable === true}
-              onCheckedChange={(checked) =>
-                setCertificateAvailable(checked ? true : undefined)
-              }
-            />
-            <Label>Certificate</Label>
-          </div>
+      
 
           {/* Sort By */}
           <div>

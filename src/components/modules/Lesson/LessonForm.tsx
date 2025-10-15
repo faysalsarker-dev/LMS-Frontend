@@ -23,7 +23,6 @@ import { useConfirmOnLeave } from "@/hooks/useConfirmOnLeave";
 interface LessonFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: LessonFormData) => void;
  lesson?: Partial<ILesson>;
   mode: "create" | "edit";
 }
@@ -144,22 +143,6 @@ if (data.videoFile instanceof File) {
     }
 
 
-
-   // Log FormData entries to console
-    console.log("=== FormData Contents ===");
-    formData.forEach((value, key) => {
-      if (value instanceof File) {
-        console.log(`${key}:`, {
-          name: value.name,
-          size: value.size,
-          type: value.type,
-          lastModified: value.lastModified,
-        });
-      } else {
-        console.log(`${key}:`, value);
-      }
-    });
-    console.log("========================");
 
 
     return formData;

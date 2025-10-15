@@ -1,7 +1,18 @@
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -34,21 +45,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { Search } from "lucide-react";
-
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import MilestoneForm from "@/components/modules/milestone/MilestoneForm";
 import {
   useGetAllMilestonesQuery,
   useDeleteMilestoneMutation,
-  
 } from "@/redux/features/milestone/milestone.api";
 import type { ICourse, IMilestone } from "@/interface";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MilestoneDashboardPage() {
-  // filters
+  // Pagination & filters
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
   const [course, setCourse] = useState("all");
@@ -60,9 +70,11 @@ export default function MilestoneDashboardPage() {
     refetch,
   } = useGetAllMilestonesQuery(
     {
-      search: search ,
+      search: search,
       status: status,
-      course: course ,
+      course: course,
+      page: page,
+      limit: limit,
     },
     { refetchOnMountOrArgChange: true }
   );
@@ -87,20 +99,41 @@ export default function MilestoneDashboardPage() {
       await deleteMilestone(milestoneId).unwrap();
       toast.success("Milestone deleted successfully");
       refetch();
-    } catch {
+    } catch (error) {
       toast.error("Failed to delete milestone");
     }
   };
 
+  // Reset to page 1 when filters change
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
 
+  const handleStatusChange = (value: string) => {
+    setStatus(value);
+    setPage(1);
+  };
+
+  const handleCourseChange = (value: string) => {
+    setCourse(value);
+    setPage(1);
+  };
+
+  const handleLimitChange = (value: string) => {
+    setLimit(parseInt(value));
+    setPage(1);
+  };
 
   if (isError) {
     return <p className="text-center text-red-500">Failed to load milestones</p>;
   }
 
   const milestones = data?.data || [];
+  const meta = data?.meta || { total: 0, page: 1, totalPages: 1, hasNextPage: false, hasPrevPage: false };
+
   return (
-    <div className="min-h-screen  flex justify-center p-4 sm:p-6 lg:p-8 font-sans">
+    <div className="min-h-screen flex justify-center p-4 sm:p-6 lg:p-8 font-sans">
       <div className="w-full max-w-7xl space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
@@ -118,12 +151,12 @@ export default function MilestoneDashboardPage() {
               <Input
                 placeholder="Search by title..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="pl-8"
               />
             </div>
 
-            <Select value={status} onValueChange={setStatus}>
+            <Select value={status} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -134,23 +167,17 @@ export default function MilestoneDashboardPage() {
               </SelectContent>
             </Select>
 
-            <Select value={course} onValueChange={setCourse}>
+            <Select value={course} onValueChange={handleCourseChange}>
               <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder="Course" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Courses</SelectItem>
-        
-
-
-{
-  courses?.data?.data?.map((course: ICourse) => (
-    <SelectItem key={course._id} value={course._id}>
-      {course.title}
-    </SelectItem>
-  ))
-}
-
+                {courses?.data?.data?.map((course: ICourse) => (
+                  <SelectItem key={course._id} value={course._id}>
+                    {course.title}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </CardContent>
@@ -161,7 +188,7 @@ export default function MilestoneDashboardPage() {
           <CardHeader>
             <CardTitle>Existing Milestones</CardTitle>
             <CardDescription>
-              Manage and view all course milestones.
+              Manage and view all course milestones. Showing {milestones.length} of {meta.total} results.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -182,118 +209,171 @@ export default function MilestoneDashboardPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                
-                <AnimatePresence>
-  {isLoading ? (
-    // Skeleton loading rows
-    [...Array(3)].map((_, idx) => (
-      <motion.tr
-        key={`skeleton-${idx}`}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.2, delay: idx * 0.03 }}
-        className="hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-      >
-        <TableCell className="font-medium">
-          <Skeleton className="h-4 w-32" />
-        </TableCell>
-        <TableCell>
-          <Skeleton className="h-4 w-32" />
-        </TableCell>
-        <TableCell>
-          <Skeleton className="h-4 w-32" />
-        </TableCell>
-        <TableCell>
-          <Skeleton className="h-4 w-32" />
-        </TableCell>
-        <TableCell className="text-right">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Skeleton className="h-4 w-8" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <Skeleton className="h-4 w-32" />
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </TableCell>
-      </motion.tr>
-    ))
-  ) : milestones.length > 0 ? (
-    // Render milestones
-    milestones.map((milestone: IMilestone, idx: number) => (
-      <motion.tr
-        key={milestone._id}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.2, delay: idx * 0.03 }}
-        className="hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-      >
-        <TableCell className="font-medium">{milestone.title}</TableCell>
-        <TableCell>
-          {typeof milestone.course === "object" && milestone.course !== null
-            ? milestone.course.title
-            : typeof milestone.course === "string"
-            ? milestone.course
-            : "Unknown"}
-        </TableCell>
-        <TableCell>{milestone.order}</TableCell>
-        <TableCell>
-          <Badge
-            className={`capitalize ${
-              milestone.status === "active"
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
-            }`}
-          >
-            {milestone.status}
-          </Badge>
-        </TableCell>
-        <TableCell className="text-right">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm">
-                ⋮
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => handleEdit(milestone)}>
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-red-600"
-                onClick={() => handleDelete(milestone._id)}
-              >
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </TableCell>
-      </motion.tr>
-    ))
-  ) : (
-    // Empty state
-    <TableRow>
-      <TableCell
-        colSpan={5}
-        className="text-center py-6 text-gray-500 dark:text-gray-400"
-      >
-        No milestones found
-      </TableCell>
-    </TableRow>
-  )}
-</AnimatePresence>
-
+                  <AnimatePresence>
+                    {isLoading ? (
+                      [...Array(3)].map((_, idx) => (
+                        <motion.tr
+                          key={`skeleton-${idx}`}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.2, delay: idx * 0.03 }}
+                          className="hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                        >
+                          <TableCell className="font-medium">
+                            <Skeleton className="h-4 w-32" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-4 w-32" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-4 w-32" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-4 w-32" />
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Skeleton className="h-8 w-8 ml-auto" />
+                          </TableCell>
+                        </motion.tr>
+                      ))
+                    ) : milestones.length > 0 ? (
+                      milestones.map((milestone: IMilestone, idx: number) => (
+                        <motion.tr
+                          key={milestone._id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.2, delay: idx * 0.03 }}
+                          className="hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                        >
+                          <TableCell className="font-medium">{milestone.title}</TableCell>
+                          <TableCell>
+                            {typeof milestone.course === "object" && milestone.course !== null
+                              ? milestone.course.title
+                              : typeof milestone.course === "string"
+                              ? milestone.course
+                              : "Unknown"}
+                          </TableCell>
+                          <TableCell>{milestone.order}</TableCell>
+                          <TableCell>
+                            <Badge
+                              className={`capitalize ${
+                                milestone.status === "active"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {milestone.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="sm">
+                                  ⋮
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => handleEdit(milestone)}>
+                                  Edit
+                                </DropdownMenuItem>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem
+                                      className="text-red-600 cursor-pointer"
+                                      onSelect={(e) => e.preventDefault()}
+                                    >
+                                      Delete
+                                    </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent className="rounded-2xl">
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete the milestone
+                                        <span className="font-semibold text-red-600"> "{milestone.title}"</span>.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => handleDelete(milestone._id)}
+                                        className="bg-red-600 hover:bg-red-700 text-white"
+                                      >
+                                        Yes, Delete
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </motion.tr>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell
+                          colSpan={5}
+                          className="text-center py-6 text-gray-500 dark:text-gray-400"
+                        >
+                          No milestones found
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </AnimatePresence>
                 </TableBody>
               </Table>
             </motion.div>
+
+            {/* Pagination Controls */}
+            {milestones.length > 0 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Rows per page:</span>
+                  <Select value={limit.toString()} onValueChange={handleLimitChange}>
+                    <SelectTrigger className="w-[70px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="5">5</SelectItem>
+                      <SelectItem value="10">10</SelectItem>
+                      <SelectItem value="20">20</SelectItem>
+                      <SelectItem value="50">50</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    Page {meta.page} of {meta.totalPages}
+                  </span>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPage(page - 1)}
+                      disabled={!meta.hasPrevPage}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPage(page + 1)}
+                      disabled={!meta.hasNextPage}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
 
-      {/* Sheet for create/update */}
       <MilestoneForm
         open={open}
         setOpen={setOpen}

@@ -1,34 +1,85 @@
+"use client";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Edit, Trash2, Eye, Search } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
-import { LessonForm, ContentTypeBadge, StatusBadge } from "@/components/modules/Lesson";
-import { useGetAllLessonsQuery } from "@/redux/features/lesson/lesson.api";
+import {
+  LessonForm,
+  ContentTypeBadge,
+  StatusBadge,
+} from "@/components/modules/Lesson";
+import { useDeleteLessonMutation, useGetAllLessonsQuery } from "@/redux/features/lesson/lesson.api";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
 import { useGetAllMilestonesQuery } from "@/redux/features/milestone/milestone.api";
 import type { ICourse, ILesson, IMilestone } from "@/interface";
+import toast from "react-hot-toast";
+import { handleApiError } from "@/utils/errorHandler";
 
 export default function LessonPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingLesson, setEditingLesson] = useState<ILesson | undefined>();
   const [formMode, setFormMode] = useState<"create" | "edit">("create");
 
-  const { data } = useGetAllLessonsQuery({});
-  const { data: courses } = useGetAllCoursesQuery({ page: 1, limit: 10000 });
-  const { data: milestones } = useGetAllMilestonesQuery({});
-  const lessons = data?.data || [];
-
-  // Filter states
-  const [searchTitle, setSearchTitle] = useState("");
+  // Pagination
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+    const [searchTitle, setSearchTitle] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedContentType, setSelectedContentType] = useState("all");
   const [selectedCourse, setSelectedCourse] = useState("all");
   const [selectedMilestone, setSelectedMilestone] = useState("all");
+
+  const { data } = useGetAllLessonsQuery({ page, limit ,status:selectedStatus , course:selectedCourse, milestone:selectedMilestone ,search : searchTitle},{ refetchOnMountOrArgChange: true });
+  const { data: courses } = useGetAllCoursesQuery({ page: 1, limit: 10000 });
+  const { data: milestones } = useGetAllMilestonesQuery({});
+  const [deleteLesson]=useDeleteLessonMutation()
+
+  const lessons = data?.data || [];
+  const meta = data?.meta;
+
+  // Filters
+
+
+  // Delete handling
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const handleCreateLesson = () => {
     setEditingLesson(undefined);
@@ -42,16 +93,22 @@ export default function LessonPage() {
     setIsFormOpen(true);
   };
 
-  const handleDeleteLesson = (lessonId: string) => {
-    if (window.confirm("Are you sure you want to delete this lesson?")) {
-      console.log("Delete lesson with ID:", lessonId);
-      // TODO: Implement delete functionality
-    }
+  const confirmDeleteLesson = (lessonId: string) => {
+    setDeleteId(lessonId);
   };
 
-  const handleFormSubmit = (data: any) => {
-    console.log("Form submitted:", data);
-    // Form submission is handled inside LessonForm component
+  const handleDeleteConfirmed = async () => {
+
+if(!deleteId) return toast.error('Item id is reqired')
+
+    try {
+await deleteLesson(deleteId).unwrap()
+      setDeleteId(null);
+      toast.success('Lesson delete successfully')
+    }catch(err){
+      handleApiError(err)
+    }
+
   };
 
   return (
@@ -64,7 +121,9 @@ export default function LessonPage() {
           className="flex items-center justify-between mb-8"
         >
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Lesson Management</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Lesson Management
+            </h1>
             <p className="text-muted-foreground mt-2">
               Manage your course lessons, content, and status
             </p>
@@ -107,7 +166,10 @@ export default function LessonPage() {
               </Select>
 
               {/* Content Type Filter */}
-              <Select value={selectedContentType} onValueChange={setSelectedContentType}>
+              <Select
+                value={selectedContentType}
+                onValueChange={setSelectedContentType}
+              >
                 <SelectTrigger className="focus-ring">
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
@@ -136,7 +198,10 @@ export default function LessonPage() {
               </Select>
 
               {/* Milestone Filter */}
-              <Select value={selectedMilestone} onValueChange={setSelectedMilestone}>
+              <Select
+                value={selectedMilestone}
+                onValueChange={setSelectedMilestone}
+              >
                 <SelectTrigger className="focus-ring">
                   <SelectValue placeholder="All Milestones" />
                 </SelectTrigger>
@@ -203,7 +268,9 @@ export default function LessonPage() {
                       <StatusBadge status={lesson.status || "inactive"} />
                     </TableCell>
                     <TableCell className="text-center">
-                      <span className="font-medium">{lesson.viewCount?.toLocaleString() || 0}</span>
+                      <span className="font-medium">
+                        {lesson.viewCount?.toLocaleString() || 0}
+                      </span>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end space-x-2">
@@ -215,14 +282,38 @@ export default function LessonPage() {
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteLesson(lesson._id)}
-                          className="hover:bg-destructive/10 hover:text-destructive"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="hover:bg-destructive/10 hover:text-destructive"
+                              onClick={() => confirmDeleteLesson(lesson._id)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Delete this lesson?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. It will
+                                permanently remove this lesson.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                className="bg-destructive text-white hover:bg-destructive/90"
+                                onClick={handleDeleteConfirmed}
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </TableCell>
                   </motion.tr>
@@ -238,6 +329,54 @@ export default function LessonPage() {
                 </div>
               </div>
             )}
+
+            {lessons.length > 0 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 p-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    Rows per page:
+                  </span>
+                  <Select
+                    value={limit.toString()}
+                    onValueChange={(val) => setLimit(Number(val))}
+                  >
+                    <SelectTrigger className="w-[70px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="5">5</SelectItem>
+                      <SelectItem value="10">10</SelectItem>
+                      <SelectItem value="20">20</SelectItem>
+                      <SelectItem value="50">50</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    Page {meta?.page || 1} of {meta?.totalPages || 1}
+                  </span>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPage(page - 1)}
+                      disabled={!meta?.hasPrevPage}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPage(page + 1)}
+                      disabled={!meta?.hasNextPage}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </Card>
         </motion.div>
 
@@ -245,7 +384,6 @@ export default function LessonPage() {
         <LessonForm
           isOpen={isFormOpen}
           onClose={() => setIsFormOpen(false)}
-          onSubmit={handleFormSubmit}
           lesson={editingLesson}
           mode={formMode}
         />

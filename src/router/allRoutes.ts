@@ -8,8 +8,11 @@ import {
 } from "lucide-react";
 import Home from "@/pages/home/Home";
 import Courses from "@/pages/course/Courses";
+import withAuth from "./withAuth";
+import { UserRoles } from "@/interface";
 
-// ✅ Lazy loaded pages
+
+const AppSettings = lazy(() => import("@/pages/admin/app-setting/AppSettings"));
 const CourseDetails = lazy(() => import("@/pages/course/CourseDetails"));
 const Contact = lazy(() => import("@/pages/abouts/Contact"));
 const About = lazy(() => import("@/pages/abouts/About"));
@@ -42,43 +45,66 @@ export const publicRoutes = [
   { Component: About, path: "/about", name: "About" },
 ];
 
+
+
+
 // 🔑 Admin routes (with icons)
 export const adminRoutes = [
   {
-    Component: AdminDashboard,
+    Component: withAuth(AdminDashboard,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN]),
     path: "/dashboard",
     name: "Dashboard",
     icon: LayoutDashboard,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN]
   },
   {
-    Component: Users,
+    Component: withAuth(Users,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN]),
     path: "/dashboard/users",
     name: "User Management",
     icon: UsersIcon,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN]
+
   },
   {
-    Component: CreateCourse,
+    Component: withAuth(CreateCourse,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
     path: "/dashboard/course/create",
     name: "Create Course",
     icon: BookOpen,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
+
   },
   {
-    Component: AllCourses,
+    Component: withAuth(AllCourses,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
     path: "/dashboard/courses",
     name: "All Courses",
     icon: Layers,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
+
   },
   {
-    Component: MilestoneDashboardPage,
+    Component: withAuth(MilestoneDashboardPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
     path: "/dashboard/milestone",
     name: "Milestones",
     icon: Flag,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
+
   },
   {
-    Component: LessonPage,
+    Component: withAuth(LessonPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
     path: "/dashboard/lesson",
     name: "Lessons",
     icon: Flag,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
+
+  },
+    {
+    Component: withAuth(AppSettings,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN]),
+    path: "/dashboard/App-settings",
+    name: "App Setting",
+        icon: Flag,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN]
+
+
   },
 
 ];
@@ -90,6 +116,7 @@ export const invisibleRoutes = [
     path: "/courses/:slug",
     name: "Course Details",
   },
+
   { Component: OtpVerify, path: "/verify-account/:email", name: "Verify Account" },
   { Component: ForgotPassword, path: "/forget-password", name: "Forgot Password" },
   { Component: ResetPassword, path: "/reset-password", name: "Reset Password" },

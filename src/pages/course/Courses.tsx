@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
 import debounce from "lodash.debounce";
-import CourseCard, { CourseCardSkeleton } from "@/components/custom/CourseCard";
+import CourseCard, { CourseCardSkeleton } from "@/components/modules/Course/CourseCard";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
 import {
   Pagination,

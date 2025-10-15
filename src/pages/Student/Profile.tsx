@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SingleFileUpload from "@/components/custom/SingleFileUpload"; // Assuming this component exists
-import CourseCard from "@/components/custom/CourseCard"; // Placeholder component
+import CourseCard from "@/components/modules/Course/CourseCard"; // Placeholder component
 
 import { useUpdateMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { handleApiError } from "@/utils/errorHandler";

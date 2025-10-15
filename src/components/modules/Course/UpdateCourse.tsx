@@ -97,7 +97,6 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
   const course = data?.data;
   const [updateCourse, { isLoading: isUpdating }] = useUpdateCourseMutation();
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-
   const { register, handleSubmit, control, reset, watch } = useForm<FormValues>({ defaultValues });
 
   // Field arrays
@@ -167,8 +166,8 @@ const onSubmit = async (data: FormValues) => {
     for (const [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
     }
-
-    await updateCourse({ courseId, formData }).unwrap();
+const courseId = course._id
+    await updateCourse({ courseId , formData }).unwrap();
     toast.success("✅ Course updated successfully!");
     onClose();
   } catch (err) {

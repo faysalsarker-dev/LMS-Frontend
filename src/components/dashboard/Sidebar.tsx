@@ -16,13 +16,24 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import logoImage from "@/assets/arow.jpg";
 
-import { adminRoutes } from '@/router/allRoutes';
-import { User } from "lucide-react";
+import {  User } from "lucide-react";
+import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
+import { getRoutesByRole } from "@/router/routeFilter";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
-// Mock admin routes - replace with your actual routes
 
 export function AppSidebar() {
+      const { data, isLoading } = useUserInfoQuery(undefined);
+  
+      const user = data?.data;
+
+
+
+    const allowedRoutes = getRoutesByRole(user?.role);
+
+
+  
   const location = useLocation();
   const { open } = useSidebar();
 
@@ -62,7 +73,34 @@ export function AppSidebar() {
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-1 px-3">
-                  {adminRoutes.map((item) => {
+
+
+
+                  {isLoading?
+                  
+                  
+                  
+                  
+                  
+                  
+                   Array.from({ length: 6 }).map((_, i) => (
+                           
+  <SidebarMenuItem key={i}>
+                        <SidebarMenuButton
+                          size="lg"
+                   className=" border-border"
+                          asChild
+                        >
+                        <Skeleton className="w-full h-12"/>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+
+                                ))
+                  
+                  
+                  
+                  :
+                  allowedRoutes?.map((item) => {
                     const isActive = location.pathname === item.path;
                     return (
                       <SidebarMenuItem key={item.name}>

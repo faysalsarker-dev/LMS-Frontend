@@ -83,10 +83,17 @@ export default function OtpVerify() {
       if (!email || currentOtp.length !== OTP_LENGTH) return;
 
       try {
-        const result = await verifyOtp({ email, otp: currentOtp }).unwrap();
+        const data = {
+email,
+ otp: currentOtp
+        }
+
+
+        const result = await verifyOtp(data).unwrap();
         toast.success(result.message || "Verification successful!");
         navigate("/");
       } catch (error: any) {
+        console.log(error);
         toast.error(error.data?.message || "Invalid OTP. Please try again.");
         setOtp("");
       }

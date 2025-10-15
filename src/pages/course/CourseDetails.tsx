@@ -7,24 +7,20 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   Clock,
-  Download,
-  Award,
-  Globe,
+
   CheckCircle,
   PlayCircle,
   Star,
-  Users,
   BookOpen,
   ArrowLeft,
-  Shield,
-  Smartphone,
-  Monitor,
+ 
   Crown,
   Calendar
 } from "lucide-react";
 import { useState, memo } from "react";
-import type { ICourse } from "@/interface";
 import { useGetCourseBySlugQuery } from "@/redux/features/course/course.api";
+import { LoadingSkeleton } from "@/components/modules/Course/LoadingSkeleton";
+import type { IMilestone } from "@/interface";
 
 
 const CourseDetails = memo(() => {
@@ -33,7 +29,7 @@ const CourseDetails = memo(() => {
   const [activeTab, setActiveTab] = useState("overview");
 
   const course = data?.data;
-console.log(course);
+  console.log(course,'course');
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -74,20 +70,7 @@ console.log(course);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <div className="container mx-auto px-4 py-20">
-          <div className="animate-pulse space-y-8">
-            <div className="h-64 bg-gray-200 rounded-2xl" />
-            <div className="grid lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-4">
-                <div className="h-8 bg-gray-200 rounded w-1/3" />
-                <div className="h-32 bg-gray-200 rounded" />
-              </div>
-              <div className="h-96 bg-gray-200 rounded-2xl" />
-            </div>
-          </div>
-        </div>
-      </div>
+    <LoadingSkeleton/>
     );
   }
 
@@ -257,16 +240,16 @@ console.log(course);
             >
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <motion.div variants={itemVariants}>
-                  <TabsList className="grid w-full grid-cols-2 mb-8 bg-gradient-card backdrop-blur-glass border-glass">
+                  <TabsList className="grid w-full grid-cols-2 mb-4  border-glass mt-10 ">
                     <TabsTrigger 
                       value="overview" 
-                      className="data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground"
+                      className="data-[state=active]:bg-primary data-[state=active]:text-white p-3"
                     >
                       Overview
                     </TabsTrigger>
                     <TabsTrigger 
                       value="curriculum"
-                      className="data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground"
+                       className="data-[state=active]:bg-primary data-[state=active]:text-white p-3"
                     >
                       Curriculum
                     </TabsTrigger>
@@ -290,7 +273,7 @@ console.log(course);
                               initial={{ opacity: 0, x: -20 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: index * 0.1 }}
-                              className="flex items-start gap-3 p-3 rounded-lg bg-gradient-glass border border-glass"
+                              className="flex items-start gap-3 p-3 rounded-lg bg-gradient-glass border border-glass shadow"
                             >
                               <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
                               <span className="text-sm">{skill}</span>
@@ -359,12 +342,31 @@ console.log(course);
                           {course.totalLectures} lectures • {course.duration} total length
                         </p>
                       </CardHeader>
-                      <CardContent>
-                        <div className="text-center py-12 text-muted-foreground">
-                          <BookOpen className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                          <p>Curriculum details will be available soon.</p>
-                        </div>
-                      </CardContent>
+                   <CardContent>
+  {course?.milestones?.length > 0 ? (
+    <div className="grid gap-4 ">
+      {course.milestones.map((ml: IMilestone) => (
+        <Card
+          key={ml._id}
+          className="hover:shadow-lg transition-all duration-300 border border-gray-200 rounded-2xl"
+        >
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold text-primary">
+              {ml.title}
+            </CardTitle>
+          </CardHeader>
+        
+        </Card>
+      ))}
+    </div>
+  ) : (
+    <div className="text-center py-12 text-muted-foreground">
+      <BookOpen className="h-12 w-12 mx-auto mb-4 opacity-50" />
+      <p className="text-base">Curriculum details will be available soon.</p>
+    </div>
+  )}
+</CardContent>
+
                     </Card>
                   </motion.div>
                 </TabsContent>
@@ -379,7 +381,7 @@ console.log(course);
               animate="visible"
             >
               <motion.div variants={itemVariants} className="sticky top-24">
-                <Card className="bg-gradient-card backdrop-blur-glass border-glass shadow-glass overflow-hidden">
+                <Card className="bg-gradient-card backdrop-blur-glass border-glass shadow-glass overflow-hidden p-0">
                   <CardContent className="p-0">
                     {/* Course Image */}
                     <div className="relative aspect-video">
@@ -390,9 +392,7 @@ console.log(course);
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4">
-                        <div className="text-white">
-                          <p className="text-sm opacity-90">Preview this course</p>
-                        </div>
+                      
                       </div>
                     </div>
 
@@ -427,37 +427,7 @@ console.log(course);
                       <Separator />
 
                       {/* Course Features */}
-                      <div className="space-y-4">
-                        <h4 className="font-semibold text-foreground">This course includes:</h4>
-                        <div className="space-y-3 text-sm">
-                          <div className="flex items-center gap-3">
-                            <Clock className="h-4 w-4 text-blue-500 flex-shrink-0" />
-                            <span>{course.duration} on-demand video</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Download className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                            <span>{course.resources?.length || 0} downloadable resources</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Smartphone className="h-4 w-4 text-purple-500 flex-shrink-0" />
-                            <span>Access on mobile and TV</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Globe className="h-4 w-4 text-cyan-500 flex-shrink-0" />
-                            <span>Access anywhere, anytime</span>
-                          </div>
-                          {course.certificateAvailable && (
-                            <div className="flex items-center gap-3">
-                              <Award className="h-4 w-4 text-amber-500 flex-shrink-0" />
-                              <span>Certificate of completion</span>
-                            </div>
-                          )}
-                          <div className="flex items-center gap-3">
-                            <Shield className="h-4 w-4 text-red-500 flex-shrink-0" />
-                            <span>30-day money-back guarantee</span>
-                          </div>
-                        </div>
-                      </div>
+                     
                     </div>
                   </CardContent>
                 </Card>

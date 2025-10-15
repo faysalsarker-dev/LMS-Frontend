@@ -5,6 +5,7 @@ import Layout from './../layout/home/Home';
 import { generateRoutes } from "./generateRoutes";
 import {adminRoutes, invisibleRoutes, publicRoutes} from "./allRoutes";
 import { AdminLayout } from "@/layout/admin/AdminLayout";
+import NotFoundPage from "@/pages/ErrorPages/NotFoundPage";
 
 export const router = createBrowserRouter([
 
@@ -35,9 +36,12 @@ export const router = createBrowserRouter([
     children:[
       ...generateRoutes(adminRoutes)
     ]
-  }
+  },
 
-
+{
+  Component:NotFoundPage,
+  path:'*'
+}
 
 
   

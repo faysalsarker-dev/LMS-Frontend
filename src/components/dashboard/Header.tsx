@@ -28,6 +28,8 @@ import { Badge } from '@/components/ui/badge';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/hooks/useTheme';
+import { useUserInfoQuery } from '@/redux/features/auth/auth.api';
+import { Skeleton } from '../ui/skeleton';
 
 const notifications = [
   {
@@ -65,7 +67,8 @@ const notifications = [
 ];
 
 export function Header() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme } = useTheme();
+  const {data , isloading} = useUserInfoQuery({})
   const unreadCount = notifications.filter(n => n.unread).length;
 
   return (
@@ -83,15 +86,7 @@ export function Header() {
         </div>
 
         {/* Center - Search */}
-        <div className="hidden md:flex flex-1 max-w-md mx-4">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Search courses, students, or instructors..."
-              className="search-input pl-10 bg-muted/50 border-border/50 focus:bg-background focus:border-primary transition-all duration-200"
-            />
-          </div>
-        </div>
+
 
         {/* Right side actions */}
         <div className="flex items-center gap-2">
@@ -185,16 +180,20 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* User Menu */}
-          <DropdownMenu>
+{
+isloading ? (
+  <Skeleton className='h-10 w-10 rounded-full'/>
+
+): data && (
+       <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:ring-2 hover:ring-primary/20 transition-all duration-200">
                 <Avatar className="h-10 w-10 ring-2 ring-border">
                   <AvatarImage 
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" 
+                    src={data?.data?.profile} 
                     alt="Admin Avatar" 
                   />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary-hover text-white font-semibold">
+                  <AvatarFallback className="bg-primary/50 text-white font-semibold">
                     FS
                   </AvatarFallback>
                 </Avatar>
@@ -214,12 +213,16 @@ export function Header() {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-sm font-medium leading-none">Faysal Sarker</p>
+                      <p className="text-sm font-medium leading-none">{data?.data?.name}</p>
                       <p className="text-xs leading-none text-muted-foreground mt-1">
-                        Admin User
+{
+  data?.data?.role
+}
                       </p>
                       <p className="text-xs leading-none text-muted-foreground mt-1">
-                        admin@example.com
+                        {
+                          data?.data?.email
+                        }
                       </p>
                     </div>
                   </div>
@@ -268,6 +271,12 @@ export function Header() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+)
+}
+
+          {/* User Menu */}
+   
         </div>
       </div>
     </header>

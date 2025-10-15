@@ -3,8 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Star, Users, Clock, ArrowRight, Play, Check } from 'lucide-react';
 import Testimonial from '@/components/custom/Testimonial';
-import HeroSection from '@/components/custom/HeroSection';
-import FeaturedCourse from '@/components/custom/FeaturedCourse';
+import HeroSection from '@/components/modules/home/HeroSection';
+import FeaturedCourse from '@/components/modules/home/FeaturedCourse';
+import LearningPaths from '@/components/modules/home/LearningPaths';
+import TrustBar from '@/components/modules/home/TrustBar';
+import InstructorSpotlight from '@/components/modules/home/InstructorSpotlight';
 
 const Home = () => {
 
@@ -12,9 +15,11 @@ const Home = () => {
     <div className="min-h-screen">
  
 <HeroSection/>
+<TrustBar/>
+<LearningPaths/>
       {/* Featured Courses */}
  <FeaturedCourse/>
-
+<InstructorSpotlight/>
       {/* Features Section */}
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
