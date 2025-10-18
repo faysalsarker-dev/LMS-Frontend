@@ -5,6 +5,8 @@ import {
   BookOpen,
   Layers,
   Flag,
+  Settings,
+  Tag,
 } from "lucide-react";
 import Home from "@/pages/home/Home";
 import Courses from "@/pages/course/Courses";
@@ -94,15 +96,15 @@ export const adminRoutes = [
     Component: withAuth(LessonPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
     path: "/dashboard/lesson",
     name: "Lessons",
-    icon: Flag,
+    icon: BookOpen,
     roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
 
   },
   {
     Component: withAuth(CategoryPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
     path: "/dashboard/category",
-    name: "Lessons",
-    icon: Flag,
+    name: "Category",
+    icon: Tag,
     roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
 
   },
@@ -110,7 +112,7 @@ export const adminRoutes = [
     Component: withAuth(AppSettings,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN]),
     path: "/dashboard/App-settings",
     name: "App Setting",
-        icon: Flag,
+        icon: Settings,
     roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN]
 
 

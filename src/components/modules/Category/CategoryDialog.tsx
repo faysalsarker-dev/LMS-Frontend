@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,15 +13,18 @@ import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import type { ICategory } from "@/interface";
-import { useCreateCategoryMutation, useUpdateCategoryMutation } from "@/redux/features/category/category.api";
-
+import {
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+} from "@/redux/features/category/category.api";
+import { handleApiError } from "@/utils/errorHandler";
+import FileUpload from "@/components/ui/FileUpload";
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initial?: ICategory | null;
   refetch: () => void;
-  ImageUploader?: React.FC<{ onFile: (file: File | null) => void; initialUrl?: string }>;
 };
 
 type FormValues = {
@@ -31,7 +39,6 @@ export const CategoryDialog: React.FC<Props> = ({
   onOpenChange,
   initial,
   refetch,
-  ImageUploader,
 }) => {
   const [createCategory] = useCreateCategoryMutation();
   const [updateCategory] = useUpdateCategoryMutation();
@@ -47,7 +54,6 @@ export const CategoryDialog: React.FC<Props> = ({
     defaultValues: {
       title: initial?.title || "",
       description: initial?.description || "",
-      totalCourse: initial?.totalCourse || 0,
     },
   });
 
@@ -56,7 +62,6 @@ export const CategoryDialog: React.FC<Props> = ({
       reset({
         title: initial.title,
         description: initial.description || "",
-        totalCourse: initial.totalCourse || 0,
       });
     } else {
       reset({ title: "", description: "", totalCourse: 0 });
@@ -67,24 +72,22 @@ export const CategoryDialog: React.FC<Props> = ({
   const onSubmit = async (data: FormValues) => {
     const formData = new FormData();
     formData.append("title", data.title);
-    if (data.description) formData.append("description", data.description);
-    formData.append("totalCourse", String(data.totalCourse ?? 0));
-    if (data.thumbnail?.[0]) formData.append("thumbnail", data.thumbnail[0]);
-    if (pickedFile) formData.append("thumbnail", pickedFile);
+    formData.append("description", data.description || "");
+    if (pickedFile) formData.append("file", pickedFile);
 
     setIsSubmitting(true);
     try {
       if (initial?._id) {
         await updateCategory({ id: initial._id, body: formData }).unwrap();
-        toast.success("Category updated");
+        toast.success("Category updated successfully");
       } else {
         await createCategory(formData).unwrap();
-        toast.success("Category created");
+        toast.success("Category created successfully");
       }
       refetch();
       onOpenChange(false);
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to save category");
+    } catch (err) {
+      handleApiError(err);
     } finally {
       setIsSubmitting(false);
     }
@@ -92,62 +95,89 @@ export const CategoryDialog: React.FC<Props> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] w-[95%]">
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent
+        className="sm:max-w-[550px] w-[95%] rounded-xl border border-border bg-background p-0 max-h-[90vh] overflow-y-auto"
+      >
+        <DialogHeader className="px-6 pt-6 pb-2 border-b border-border">
+          <DialogTitle className="text-xl font-semibold tracking-tight">
             {initial?._id ? "Edit Category" : "Create New Category"}
           </DialogTitle>
         </DialogHeader>
 
         <motion.form
           onSubmit={handleSubmit(onSubmit)}
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 8 }}
-          className="space-y-4 mt-4"
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="space-y-6 p-6"
         >
-          <div>
-            <Label>Title</Label>
-            <Input {...register("title", { required: "Title is required" })} />
+          {/* Image Upload */}
+          <div className="">
+            <Label className="text-sm font-medium text-muted-foreground">
+              Thumbnail
+            </Label>
+            <FileUpload onChange={setPickedFile} />
+            {initial?.thumbnail && (
+              <div className="mt-2 rounded-lg overflow-hidden border border-border/30 shadow-sm">
+                <img
+                  src={initial.thumbnail}
+                  alt={initial.title}
+                  className="h-24 w-24 object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Title */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-muted-foreground">
+              Title
+            </Label>
+            <Input
+              {...register("title", { required: "Title is required" })}
+              placeholder="Enter category title"
+              className="rounded-lg focus-visible:ring-primary/70"
+            />
             {errors.title && (
               <p className="text-sm text-red-500">{errors.title.message}</p>
             )}
           </div>
 
-          <div>
-            <Label>Description</Label>
-            <Textarea {...register("description")} rows={4} />
-          </div>
-
-          <div>
-            <Label>Total Courses</Label>
-            <Input
-              type="number"
-              {...register("totalCourse", { valueAsNumber: true })}
+          {/* Description */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-muted-foreground">
+              Description
+            </Label>
+            <Textarea
+              {...register("description", {
+                required: "Description is required",
+              })}
+              rows={4}
+              placeholder="Write a short description..."
+              className="rounded-lg resize-none focus-visible:ring-primary/70"
             />
-          </div>
-
-          <div>
-            <Label>Thumbnail</Label>
-            {ImageUploader ? (
-              <ImageUploader
-                onFile={(f) => setPickedFile(f)}
-                initialUrl={initial?.thumbnail ?? undefined}
-              />
-            ) : (
-              <input type="file" accept="image/*" {...register("thumbnail")} />
+            {errors.description && (
+              <p className="text-sm text-red-500">
+                {errors.description.message}
+              </p>
             )}
           </div>
 
-          <div className="flex justify-end gap-2">
+          {/* Actions */}
+          <div className="flex justify-end gap-3 pt-2 border-t border-border">
             <Button
+              type="button"
               variant="ghost"
               onClick={() => onOpenChange(false)}
-              type="button"
+              className="rounded-full px-5 text-muted-foreground hover:text-foreground hover:bg-muted transition"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="rounded-full px-6 font-medium"
+            >
               {isSubmitting ? "Saving..." : "Save"}
             </Button>
           </div>
