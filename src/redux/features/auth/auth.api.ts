@@ -52,6 +52,15 @@ export const authApi = baseApi.injectEndpoints({
      invalidatesTags: ["USER"],
 
     }),
+    addToWishlist: builder.mutation({
+      query: (payload) => ({
+        url: "/user/addToWishlist",
+        method: "PUT",
+        data: payload,
+      }),
+     invalidatesTags: ["USER"],
+
+    }),
     forgetPassword: builder.mutation({
       query: (payload) => ({
         url: "/user/forget-password",
@@ -112,5 +121,6 @@ export const {
   useVerifyOtpMutation,
   useForgetPasswordMutation,
   useResetPasswordMutation,
-  useGetAllQuery
+  useGetAllQuery,
+  useAddToWishlistMutation
 } = authApi;

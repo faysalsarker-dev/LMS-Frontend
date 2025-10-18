@@ -40,8 +40,6 @@ const getRoleVariant = (role: IUser['role']) => {
 const formatDate = (date: Date | null | undefined) => 
   date ? format(new Date(date), "PPP") : "—";
 
-const formatCurrency = (amount: number | undefined) =>
-  amount ? `$${amount.toLocaleString()}` : "$0";
 
 export function UserProfileDrawer({ user, open, onOpenChange }: UserProfileDrawerProps) {
   if (!user) return null;

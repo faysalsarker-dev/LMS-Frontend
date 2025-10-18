@@ -3,7 +3,7 @@ import Register from "@/pages/auth/Register";
 import { createBrowserRouter } from "react-router";
 import Layout from './../layout/home/Home';
 import { generateRoutes } from "./generateRoutes";
-import {adminRoutes, invisibleRoutes, publicRoutes} from "./allRoutes";
+import {adminRoutes, invisibleRoutes, publicRoutes, studentRoutes} from "./allRoutes";
 import { AdminLayout } from "@/layout/admin/AdminLayout";
 import NotFoundPage from "@/pages/ErrorPages/NotFoundPage";
 
@@ -15,6 +15,8 @@ export const router = createBrowserRouter([
             children:[
          ...generateRoutes(publicRoutes),
          ...generateRoutes(invisibleRoutes),
+         ...generateRoutes(studentRoutes),
+
 
 
            {

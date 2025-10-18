@@ -13,7 +13,6 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -68,7 +67,7 @@ const notifications = [
 
 export function Header() {
   const { setTheme } = useTheme();
-  const {data , isloading} = useUserInfoQuery({})
+  const {data , isloading} = useUserInfoQuery(undefined)
   const unreadCount = notifications.filter(n => n.unread).length;
 
   return (

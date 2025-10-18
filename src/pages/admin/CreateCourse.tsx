@@ -32,12 +32,16 @@ import {
   Timer,
   List,
   Copy,
+  TagIcon,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { handleApiError } from "@/utils/errorHandler";
 import { currencies } from "@/utils/currency";
 import { useCreateCourseMutation } from "@/redux/features/course/course.api";
+import { useGetAllCategorysQuery } from "@/redux/features/category/category.api";
+import type { ICategory } from "@/interface";
+import { useNavigate } from "react-router";
 
 type FormValues = {
   title: string;
@@ -57,13 +61,16 @@ type FormValues = {
   duration: string;
   totalLectures: number;
   isFeatured: boolean; 
+  category:string;
 };
 
 
 const CreateCourse: React.FC = () => {
+    const { data, isLoading:categoryLoading} = useGetAllCategorysQuery({});
+  const category = data?.data 
   const [createCourse, { isLoading }] = useCreateCourseMutation();
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-
+const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -89,6 +96,7 @@ defaultValues: {
   duration: "",
   totalLectures: 0,
   isFeatured: false,
+  category:""
 },
 
   });
@@ -105,7 +113,7 @@ defaultValues: {
  const onSubmit = async (data: FormValues) => {
   try {
     const formData = new FormData();
-
+console.log(data.category);
     formData.append("title", String(data.title));
     formData.append("description", String(data.description));
 
@@ -121,6 +129,7 @@ defaultValues: {
 
     formData.append("price", data.price.toString());
     formData.append("currency", data.currency);
+    formData.append("category", data.category);
     formData.append("isDiscounted", data.isDiscounted.toString());
     formData.append("discountPrice", data.discountPrice.toString());
     formData.append("isFeatured", data.isFeatured.toString());
@@ -135,6 +144,7 @@ defaultValues: {
     await createCourse(formData);
 
     toast.success("✨ Course created successfully!");
+    navigate('/dashboard/courses')
     reset();
     setThumbnailFile(null);
   } catch (err) {
@@ -297,7 +307,39 @@ defaultValues: {
                 )}
               />
 
+              <Controller
+                name="category"
+                control={control}
+                render={({ field }) => (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <TagIcon className="h-4 w-4 text-primary" />
+                      <Label className="text-sm font-medium">Category</Label>
+                    </div>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="h-12 w-full border-border hover:border-primary/50">
+                        <SelectValue placeholder="Select category " />
+                      </SelectTrigger>
+                      <SelectContent>
+                        
+{categoryLoading ? (
+                  <p className="text-sm p-2">Loading courses...</p>
+                ) : (
+                  category?.map((c:ICategory) => (
+                    <SelectItem key={c._id} value={c._id!}>
+                      {c.title}
+                    </SelectItem>
+                  ))
+                )}
 
+
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              />
+
+  
 
 
 <div className="flex items-center gap-4">
