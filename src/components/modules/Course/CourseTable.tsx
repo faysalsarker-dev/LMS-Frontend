@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,19 +19,18 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import UpdateCourse from "./UpdateCourse";
 import type { ICourse } from "@/interface";
-
-interface Course {
-  _id: string;
-  title: string;
-  description: string;
-  thumbnail?: string;
-  price: number;
-  currency: string;
-  level: string;
-  status: string;
-  totalEnrolled: number;
-  averageRating: number;
-}
+import { useDeleteCourseMutation } from "@/redux/features/course/course.api";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "react-hot-toast";
 
 interface Meta {
   page: number;
@@ -41,7 +39,7 @@ interface Meta {
 }
 
 interface CourseTableProps {
-  courses: Course[];
+  courses: ICourse[];
   meta: Meta;
   loading?: boolean;
   onPageChange?: (page: number) => void;
@@ -55,19 +53,43 @@ export function CourseTable({
 }: CourseTableProps) {
   const [currentPage, setCurrentPage] = useState(meta.page || 1);
   const totalPages = Math.ceil(meta.total / meta.limit);
-  const [updateOpen,setUpdateOpen]=useState(false)
+
+  const [updateOpen, setUpdateOpen] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
+
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [open, setOpen] = useState<boolean>(false);
+
+  const [deleteCourse, { isLoading: deleting }] = useDeleteCourseMutation();
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     onPageChange?.(page);
   };
 
+  const confirmDelete = (id: string) => {
+    setDeleteId(id);
+    setOpen(true);
+  };
 
-  const onUpdate =(id:string)=>{
+  const handleDelete = async () => {
+    if (!deleteId) return;
+    try {
+      await deleteCourse(deleteId).unwrap();
+      toast.success("Course deleted successfully!");
+    } catch (err) {
+      toast.error("Failed to delete course.");
+    } finally {
+      setDeleteId(null);
+      setOpen(false);
+    }
+  };
+
+  const onUpdate = (id: string) => {
     setUpdateOpen(true);
     setSelectedCourseId(id);
-  }
+  };
+
   return (
     <div className="w-full space-y-4">
       {/* Table */}
@@ -88,7 +110,6 @@ export function CourseTable({
 
           <TableBody className="min-h-12">
             {loading ? (
-              // 🔹 Skeleton rows while loading
               Array.from({ length: meta.limit }).map((_, i) => (
                 <TableRow key={i}>
                   <TableCell>
@@ -133,9 +154,7 @@ export function CourseTable({
                       <Skeleton className="h-12 w-16 rounded-md bg-gray-200" />
                     )}
                   </TableCell>
-                  <TableCell className="font-medium">
-                    {course.title}
-                  </TableCell>
+                  <TableCell className="font-medium">{course.title}</TableCell>
                   <TableCell>{course.level}</TableCell>
                   <TableCell>{course.status}</TableCell>
                   <TableCell>
@@ -144,18 +163,33 @@ export function CourseTable({
                   <TableCell>{course.totalEnrolled}</TableCell>
                   <TableCell>{course.averageRating.toFixed(1)}</TableCell>
                   <TableCell className="text-right space-x-2">
-                    <Button type="button" onClick={() => onUpdate(course.slug)} size="sm" variant="outline">
+                    <Button
+                      type="button"
+                      onClick={() => onUpdate(course.slug)}
+                      size="sm"
+                      variant="outline"
+                    >
                       Edit
                     </Button>
-                    <Button size="sm" variant="destructive">
-                      Delete
+                    <Button
+                      onClick={() => confirmDelete(course._id)}
+                      size="sm"
+                      variant="destructive"
+                      disabled={deleting && deleteId === course._id}
+                    >
+                      {deleting && deleteId === course._id
+                        ? "Deleting..."
+                        : "Delete"}
                     </Button>
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-6 text-muted-foreground">
+                <TableCell
+                  colSpan={8}
+                  className="text-center py-6 text-muted-foreground"
+                >
                   No courses found.
                 </TableCell>
               </TableRow>
@@ -164,13 +198,38 @@ export function CourseTable({
         </Table>
       </div>
 
+      {/* Update Modal */}
+      {updateOpen && (
+        <UpdateCourse
+          onClose={() => setUpdateOpen(false)}
+          courseId={selectedCourseId}
+          open={updateOpen}
+        />
+      )}
 
-
-{
-  updateOpen && <UpdateCourse onClose={()=>setUpdateOpen(false)} courseId={selectedCourseId} open={updateOpen} />
-}
-
-
+      {/* Delete Confirmation Alert */}
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent className="max-w-sm rounded-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this course?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. It will permanently remove this
+              course and its data from the system.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              Yes, delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Pagination */}
       {totalPages > 1 && (
@@ -178,8 +237,12 @@ export function CourseTable({
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
-                onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                onClick={() =>
+                  currentPage > 1 && handlePageChange(currentPage - 1)
+                }
+                className={
+                  currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                }
               />
             </PaginationItem>
 
@@ -202,7 +265,11 @@ export function CourseTable({
                 onClick={() =>
                   currentPage < totalPages && handlePageChange(currentPage + 1)
                 }
-                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                className={
+                  currentPage === totalPages
+                    ? "pointer-events-none opacity-50"
+                    : ""
+                }
               />
             </PaginationItem>
           </PaginationContent>

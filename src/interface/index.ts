@@ -177,3 +177,12 @@ export interface UploadProgress {
   status: "idle" | "uploading" | "processing" | "success" | "error";
   error?: string;
 }
+
+
+export interface ICategory {
+  _id?:string;
+  title: string;
+  description?: string;
+  thumbnail?: string | null;
+  totalCourse?: number;
+}

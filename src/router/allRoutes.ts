@@ -10,6 +10,7 @@ import Home from "@/pages/home/Home";
 import Courses from "@/pages/course/Courses";
 import withAuth from "./withAuth";
 import { UserRoles } from "@/interface";
+import { CategoryPage } from "@/pages/admin/category/CategoryPage";
 
 
 const AppSettings = lazy(() => import("@/pages/admin/app-setting/AppSettings"));
@@ -92,6 +93,14 @@ export const adminRoutes = [
   {
     Component: withAuth(LessonPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
     path: "/dashboard/lesson",
+    name: "Lessons",
+    icon: Flag,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
+
+  },
+  {
+    Component: withAuth(CategoryPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
+    path: "/dashboard/category",
     name: "Lessons",
     icon: Flag,
     roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]

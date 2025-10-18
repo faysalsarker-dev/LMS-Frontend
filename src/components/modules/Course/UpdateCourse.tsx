@@ -31,21 +31,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 type FieldObject = { value: string; id: string };
 
-const normalizeArrayField = (field?: string[] | { value: string; id: string }[]): FieldObject[] => {
-  if (!field || field.length === 0) return [{ value: "", id: Math.random().toString(36).substring(2, 9) }];
-
-  return field.flatMap((item) => {
-    if (typeof item === "string") return [{ value: item, id: Math.random().toString(36).substring(2, 9) }];
-    try {
-      const values: string[] = JSON.parse(item.value);
-      if (!Array.isArray(values)) return [];
-      return values.map((v) => ({ value: v, id: Math.random().toString(36).substring(2, 9) }));
-    } catch {
-      return [{ value: item.value || "", id: item.id || Math.random().toString(36).substring(2, 9) }];
-    }
-  });
-};
-
 interface UpdateCourseSheetProps {
   courseId: string | null;
   open: boolean;
@@ -92,6 +77,22 @@ const defaultValues: FormValues = {
   isFeatured: false,
 };
 
+// Helper function to convert string array to FieldObject array
+const convertToFieldObjects = (arr: string[] | undefined): FieldObject[] => {
+  if (!arr || !Array.isArray(arr) || arr.length === 0) {
+    return [{ value: "", id: Math.random().toString(36).substring(2, 9) }];
+  }
+  return arr.map(item => ({
+    value: item,
+    id: Math.random().toString(36).substring(2, 9)
+  }));
+};
+
+// Helper function to convert FieldObject array to string array (filtering empty values)
+const convertToStringArray = (arr: FieldObject[]): string[] => {
+  return arr.filter(item => item.value.trim() !== "").map(item => item.value.trim());
+};
+
 const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClose }) => {
   const { data, isLoading } = useGetCourseBySlugQuery(courseId, { skip: !courseId });
   const course = data?.data;
@@ -109,71 +110,80 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
   const isDiscounted = watch("isDiscounted");
 
   useEffect(() => {
-    if (course) {
-      reset({
-        ...defaultValues,
-        ...course,
-     
-   tags: normalizeArrayField(course.tags?.map((s: string) => ({ value: s })) || [{ value: "" }]),
-      skills: normalizeArrayField(course.skills?.map((s: string) => ({ value: s })) || [{ value: "" }]),
-      prerequisites: normalizeArrayField(course.prerequisites?.map((s: string) => ({ value: s })) || [{ value: "" }]),
-      requirements: normalizeArrayField(course.requirements?.map((s: string) => ({ value: s })) || [{ value: "" }]),
-      resources: normalizeArrayField(course.resources?.map((s: string) => ({ value: s })) || [{ value: "" }]),
-
-      });
+    if (course && open) {
+      // Small delay to ensure form is ready
+      setTimeout(() => {
+        reset({
+          title: course.title || "",
+          description: course.description || "",
+          tags: convertToFieldObjects(course.tags),
+          skills: convertToFieldObjects(course.skills),
+          level: course.level || "Beginner",
+          status: course.status || "draft",
+          prerequisites: convertToFieldObjects(course.prerequisites),
+          requirements: convertToFieldObjects(course.requirements),
+          resources: convertToFieldObjects(course.resources),
+          price: course.price || 0,
+          currency: course.currency || "USD",
+          isDiscounted: course.isDiscounted || false,
+          discountPrice: course.discountPrice || 0,
+          certificateAvailable: course.certificateAvailable || false,
+          duration: course.duration || "",
+          totalLectures: course.totalLectures || 0,
+          isFeatured: course.isFeatured || false,
+        });
+        // Reset thumbnail file when course changes
+        setThumbnailFile(null);
+      }, 0);
     }
-  }, [course, reset]);
+  }, [course, open, reset]);
 
-const onSubmit = async (data: FormValues) => {
-  try {
-    const formData = new FormData();
-      formData.append("title", String(data.title));
-      formData.append("description", String(data.description));
-      formData.append(
-        "tags",
-        JSON.stringify(data.tags.map((t) => t.value).filter(Boolean))
-      );
-      formData.append(
-        "skills",
-        JSON.stringify(data.skills.map((s) => s.value).filter(Boolean))
-      );
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const formData = new FormData();
+      
+      // Basic fields
+      formData.append("title", data.title.trim());
+      formData.append("description", data.description.trim());
       formData.append("level", data.level);
       formData.append("status", data.status);
-      formData.append(
-        "prerequisites",
-        JSON.stringify(data.prerequisites.map((p) => p.value).filter(Boolean))
-      );
-      formData.append(
-        "requirements",
-        JSON.stringify(data.requirements.map((r) => r.value).filter(Boolean))
-      );
-      formData.append(
-        "resources",
-        JSON.stringify(data.resources.map((r) => r.value).filter(Boolean))
-      );
+
+      // Convert field arrays to string arrays and append
+      const tags = convertToStringArray(data.tags);
+      const skills = convertToStringArray(data.skills);
+      const prerequisites = convertToStringArray(data.prerequisites);
+      const requirements = convertToStringArray(data.requirements);
+      const resources = convertToStringArray(data.resources);
+
+      tags.forEach(tag => formData.append("tags", tag));
+      skills.forEach(skill => formData.append("skills", skill));
+      prerequisites.forEach(prereq => formData.append("prerequisites", prereq));
+      requirements.forEach(req => formData.append("requirements", req));
+      resources.forEach(res => formData.append("resources", res));
+
+      // Pricing and other fields
       formData.append("price", data.price.toString());
       formData.append("currency", data.currency);
       formData.append("isDiscounted", data.isDiscounted.toString());
       formData.append("discountPrice", data.discountPrice.toString());
       formData.append("isFeatured", data.isFeatured.toString());
-      formData.append("duration", data.duration);
+      formData.append("duration", data.duration.trim());
       formData.append("totalLectures", data.totalLectures.toString());
       formData.append("certificateAvailable", data.certificateAvailable.toString());
-      if (thumbnailFile) formData.append("file", thumbnailFile);
+      
+      // Append thumbnail if changed
+      if (thumbnailFile) {
+        formData.append("file", thumbnailFile);
+      }
 
-
-    // ✅ Debug log
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
+      const courseId = course._id;
+      await updateCourse({ courseId, formData }).unwrap();
+      toast.success("✅ Course updated successfully!");
+      onClose();
+    } catch (err) {
+      handleApiError(err);
     }
-const courseId = course._id
-    await updateCourse({ courseId , formData }).unwrap();
-    toast.success("✅ Course updated successfully!");
-    onClose();
-  } catch (err) {
-    handleApiError(err);
-  }
-};
+  };
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
@@ -182,11 +192,13 @@ const courseId = course._id
           <SheetTitle className="text-xl font-semibold">Update Course</SheetTitle>
         </SheetHeader>
 
-        {isLoading ? (
+        {isLoading || !course ? (
           <div className="space-y-4 p-6">
             <Skeleton className="h-6 w-1/2" />
             <Skeleton className="h-10 w-full" />
             <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 p-6 text-sm">
@@ -194,11 +206,11 @@ const courseId = course._id
             <FormSection title="Course Fundamentals" description="Update course basics" icon={<BookOpen className="h-6 w-6" />}>
               <div className="space-y-3">
                 <Label htmlFor="title">Course Title</Label>
-                <Input id="title" disabled={isUpdating} {...register("title")} />
+                <Input id="title" disabled={isUpdating} {...register("title", { required: true })} />
               </div>
               <div className="space-y-3">
                 <Label htmlFor="description">Course Description</Label>
-                <Textarea id="description" disabled={isUpdating} {...register("description")} rows={5} />
+                <Textarea id="description" disabled={isUpdating} {...register("description", { required: true })} rows={5} />
               </div>
               <div className="space-y-3">
                 <Label>Thumbnail</Label>
@@ -220,46 +232,52 @@ const courseId = course._id
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="duration">Duration</Label>
-                  <Input id="duration" disabled={isUpdating} {...register("duration")} />
+                  <Input id="duration" placeholder="e.g., 4 weeks" disabled={isUpdating} {...register("duration")} />
                 </div>
                 <div>
                   <Label htmlFor="lectures">Total Lectures</Label>
-                  <Input id="lectures" type="number" disabled={isUpdating} {...register("totalLectures")} />
+                  <Input id="lectures" type="number" disabled={isUpdating} {...register("totalLectures", { valueAsNumber: true })} />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <Controller
-                  name="level"
-                  control={control}
-                  render={({ field }) => (
-                    <Select disabled={isUpdating} value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Beginner">Beginner</SelectItem>
-                        <SelectItem value="Intermediate">Intermediate</SelectItem>
-                        <SelectItem value="Advanced">Advanced</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                <Controller
-                  name="status"
-                  control={control}
-                  render={({ field }) => (
-                    <Select disabled={isUpdating} value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="archived">Archived</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
+                <div>
+                  <Label>Course Level</Label>
+                  <Controller
+                    name="level"
+                    control={control}
+                    render={({ field }) => (
+                      <Select disabled={isUpdating} value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Beginner">Beginner</SelectItem>
+                          <SelectItem value="Intermediate">Intermediate</SelectItem>
+                          <SelectItem value="Advanced">Advanced</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                </div>
+                <div>
+                  <Label>Course Status</Label>
+                  <Controller
+                    name="status"
+                    control={control}
+                    render={({ field }) => (
+                      <Select disabled={isUpdating} value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="draft">Draft</SelectItem>
+                          <SelectItem value="archived">Archived</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                </div>
               </div>
 
               <div className="flex items-center gap-2 mt-3">
@@ -294,19 +312,22 @@ const courseId = course._id
             {/* Pricing */}
             <FormSection title="Pricing" description="Update price & discounts" icon={<DollarSign className="h-6 w-6" />}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <Controller name="currency" control={control} render={({ field }) => (
-                  <Select disabled={isUpdating} value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select currency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.label}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                )}/>
+                <div>
+                  <Label>Currency</Label>
+                  <Controller name="currency" control={control} render={({ field }) => (
+                    <Select disabled={isUpdating} value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select currency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {currencies.map(c => <SelectItem key={c.code} value={c.code}>{c.label}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  )}/>
+                </div>
                 <div>
                   <Label>Price</Label>
-                  <Input type="number" disabled={isUpdating} {...register("price")} />
+                  <Input type="number" step="0.01" disabled={isUpdating} {...register("price", { valueAsNumber: true })} />
                 </div>
               </div>
 
@@ -320,7 +341,7 @@ const courseId = course._id
               {isDiscounted && (
                 <div className="mt-3 transition-all">
                   <Label>Discount Price</Label>
-                  <Input type="number" disabled={isUpdating} {...register("discountPrice")} />
+                  <Input type="number" step="0.01" disabled={isUpdating} {...register("discountPrice", { valueAsNumber: true })} />
                 </div>
               )}
 
@@ -335,9 +356,11 @@ const courseId = course._id
             {/* Enrolled Students */}
             <FormSection title="Enrolled Students" description="List of enrolled students" icon={<Users className="h-6 w-6" />}>
               {course?.enrolledStudents?.length ? (
-                <ul className="list-disc pl-6">
+                <ul className="list-disc pl-6 space-y-1">
                   {course.enrolledStudents.map((s: any) => (
-                    <li key={s._id}>{s.name} <span className="text-muted-foreground">({s.email})</span></li>
+                    <li key={s._id}>
+                      {s.name} <span className="text-muted-foreground">({s.email})</span>
+                    </li>
                   ))}
                 </ul>
               ) : (

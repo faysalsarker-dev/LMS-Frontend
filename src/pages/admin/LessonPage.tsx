@@ -67,7 +67,7 @@ export default function LessonPage() {
   const [selectedCourse, setSelectedCourse] = useState("all");
   const [selectedMilestone, setSelectedMilestone] = useState("all");
 
-  const { data } = useGetAllLessonsQuery({ page, limit ,status:selectedStatus , course:selectedCourse, milestone:selectedMilestone ,search : searchTitle},{ refetchOnMountOrArgChange: true });
+  const { data } = useGetAllLessonsQuery({ page, limit ,status:selectedStatus , course:selectedCourse, milestone:selectedMilestone ,search : searchTitle ,type:selectedContentType},{ refetchOnMountOrArgChange: true });
   const { data: courses } = useGetAllCoursesQuery({ page: 1, limit: 10000 });
   const { data: milestones } = useGetAllMilestonesQuery({});
   const [deleteLesson]=useDeleteLessonMutation()
@@ -111,6 +111,7 @@ await deleteLesson(deleteId).unwrap()
 
   };
 
+  console.log(selectedContentType,'types');
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
