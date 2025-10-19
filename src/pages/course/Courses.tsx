@@ -1,4 +1,4 @@
-import { useState,  useMemo } from "react";
+import { useState,  useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,8 +24,11 @@ import CourseCard, { CourseCardSkeleton } from "@/components/modules/Course/Cour
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
 import { useGetAllCategorysQuery } from "@/redux/features/category/category.api";
 import type { ICategory, ICourse } from "@/interface";
+import { useSearchParams } from "react-router";
 
 const Courses = () => {
+
+  const [searchParams] = useSearchParams();
   // ------------------------------
   // 🔹 State Management
   // ------------------------------
@@ -36,6 +39,18 @@ const Courses = () => {
     page: 1,
     limit: 9,
   });
+
+
+  useEffect(() => {
+    const category = searchParams.get("category");
+    console.log(category);
+    if (category) {
+      setFilters((prev) => ({
+        ...prev,
+        category,
+      }));
+    }
+  }, [searchParams]);
 
   // ------------------------------
   // 🔹 Data Fetching

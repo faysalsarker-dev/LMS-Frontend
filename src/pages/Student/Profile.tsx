@@ -1,431 +1,362 @@
-import { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import {  useState, useCallback, useMemo, type JSX } from "react";
+
 import { format } from "date-fns";
-import { BookCheck, Heart, Lock, LogOut, User, Loader2, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
+import {
+  BookCheck,
+  Heart,
+  Lock,
+  LogOut,
+  Loader2,
+  User,
+  Edit2,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+
 import MyCourseCard from "@/components/modules/profile/MyCourseCard";
 import AvatarUpload from "@/components/modules/profile/AvatarUpload";
-import { useUpdateMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
+import CourseCard from "@/components/modules/Course/CourseCard";
+import {
+  useUpdateMutation,
+  useUserInfoQuery,
+} from "@/redux/features/auth/auth.api";
+import type { ICourse } from "@/interface";
+import { handleApiError } from "@/utils/errorHandler";
+import SettingsTab from "@/components/modules/profile/SettingsTab";
+import PersonalInfoTab from "@/components/modules/profile/PersonalInfoTab";
+import EditProfileDialog from "@/components/modules/profile/EditProfileDialog";
+
+
+
+interface IAddress {
+  country: string;
+  city: string;
+}
+
+interface IUserInfo {
+  _id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  profile?: string;
+  address?: IAddress;
+  courses: ICourse[];
+  wishList: ICourse[];
+  createdAt: string;
+  updatedAt?: string;
+}
+
+interface IFormValues {
+  name: string;
+  email: string;
+  phone: string;
+  address: IAddress;
+  password: string;
+}
+
+
+
+interface IProfileHeaderProps {
+  userInfo: IUserInfo;
+  onEditClick: () => void;
+}
+
+
+
+
+interface ICoursesTabProps {
+  courses: ICourse[];
+  isLoading: boolean;
+}
+
+interface IWishlistTabProps {
+  wishlist: ICourse[];
+  isLoading: boolean;
+}
+
+
+
+interface IEmptyStateProps {
+  message: string;
+}
 
 
 
 
 
 
-const countries = ["United States", "Canada", "United Kingdom", "Bangladesh", "India", "China", "Australia", "Germany"];
-
-const Profile = () => {
-const [updateUser]=useUpdateMutation()
-  const [profileImage, setProfileImage] = useState<File | null>(null);
-
-  const {data , isloading} = useUserInfoQuery(undefined)
-  console.log(data,'data');
-  const userInfo = data?.data
-const course = data?.data.course
 
 
 
-  const { control, handleSubmit, reset, formState: { isDirty } } = useForm({
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      address: {
-        country: "",
-        city: "",
-      },
+// Empty State Component
+const EmptyState = ({ message }: IEmptyStateProps): JSX.Element => (
+  <div className="flex items-center justify-center min-h-screen">
+    <p className="text-muted-foreground">{message}</p>
+  </div>
+);
+
+// Profile Header Component
+const ProfileHeader = ({ userInfo, onEditClick }: IProfileHeaderProps): JSX.Element => {
+  const { name, email, createdAt } = userInfo;
+
+  return (
+    <Card className="mb-8 shadow-md border border-border pt-0 rounded-2xl">
+      <div className="h-32 bg-primary rounded-t-2xl" />
+      <CardContent className=" pt-0 flex flex-col md:flex-row items-center gap-6">
+        <AvatarUpload
+          imageUrl={userInfo.profile}
+          onImageChange={() => {}}
+        />
+        <div className="text-center md:text-left flex-1">
+          <div className="flex items-start gap-3">
+            <div>
+              <h2 className="text-2xl font-bold">{name}</h2>
+              <p className="text-sm text-muted-foreground">{email}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Member since {format(new Date(createdAt), "MMMM yyyy")}
+              </p>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onEditClick}
+              className="p-2"
+              aria-label="Edit profile"
+            >
+              <Edit2 className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+        <Button variant="outline" className="gap-2">
+          <LogOut className="w-4 h-4" /> Logout
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Edit Profile Dialog Component
+
+    
+    // Personal Information Tab
+
+
+// Courses Tab
+const CoursesTab = ({ courses, isLoading }: ICoursesTabProps): JSX.Element => {
+  if (isLoading) {
+    return (
+      <Card className="shadow-md border border-border">
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-center py-10">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="shadow-md border border-border">
+      <CardHeader>
+        <CardTitle>My Courses</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {courses?.length ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {courses.map((course) => (
+              <MyCourseCard key={course._id} course={course} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-10 text-muted-foreground">
+            You haven't enrolled in any courses yet.
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+// Wishlist Tab
+const WishlistTab = ({ wishlist, isLoading }: IWishlistTabProps): JSX.Element => {
+  if (isLoading) {
+    return (
+      <Card className="shadow-md border border-border">
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-center py-10">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="shadow-md border border-border">
+      <CardHeader>
+        <CardTitle>Wishlist</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {wishlist?.length ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {wishlist.map((course) => (
+              <CourseCard key={course._id} course={course} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-10 text-muted-foreground">
+            Your wishlist is empty.
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+// Settings Tab
+
+
+const Profile = (): JSX.Element => {
+  const [updateUser, { isLoading: isUpdating }] = useUpdateMutation();
+  const { data, isLoading, refetch } = useUserInfoQuery(undefined);
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const userInfo = useMemo(() => data?.data, [data]);
+  const courses = useMemo(() => userInfo?.courses || [], [userInfo]);
+  const wishlist = useMemo(() => userInfo?.wishList || [], [userInfo]);
+
+  // Handle profile update
+  const handleProfileUpdate = useCallback(
+    async (formValues: IFormValues, profileImage: File | null): Promise<void> => {
+      try {
+        const fd = new FormData();
+        fd.append("name", formValues.name);
+        fd.append("phone", formValues.phone || "");
+        fd.append("address[country]", formValues.address?.country || "");
+        fd.append("address[city]", formValues.address?.city || "");
+
+        if (profileImage) {
+          fd.append("profile", profileImage);
+        }
+
+        const res = await updateUser(fd).unwrap();
+
+        if (res?.success) {
+          toast.success("Profile updated successfully!");
+          refetch();
+        } 
+      } catch (err) {
+handleApiError(err)
+      }
     },
-  });
+    [updateUser, refetch]
+  );
 
-  useEffect(() => {
-    if (userInfo?.data) {
-      reset({
-        name: userInfo.data.name || "",
-        email: userInfo.data.email || "",
-        phone: userInfo.data.phone || "",
-        address: {
-          country: userInfo.data.address?.country || "",
-          city: userInfo.data.address?.city || "",
-        },
-      });
-    }
-  }, [userInfo, reset]);
 
-  const handleImageChange = (file: File) => {
-    setProfileImage(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviewUrl(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const onSubmit = async (data: any) => {
-    setIsUpdating(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log("Form data:", data);
-      console.log("Profile image:", profileImage);
-      // Handle form submission here
-    } catch (err) {
-      console.error("Error updating profile:", err);
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  const handleLogout = () => {
-    console.log("Logging out...");
-    // Handle logout
-  };
-
-  const handleResetPassword = () => {
-    console.log("Reset password...");
-    // Handle password reset
-  };
-
-  const handleDeleteAccount = () => {
-    console.log("Delete account...");
-    // Handle account deletion
-  };
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
-      </div>
+        <div className="flex items-center justify-center min-h-screen">
+    <Loader2 className="h-10 w-10 animate-spin text-primary" />
+  </div>
     );
   }
 
-  if (!userInfo?.data) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-muted-foreground">No profile data found.</p>
-      </div>
-    );
+  if (!userInfo) {
+    return <EmptyState message="No profile data found." />;
   }
-
-  const { name, email, createdAt, address } = userInfo;
 
   return (
     <div className="min-h-screen py-12 bg-background">
       <div className="container mx-auto px-4 max-w-6xl">
-        {/* Page Header */}
-        <div className="mb-8 animate-fade-in">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
+        {/* Header */}
+        <div className="mb-8 text-center md:text-left">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent">
             My Profile
           </h1>
-          <p className="text-muted-foreground">Manage your account and course preferences</p>
+          <p className="text-muted-foreground">
+            Manage your account and preferences
+          </p>
         </div>
 
-        {/* Profile Header Card */}
-        <Card className="mb-8 shadow-card border-border overflow-hidden animate-scale-in">
-          <div className="h-32 bg-gradient-primary" />
-          <CardContent className="pt-0 pb-8">
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-6 -mt-16 md:-mt-12">
-              <AvatarUpload
-                imageUrl={previewUrl}
-                onImageChange={handleImageChange}
-              />
-              <div className="flex-1 text-center md:text-left mt-4 md:mt-8">
-                <h2 className="text-3xl font-bold mb-2">{name}</h2>
-                <p className="text-muted-foreground mb-1">{email}</p>
-                <p className="text-sm text-muted-foreground flex items-center justify-center md:justify-start gap-1">
-                  <span>Member since {format(new Date(createdAt), "MMMM yyyy")}</span>
-                </p>
-              </div>
-              <div className="md:mt-8">
-                <Button onClick={handleLogout} variant="outline" className="gap-2">
-                  <LogOut className="h-4 w-4" />
-                  Logout
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Profile Card */}
+        <ProfileHeader
+          userInfo={userInfo}
+          onEditClick={() => setDialogOpen(true)}
+        />
 
-        {/* Tabs Section */}
-        <Tabs defaultValue="profile" className="animate-slide-up">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-8 bg-muted/50 p-1">
-            <TabsTrigger 
-              value="profile" 
-              className="gap-2 data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground transition-all"
+        {/* Edit Dialog */}
+        <EditProfileDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          userInfo={userInfo}
+          onSubmit={handleProfileUpdate}
+          isLoading={isUpdating}
+        />
+
+        {/* Tabs */}
+        <Tabs defaultValue="profile">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6 bg-muted/50 p-1 rounded-lg">
+            <TabsTrigger
+              value="profile"
+              className="data-[state=active]:bg-primary data-[state=active]:text-white"
             >
-              <User className="h-4 w-4" />
-              <span className="hidden sm:inline">Profile</span>
+              <User className="h-4 w-4 mr-1" /> Profile
             </TabsTrigger>
-            <TabsTrigger 
+            <TabsTrigger
               value="courses"
-              className="gap-2 data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground transition-all"
+              className="data-[state=active]:bg-primary data-[state=active]:text-white"
             >
-              <BookCheck className="h-4 w-4" />
-              <span className="hidden sm:inline">My Courses</span>
+              <BookCheck className="h-4 w-4 mr-1" /> Courses
             </TabsTrigger>
-            <TabsTrigger 
+            <TabsTrigger
               value="wishlist"
-              className="gap-2 data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground transition-all"
+              className="data-[state=active]:bg-primary data-[state=active]:text-white"
             >
-              <Heart className="h-4 w-4" />
-              <span className="hidden sm:inline">Wishlist</span>
+              <Heart className="h-4 w-4 mr-1" /> Wishlist
             </TabsTrigger>
-            <TabsTrigger 
+            <TabsTrigger
               value="settings"
-              className="gap-2 data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground transition-all"
+              className="data-[state=active]:bg-primary data-[state=active]:text-white"
             >
-              <Lock className="h-4 w-4" />
-              <span className="hidden sm:inline">Settings</span>
+              <Lock className="h-4 w-4 mr-1" /> Settings
             </TabsTrigger>
           </TabsList>
 
-          {/* Profile Tab */}
           <TabsContent value="profile">
-            <Card className="shadow-card border-border">
-              <CardHeader>
-                <CardTitle className="text-2xl">Personal Information</CardTitle>
-                <CardDescription>Update your profile details and contact information</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Controller
-                        name="name"
-                        control={control}
-                        render={({ field }) => (
-                          <Input 
-                            {...field} 
-                            id="name" 
-                            placeholder="Enter your full name"
-                            className="transition-all focus:ring-2 focus:ring-primary"
-                          />
-                        )}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
-                      <Controller
-                        name="email"
-                        control={control}
-                        render={({ field }) => (
-                          <Input 
-                            {...field} 
-                            type="email" 
-                            id="email" 
-                            disabled 
-                            className="bg-muted cursor-not-allowed"
-                          />
-                        )}
-                      />
-                      <p className="text-xs text-muted-foreground">Email cannot be changed</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Controller
-                      name="phone"
-                      control={control}
-                      render={({ field }) => (
-                        <Input 
-                          {...field} 
-                          id="phone" 
-                          placeholder="+1 (555) 000-0000"
-                          className="transition-all focus:ring-2 focus:ring-primary"
-                        />
-                      )}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="country">Country</Label>
-                      <Controller
-                        name="address.country"
-                        control={control}
-                        render={({ field }) => (
-                          <Select value={field.value} onValueChange={field.onChange}>
-                            <SelectTrigger className="transition-all focus:ring-2 focus:ring-primary">
-                              <SelectValue placeholder="Select Country" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {countries.map((country) => (
-                                <SelectItem key={country} value={country}>
-                                  {country}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="city">City</Label>
-                      <Controller
-                        name="address.city"
-                        control={control}
-                        render={({ field }) => (
-                          <Input 
-                            {...field} 
-                            id="city" 
-                            placeholder="Enter your city"
-                            className="transition-all focus:ring-2 focus:ring-primary"
-                          />
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end gap-3 pt-4 border-t">
-                    <Button 
-                      variant="outline" 
-                      type="button" 
-                      onClick={() => {
-                        reset();
-                        setPreviewUrl(userInfo.data.profile);
-                      }} 
-                      disabled={isUpdating || !isDirty}
-                    >
-                      Cancel
-                    </Button>
-                    <Button 
-                      type="submit" 
-                      disabled={isUpdating || !isDirty}
-                      className="bg-gradient-primary hover:opacity-90 transition-opacity"
-                    >
-                      {isUpdating && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                      Save Changes
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
+            <PersonalInfoTab userInfo={userInfo} />
           </TabsContent>
 
-          {/* My Courses Tab */}
           <TabsContent value="courses">
-            <Card className="shadow-card border-border">
-              <CardHeader>
-                <CardTitle className="text-2xl flex items-center gap-2">
-                  <BookCheck className="h-6 w-6 text-primary" />
-                  My Enrolled Courses
-                </CardTitle>
-                <CardDescription>
-                  Track your learning progress across {dummyCourses.length} courses
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {dummyCourses.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {dummyCourses.map((course) => (
-                      <MyCourseCard key={course.id} course={course} showProgress />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <BookCheck className="h-16 w-16 text-muted-foreground mx-auto mb-4 opacity-50" />
-                    <p className="text-muted-foreground">You haven't enrolled in any courses yet.</p>
-                    <Button className="mt-4 bg-gradient-primary">Browse Courses</Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <CoursesTab courses={courses} isLoading={isLoading} />
           </TabsContent>
 
-          {/* Wishlist Tab */}
           <TabsContent value="wishlist">
-            <Card className="shadow-card border-border">
-              <CardHeader>
-                <CardTitle className="text-2xl flex items-center gap-2">
-                  <Heart className="h-6 w-6 text-secondary" />
-                  My Wishlist
-                </CardTitle>
-                <CardDescription>
-                  Courses you've saved for later learning
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {wishlistCourses.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {wishlistCourses.map((course) => (
-                      <MyCourseCard key={course.id} course={course} />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <Heart className="h-16 w-16 text-muted-foreground mx-auto mb-4 opacity-50" />
-                    <p className="text-muted-foreground">Your wishlist is empty.</p>
-                    <Button className="mt-4 bg-gradient-primary">Explore Courses</Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <WishlistTab wishlist={wishlist} isLoading={isLoading} />
           </TabsContent>
 
-          {/* Settings Tab */}
           <TabsContent value="settings">
-            <div className="space-y-6">
-              <Card className="shadow-card border-border">
-                <CardHeader>
-                  <CardTitle className="text-2xl flex items-center gap-2">
-                    <Lock className="h-6 w-6 text-accent" />
-                    Security Settings
-                  </CardTitle>
-                  <CardDescription>
-                    Manage your password and account security
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-start justify-between p-4 border rounded-lg">
-                    <div>
-                      <h3 className="font-semibold mb-1">Password</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Update your password to keep your account secure
-                      </p>
-                    </div>
-                    <Button onClick={handleResetPassword} className="bg-gradient-primary">
-                      Reset Password
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+            <SettingsTab/>
 
-              <Card className="shadow-card border-destructive/50">
-                <CardHeader>
-                  <CardTitle className="text-2xl text-destructive flex items-center gap-2">
-                    <Trash2 className="h-6 w-6" />
-                    Danger Zone
-                  </CardTitle>
-                  <CardDescription>
-                    Irreversible actions that affect your account
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-start justify-between p-4 border border-destructive/50 rounded-lg bg-destructive/5">
-                    <div>
-                      <h3 className="font-semibold mb-1 text-destructive">Delete Account</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Permanently delete your account and all associated data
-                      </p>
-                    </div>
-                    <Button 
-                      onClick={handleDeleteAccount} 
-                      variant="destructive"
-                      className="gap-2"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      Delete Account
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+
+
+
+
+
+
+
+
           </TabsContent>
         </Tabs>
       </div>

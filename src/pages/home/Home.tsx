@@ -8,6 +8,7 @@ import FeaturedCourse from '@/components/modules/home/FeaturedCourse';
 import LearningPaths from '@/components/modules/home/LearningPaths';
 import TrustBar from '@/components/modules/home/TrustBar';
 import InstructorSpotlight from '@/components/modules/home/InstructorSpotlight';
+import FaqSection from '@/components/modules/home/FaqSection';
 
 const Home = () => {
 
@@ -75,6 +76,9 @@ const Home = () => {
         </div>
       </section>
 
+
+
+<FaqSection/>
       <Testimonial />
 
       {/* CTA Section */}

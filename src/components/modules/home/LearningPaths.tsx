@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { Card, } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
 import { useGetAllCategorysQuery } from '@/redux/features/category/category.api';
@@ -68,6 +67,7 @@ const LearningPaths = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
+                  <Link to={`/courses?category=${path._id}`}>
                   <Card className="p-6 h-full hover-lift cursor-pointer group border-2 hover:border-primary/50">
                     <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <img className="w-12 h-12" src={path.thumbnail!} alt={path.title} />
@@ -81,23 +81,13 @@ const LearningPaths = () => {
                       <ArrowRight className="w-5 h-5 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                     </div>
                   </Card>
+                  </Link>
+                  
                 </motion.div>
               ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
-        >
-          <Link to="/courses">
-            <Button size="lg" variant="outline" className="group">
-              Explore All Paths
-              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
-        </motion.div>
+     
       </div>
     </section>
   );
