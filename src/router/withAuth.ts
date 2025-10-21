@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate} from "react-router";
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import {LoadingSkeleton} from "@/components/modules/Course/LoadingSkeleton"
 
@@ -10,7 +9,6 @@ const withAuth = <P extends object>(
   requiredRole?: TRole[]
 ) => {
   const AuthWrapper: React.FC<P> = (props) => {
-    const navigate = useNavigate();
     const { data, isLoading } = useUserInfoQuery(undefined);
 
     const user = data?.data;

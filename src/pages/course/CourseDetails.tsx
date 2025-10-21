@@ -10,7 +10,6 @@ import {
 
   CheckCircle,
   PlayCircle,
-  Star,
   BookOpen,
   ArrowLeft,
  
@@ -146,13 +145,7 @@ const CourseDetails = memo(() => {
 
                       {/* Stats */}
                       <div className="flex flex-wrap items-center gap-6 text-sm">
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1">
-                            <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-                            <span className="font-bold text-foreground">{course.averageRating}</span>
-                          </div>
-                          <span className="text-muted-foreground">({course.totalEnrolled.toLocaleString()} students)</span>
-                        </div>
+                      
                         <div className="flex items-center gap-2">
                           <Clock className="w-4 h-4 text-blue-500" />
                           <span>{course.duration}</span>
@@ -173,9 +166,11 @@ const CourseDetails = memo(() => {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
-                          <Button size="lg" className="bg-gradient-primary text-primary-foreground px-8 py-3 text-lg font-semibold">
-                            Enroll Now
-                          </Button>
+                    <Link  to={`/checkout/${slug}`}>
+                            <Button size="lg" className="bg-gradient-primary text-primary-foreground px-8 py-3 text-lg font-semibold">
+                              Enroll Now
+                            </Button>
+                    </Link>
                         </motion.div>
                         
                         <div className="flex items-center gap-3">
@@ -419,9 +414,11 @@ const CourseDetails = memo(() => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        <Button className="w-full bg-gradient-primary text-primary-foreground py-3 text-lg font-semibold">
-                          Enroll Now
-                        </Button>
+                  <Link to={`/checkout/${slug}`}>
+                          <Button className="w-full bg-gradient-primary text-primary-foreground py-3 text-lg font-semibold">
+                            Enroll Now
+                          </Button>
+                  </Link>
                       </motion.div>
 
                       <Separator />

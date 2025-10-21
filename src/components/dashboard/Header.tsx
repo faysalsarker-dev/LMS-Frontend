@@ -28,7 +28,6 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/hooks/useTheme';
 import { useUserInfoQuery } from '@/redux/features/auth/auth.api';
-import { Skeleton } from '../ui/skeleton';
 
 const notifications = [
   {
@@ -67,7 +66,7 @@ const notifications = [
 
 export function Header() {
   const { setTheme } = useTheme();
-  const {data , isloading} = useUserInfoQuery(undefined)
+  const {data } = useUserInfoQuery(undefined)
   const unreadCount = notifications.filter(n => n.unread).length;
 
   return (
@@ -180,10 +179,7 @@ export function Header() {
           </DropdownMenu>
 
 {
-isloading ? (
-  <Skeleton className='h-10 w-10 rounded-full'/>
-
-): data && (
+ data && (
        <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:ring-2 hover:ring-primary/20 transition-all duration-200">

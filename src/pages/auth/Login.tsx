@@ -1,6 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +12,6 @@ import { GraduationCap, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useLoginMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { handleApiError } from "@/utils/errorHandler";
 
 type LoginFormValues = {
   email: string;
@@ -40,32 +41,12 @@ const Login = () => {
     },
   });
 
-  // ✅ Redirect if already logged in
   useEffect(() => {
-    if (user) {
+    if (user && !isUserLoading) {
       navigate(-1);
     }
   }, [user, navigate]);
 
-  // const onSubmit = async (data: LoginFormValues) => {
-  //   try {
-  //     await login({
-  //       email: data.email,
-  //       password: data.password,
-  //       remember: data.remember,
-  //     }).unwrap();
-
-  //     toast.success("Login successful!");
-  //     navigate(from, { replace: true });
-  //   } catch (err) {
-  //     const apiError = err as { data?: { message?: string } };
-  //     console.log(err);
-  //     if (apiError?.data?.message === "Account is not verified") {
-  //       return navigate(`/verify-account/${data.email}`);
-  //     }
-  //     handleApiError(err);
-  //   }
-  // };
 
 
 
@@ -99,31 +80,11 @@ const onSubmit = async (data: LoginFormValues) => {
 
 
   // ✅ Combined loading state
-  const isLoading = isLoginLoading || isUserLoading;
 
 
   return (
     <div className="relative min-h-screen flex items-center justify-center py-12 px-4 bg-background overflow-hidden">
-      {/* <AnimatePresence>
-        {isLoading && (
-          <motion.div
-            className="absolute inset-0 flex flex-col items-center justify-center bg-background/70 backdrop-blur-sm z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="flex flex-col items-center"
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 200 }}
-            >
-              <Loader2 className="h-10 w-10 text-primary animate-spin mb-3" />
-              <p className="text-sm text-muted-foreground">Please wait...</p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence> */}
+  
 
       {/* ✅ Main content */}
       <motion.div

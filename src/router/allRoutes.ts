@@ -13,6 +13,7 @@ import Courses from "@/pages/course/Courses";
 import withAuth from "./withAuth";
 import { UserRoles } from "@/interface";
 import { CategoryPage } from "@/pages/admin/category/CategoryPage";
+import CheckoutPage from "@/pages/Checkout/CheckoutPage";
 
 
 const AppSettings = lazy(() => import("@/pages/admin/app-setting/AppSettings"));
@@ -125,6 +126,11 @@ export const invisibleRoutes = [
   {
     Component: CourseDetails,
     path: "/courses/:slug",
+    name: "Course Details",
+  },
+  {
+    Component: CheckoutPage,
+    path: "/checkout/:slug",
     name: "Course Details",
   },
 
