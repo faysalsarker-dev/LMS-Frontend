@@ -145,10 +145,7 @@ const ProfileHeader = ({ userInfo, onEditClick }: IProfileHeaderProps): JSX.Elem
   );
 };
 
-// Edit Profile Dialog Component
 
-    
-    // Personal Information Tab
 
 
 // Courses Tab
@@ -173,7 +170,7 @@ const CoursesTab = ({ courses, isLoading }: ICoursesTabProps): JSX.Element => {
       <CardContent>
         {courses?.length ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
+            {courses?.map((course : ICourse) => (
               <MyCourseCard key={course._id} course={course} />
             ))}
           </div>
@@ -228,14 +225,18 @@ const WishlistTab = ({ wishlist, isLoading }: IWishlistTabProps): JSX.Element =>
 
 const Profile = (): JSX.Element => {
   const [updateUser, { isLoading: isUpdating }] = useUpdateMutation();
-  const { data, isLoading, refetch } = useUserInfoQuery(undefined);
+const { data, isLoading, refetch } = useUserInfoQuery({
+  includeCourses: true,
+  includeWishlist: true,
+});
+
 
   const [dialogOpen, setDialogOpen] = useState(false);
-
+  
   const userInfo = useMemo(() => data?.data, [data]);
   const courses = useMemo(() => userInfo?.courses || [], [userInfo]);
   const wishlist = useMemo(() => userInfo?.wishList || [], [userInfo]);
-
+  
   // Handle profile update
   const handleProfileUpdate = useCallback(
     async (formValues: IFormValues, profileImage: File | null): Promise<void> => {

@@ -9,7 +9,10 @@ const withAuth = <P extends object>(
   requiredRole?: TRole[]
 ) => {
   const AuthWrapper: React.FC<P> = (props) => {
-    const { data, isLoading } = useUserInfoQuery(undefined);
+    const { data, isLoading } = useUserInfoQuery({
+       includeCourses: false,
+  includeWishlist: false,
+    });
 
     const user = data?.data;
 

@@ -62,8 +62,8 @@ const CheckoutPage = () => {
     }
 
     const enrolData = {
-      courseId: course._id,
-      paymentType: selectedPayment,
+      course: course._id,
+      method: selectedPayment,
     };
 
     const loadingToastId = toast.loading(`Processing ${selectedPayment} payment...`);

@@ -47,7 +47,11 @@ import { useState } from 'react';
 
 export const Header = () => {
   const location = useLocation();
-   const { data: userInfo } = useUserInfoQuery(undefined);
+   const { data: userInfo } = useUserInfoQuery({});
+
+
+
+
       const [logout] = useLogoutMutation();
 const [open,setOpen]=useState(false)
 

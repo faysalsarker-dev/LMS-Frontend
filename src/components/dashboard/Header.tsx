@@ -66,7 +66,10 @@ const notifications = [
 
 export function Header() {
   const { setTheme } = useTheme();
-  const {data } = useUserInfoQuery(undefined)
+  const {data } = useUserInfoQuery({
+      includeCourses: false,
+  includeWishlist: false,
+  })
   const unreadCount = notifications.filter(n => n.unread).length;
 
   return (

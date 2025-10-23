@@ -14,7 +14,7 @@ export interface Module {
 }
 
 export interface Milestone {
-  id: string;
+  _id: string;
   title: string;
   modules: Module[];
   progress: number;

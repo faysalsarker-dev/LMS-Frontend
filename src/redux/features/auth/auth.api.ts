@@ -80,9 +80,10 @@ export const authApi = baseApi.injectEndpoints({
 
     }),
     userInfo: builder.query({
-      query: () => ({
-        url: "/user/me",
+      query: ({ includeCourses, includeWishlist}) => ({
+        url: `/user/me`,
         method: "GET",
+         params: { courses: includeCourses, wishlist: includeWishlist },
       }),
       providesTags: ["USER"],
     }),

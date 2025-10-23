@@ -3,26 +3,32 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router";
 import type { ICourse } from "@/interface";
+import { useGetProgressQuery } from "@/redux/features/progress/progress.api";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface CourseCardProps {
   course: ICourse;
 }
 
 const MyCourseCard = ({ course }: CourseCardProps) => {
+  const courseId = course?._id
+const {data,isLoading}=useGetProgressQuery(courseId)
+
+
+
   return (
-    <Card className="group relative overflow-hidden border border-border bg-gradient-to-br from-background to-muted/40 backdrop-blur-sm shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 rounded-2xl">
+    <Card className="group p-0 relative overflow-hidden border border-border bg-gradient-to-br from-background to-muted/40 backdrop-blur-sm shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 rounded-2xl">
       {/* Thumbnail */}
-      <div className="relative aspect-video overflow-hidden">
+      <div className="relative aspect-video overflow-hidden p-2">
         <img
           src={course.thumbnail || "/placeholder.jpg"}
           alt={course.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full rounded-lg object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-60 group-hover:opacity-70 transition-opacity" />
       </div>
 
       {/* Content */}
-      <CardContent className="p-5 space-y-3">
+      <CardContent className="p-5 pt-0 space-y-3">
         <h3 className="font-semibold text-lg leading-snug line-clamp-2 text-foreground group-hover:text-primary transition-colors">
           {course.title}
         </h3>
@@ -31,18 +37,35 @@ const MyCourseCard = ({ course }: CourseCardProps) => {
           {course.description || "No description available."}
         </p>
 
-        <div className="space-y-1">
+{
+isLoading?(
+   <div className="space-y-1">
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <Skeleton className="w-full"/>
+           
+          </div>
+                     <Skeleton className="w-full"/>
+
+        </div>
+):(
+
+    <div className="space-y-1">
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>Progress</span>
-            <span>33%</span>
+            <span>{data?.data?.progressPercentage}%</span>
           </div>
-          <Progress value={33} className="h-2" />
+          <Progress value={data?.data?.progressPercentage} className="h-2" />
         </div>
+)
+}
+
+
+      
       </CardContent>
 
       {/* Footer */}
       <CardFooter className="p-5 pt-0">
-        <Link to={`/my-course/${course.slug}`} className="w-full">
+        <Link to={`/course/video/${course._id}`} className="w-full">
           <Button
             className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
             size="sm"

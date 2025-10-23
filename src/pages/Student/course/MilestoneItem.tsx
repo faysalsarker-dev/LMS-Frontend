@@ -1,4 +1,3 @@
-import { Progress } from "@/components/ui/progress";
 import {
   Collapsible,
   CollapsibleContent,
@@ -6,58 +5,41 @@ import {
 } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import type { Milestone, Lesson } from "@/types/course";
-import { ModuleItem } from "./ModuleItem";
+import { LessonItem } from "./LessonItem";
 
 interface MilestoneItemProps {
   milestone: Milestone;
   isOpen: boolean;
-  openModules: Set<string>;
-  currentLessonId?: string;
   onToggle: () => void;
-  onModuleToggle: (moduleId: string) => void;
   onLessonClick: (lesson: Lesson) => void;
+  currentLessonId?: string;
 }
 
 export function MilestoneItem({
   milestone,
   isOpen,
-  openModules,
-  currentLessonId,
   onToggle,
-  onModuleToggle,
-  onLessonClick
+  onLessonClick,
+  currentLessonId,
 }: MilestoneItemProps) {
   return (
-    <Collapsible open={isOpen} onOpenChange={onToggle}>
-      <CollapsibleTrigger className="w-full">
-        <div className="flex items-center justify-between p-3 bg-accent/50 rounded-lg hover:bg-accent transition-colors">
-          <div className="flex items-center space-x-3">
-            {isOpen ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4" />
-            )}
-            <div className="text-left">
-              <h3 className="font-semibold text-sm">{milestone.title}</h3>
-              <div className="flex items-center space-x-2 mt-1">
-                <Progress value={milestone.progress} className="w-24 h-2" />
-                <span className="text-xs text-muted-foreground">
-                  {milestone.progress}%
-                </span>
-              </div>
-            </div>
-          </div>
+    <Collapsible open={isOpen}>
+      <CollapsibleTrigger
+        onClick={onToggle}
+        className="w-full flex items-center justify-between bg-primary/10 hover:bg-primary/20 rounded-lg p-3"
+      >
+        <div className="flex items-center space-x-3">
+          {isOpen ? <ChevronDown /> : <ChevronRight />}
+          <h3 className="font-semibold">{milestone.title}</h3>
         </div>
       </CollapsibleTrigger>
 
-      <CollapsibleContent className="space-y-2 mt-2 ml-4">
-        {milestone.modules.map((module) => (
-          <ModuleItem
-            key={module.id}
-            module={module}
-            isOpen={openModules.has(module.id)}
-            currentLessonId={currentLessonId}
-            onToggle={() => onModuleToggle(module.id)}
+      <CollapsibleContent className="mt-2 space-y-2 ml-5">
+        {milestone.lesson.map((lesson) => (
+          <LessonItem
+            key={lesson._id}
+            lesson={lesson}
+            isCurrentLesson={lesson._id === currentLessonId}
             onLessonClick={onLessonClick}
           />
         ))}

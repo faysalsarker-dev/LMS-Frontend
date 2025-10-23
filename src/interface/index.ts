@@ -86,7 +86,7 @@ export interface IMilestone {
   course?:ICourse | string;
   order: number;
   status: "active" | "inactive";
-  lessons: string[];
+  lesson: string[] | ILesson[];
   createdAt:Date;
   updatedAt:Date;
 }

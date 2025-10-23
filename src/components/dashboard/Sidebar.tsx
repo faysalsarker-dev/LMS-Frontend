@@ -24,7 +24,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 
 export function AppSidebar() {
-      const { data, isLoading } = useUserInfoQuery(undefined);
+      const { data, isLoading } = useUserInfoQuery({});
   
       const user = data?.data;
 

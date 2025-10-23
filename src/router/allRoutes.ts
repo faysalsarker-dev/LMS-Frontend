@@ -129,7 +129,7 @@ export const invisibleRoutes = [
     name: "Course Details",
   },
   {
-    Component: CheckoutPage,
+    Component: withAuth(CheckoutPage),
     path: "/checkout/:slug",
     name: "Course Details",
   },
@@ -147,5 +147,5 @@ export const studentRoutes = [
     name: "Student Dashboard",
   },
   { Component: Profile, path: "/dashboard/profile", name: "Profile" },
-  { Component: CoursePlayer, path: "/dashboard/video", name: "Course Player" },
+  { Component: CoursePlayer, path: "/course/video/:id", name: "Course Player" },
 ];
