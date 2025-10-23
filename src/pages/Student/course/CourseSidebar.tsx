@@ -14,7 +14,7 @@ interface CourseSidebarProps {
   milestones: Milestone[];
   onLessonClick: (lesson: ILesson) => void;
   currentLessonId?: string;
-  completedLessons: string[] | Partial<ILesson[]> ;
+  completedLessons: string[] | ILesson[] ;
 }
 
 export function CourseSidebar({ 
@@ -197,7 +197,7 @@ export function CourseSidebar({
 
                 {/* Lessons list */}
                 {isExpanded && (
-                  <div className="bg-muted/20">
+                  <div className="bg-muted/20 mt-2">
                     {milestone?.lesson?.map((lesson, localIndex) => {
                       if (!lesson?._id) return null;
                       

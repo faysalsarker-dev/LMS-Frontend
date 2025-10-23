@@ -9,9 +9,11 @@ type CoursePlayerContentProps = {
 
 
 export function CoursePlayerContent({ lesson }: CoursePlayerContentProps) {
+
+
   switch (lesson.contentType) {
     case "video":
-      return <VideoPlayer url={lesson.videoUrl} />;
+      return <VideoPlayer url={lesson.videoUrl!} />;
     case "doc":
       return <DocLesson docContent={lesson.docContent} />;
     case "quiz":

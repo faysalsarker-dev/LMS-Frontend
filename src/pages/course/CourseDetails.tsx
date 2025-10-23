@@ -14,21 +14,36 @@ import {
   ArrowLeft,
  
   Crown,
-  Calendar
+  Calendar,
+  Bookmark,
+  BookmarkCheck
 } from "lucide-react";
 import { useState, memo } from "react";
 import { useGetCourseBySlugQuery } from "@/redux/features/course/course.api";
 import { LoadingSkeleton } from "@/components/modules/Course/LoadingSkeleton";
 import type { IMilestone } from "@/interface";
+import { useAddToWishlistMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
 
 
 const CourseDetails = memo(() => {
   const { slug } = useParams<{ slug: string }>();
   const { data, isLoading, error } = useGetCourseBySlugQuery(slug!);
+  const {data:uData,isLoading:isUserLoading}=useUserInfoQuery({})
   const [activeTab, setActiveTab] = useState("overview");
-
+const [addToWishlist]=useAddToWishlistMutation()
   const course = data?.data;
-  console.log(course,'course');
+const user = uData?.data;
+
+
+const addToMark = async (courseId:string)=>{
+  await addToWishlist(courseId).unwrap()
+}
+
+
+
+
+
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -121,7 +136,10 @@ const CourseDetails = memo(() => {
 
                     <motion.div variants={itemVariants} className="space-y-6">
                       {/* Badges */}
-                      <div className="flex flex-wrap gap-2">
+
+
+                      <div className="flex justify-between items-center mb-2">
+ <div className="flex flex-wrap gap-2">
                         <Badge className="bg-gradient-to-r from-primary/20 to-primary-glow/20 text-primary border-primary/30">
                           {course.level}
                         </Badge>
@@ -131,7 +149,29 @@ const CourseDetails = memo(() => {
                             Featured
                           </Badge>
                         )}
+
+
+
                       </div>
+<Button variant="ghost" size="lg" className="p-2 rounded-full hover:bg-primary/10">
+
+{
+!isUserLoading && user.wishList?.includes(course._id) ? (
+   
+                            <BookmarkCheck />
+                   
+):(
+       <Bookmark onClick={addToMark} />
+)
+
+}
+
+
+
+</Button>
+
+                      </div>
+                     
 
                       {/* Title */}
                       <h1 className="text-3xl lg:text-4xl font-bold leading-tight text-foreground">
@@ -166,11 +206,36 @@ const CourseDetails = memo(() => {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
-                    <Link  to={`/checkout/${slug}`}>
+
+{/* {
+!isUserLoading && user.courses?.includes(course._id) && (
+  <Badge className="bg-green-500 text-white px-4 py-2 text-lg font-semibold">
+    You are already enrolled in this course
+  </Badge>
+)
+
+} */}
+
+
+{
+!isUserLoading && user.courses?.includes(course._id) ? (
+   <Link  to={`/course/video/${course._id}`}>
+                            <Button size="lg" className="bg-gradient-primary text-primary-foreground px-8 py-3 text-lg font-semibold">
+                              Continue Learning
+                            </Button>
+                    </Link>
+):(
+        <Link  to={`/checkout/${slug}`}>
                             <Button size="lg" className="bg-gradient-primary text-primary-foreground px-8 py-3 text-lg font-semibold">
                               Enroll Now
                             </Button>
                     </Link>
+)
+
+}
+
+
+            
                         </motion.div>
                         
                         <div className="flex items-center gap-3">
@@ -414,11 +479,22 @@ const CourseDetails = memo(() => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                  <Link to={`/checkout/${slug}`}>
-                          <Button className="w-full bg-gradient-primary text-primary-foreground py-3 text-lg font-semibold">
-                            Enroll Now
-                          </Button>
-                  </Link>
+          {
+!isUserLoading && user.courses?.includes(course._id) ? (
+   <Link  to={`/course/video/${course._id}`}>
+                            <Button size="lg" className="text-center bg-gradient-primary text-primary-foreground px-8 py-3 text-lg font-semibold">
+                              Continue Learning
+                            </Button>
+                    </Link>
+):(
+        <Link  to={`/checkout/${slug}`}>
+                            <Button size="lg" className="bg-gradient-primary text-primary-foreground px-8 py-3 text-lg font-semibold">
+                              Enroll Now
+                            </Button>
+                    </Link>
+)
+
+}
                       </motion.div>
 
                       <Separator />

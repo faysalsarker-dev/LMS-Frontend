@@ -116,6 +116,8 @@ export function CoursePlayer() {
     ? progress.completedLessons.includes(currentLesson._id)
     : false;
 
+
+    console.log(isCurrentLessonCompleted,'check');
   // Loading state
   if (isLoading || loadingProgress) {
     return (

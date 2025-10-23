@@ -61,6 +61,7 @@ const onSubmit = async (data: LoginFormValues) => {
 
     toast.success("Login successful!");
     navigate(from, { replace: true });
+    window.location.reload();
   } catch (err: any) {
     console.log("Login error:", err);
 
