@@ -14,6 +14,7 @@ import withAuth from "./withAuth";
 import { UserRoles } from "@/interface";
 import { CategoryPage } from "@/pages/admin/category/CategoryPage";
 import CheckoutPage from "@/pages/Checkout/CheckoutPage";
+import EnrolmentPage from "@/pages/Enrolment/EnrolmentPage";
 
 
 const AppSettings = lazy(() => import("@/pages/admin/app-setting/AppSettings"));
@@ -21,7 +22,7 @@ const CourseDetails = lazy(() => import("@/pages/course/CourseDetails"));
 const Contact = lazy(() => import("@/pages/abouts/Contact"));
 const About = lazy(() => import("@/pages/abouts/About"));
 
-const Dashboard = lazy(() => import("@/pages/Student/Dashboard"));
+const Dashboard = lazy(() => import("@/pages/MyCourses/Dashboard"));
 const Profile = lazy(() => import("@/pages/Student/Profile"));
 const CoursePlayer = lazy(() =>
   import("@/pages/Student/course/CoursePlayer").then((m) => ({
@@ -39,6 +40,7 @@ const CreateCourse = lazy(() => import("@/pages/admin/CreateCourse"));
 const AllCourses = lazy(() => import("@/pages/admin/AllCourses"));
 const MilestoneDashboardPage = lazy(() => import("@/pages/admin/Milestone"));
 const LessonPage = lazy(() => import("@/pages/admin/LessonPage"));
+const MyDashboard = lazy(() => import("@//pages/MyCourses/Dashboard"));
 
 // 🌍 Public routes
 export const publicRoutes = [
@@ -65,6 +67,14 @@ export const adminRoutes = [
     Component: withAuth(Users,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN]),
     path: "/dashboard/users",
     name: "User Management",
+    icon: UsersIcon,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN]
+
+  },
+  {
+    Component: withAuth(EnrolmentPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN]),
+    path: "/dashboard/enrollments",
+    name: "Enrollment Management",
     icon: UsersIcon,
     roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN]
 
@@ -146,6 +156,7 @@ export const studentRoutes = [
     path: "/dashboard/attention",
     name: "Student Dashboard",
   },
-  { Component: Profile, path: "/dashboard/profile", name: "Profile" },
-  { Component: CoursePlayer, path: "/course/video/:id", name: "Course Player" },
+  { Component: Profile, path: "/profile", name: "Profile" },
+  { Component: withAuth(CoursePlayer), path: "/course/video/:id", name: "Course Player" },
+  { Component: withAuth(MyDashboard), path: "/my-courses", name: "My Courses" },
 ];

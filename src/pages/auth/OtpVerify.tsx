@@ -10,6 +10,7 @@ import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/com
 
 // Assuming you have these two mutations in your auth.api.ts
 import { useSendOtpMutation, useVerifyOtpMutation } from "@/redux/features/auth/auth.api";
+import { handleApiError } from "@/utils/errorHandler";
 
 const OTP_LENGTH = 6;
 const COUNTDOWN_SECONDS = 60;
@@ -91,10 +92,9 @@ email,
 
         const result = await verifyOtp(data).unwrap();
         toast.success(result.message || "Verification successful!");
-        navigate("/");
-      } catch (error: any) {
-        console.log(error);
-        toast.error(error.data?.message || "Invalid OTP. Please try again.");
+        navigate("/login");
+      } catch (error) {
+     handleApiError(error)
         setOtp("");
       }
     },
@@ -109,8 +109,8 @@ email,
       toast.success("A new OTP has been sent.");
       resetTimer();
       setOtp("");
-    } catch (error: any) {
-      toast.error(error.data?.message || "Failed to resend OTP.");
+    } catch (error) {
+    handleApiError(error);
     }
   };
 

@@ -25,7 +25,6 @@ export function CoursePlayer() {
   const [lessons, setLessons] = useState<ILesson[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // 🔹 Load lessons on course change
   useEffect(() => {
     if (!course) return;
 
@@ -33,39 +32,38 @@ export function CoursePlayer() {
     setLessons(allLessons);
   }, [course]);
 
-  // 🔹 Initialize current lesson only once on mount
-  useEffect(() => {
-    if (!course || isInitialized || lessons.length === 0) return;
 
-    if (!progress || !progress.completedLessons || progress.completedLessons.length === 0) {
-      // No progress yet, start from first lesson
-      setCurrentLesson(lessons[0]);
-      setIsInitialized(true);
-      return;
-    }
 
-    // Find the first incomplete lesson
-    const completedIds = new Set(progress.completedLessons);
-    const nextIncompleteLesson = lessons.find(
-      (lesson: ILesson) => !completedIds.has(lesson._id)
-    );
 
-    if (nextIncompleteLesson) {
-      // Set to first incomplete lesson
-      setCurrentLesson(nextIncompleteLesson);
-    } else {
-      // All lessons completed, show last lesson
-      setCurrentLesson(lessons[lessons.length - 1]);
-    }
-    
+ useEffect(() => {
+  if (!course || !progress || lessons.length === 0 || isInitialized === true) return;
+
+  if (!progress.completedLessons || progress.completedLessons.length === 0) {
+    setCurrentLesson(lessons[0]);
     setIsInitialized(true);
-  }, [course, progress, lessons, isInitialized]);
+    return;
+  }
 
-  // 🔹 Handle lesson completion
+  // 🟢 When user has progress → find next incomplete lesson
+  const completedIds = new Set(progress.completedLessons.map((l: ILesson) => l._id?.toString()));
+  const nextIncompleteLesson = lessons.find(
+    (lesson: ILesson) => !completedIds.has(lesson._id?.toString())
+  );
+
+  if (nextIncompleteLesson) {
+    setCurrentLesson(nextIncompleteLesson);
+  } else {
+    setCurrentLesson(lessons[lessons.length - 1]);
+  }
+
+  setIsInitialized(true);
+}, [course, progress, lessons, isInitialized]);
+
+ 
+ 
   const handleLessonComplete = async () => {
     if (!currentLesson || !id) return;
 
-    // Don't mark already completed lessons
     if (isCurrentLessonCompleted) {
  
       return;
@@ -112,12 +110,15 @@ export function CoursePlayer() {
   };
 
   // Check if current lesson is completed
-  const isCurrentLessonCompleted = currentLesson && progress?.completedLessons
-    ? progress.completedLessons.includes(currentLesson._id)
+ const isCurrentLessonCompleted =
+  currentLesson && progress?.completedLessons
+    ? progress.completedLessons.some(
+        (lesson: ILesson) => lesson._id?.toString() === currentLesson._id?.toString()
+      )
     : false;
 
 
-    console.log(isCurrentLessonCompleted,'check');
+
   // Loading state
   if (isLoading || loadingProgress) {
     return (

@@ -35,8 +35,9 @@ const [addToWishlist]=useAddToWishlistMutation()
 const user = uData?.data;
 
 
-const addToMark = async (courseId:string)=>{
-  await addToWishlist(courseId).unwrap()
+const addToMark = async ()=>{
+  const courseId = course?._id;
+  await addToWishlist({courseId}).unwrap()
 }
 
 
@@ -153,7 +154,7 @@ const addToMark = async (courseId:string)=>{
 
 
                       </div>
-<Button variant="ghost" size="lg" className="p-2 rounded-full hover:bg-primary/10">
+<Button onClick={addToMark} variant="ghost" size="lg" className="p-2 rounded-full hover:bg-primary/10">
 
 {
 !isUserLoading && user.wishList?.includes(course._id) ? (
@@ -161,7 +162,7 @@ const addToMark = async (courseId:string)=>{
                             <BookmarkCheck />
                    
 ):(
-       <Bookmark onClick={addToMark} />
+       <Bookmark />
 )
 
 }

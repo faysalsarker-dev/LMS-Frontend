@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
   Play,
@@ -283,7 +284,7 @@ export default function VideoPlayer({ url }: { url: string }) {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="min-h-screen  flex items-center justify-center p-4">
+    <div className="lg:min-h-screen  flex items-center justify-center md:p-4 p-2">
       <div className="w-full max-w-6xl">
         <div
           ref={containerRef}

@@ -186,3 +186,17 @@ export interface ICategory {
   thumbnail?: string | null;
   totalCourse?: number;
 }
+
+
+
+
+export interface IEnrollment {
+  _id: string;
+  user: IUser | string; 
+  course: ICourse | string;
+  status: "active" | "completed" | "cancelled";
+  paymentStatus: "pending" | "paid" | "failed";
+  method:"alipay" | "wechat" ;
+  enrolledAt: Date;
+  completedAt?: Date;
+}

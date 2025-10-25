@@ -17,14 +17,7 @@ createRoot(document.getElementById("root")!).render(
 <Toaster
   position="top-right"
   reverseOrder={false}
-  toastOptions={{
-    style: {
-      borderRadius: "12px",
-      background: "hsl(var(--card))",
-      color: "hsl(var(--card-foreground))",
-      border: "1px solid hsl(var(--border))",
-    },
-  }}
+
 />
 
       </ThemeProvider>

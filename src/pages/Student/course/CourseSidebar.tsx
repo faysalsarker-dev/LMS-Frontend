@@ -35,12 +35,12 @@ export function CourseSidebar({
     
     if (typeof firstItem === 'string') {
       // Array of IDs
-      return new Set(completedLessons.filter(Boolean));
+      return new Set(completedLessons.filter(Boolean) as string[]);
     } else if (typeof firstItem === 'object' && firstItem !== null) {
       // Array of lesson objects - extract _id from each
       return new Set(
         completedLessons
-          .filter(item => item && item._id)
+          .filter((item): item is ILesson => typeof item === 'object' && item !== null && '_id' in item && Boolean((item as ILesson)._id))
           .map(item => item._id)
       );
     }

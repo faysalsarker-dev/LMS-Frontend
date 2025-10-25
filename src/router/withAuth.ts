@@ -1,14 +1,22 @@
 import React from "react";
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import {LoadingSkeleton} from "@/components/modules/Course/LoadingSkeleton"
+import { useParams } from "react-router";
 
 type TRole = "student" | "instructor" | "admin" | "super_admin";
 
 const withAuth = <P extends object>(
   WrappedComponent: React.ComponentType<P>,
-  requiredRole?: TRole[]
+  requiredRole?: TRole[],
+  course?: boolean
 ) => {
   const AuthWrapper: React.FC<P> = (props) => {
+    const {id} = useParams()
+
+    console.log(id);
+
+
+
     const { data, isLoading } = useUserInfoQuery({
        includeCourses: false,
   includeWishlist: false,
@@ -28,6 +36,14 @@ if (
 ) {
   return null;
 }
+
+if(course){
+  const check = user?.courses.includes(id as string);
+  if(!check){
+    return null;
+  } 
+}
+
 
 
     return React.createElement(WrappedComponent, props);

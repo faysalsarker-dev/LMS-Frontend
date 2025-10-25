@@ -5,7 +5,8 @@ import {
   GraduationCap,
   User,
   LogOut,
-  Settings,
+  LayoutDashboard,
+  BookOpenText,
 } from 'lucide-react';
 
 import {
@@ -61,7 +62,7 @@ const [open,setOpen]=useState(false)
 
 
    const handleLogout = async () => {
-       await logout(undefined).unwrap();
+       await logout(undefined);
     dispatch(authApi.util.resetApiState());
    }
 
@@ -105,6 +106,26 @@ const [open,setOpen]=useState(false)
            
                 </NavigationMenuItem>
               ))}
+
+{
+  userInfo?.data && (
+      <NavigationMenuItem className="h-full">
+                  <Link
+                  to={`/my-courses`}
+                  >
+                         <NavigationMenuLink
+                    active={isActive(`/my-courses`)}
+                  
+                    className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary data-[active]:text-primary h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
+                  >
+                    My Courses
+                  </NavigationMenuLink>
+                  </Link>
+           
+                </NavigationMenuItem>
+  )
+}
+
             </NavigationMenuList>
           </NavigationMenu>
 
@@ -122,15 +143,34 @@ const [open,setOpen]=useState(false)
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard/profile" className="flex items-center gap-2">
+                    <Link to="/profile" className="flex items-center gap-2">
                       <User className="w-4 h-4" /> Profile
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/settings" className="flex items-center gap-2">
-                      <Settings className="w-4 h-4" /> Settings
-                    </Link>
-                  </DropdownMenuItem>
+
+          {
+  userInfo?.data && (
+    <DropdownMenuItem asChild>
+      <Link to="/my-courses" className="flex items-center gap-2">
+        <BookOpenText  className="w-4 h-4" /> My Courses
+      </Link>
+    </DropdownMenuItem>
+  )
+}
+
+              
+          {
+  (userInfo?.data?.role === 'admin' ||
+    userInfo?.data?.role === 'super_admin' ||
+    userInfo?.data?.role === 'instructor') && (
+    <DropdownMenuItem asChild>
+      <Link to="/dashboard" className="flex items-center gap-2">
+        <LayoutDashboard className="w-4 h-4" /> Dashboard
+      </Link>
+    </DropdownMenuItem>
+  )
+}
+
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={()=>setOpen(!open)} className="text-red-500 cursor-pointer">
                     <LogOut className="w-4 h-4" /> Log out

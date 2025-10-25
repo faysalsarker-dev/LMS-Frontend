@@ -235,8 +235,8 @@ const { data, isLoading, refetch } = useUserInfoQuery({
   
   const userInfo = useMemo(() => data?.data, [data]);
   const courses = useMemo(() => userInfo?.courses || [], [userInfo]);
-  const wishlist = useMemo(() => userInfo?.wishList || [], [userInfo]);
-  
+  const wishlist = useMemo(() => userInfo?.wishlist || [], [userInfo]);
+
   // Handle profile update
   const handleProfileUpdate = useCallback(
     async (formValues: IFormValues, profileImage: File | null): Promise<void> => {
