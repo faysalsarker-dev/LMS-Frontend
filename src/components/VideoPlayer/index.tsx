@@ -18,7 +18,7 @@ interface VideoPlayerProps {
 
 const VideoPlayer = memo(function VideoPlayer({
   url,
-  watermark = "Protected Content © 2025",
+  watermark = "HLC © 2025",
   brandLogo,
 }: VideoPlayerProps) {
   const {
@@ -137,7 +137,7 @@ const VideoPlayer = memo(function VideoPlayer({
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-2 md:p-4 bg-background">
+    <div className="flex items-center justify-center p-2 md:p-4 bg-background">
       <div className="w-full max-w-6xl">
         <div
           ref={containerRef}
@@ -250,7 +250,7 @@ const VideoPlayer = memo(function VideoPlayer({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
-            className="absolute top-4 right-4 text-white/50 text-xs font-mono pointer-events-none select-none z-20"
+            className="absolute top-4 right-4 text-primary/50 text-xs font-mono pointer-events-none select-none z-20"
           >
             {watermark}
           </motion.div>

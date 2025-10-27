@@ -15,6 +15,7 @@ import { UserRoles } from "@/interface";
 import { CategoryPage } from "@/pages/admin/category/CategoryPage";
 import CheckoutPage from "@/pages/Checkout/CheckoutPage";
 import EnrolmentPage from "@/pages/Enrolment/EnrolmentPage";
+import Profile from "@/pages/Student/Profile";
 
 
 const AppSettings = lazy(() => import("@/pages/admin/app-setting/AppSettings"));
@@ -23,7 +24,6 @@ const Contact = lazy(() => import("@/pages/abouts/Contact"));
 const About = lazy(() => import("@/pages/abouts/About"));
 
 const Dashboard = lazy(() => import("@/pages/MyCourses/Dashboard"));
-const Profile = lazy(() => import("@/pages/Student/Profile"));
 const CoursePlayer = lazy(() =>
   import("@/pages/Student/course/CoursePlayer").then((m) => ({
     default: m.CoursePlayer,
@@ -157,6 +157,6 @@ export const studentRoutes = [
     name: "Student Dashboard",
   },
   { Component: Profile, path: "/profile", name: "Profile" },
-  { Component: withAuth(CoursePlayer), path: "/course/video/:id", name: "Course Player" },
+  { Component: withAuth(CoursePlayer,[UserRoles.STUDENT,UserRoles.INSTRUCTOR,UserRoles.ADMIN,UserRoles.SUPER_ADMIN],true), path: "/course/video/:id", name: "Course Player" },
   { Component: withAuth(MyDashboard), path: "/my-courses", name: "My Courses" },
 ];

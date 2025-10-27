@@ -159,7 +159,7 @@ const CourseCard = memo(({ course }: { course: ICourse }) => {
             <div>
               {isDiscounted && price > 0 && (
                 <span className="text-sm text-muted-foreground line-through">
-                  ${price}
+                  {currency} {price}
                 </span>
               )}
               <div

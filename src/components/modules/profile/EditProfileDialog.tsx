@@ -1,5 +1,5 @@
-import type { IUser } from "@/interface";
 import { useCallback, useEffect, useState, type JSX } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Select,
   SelectContent,
@@ -19,43 +19,37 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Upload, X, User } from "lucide-react";
+import { useUpdateMutation } from "@/redux/features/auth/auth.api";
+import { handleApiError } from "@/utils/errorHandler";
+import type { IUser } from "@/interface";
 
 interface IAddress {
   country: string;
   city: string;
 }
+
 interface IFormValues {
   name: string;
   email: string;
   phone: string;
   address: IAddress;
-  password: string;
 }
-
-
-
-
-
-
 
 interface IEditProfileDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  userInfo: IUser;
-  onSubmit: (formValues: IFormValues, profileImage: File | null) => Promise<void>;
-  isLoading: boolean;
+  userInfo: Partial<IUser>;
+  refetch: () => void;
 }
-
-
 
 const DEFAULT_FORM_VALUES: IFormValues = {
   name: "",
   email: "",
   phone: "",
   address: { country: "", city: "" },
-  password: "",
 };
+
 const COUNTRIES: string[] = [
   "United States",
   "Canada",
@@ -67,22 +61,16 @@ const COUNTRIES: string[] = [
   "Germany",
 ];
 
-
-
-
-
-
-
 const EditProfileDialog = ({
   open,
   onOpenChange,
   userInfo,
-  onSubmit,
-  isLoading,
+  refetch
 }: IEditProfileDialogProps): JSX.Element => {
   const { control, handleSubmit, reset } = useForm<IFormValues>({
     defaultValues: DEFAULT_FORM_VALUES,
   });
+  const [updateUser, { isLoading }] = useUpdateMutation();
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(userInfo?.profile || null);
@@ -98,7 +86,6 @@ const EditProfileDialog = ({
           country: userInfo.address?.country || "",
           city: userInfo.address?.city || "",
         },
-        password: "",
       });
       setPreview(userInfo.profile || null);
       setProfileImage(null);
@@ -113,192 +100,228 @@ const EditProfileDialog = ({
     reader.readAsDataURL(file);
   }, []);
 
-  const handleFormSubmit = useCallback(
+  const handleRemoveImage = useCallback(() => {
+    setProfileImage(null);
+    setPreview(userInfo?.profile || null);
+  }, [userInfo]);
+
+  const handleProfileUpdate = useCallback(
     async (formValues: IFormValues): Promise<void> => {
-      await onSubmit(formValues, profileImage);
-      onOpenChange(false);
+      try {
+        const fd = new FormData();
+        fd.append("name", formValues.name);
+        fd.append("phone", formValues.phone || "");
+        fd.append("address[country]", formValues.address?.country || "");
+        fd.append("address[city]", formValues.address?.city || "");
+
+        if (profileImage) {
+          fd.append("profile", profileImage);
+        }
+const info = {
+  id: userInfo?._id,
+  payload: fd
+}
+        const res = await updateUser(info).unwrap();
+
+        if (res?.success) {
+          refetch();
+          onOpenChange(false);
+        }
+      } catch (err) {
+        handleApiError(err);
+      }
     },
-    [onSubmit, profileImage, onOpenChange]
+    [updateUser, refetch, profileImage, onOpenChange,userInfo?._id]
   );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Edit Profile</DialogTitle>
-          <DialogDescription>
-            Update your personal info and profile picture.
+      <DialogContent className="max-w-xl">
+        <DialogHeader className="space-y-2">
+          <DialogTitle className="text-2xl font-semibold">Edit Profile</DialogTitle>
+          <DialogDescription className="text-muted-foreground">
+            Update your personal information
           </DialogDescription>
         </DialogHeader>
 
-        <form
-          onSubmit={handleSubmit(handleFormSubmit)}
-          className="space-y-4"
-        >
-              <div className="flex gap-4 items-start">
-                {/* Avatar Preview */}
-                <div className="w-28">
-                  <Label htmlFor="profile-image" className="mb-2">
-                    Profile
-                  </Label>
-                  <div className="rounded-md overflow-hidden border w-28 h-28 flex items-center justify-center bg-muted">
-                    {preview ? (
-                      <img
-                        src={preview}
-                        alt="profile preview"
-                        className="object-cover w-full h-full"
-                      />
-                    ) : (
-                      <div className="text-xs text-muted-foreground px-2 text-center">
-                        No image
-                      </div>
-                    )}
-                  </div>
-                  <input
-                    id="profile-image"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      handleImageChange(e.target.files?.[0] || null)
-                    }
-                    className="mt-2 text-sm"
-                    disabled={isLoading}
-                    aria-label="Upload profile image"
+        <form onSubmit={handleSubmit(handleProfileUpdate)} className="space-y-6 mt-4">
+          {/* Profile Image Section */}
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col items-center gap-4"
+          >
+            <div className="relative group">
+              <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-border shadow-sm">
+                {preview ? (
+                  <img
+                    src={preview}
+                    alt="Profile"
+                    className="object-cover w-full h-full"
                   />
-                </div>
-
-                {/* Form Fields */}
-                <div className="flex-1 space-y-3">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                      <Label htmlFor="name">Full Name</Label>
-                      <Controller
-                        name="name"
-                        control={control}
-                        render={({ field }) => (
-                          <Input
-                            {...field}
-                            id="name"
-                            placeholder="Full name"
-                            disabled={isLoading}
-                          />
-                        )}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email">Email</Label>
-                      <Controller
-                        name="email"
-                        control={control}
-                        render={({ field }) => (
-                          <Input
-                            {...field}
-                            id="email"
-                            disabled
-                            className="bg-muted cursor-not-allowed"
-                          />
-                        )}
-                      />
-                    </div>
+                ) : (
+                  <div className="w-full h-full bg-muted flex items-center justify-center">
+                    <User className="w-10 h-10 text-muted-foreground" />
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                      <Label htmlFor="phone">Phone</Label>
-                      <Controller
-                        name="phone"
-                        control={control}
-                        render={({ field }) => (
-                          <Input
-                            {...field}
-                            id="phone"
-                            placeholder="+880..."
-                            disabled={isLoading}
-                          />
-                        )}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="country">Country</Label>
-                      <Controller
-                        name="address.country"
-                        control={control}
-                        render={({ field }) => (
-                          <Select
-                            value={field.value}
-                            onValueChange={field.onChange}
-                            disabled={isLoading}
-                          >
-                            <SelectTrigger id="country">
-                              <SelectValue placeholder="Select country" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {COUNTRIES.map((country) => (
-                                <SelectItem key={country} value={country}>
-                                  {country}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="city">City</Label>
-                    <Controller
-                      name="address.city"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          id="city"
-                          placeholder="City"
-                          disabled={isLoading}
-                        />
-                      )}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="password">New Password (optional)</Label>
-                    <Controller
-                      name="password"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          id="password"
-                          type="password"
-                          placeholder="Leave blank to keep current password"
-                          disabled={isLoading}
-                        />
-                      )}
-                    />
-                  </div>
-                </div>
+                )}
               </div>
+              <AnimatePresence>
+                {profileImage && (
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0 }}
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className="absolute -top-1 -right-1 p-1.5 bg-destructive text-white rounded-full shadow-md hover:bg-destructive/90 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </div>
+            <label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleImageChange(e.target.files?.[0] || null)}
+                className="hidden"
+                disabled={isLoading}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const input = (e.currentTarget.previousElementSibling as HTMLInputElement);
+                  input?.click();
+                }}
+                disabled={isLoading}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Upload Photo
+              </Button>
+            </label>
+          </motion.div>
 
-              <DialogFooter className="flex justify-end gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => onOpenChange(false)}
-                  disabled={isLoading}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                  Save Changes
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-      );
-    };
+          {/* Form Fields */}
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      id="name"
+                      placeholder="John Doe"
+                      disabled={isLoading}
+                    />
+                  )}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      id="email"
+                      disabled
+                      className="bg-muted/50"
+                    />
+                  )}
+                />
+              </div>
+            </div>
 
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone</Label>
+                <Controller
+                  name="phone"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      id="phone"
+                      placeholder="+1 234 567 8900"
+                      disabled={isLoading}
+                    />
+                  )}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="country">Country</Label>
+                <Controller
+                  name="address.country"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      disabled={isLoading}
+                    >
+                      <SelectTrigger id="country">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {COUNTRIES.map((country) => (
+                          <SelectItem key={country} value={country}>
+                            {country}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+            </div>
 
-    export default EditProfileDialog
+            <div className="space-y-2">
+              <Label htmlFor="city">City</Label>
+              <Controller
+                name="address.city"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="city"
+                    placeholder="New York"
+                    disabled={isLoading}
+                  />
+                )}
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={isLoading}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isLoading}
+            >
+              {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default EditProfileDialog;

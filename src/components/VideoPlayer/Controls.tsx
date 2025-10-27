@@ -10,6 +10,8 @@ import {
   Settings,
   SkipForward,
   SkipBack,
+  RotateCcw,
+  RotateCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -123,9 +125,9 @@ export const Controls = memo(function Controls({
             </TooltipContent>
           </Tooltip>
 
-          {/* Volume controls */}
+          {/* Volume controls with integrated skip buttons */}
           <div
-            className="flex items-center gap-2 ml-1"
+            className="flex items-center gap-1 ml-1"
             onMouseEnter={() => setShowVolumeSlider(true)}
             onMouseLeave={() => setShowVolumeSlider(false)}
           >
@@ -170,6 +172,43 @@ export const Controls = memo(function Controls({
                 </motion.div>
               )}
             </AnimatePresence>
+          </div>
+
+          {/* Small skip buttons next to volume control */}
+          <div className="flex items-center gap-0.5 ml-1 border-l border-white/20 pl-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onSkipBackward}
+                  className="h-7 w-7 hover:bg-white/20 text-white transition-colors"
+                  aria-label="Skip back 10 seconds"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="bg-black/95 text-white border-none">
+                -10s
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onSkipForward}
+                  className="h-7 w-7 hover:bg-white/20 text-white transition-colors"
+                  aria-label="Skip forward 10 seconds"
+                >
+                  <RotateCw className="h-3.5 w-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="bg-black/95 text-white border-none">
+                +10s
+              </TooltipContent>
+            </Tooltip>
           </div>
 
           <span className="text-sm font-medium ml-2 tabular-nums select-none">

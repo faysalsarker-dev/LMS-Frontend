@@ -51,7 +51,7 @@ export default function SimpleCTA() {
             <Button
               size="lg"
               variant="outline"
-              className="px-8 py-6 text-lg font-semibold rounded-full border-2 border-white/60 text-white hover:bg-white/10 transition-all duration-300"
+              className="px-8 py-6 text-lg font-semibold rounded-full border-2 border-white/60 text-white hover:bg-white/10 bg-white/20 transition-all duration-300"
             >
               Browse Courses
             </Button>

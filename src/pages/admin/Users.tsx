@@ -33,6 +33,7 @@ const [update]=useUpdateMutation();
   const users = data?.data?.data || [] as IUser[];
   const meta = data?.data?.meta;
 
+
   const handleUserAction = useCallback(async (action: string, user: IUser) => {
     switch (action) {
       case "edit":
@@ -52,7 +53,7 @@ break;
 
       break;
     }
-  }, []);
+  }, [update]);
 
 
 
@@ -124,7 +125,7 @@ break;
       </motion.div>
 
       {/* User Stats */}
-      <UserStats users={users} />
+      <UserStats />
 
 
       {/* Filters Section */}

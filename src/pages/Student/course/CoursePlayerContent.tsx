@@ -1,4 +1,4 @@
-import  VideoPlayer  from "./VideoPlayer";
+import VideoPlayer from "@/components/VideoPlayer";
 import { DocLesson } from "./DocLesson";
 import { QuizLesson } from "./QuizLesson";
 import type { ILesson } from "@/interface";
@@ -10,10 +10,10 @@ type CoursePlayerContentProps = {
 
 export function CoursePlayerContent({ lesson }: CoursePlayerContentProps) {
 
-
+const url =`https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`
   switch (lesson.contentType) {
     case "video":
-      return <VideoPlayer url={lesson.videoUrl!} />;
+      return <VideoPlayer url={url} />;
     case "doc":
       return <DocLesson docContent={lesson.docContent} />;
     case "quiz":

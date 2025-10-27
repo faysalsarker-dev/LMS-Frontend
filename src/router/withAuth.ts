@@ -13,10 +13,6 @@ const withAuth = <P extends object>(
   const AuthWrapper: React.FC<P> = (props) => {
     const {id} = useParams()
 
-    console.log(id);
-
-
-
     const { data, isLoading } = useUserInfoQuery({
        includeCourses: false,
   includeWishlist: false,
@@ -37,7 +33,7 @@ if (
   return null;
 }
 
-if(course){
+if(course && id){
   const check = user?.courses.includes(id as string);
   if(!check){
     return null;

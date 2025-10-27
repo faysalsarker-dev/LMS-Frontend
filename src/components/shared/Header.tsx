@@ -92,17 +92,19 @@ const [open,setOpen]=useState(false)
             <NavigationMenuList className="h-full gap-2">
               {navigation.map((link, index) => (
                 <NavigationMenuItem key={index} className="h-full">
-                  <Link
-                  to={link.href}
-                  >
-                         <NavigationMenuLink
+          
+                         <NavigationMenuLink asChild
                     active={isActive(link.href)}
-                  
+                 
                     className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary data-[active]:text-primary h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
                   >
+                            <Link
+                  to={link.href}
+                  >
                     {link.name}
+                     </Link>
                   </NavigationMenuLink>
-                  </Link>
+                 
            
                 </NavigationMenuItem>
               ))}
@@ -110,17 +112,20 @@ const [open,setOpen]=useState(false)
 {
   userInfo?.data && (
       <NavigationMenuItem className="h-full">
-                  <Link
-                  to={`/my-courses`}
-                  >
+             
                          <NavigationMenuLink
                     active={isActive(`/my-courses`)}
-                  
+                  asChild
                     className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary data-[active]:text-primary h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
                   >
-                    My Courses
+     <Link
+                  to={`/my-courses`}
+                  >
+
+
+                    My Courses </Link>
                   </NavigationMenuLink>
-                  </Link>
+                 
            
                 </NavigationMenuItem>
   )
@@ -272,8 +277,7 @@ const [open,setOpen]=useState(false)
     <AlertDialogHeader>
       <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
       <AlertDialogDescription>
-        This action cannot be undone. This will permanently delete your account
-        and remove your data from our servers.
+        This action cannot be undone. This will Logout  your account
       </AlertDialogDescription>
     </AlertDialogHeader>
     <AlertDialogFooter>
