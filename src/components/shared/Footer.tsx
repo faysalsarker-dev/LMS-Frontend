@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
-import { GraduationCap, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import Logo from './Logo';
 
 export const Footer = () => {
   const isMobile = useIsMobile();
@@ -48,12 +49,9 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center space-x-2 mb-4">
-              <div className="bg-gradient-primary p-2 rounded-xl">
-                <GraduationCap className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <span className="font-bold text-xl text-foreground">EduPlatform</span>
-            </Link>
+           
+              <Logo/>
+            
             <p className="text-muted-foreground mb-6 max-w-md">
               Transform your life through learning. Join millions of learners from around the world 
               already learning on EduPlatform.

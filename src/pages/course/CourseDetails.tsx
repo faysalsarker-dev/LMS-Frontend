@@ -25,6 +25,7 @@ import { useAddToWishlistMutation, useUserInfoQuery } from "@/redux/features/aut
 import { LoadingSkeleton } from "@/components/modules/Course/LoadingSkeleton";
 import { format } from "date-fns";
 import type { IMilestone } from "@/interface";
+import CourseReviewForm from "@/components/modules/Course/CourseReviewForm";
 
 
 const CourseDetails = memo(() => {
@@ -478,6 +479,10 @@ const isEnrolled = !isUserLoading && user.courses?.includes(course?._id);
                     </motion.div>
                   </TabsContent>
                 </Tabs>
+
+
+<CourseReviewForm courseId={course._id} />
+
               </motion.div>
 
               {/* Sidebar */}

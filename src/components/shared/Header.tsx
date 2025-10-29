@@ -2,7 +2,6 @@ import { Link, useLocation } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { 
   Menu, 
-  GraduationCap,
   User,
   LogOut,
   LayoutDashboard,
@@ -45,6 +44,7 @@ import {
 import { authApi, useLogoutMutation, useUserInfoQuery } from '@/redux/features/auth/auth.api';
 import { useAppDispatch } from '@/redux/hooks';
 import { useState } from 'react';
+import Logo from './Logo';
 
 export const Header = () => {
   const location = useLocation();
@@ -80,12 +80,11 @@ const [open,setOpen]=useState(false)
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <div className="bg-gradient-primary p-2 rounded-xl">
-              <GraduationCap className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <span className="font-bold text-xl text-foreground">EduPlatform</span>
-          </Link>
+         
+     
+
+            <Logo/>
+         
 
           {/* Desktop Navigation */}
           <NavigationMenu className="h-full *:h-full max-md:hidden">
@@ -207,8 +206,7 @@ const [open,setOpen]=useState(false)
               <SheetContent side="left" className="w-64">
                 <SheetHeader>
                   <SheetTitle className="flex items-center gap-2">
-                    <GraduationCap className="h-5 w-5 text-primary" />
-                    EduPlatform
+                   <Logo/>
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="mt-6 flex flex-col gap-3 px-3">
@@ -216,6 +214,7 @@ const [open,setOpen]=useState(false)
                     <Link
                       key={item.name}
                       to={item.href}
+                      
                       className={`px-2 py-2 rounded-md font-medium ${
                         isActive(item.href)
                           ? "text-primary"

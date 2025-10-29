@@ -14,12 +14,12 @@ import { Link, useLocation } from "react-router";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import logoImage from "@/assets/arow.jpg";
 
 import {  User } from "lucide-react";
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { getRoutesByRole } from "@/router/routeFilter";
 import { Skeleton } from "@/components/ui/skeleton";
+import Logo from "@/components/shared/Logo";
 
 
 
@@ -47,14 +47,10 @@ export function AppSidebar() {
         <SidebarHeader className="border-b border-sidebar-border p-4">
           <div className="flex items-center gap-3">
             <div className="flex-shrink-0">
-              <img 
-                src={logoImage} 
-                alt="EduDashboard Logo" 
-                className="w-10 h-10 rounded-xl object-cover shadow-lg ring-2 ring-primary/20"
-              />
+         <Logo/>
             </div>
 
-            {open && (
+            {/* {open && (
               <div className="text-left leading-tight animate-fade-in">
                 <h1 className="font-bold text-lg text-foreground">
                   EduDashboard
@@ -63,7 +59,7 @@ export function AppSidebar() {
                   Admin Portal
                 </p>
               </div>
-            )}
+            )} */}
           </div>
         </SidebarHeader>
 

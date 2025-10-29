@@ -43,7 +43,6 @@ const Courses = () => {
 
   useEffect(() => {
     const category = searchParams.get("category");
-    console.log(category);
     if (category) {
       setFilters((prev) => ({
         ...prev,

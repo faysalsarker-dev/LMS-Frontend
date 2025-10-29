@@ -45,7 +45,7 @@ export function Header() {
           {/* Breadcrumb or Page Title could go here */}
           <div className="hidden md:block">
             <h2 className="text-lg font-semibold text-foreground">Dashboard</h2>
-            <p className="text-sm text-muted-foreground">Welcome back, Admin</p>
+            <p className="text-sm text-muted-foreground">Welcome back, {data?.data?.name}</p>
           </div>
         </div>
 
