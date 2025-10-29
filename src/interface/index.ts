@@ -200,3 +200,15 @@ export interface IEnrollment {
   enrolledAt: Date;
   completedAt?: Date;
 }
+
+
+
+export interface ITestimonial {
+  _id:string;
+  review: string;
+  user: Partial<IUser>;
+  course: Partial<ICourse>;
+  rating: number;
+  createdAt:Date;
+  updatedAt:Date;
+}

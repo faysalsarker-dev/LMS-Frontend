@@ -16,6 +16,7 @@ import { CategoryPage } from "@/pages/admin/category/CategoryPage";
 import CheckoutPage from "@/pages/Checkout/CheckoutPage";
 import EnrolmentPage from "@/pages/Enrolment/EnrolmentPage";
 import Profile from "@/pages/Student/Profile";
+import AdminTestimonialsPage from "@/pages/admin/testimonial/TestimonialPage";
 
 
 const AppSettings = lazy(() => import("@/pages/admin/app-setting/AppSettings"));
@@ -115,6 +116,14 @@ export const adminRoutes = [
     Component: withAuth(CategoryPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
     path: "/dashboard/category",
     name: "Category",
+    icon: Tag,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
+
+  },
+  {
+    Component: withAuth(AdminTestimonialsPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
+    path: "/dashboard/testimonial",
+    name: "Testimonials",
     icon: Tag,
     roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
 

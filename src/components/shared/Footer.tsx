@@ -49,9 +49,11 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-           
-              <Logo/>
-            
+           <div>
+             
+                <Logo/>
+              
+           </div>
             <p className="text-muted-foreground mb-6 max-w-md">
               Transform your life through learning. Join millions of learners from around the world 
               already learning on EduPlatform.

@@ -25,7 +25,7 @@ import { useAddToWishlistMutation, useUserInfoQuery } from "@/redux/features/aut
 import { LoadingSkeleton } from "@/components/modules/Course/LoadingSkeleton";
 import { format } from "date-fns";
 import type { IMilestone } from "@/interface";
-import CourseReviewForm from "@/components/modules/Course/CourseReviewForm";
+import Reviews from "@/components/modules/Course/Reviews";
 
 
 const CourseDetails = memo(() => {
@@ -34,7 +34,7 @@ const CourseDetails = memo(() => {
   const {data:uData,isLoading:isUserLoading}=useUserInfoQuery({})
   const [activeTab, setActiveTab] = useState("overview");
 const [addToWishlist]=useAddToWishlistMutation()
-  const course = data?.data;
+  const course = data?.data ;
 const user = uData?.data;
 
 
@@ -305,7 +305,7 @@ const isEnrolled = !isUserLoading && user.courses?.includes(course?._id);
                     >
                       <div className="relative w-full  bg-gradient-to-br from-primary/5 to-primary/10">
                         <img
-                          src={course.thumbnail}
+                          src={course.thumbnail!}
                           alt={course.title}
                           className="w-full h-full object-cover rounded-lg"
                           loading="eager"
@@ -344,7 +344,7 @@ const isEnrolled = !isUserLoading && user.courses?.includes(course?._id);
               >
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                   <motion.div variants={itemVariants}>
-                    <TabsList className="grid w-full grid-cols-2 mb-4 border-glass mt-10 h-12">
+                    <TabsList className="grid w-full grid-cols-3 mb-4 border-glass mt-10 h-12">
                       <TabsTrigger 
                         value="overview" 
                         className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground p-3 font-semibold transition-all"
@@ -356,6 +356,12 @@ const isEnrolled = !isUserLoading && user.courses?.includes(course?._id);
                         className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground p-3 font-semibold transition-all"
                       >
                         Curriculum
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="reviews"
+                        className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground p-3 font-semibold transition-all"
+                      >
+                        reviews
                       </TabsTrigger>
                     </TabsList>
                   </motion.div>
@@ -478,10 +484,34 @@ const isEnrolled = !isUserLoading && user.courses?.includes(course?._id);
                       </Card>
                     </motion.div>
                   </TabsContent>
+  <TabsContent value="reviews" className="mt-6">
+            <Reviews avRatting={course.averageRating} courseId={course._id} />
+                </TabsContent>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </Tabs>
 
 
-<CourseReviewForm courseId={course._id} />
+
 
               </motion.div>
 
@@ -498,7 +528,7 @@ const isEnrolled = !isUserLoading && user.courses?.includes(course?._id);
                       {/* Course Image */}
                       <div className="relative aspect-video">
                         <img
-                          src={course.thumbnail}
+                          src={course.thumbnail!}
                           alt={course.title}
                           className="w-full h-full object-cover"
                         />
