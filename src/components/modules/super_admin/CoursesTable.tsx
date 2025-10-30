@@ -48,7 +48,7 @@ export function CoursesTable({ courses }: CoursesTableProps) {
               <TableCell>
                 <div className="flex items-center gap-3">
                   <img
-                    src={course.thumbnail}
+                    src={course.thumbnail!}
                     alt={course.title}
                     className="h-12 w-20 rounded object-cover"
                   />

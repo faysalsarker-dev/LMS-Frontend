@@ -126,7 +126,7 @@ export default function TestimonialTable({
                   </Tooltip>
 
                   {/* Date */}
-                  <TableCell className="">
+                  <TableCell className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
                     {new Date(t.createdAt).toLocaleDateString("en-US", {
                       month: "short",
@@ -136,53 +136,54 @@ export default function TestimonialTable({
                   </TableCell>
 
                   {/* Actions */}
-                  <TableCell className="flex justify-center items-center gap-1  ">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          onClick={() => onEdit(t)}
-                          className="hover:bg-blue-50 hover:text-blue-600"
-                        >
-                          <PencilLine className="w-4 h-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Edit</TooltipContent>
-                    </Tooltip>
+                  <TableCell className="text-center">
+                    <div className="flex justify-center items-center gap-1">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            onClick={() => onEdit(t)}
+                            className="hover:bg-blue-50 hover:text-blue-600"
+                          >
+                            <PencilLine className="w-4 h-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Edit</TooltipContent>
+                      </Tooltip>
 
-               <TableCell>
-                <AlertDialog>
-  <AlertDialogTrigger asChild>    <Button
-                          size="icon"
-                          variant="destructive"
-                          
-                          className="hover:opacity-90"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button></AlertDialogTrigger>
-  <AlertDialogContent>
-    <AlertDialogHeader>
-      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-      <AlertDialogDescription>
-        This action cannot be undone. This will permanently delete your account
-        and remove your data from our servers.
-      </AlertDialogDescription>
-    </AlertDialogHeader>
-    <AlertDialogFooter>
-      <AlertDialogCancel>Cancel</AlertDialogCancel>
-      <AlertDialogAction onClick={() => onDelete(t._id)}>Continue</AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog>
-               </TableCell>
-
-
-
-
-
-                    
-                   
+                      <AlertDialog>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="destructive"
+                                className="hover:opacity-90"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                          </TooltipTrigger>
+                          <TooltipContent>Delete</TooltipContent>
+                        </Tooltip>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will permanently delete this
+                              testimonial and remove the data from our servers.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => onDelete(t._id)}>
+                              Continue
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
                   </TableCell>
                 </motion.tr>
               ))
@@ -203,12 +204,6 @@ export default function TestimonialTable({
           </AnimatePresence>
         </TableBody>
       </Table>
-
-
-
-
-
-
     </div>
   );
 }

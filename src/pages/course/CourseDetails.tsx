@@ -10,7 +10,6 @@ import { Separator } from "@/components/ui/separator";
 import {
   Clock,
   CheckCircle,
-  PlayCircle,
   BookOpen,
   ArrowLeft,
   Crown,
@@ -312,16 +311,7 @@ const isEnrolled = !isUserLoading && user.courses?.includes(course?._id);
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                         
-                        {/* Play Button Overlay */}
-                        <motion.div 
-                          className="absolute inset-0 flex items-center justify-center"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <div className="bg-white/20 backdrop-blur-sm rounded-full p-6 border border-white/30 cursor-pointer hover:bg-white/30 transition-all shadow-glass">
-                            <PlayCircle className="h-12 w-12 text-white drop-shadow-lg" />
-                          </div>
-                        </motion.div>
+                    
                       </div>
                     </motion.div>
                   </div>

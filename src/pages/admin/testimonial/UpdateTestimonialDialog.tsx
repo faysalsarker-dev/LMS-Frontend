@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { handleApiError } from "@/utils/errorHandler";
 import type { ITestimonial } from "@/interface";
+import { Textarea } from "@/components/ui/textarea";
 
 
 
@@ -52,7 +53,7 @@ handleApiError(err)
           </div>
           <div>
             <label className="text-sm font-medium">Review</label>
-            <Input {...register("review", { required: true })} />
+            <Textarea className="min-h-32" {...register("review", { required: true })} />
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>

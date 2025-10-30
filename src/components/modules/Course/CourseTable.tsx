@@ -31,6 +31,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "react-hot-toast";
+import { handleApiError } from "@/utils/errorHandler";
 
 interface Meta {
   page: number;
@@ -78,7 +79,7 @@ export function CourseTable({
       await deleteCourse(deleteId).unwrap();
       toast.success("Course deleted successfully!");
     } catch (err) {
-      toast.error("Failed to delete course.");
+handleApiError(err)
     } finally {
       setDeleteId(null);
       setOpen(false);
