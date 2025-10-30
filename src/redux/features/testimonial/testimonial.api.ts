@@ -48,6 +48,13 @@ export const testimonialApi = baseApi.injectEndpoints({
       }),
       providesTags: ["TESTIMONIAL"],
     }),
+    getMyTestimonials: build.query({
+      query: (courseId) => ({
+        url: `/testimonial/my-review/${courseId}`,
+        method: "GET",
+      }),
+      providesTags: ["TESTIMONIAL"],
+    }),
 
     // ✅ Admin: all testimonials with pagination + sorting
     getAllTestimonialsAdmin: build.query({
@@ -69,4 +76,5 @@ export const {
   useGetCourseReviewSummaryQuery,
   useGetTopTestimonialsQuery,
   useGetAllTestimonialsAdminQuery,
+  useGetMyTestimonialsQuery,
 } = testimonialApi;
