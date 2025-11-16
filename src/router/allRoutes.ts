@@ -17,6 +17,8 @@ import CheckoutPage from "@/pages/Checkout/CheckoutPage";
 import EnrolmentPage from "@/pages/Enrolment/EnrolmentPage";
 import Profile from "@/pages/Student/Profile";
 import AdminTestimonialsPage from "@/pages/admin/testimonial/TestimonialPage";
+import AdminPromoPage from "@/pages/admin/promo/AdminPromoPage";
+import UserPromoUsagePage from "@/pages/admin/promo/UserPromoUsagePage";
 
 
 const AppSettings = lazy(() => import("@/pages/admin/app-setting/AppSettings"));
@@ -116,6 +118,22 @@ export const adminRoutes = [
     Component: withAuth(CategoryPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
     path: "/dashboard/category",
     name: "Category",
+    icon: Tag,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
+
+  },
+  {
+    Component: withAuth(AdminPromoPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
+    path: "/dashboard/promos-managment",
+    name: "Promos",
+    icon: Tag,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
+
+  },
+  {
+    Component: withAuth(UserPromoUsagePage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
+    path: "/dashboard/user-managment",
+    name: "User Promos",
     icon: Tag,
     roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
 
