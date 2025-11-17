@@ -19,6 +19,7 @@ import Profile from "@/pages/Student/Profile";
 import AdminTestimonialsPage from "@/pages/admin/testimonial/TestimonialPage";
 import AdminPromoPage from "@/pages/admin/promo/AdminPromoPage";
 import UserPromoUsagePage from "@/pages/admin/promo/UserPromoUsagePage";
+import AssignmentPage from "@/pages/admin/assignment/AssignmentPage";
 
 
 const AppSettings = lazy(() => import("@/pages/admin/app-setting/AppSettings"));
@@ -109,6 +110,14 @@ export const adminRoutes = [
   {
     Component: withAuth(LessonPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
     path: "/dashboard/lesson",
+    name: "Lessons",
+    icon: BookOpen,
+    roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]
+
+  },
+  {
+    Component: withAuth(AssignmentPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
+    path: "/dashboard/assignment",
     name: "Lessons",
     icon: BookOpen,
     roles:[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]

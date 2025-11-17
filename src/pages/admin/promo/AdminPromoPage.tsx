@@ -12,6 +12,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import {  XAxis, YAxis, CartesianGrid, ResponsiveContainer, Area, AreaChart } from "recharts";
 import { Search, Filter, ArrowUpDown, Edit2, Trash2, TrendingUp, Users, Percent, Calendar, Sparkles, Activity } from "lucide-react";
 import toast from "react-hot-toast";
+import CreatePromoModal from "@/components/modules/promo/CreatePromoForm";
 
 const container = {
   hidden: { opacity: 0 },
@@ -28,6 +29,7 @@ const item = {
 
 export default function AdminPromoPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [open, setOpen] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState("recent");
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedPromo, setSelectedPromo] = useState<PromoCode | null>(null);
@@ -79,19 +81,25 @@ export default function AdminPromoPage() {
         className="max-w-7xl mx-auto space-y-8"
       >
         {/* Header */}
-        <motion.div variants={item} className="flex items-center gap-3">
-          <div className="p-3 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-            <Sparkles className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              Promo Management
-            </h1>
-            <p className="text-muted-foreground mt-1 flex items-center gap-2">
-              <Activity className="h-4 w-4" />
-              Manage and monitor all promotional codes
-            </p>
-          </div>
+        <motion.div variants={item} className="flex justify-between items-center">
+    <div className="flex items-center gap-3">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+              <Sparkles className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                Promo Management
+              </h1>
+              <p className="text-muted-foreground mt-1 flex items-center gap-2">
+                <Activity className="h-4 w-4" />
+                Manage and monitor all promotional codes
+              </p>
+            </div>
+  
+    </div>
+<Button onClick={()=>setOpen(true)}>Add New Promo</Button>
+
+
         </motion.div>
 
         {/* Analytics Cards */}
@@ -323,6 +331,21 @@ export default function AdminPromoPage() {
           </Card>
         </motion.div>
       </motion.div>
+
+
+
+
+<CreatePromoModal
+open={open}
+setOpen={() => setOpen(false)}
+
+
+/>
+
+
+
+
+
 
       <EditPromoModal
         promo={selectedPromo}

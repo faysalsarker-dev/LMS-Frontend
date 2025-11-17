@@ -212,3 +212,26 @@ export interface ITestimonial {
   createdAt:Date;
   updatedAt:Date;
 }
+
+
+export interface IPromo {
+  _id: string;
+  code: string;
+  discount: number;
+  type: "percentage" | "fixed";
+  maxUsage: number;
+  usedCount: number;
+  isActive: boolean;
+  expireDate: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IPromoPayload {
+  code: string;
+  discount: number;
+  type: "percentage" | "fixed";
+  maxUsage: number;
+  expireDate: string;
+  isActive?: boolean;
+}

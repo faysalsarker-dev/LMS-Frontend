@@ -383,3 +383,519 @@ export const mockCategories = [
   'Language',
   'Personal Development'
 ];
+
+
+export interface Student {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface Course {
+  id: string;
+  title: string;
+}
+
+export interface Lesson {
+  id: string;
+  title: string;
+}
+
+export type SubmissionType = "link" | "text" | "file";
+export type SubmissionStatus = "pending" | "reviewed" | "graded";
+
+export interface AssignmentSubmission {
+  id: string;
+  student: Student;
+  course: Course;
+  lesson: Lesson;
+  submissionType: SubmissionType;
+  file: {
+    url: string | null;
+  };
+  textResponse: string | null;
+  submittedAt: string;
+  status: SubmissionStatus;
+  result: number | null;
+  feedback: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PaginationInfo {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface SubmissionsQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: SubmissionStatus | "";
+  submissionType?: SubmissionType | "";
+  course?: string;
+  lesson?: string;
+  sortBy?: "submittedAt" | "student.name" | "result";
+  sortOrder?: "asc" | "desc";
+}
+
+export interface SubmissionsResponse {
+  submissions: AssignmentSubmission[];
+  pagination: PaginationInfo;
+}
+
+export interface GradeFormData {
+  result: number;
+  feedback: string;
+  status: SubmissionStatus;
+}
+
+// Mock data
+const mockSubmissions: AssignmentSubmission[] = [
+  {
+    id: "sub_1",
+    student: { id: "u_101", name: "Ayesha Rahman", email: "ayesha.r@example.com" },
+    course: { id: "c_1", title: "Intro to JS" },
+    lesson: { id: "l_1", title: "Callbacks & Promises" },
+    submissionType: "file",
+    file: { url: "https://example.com/files/sub_1.pdf" },
+    textResponse: null,
+    submittedAt: "2025-11-10T09:12:00.000Z",
+    status: "pending",
+    result: null,
+    feedback: null,
+    createdAt: "2025-11-10T09:12:00.000Z",
+    updatedAt: "2025-11-10T09:12:00.000Z",
+  },
+  {
+    id: "sub_2",
+    student: { id: "u_102", name: "Rafi Khan", email: "rafi.k@example.com" },
+    course: { id: "c_2", title: "React Advanced" },
+    lesson: { id: "l_7", title: "Performance Optimization" },
+    submissionType: "text",
+    file: { url: null },
+    textResponse: "Implemented lazy loading and memoization. Code snippet: const MyComponent = React.memo(() => { ... })",
+    submittedAt: "2025-11-12T14:05:00.000Z",
+    status: "reviewed",
+    result: null,
+    feedback: "Good work; add comments to your code.",
+    createdAt: "2025-11-12T14:05:00.000Z",
+    updatedAt: "2025-11-13T10:22:00.000Z",
+  },
+  {
+    id: "sub_3",
+    student: { id: "u_103", name: "Faisal Ahmed", email: "faisal.a@example.com" },
+    course: { id: "c_1", title: "Intro to JS" },
+    lesson: { id: "l_2", title: "DOM & Events" },
+    submissionType: "link",
+    file: { url: null },
+    textResponse: null,
+    submittedAt: "2025-11-15T18:22:00.000Z",
+    status: "graded",
+    result: 88,
+    feedback: "Solid — minor DOM edge cases missed.",
+    createdAt: "2025-11-15T18:22:00.000Z",
+    updatedAt: "2025-11-16T09:15:00.000Z",
+  },
+  {
+    id: "sub_4",
+    student: { id: "u_104", name: "Nadia Islam", email: "nadia.i@example.com" },
+    course: { id: "c_3", title: "Node.js Backend" },
+    lesson: { id: "l_15", title: "REST API Design" },
+    submissionType: "file",
+    file: { url: "https://example.com/files/sub_4.zip" },
+    textResponse: null,
+    submittedAt: "2025-11-08T11:45:00.000Z",
+    status: "graded",
+    result: 92,
+    feedback: "Excellent implementation of RESTful principles.",
+    createdAt: "2025-11-08T11:45:00.000Z",
+    updatedAt: "2025-11-09T14:30:00.000Z",
+  },
+  {
+    id: "sub_5",
+    student: { id: "u_105", name: "Imran Hossain", email: "imran.h@example.com" },
+    course: { id: "c_2", title: "React Advanced" },
+    lesson: { id: "l_8", title: "Custom Hooks" },
+    submissionType: "text",
+    file: { url: null },
+    textResponse: "Created useDebounce hook: const useDebounce = (value, delay) => { const [debouncedValue, setDebouncedValue] = useState(value); useEffect(() => { const handler = setTimeout(() => setDebouncedValue(value), delay); return () => clearTimeout(handler); }, [value, delay]); return debouncedValue; }",
+    submittedAt: "2025-11-14T16:30:00.000Z",
+    status: "pending",
+    result: null,
+    feedback: null,
+    createdAt: "2025-11-14T16:30:00.000Z",
+    updatedAt: "2025-11-14T16:30:00.000Z",
+  },
+  {
+    id: "sub_6",
+    student: { id: "u_106", name: "Sadia Begum", email: "sadia.b@example.com" },
+    course: { id: "c_1", title: "Intro to JS" },
+    lesson: { id: "l_3", title: "Array Methods" },
+    submissionType: "link",
+    file: { url: null },
+    textResponse: null,
+    submittedAt: "2025-11-11T13:20:00.000Z",
+    status: "reviewed",
+    result: null,
+    feedback: "Please add more test cases.",
+    createdAt: "2025-11-11T13:20:00.000Z",
+    updatedAt: "2025-11-12T08:15:00.000Z",
+  },
+  {
+    id: "sub_7",
+    student: { id: "u_107", name: "Kamal Uddin", email: "kamal.u@example.com" },
+    course: { id: "c_3", title: "Node.js Backend" },
+    lesson: { id: "l_16", title: "Database Integration" },
+    submissionType: "file",
+    file: { url: "https://example.com/files/sub_7.pdf" },
+    textResponse: null,
+    submittedAt: "2025-11-09T10:05:00.000Z",
+    status: "graded",
+    result: 78,
+    feedback: "Good start, but error handling needs improvement.",
+    createdAt: "2025-11-09T10:05:00.000Z",
+    updatedAt: "2025-11-10T11:20:00.000Z",
+  },
+  {
+    id: "sub_8",
+    student: { id: "u_108", name: "Fatima Ali", email: "fatima.a@example.com" },
+    course: { id: "c_2", title: "React Advanced" },
+    lesson: { id: "l_9", title: "Context API" },
+    submissionType: "text",
+    file: { url: null },
+    textResponse: "Implemented auth context with login/logout functionality. Used useContext and useReducer pattern.",
+    submittedAt: "2025-11-13T15:40:00.000Z",
+    status: "pending",
+    result: null,
+    feedback: null,
+    createdAt: "2025-11-13T15:40:00.000Z",
+    updatedAt: "2025-11-13T15:40:00.000Z",
+  },
+  {
+    id: "sub_9",
+    student: { id: "u_109", name: "Rashid Mahmood", email: "rashid.m@example.com" },
+    course: { id: "c_1", title: "Intro to JS" },
+    lesson: { id: "l_4", title: "Async JavaScript" },
+    submissionType: "file",
+    file: { url: "https://example.com/files/sub_9.js" },
+    textResponse: null,
+    submittedAt: "2025-11-07T14:25:00.000Z",
+    status: "graded",
+    result: 95,
+    feedback: "Outstanding work! Very clean async/await implementation.",
+    createdAt: "2025-11-07T14:25:00.000Z",
+    updatedAt: "2025-11-08T09:10:00.000Z",
+  },
+  {
+    id: "sub_10",
+    student: { id: "u_110", name: "Zara Malik", email: "zara.m@example.com" },
+    course: { id: "c_3", title: "Node.js Backend" },
+    lesson: { id: "l_17", title: "Authentication & JWT" },
+    submissionType: "link",
+    file: { url: null },
+    textResponse: null,
+    submittedAt: "2025-11-16T12:10:00.000Z",
+    status: "pending",
+    result: null,
+    feedback: null,
+    createdAt: "2025-11-16T12:10:00.000Z",
+    updatedAt: "2025-11-16T12:10:00.000Z",
+  },
+  {
+    id: "sub_11",
+    student: { id: "u_111", name: "Hassan Reza", email: "hassan.r@example.com" },
+    course: { id: "c_2", title: "React Advanced" },
+    lesson: { id: "l_10", title: "Redux Toolkit" },
+    submissionType: "file",
+    file: { url: "https://example.com/files/sub_11.zip" },
+    textResponse: null,
+    submittedAt: "2025-11-06T09:50:00.000Z",
+    status: "graded",
+    result: 85,
+    feedback: "Good use of Redux Toolkit. Consider adding more slices.",
+    createdAt: "2025-11-06T09:50:00.000Z",
+    updatedAt: "2025-11-07T13:45:00.000Z",
+  },
+  {
+    id: "sub_12",
+    student: { id: "u_112", name: "Samira Khan", email: "samira.k@example.com" },
+    course: { id: "c_1", title: "Intro to JS" },
+    lesson: { id: "l_5", title: "ES6 Features" },
+    submissionType: "text",
+    file: { url: null },
+    textResponse: "Demonstrated destructuring, spread operator, arrow functions, and template literals with practical examples.",
+    submittedAt: "2025-11-05T17:15:00.000Z",
+    status: "reviewed",
+    result: null,
+    feedback: "Great examples. Please add one more on optional chaining.",
+    createdAt: "2025-11-05T17:15:00.000Z",
+    updatedAt: "2025-11-06T10:30:00.000Z",
+  },
+  {
+    id: "sub_13",
+    student: { id: "u_113", name: "Omar Farooq", email: "omar.f@example.com" },
+    course: { id: "c_3", title: "Node.js Backend" },
+    lesson: { id: "l_18", title: "WebSockets" },
+    submissionType: "link",
+    file: { url: null },
+    textResponse: null,
+    submittedAt: "2025-11-15T11:30:00.000Z",
+    status: "pending",
+    result: null,
+    feedback: null,
+    createdAt: "2025-11-15T11:30:00.000Z",
+    updatedAt: "2025-11-15T11:30:00.000Z",
+  },
+  {
+    id: "sub_14",
+    student: { id: "u_114", name: "Laila Hussain", email: "laila.h@example.com" },
+    course: { id: "c_2", title: "React Advanced" },
+    lesson: { id: "l_11", title: "Testing with Jest" },
+    submissionType: "file",
+    file: { url: "https://example.com/files/sub_14.pdf" },
+    textResponse: null,
+    submittedAt: "2025-11-04T13:55:00.000Z",
+    status: "graded",
+    result: 90,
+    feedback: "Comprehensive test coverage. Well done!",
+    createdAt: "2025-11-04T13:55:00.000Z",
+    updatedAt: "2025-11-05T08:20:00.000Z",
+  },
+  {
+    id: "sub_15",
+    student: { id: "u_115", name: "Tariq Aziz", email: "tariq.a@example.com" },
+    course: { id: "c_1", title: "Intro to JS" },
+    lesson: { id: "l_6", title: "Object-Oriented JS" },
+    submissionType: "text",
+    file: { url: null },
+    textResponse: "Created class hierarchy with proper inheritance: class Animal { constructor(name) { this.name = name; } speak() { console.log(`${this.name} makes a sound`); } } class Dog extends Animal { speak() { console.log(`${this.name} barks`); } }",
+    submittedAt: "2025-11-17T08:40:00.000Z",
+    status: "pending",
+    result: null,
+    feedback: null,
+    createdAt: "2025-11-17T08:40:00.000Z",
+    updatedAt: "2025-11-17T08:40:00.000Z",
+  },
+  {
+    id: "sub_16",
+    student: { id: "u_116", name: "Mariam Sheikh", email: "mariam.s@example.com" },
+    course: { id: "c_3", title: "Node.js Backend" },
+    lesson: { id: "l_19", title: "Microservices" },
+    submissionType: "link",
+    file: { url: null },
+    textResponse: null,
+    submittedAt: "2025-11-03T16:20:00.000Z",
+    status: "graded",
+    result: 87,
+    feedback: "Good architecture design. Consider adding circuit breakers.",
+    createdAt: "2025-11-03T16:20:00.000Z",
+    updatedAt: "2025-11-04T12:15:00.000Z",
+  },
+  {
+    id: "sub_17",
+    student: { id: "u_117", name: "Yasir Iqbal", email: "yasir.i@example.com" },
+    course: { id: "c_2", title: "React Advanced" },
+    lesson: { id: "l_12", title: "Server Components" },
+    submissionType: "file",
+    file: { url: "https://example.com/files/sub_17.zip" },
+    textResponse: null,
+    submittedAt: "2025-11-02T10:10:00.000Z",
+    status: "reviewed",
+    result: null,
+    feedback: "Interesting approach. Please clarify data fetching strategy.",
+    createdAt: "2025-11-02T10:10:00.000Z",
+    updatedAt: "2025-11-03T09:05:00.000Z",
+  },
+  {
+    id: "sub_18",
+    student: { id: "u_118", name: "Hina Yusuf", email: "hina.y@example.com" },
+    course: { id: "c_1", title: "Intro to JS" },
+    lesson: { id: "l_1", title: "Callbacks & Promises" },
+    submissionType: "text",
+    file: { url: null },
+    textResponse: "Explained callback hell and how Promises solve it. Included examples with .then() and async/await.",
+    submittedAt: "2025-11-01T14:35:00.000Z",
+    status: "graded",
+    result: 82,
+    feedback: "Good explanation. Add error handling examples.",
+    createdAt: "2025-11-01T14:35:00.000Z",
+    updatedAt: "2025-11-02T11:50:00.000Z",
+  },
+  {
+    id: "sub_19",
+    student: { id: "u_119", name: "Adnan Malik", email: "adnan.m@example.com" },
+    course: { id: "c_3", title: "Node.js Backend" },
+    lesson: { id: "l_20", title: "GraphQL APIs" },
+    submissionType: "link",
+    file: { url: null },
+    textResponse: null,
+    submittedAt: "2025-11-16T15:25:00.000Z",
+    status: "pending",
+    result: null,
+    feedback: null,
+    createdAt: "2025-11-16T15:25:00.000Z",
+    updatedAt: "2025-11-16T15:25:00.000Z",
+  },
+  {
+    id: "sub_20",
+    student: { id: "u_120", name: "Saima Aslam", email: "saima.a@example.com" },
+    course: { id: "c_2", title: "React Advanced" },
+    lesson: { id: "l_13", title: "Animation Libraries" },
+    submissionType: "file",
+    file: { url: "https://example.com/files/sub_20.mp4" },
+    textResponse: null,
+    submittedAt: "2025-11-16T09:45:00.000Z",
+    status: "reviewed",
+    result: null,
+    feedback: "Nice animations! Document the keyframes used.",
+    createdAt: "2025-11-16T09:45:00.000Z",
+    updatedAt: "2025-11-17T07:30:00.000Z",
+  },
+  {
+    id: "sub_21",
+    student: { id: "u_121", name: "Bilal Nasir", email: "bilal.n@example.com" },
+    course: { id: "c_1", title: "Intro to JS" },
+    lesson: { id: "l_2", title: "DOM & Events" },
+    submissionType: "file",
+    file: { url: "https://example.com/files/sub_21.html" },
+    textResponse: null,
+    submittedAt: "2025-10-30T12:50:00.000Z",
+    status: "graded",
+    result: 76,
+    feedback: "Basic implementation works. Add event delegation.",
+    createdAt: "2025-10-30T12:50:00.000Z",
+    updatedAt: "2025-10-31T10:40:00.000Z",
+  },
+  {
+    id: "sub_22",
+    student: { id: "u_122", name: "Rabia Hassan", email: "rabia.h@example.com" },
+    course: { id: "c_3", title: "Node.js Backend" },
+    lesson: { id: "l_15", title: "REST API Design" },
+    submissionType: "text",
+    file: { url: null },
+    textResponse: "Designed RESTful endpoints: GET /api/users, POST /api/users, PUT /api/users/:id, DELETE /api/users/:id. Followed CRUD principles.",
+    submittedAt: "2025-11-14T11:15:00.000Z",
+    status: "pending",
+    result: null,
+    feedback: null,
+    createdAt: "2025-11-14T11:15:00.000Z",
+    updatedAt: "2025-11-14T11:15:00.000Z",
+  },
+];
+
+let dataStore = [...mockSubmissions];
+
+export const mockSubmissionService = {
+  // Get all submissions with filters, pagination, sorting
+  getAllSubmissions: async (query: SubmissionsQuery = {}): Promise<SubmissionsResponse> => {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    let filtered = [...dataStore];
+
+    // Search filter
+    if (query.search) {
+      const searchLower = query.search.toLowerCase();
+      filtered = filtered.filter(
+        (sub) =>
+          sub.student.name.toLowerCase().includes(searchLower) ||
+          sub.student.email.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Status filter
+    if (query.status) {
+      filtered = filtered.filter((sub) => sub.status === query.status);
+    }
+
+    // Submission type filter
+    if (query.submissionType) {
+      filtered = filtered.filter((sub) => sub.submissionType === query.submissionType);
+    }
+
+    // Course filter
+    if (query.course) {
+      filtered = filtered.filter((sub) => sub.course.id === query.course);
+    }
+
+    // Lesson filter
+    if (query.lesson) {
+      filtered = filtered.filter((sub) => sub.lesson.id === query.lesson);
+    }
+
+    // Sort
+    const sortBy = query.sortBy || "submittedAt";
+    const sortOrder = query.sortOrder || "desc";
+
+    filtered.sort((a, b) => {
+      let aVal, bVal;
+
+      if (sortBy === "submittedAt") {
+        aVal = new Date(a.submittedAt).getTime();
+        bVal = new Date(b.submittedAt).getTime();
+      } else if (sortBy === "student.name") {
+        aVal = a.student.name.toLowerCase();
+        bVal = b.student.name.toLowerCase();
+      } else if (sortBy === "result") {
+        aVal = a.result ?? -1;
+        bVal = b.result ?? -1;
+      } else {
+        aVal = 0;
+        bVal = 0;
+      }
+
+      if (aVal < bVal) return sortOrder === "asc" ? -1 : 1;
+      if (aVal > bVal) return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    // Pagination
+    const page = query.page || 1;
+    const limit = query.limit || 10;
+    const total = filtered.length;
+    const totalPages = Math.ceil(total / limit);
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+
+    const submissions = filtered.slice(startIndex, endIndex);
+
+    return {
+      submissions,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages,
+      },
+    };
+  },
+
+  // Get submission by ID
+  getSubmissionById: async (id: string): Promise<AssignmentSubmission | null> => {
+    await new Promise(resolve => setTimeout(resolve, 200));
+    return dataStore.find((sub) => sub.id === id) || null;
+  },
+
+  // Update submission (for grading)
+  updateSubmission: async (
+    id: string,
+    payload: Partial<GradeFormData>
+  ): Promise<AssignmentSubmission | null> => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    const index = dataStore.findIndex((sub) => sub.id === id);
+    if (index === -1) return null;
+
+    const updated = {
+      ...dataStore[index],
+      ...payload,
+      updatedAt: new Date().toISOString(),
+    };
+
+    dataStore[index] = updated;
+    return updated;
+  },
+};
