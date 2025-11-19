@@ -3,9 +3,12 @@ import Register from "@/pages/auth/Register";
 import { createBrowserRouter } from "react-router";
 import Layout from './../layout/home/Home';
 import { generateRoutes } from "./generateRoutes";
-import {adminRoutes, invisibleRoutes, publicRoutes, studentRoutes} from "./allRoutes";
+import { invisibleRoutes} from "./allRoutes";
 import { AdminLayout } from "@/layout/admin/AdminLayout";
 import NotFoundPage from "@/pages/ErrorPages/NotFoundPage";
+import { publicRoutes } from "./routes/public";
+import { adminRoutes } from "./routes/admin";
+import { studentRoutes } from "./routes/student";
 
 export const router = createBrowserRouter([
 

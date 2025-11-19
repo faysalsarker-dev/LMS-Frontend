@@ -1,11 +1,10 @@
-import type { IPromo, IPromoPayload } from "@/interface";
 import { baseApi } from "@/redux/baseApi";
 
 export const promoApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
 
     // Create Promo
-    createPromo: builder.mutation<IPromo, IPromoPayload>({
+    createPromo: builder.mutation({
       query: (data) => ({
         url: "/promo",
         method: "POST",
@@ -15,16 +14,36 @@ export const promoApi = baseApi.injectEndpoints({
     }),
 
     // Get all Promos
-    getAllPromos: builder.query<IPromo[], void>({
+    getMyPromos: builder.query({
       query: () => ({
-        url: "/promo",
+        url: "/promo/my-promo",
         method: "GET",
       }),
       providesTags: ["PROMO"],
     }),
+getAllPromos: builder.query({
+  query: (params) => {
+    // Remove undefined/null values and create clean query string
+    const cleanParams = Object.entries(params).reduce((acc, [key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        acc[key] = value;
+      }
+      return acc;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }, {} as Record<string, any>);
+
+    const queryString = new URLSearchParams(cleanParams).toString();
+    
+    return {
+      url: `/promo/admin/all${queryString ? `?${queryString}` : ''}`,
+      method: "GET",
+    };
+  },
+  providesTags: ["PROMO"],
+}),
 
     // Get single promo
-    getPromoById: builder.query<IPromo, string>({
+    getPromoById: builder.query({
       query: (id) => ({
         url: `/promo/${id}`,
         method: "GET",
@@ -32,21 +51,39 @@ export const promoApi = baseApi.injectEndpoints({
       providesTags: ["PROMO"],
     }),
 
+    getAnalytics: builder.query({
+     query: (params) => {
+    // Remove undefined/null values and create clean query string
+    const cleanParams = Object.entries(params).reduce((acc, [key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        acc[key] = value;
+      }
+      return acc;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }, {} as Record<string, any>);
+
+    const queryString = new URLSearchParams(cleanParams).toString();
+    
+    return {
+      url: `/promo/analytics${queryString ? `?${queryString}` : ''}`,
+      method: "GET",
+    };
+  },
+  providesTags: ["PROMO"],
+    }),
+
     // Update promo
-    updatePromo: builder.mutation<
-      IPromo,
-      { promoId: string; formData: Partial<IPromoPayload> }
-    >({
-      query: ({ promoId, formData }) => ({
-        url: `/promo/${promoId}`,
+    updatePromo: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/promo/${id}`,
         method: "PUT",
-        data: formData,
+        data: data,
       }),
       invalidatesTags: ["PROMO"],
     }),
 
     // Delete promo
-    deletePromo: builder.mutation<{ message: string }, string>({
+    deletePromo: builder.mutation({
       query: (id) => ({
         url: `/promo/${id}`,
         method: "DELETE",
@@ -62,4 +99,6 @@ export const {
   useGetPromoByIdQuery,
   useUpdatePromoMutation,
   useDeletePromoMutation,
+  useGetMyPromosQuery,
+  useGetAnalyticsQuery
 } = promoApi;

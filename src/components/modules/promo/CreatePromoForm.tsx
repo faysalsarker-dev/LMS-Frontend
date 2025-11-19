@@ -35,6 +35,7 @@ import { cn } from "@/lib/utils";
 // API hooks
 import { useCreatePromoMutation } from "@/redux/features/promo/promo.api";
 import { useGetAllQuery } from "@/redux/features/auth/auth.api";
+import { handleApiError } from "@/utils/errorHandler";
 
 interface CreatePromoFormData {
   code: string;
@@ -106,14 +107,15 @@ const CreatePromoModal = ({
       toast.success("Promo created successfully!");
       reset();
       setOpen(false);
-    } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to create promo");
+    } catch (err) {
+
+handleApiError(err)
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-lg overflow-auto h-[80%]">
+      <DialogContent className="sm:max-w-[500px] overflow-auto h-[80%]">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Create Promo Code
@@ -243,7 +245,7 @@ const CreatePromoModal = ({
                       mode="single"
                       selected={validFrom ? new Date(validFrom) : undefined}
                       onSelect={(date) =>
-                        setValue("validFrom", date?.toISOString().split("T")[0]!)
+                        date && setValue("validFrom", date.toISOString().split("T")[0])
                       }
                     />
                   </PopoverContent>
@@ -274,10 +276,7 @@ const CreatePromoModal = ({
                         expirationDate ? new Date(expirationDate) : undefined
                       }
                       onSelect={(date) =>
-                        setValue(
-                          "expirationDate",
-                          date?.toISOString().split("T")[0]!
-                        )
+                        date && setValue("expirationDate", date.toISOString().split("T")[0])
                       }
                     />
                   </PopoverContent>
@@ -312,16 +311,16 @@ const CreatePromoModal = ({
             </div>
 
             {/* Buttons */}
-            <div className="flex gap-3 pt-2">
+            <div className="flex gap-3 pt-2 justify-between items-center w-full">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setOpen(false)}
-                className="w-full"
+                className="w-1/2"
               >
                 Cancel
               </Button>
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-1/2" disabled={isLoading}>
                 Create Promo
               </Button>
             </div>

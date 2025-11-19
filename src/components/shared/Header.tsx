@@ -75,6 +75,7 @@ const [open,setOpen]=useState(false)
 
   const isActive = (path: string) => location.pathname === path;
 
+
   return (
     <header className="bg-card backdrop-blur-sm border-b border-border sticky top-0 z-40 shadow-sm">
       <div className="container mx-auto px-4">

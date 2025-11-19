@@ -1,4 +1,4 @@
-import { adminRoutes } from "./allRoutes";
+import { adminRoutes } from "./routes/admin";
 
 
 type UserRole = "instructor" | "admin" | "super_admin";
