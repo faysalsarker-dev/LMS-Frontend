@@ -8,7 +8,8 @@ type CoursePlayerContentProps = {
 };  
 
 
-export function CoursePlayerContent({ lesson }: CoursePlayerContentProps) {
+export function CoursePlayerContent({ lesson ,data}: CoursePlayerContentProps) {
+console.log(data  ,'lesson content data');
 
 const url =`https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`
   switch (lesson.contentType) {

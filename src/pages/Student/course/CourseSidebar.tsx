@@ -1,69 +1,57 @@
+
 import { useState, useEffect, useMemo } from "react";
 import { ChevronDown, ChevronRight, CheckCircle2, Circle, PlayCircle, Lock, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import type { ILesson } from "@/interface";
+
+interface Lesson {
+  _id: string;
+  title: string;
+  order: number;
+  contentType: string;
+  isCompleted: boolean;
+}
 
 interface Milestone {
   _id: string;
   title: string;
-  lesson: ILesson[];
+  order: number;
+  lessons: Lesson[];
 }
 
 interface CourseSidebarProps {
-  milestones: Milestone[];
-  onLessonClick: (lesson: ILesson) => void;
+  curriculum: Milestone[];
+  onLessonClick: (lesson: Lesson) => void;
   currentLessonId?: string;
-  completedLessons: string[] | ILesson[] ;
+  isLoading?: boolean;
 }
 
 export function CourseSidebar({ 
-  milestones, 
+  curriculum,
   onLessonClick, 
   currentLessonId,
-  completedLessons = []
+  isLoading = false
 }: CourseSidebarProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedMilestones, setExpandedMilestones] = useState<Set<string>>(new Set());
 
-  // Convert completed lessons to Set of IDs for O(1) lookup performance
-  const completedLessonsSet = useMemo(() => {
-    if (!completedLessons || completedLessons.length === 0) return new Set<string>();
-    
-    // Check if array contains objects or strings
-    const firstItem = completedLessons[0];
-    
-    if (typeof firstItem === 'string') {
-      // Array of IDs
-      return new Set(completedLessons.filter(Boolean) as string[]);
-    } else if (typeof firstItem === 'object' && firstItem !== null) {
-      // Array of lesson objects - extract _id from each
-      return new Set(
-        completedLessons
-          .filter((item): item is ILesson => typeof item === 'object' && item !== null && '_id' in item && Boolean((item as ILesson)._id))
-          .map(item => item._id)
-      );
-    }
-    
-    return new Set<string>();
-  }, [completedLessons]);
-
-  // Get all lessons in order for sequential checking
+  
   const allLessons = useMemo(() => {
-    return milestones.flatMap(m => m.lesson || []).filter(Boolean);
-  }, [milestones]);
+    if (!curriculum || curriculum.length === 0) return [];
+    return curriculum.flatMap(m => m.lessons || []);
+  }, [curriculum]);
 
   // Auto-expand milestone containing current lesson
   useEffect(() => {
-    if (currentLessonId) {
-      const milestoneWithCurrentLesson = milestones.find(m => 
-        m.lesson?.some(l => l?._id === currentLessonId)
+    if (currentLessonId && curriculum && curriculum.length > 0) {
+      const milestoneWithCurrentLesson = curriculum.find(m => 
+        m.lessons?.some(l => l._id === currentLessonId)
       );
       if (milestoneWithCurrentLesson) {
         setExpandedMilestones(prev => new Set([...prev, milestoneWithCurrentLesson._id]));
       }
     }
-  }, [currentLessonId, milestones]);
+  }, [currentLessonId, curriculum]);
 
   const toggleMilestone = (milestoneId: string) => {
     setExpandedMilestones(prev => {
@@ -78,52 +66,41 @@ export function CourseSidebar({
   };
 
   const getMilestoneProgress = (milestone: Milestone) => {
-    if (!milestone?.lesson || milestone.lesson.length === 0) {
-      return { completed: 0, total: 0, percentage: 0 };
-    }
-
-    const total = milestone.lesson.length;
-    const completed = milestone.lesson.filter(
-      lesson => lesson?._id && completedLessonsSet.has(lesson._id)
-    ).length;
+    const total = milestone.lessons?.length || 0;
+    const completed = milestone.lessons?.filter(l => l.isCompleted).length || 0;
+    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
     
-    return { 
-      completed, 
-      total, 
-      percentage: total > 0 ? Math.round((completed / total) * 100) : 0 
-    };
+    return { completed, total, percentage };
   };
 
   // Filter milestones based on search
   const filteredMilestones = useMemo(() => {
-    if (!searchTerm.trim()) return milestones;
+    if (!curriculum || curriculum.length === 0) return [];
+    if (!searchTerm.trim()) return curriculum;
     
     const searchLower = searchTerm.toLowerCase();
-    return milestones.filter(m =>
+    return curriculum.filter(m =>
       m.title?.toLowerCase().includes(searchLower) ||
-      m.lesson?.some(l => l.title?.toLowerCase().includes(searchLower))
+      m.lessons?.some(l => l.title?.toLowerCase().includes(searchLower))
     );
-  }, [milestones, searchTerm]);
+  }, [curriculum, searchTerm]);
 
-  // Determine lesson status with proper completion check
-  const getLessonStatus = (lesson: ILesson, globalIndex: number): 'completed' | 'in-progress' | 'unlocked' | 'locked' => {
-    if (!lesson?._id) return 'locked';
-
-    // Check if lesson is completed using the Set (O(1) operation)
-    if (completedLessonsSet.has(lesson._id)) return 'completed';
-    
-    // Check if it's the current lesson
-    if (lesson._id === currentLessonId) return 'in-progress';
+  // Determine if lesson is unlocked (sequential unlock logic)
+  const isLessonUnlocked = (lesson: Lesson): boolean => {
+    const globalIndex = allLessons.findIndex(l => l._id === lesson._id);
     
     // First lesson is always unlocked
-    if (globalIndex === 0) return 'unlocked';
+    if (globalIndex === 0) return true;
     
-    // Check if previous lesson is completed (sequential unlock)
+    // Check if previous lesson is completed
     const previousLesson = allLessons[globalIndex - 1];
-    if (previousLesson?._id && completedLessonsSet.has(previousLesson._id)) {
-      return 'unlocked';
-    }
-    
+    return previousLesson?.isCompleted || false;
+  };
+
+  const getLessonStatus = (lesson: Lesson): 'completed' | 'in-progress' | 'unlocked' | 'locked' => {
+    if (lesson.isCompleted) return 'completed';
+    if (lesson._id === currentLessonId) return 'in-progress';
+    if (isLessonUnlocked(lesson)) return 'unlocked';
     return 'locked';
   };
 
@@ -132,7 +109,6 @@ export function CourseSidebar({
       <div className="p-4 border-b bg-muted/50">
         <h3 className="font-semibold mb-3">Course Content</h3>
         
-        {/* Search bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -143,16 +119,25 @@ export function CourseSidebar({
           />
         </div>
       </div>
-      
+
       <div className="overflow-y-auto flex-1">
-        {filteredMilestones?.length === 0 ? (
+        {isLoading ? (
+          <div className="p-8 text-center text-muted-foreground">
+            <div className="flex flex-col items-center gap-3">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <p>Loading curriculum...</p>
+            </div>
+          </div>
+        ) : !curriculum || curriculum.length === 0 ? (
+          <div className="p-8 text-center text-muted-foreground">
+            <p>No curriculum data available</p>
+          </div>
+        ) : filteredMilestones.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground">
             <p>No lessons found</p>
           </div>
         ) : (
-          filteredMilestones?.map((milestone) => {
-            if (!milestone?._id) return null;
-            
+          filteredMilestones.map((milestone) => {
             const isExpanded = expandedMilestones.has(milestone._id);
             const progress = getMilestoneProgress(milestone);
             
@@ -196,75 +181,72 @@ export function CourseSidebar({
                 )}
 
                 {/* Lessons list */}
-                {isExpanded && (
-                  <div className="bg-muted/20 mt-2">
-                    {milestone?.lesson?.map((lesson, localIndex) => {
-                      if (!lesson?._id) return null;
-                      
-                      const globalIndex = allLessons.findIndex(l => l?._id === lesson._id);
-                      const status = getLessonStatus(lesson, globalIndex);
-                      const isActive = lesson._id === currentLessonId;
-                      const isCompleted = status === 'completed';
-                      const isLocked = status === 'locked';
-                      
-                      return (
-                        <button
-                          key={lesson._id}
-                          onClick={() => !isLocked && onLessonClick(lesson)}
-                          disabled={isLocked}
-                          className={cn(
-                            "w-full p-3 pl-8 flex items-center gap-3 transition-all text-left",
-                            "hover:bg-muted/80",
-                            isActive && "bg-primary/10 border-l-4 border-primary shadow-sm",
-                            isLocked && "opacity-50 cursor-not-allowed hover:bg-transparent"
-                          )}
-                        >
-                          {/* Status icon */}
-                          <div className="flex-shrink-0">
-                            {isCompleted ? (
-                              <CheckCircle2 className="h-5 w-5 text-green-600" />
-                            ) : isActive ? (
-                              <PlayCircle className="h-5 w-5 text-primary fill-primary/20" />
-                            ) : isLocked ? (
-                              <Lock className="h-5 w-5 text-muted-foreground" />
-                            ) : (
-                              <Circle className="h-5 w-5 text-muted-foreground" />
+                {isExpanded && milestone.lessons && milestone.lessons.length > 0 && (
+                  <div className="bg-muted/20">
+                    {milestone.lessons.map((lesson, index) => {
+                        const status = getLessonStatus(lesson);
+                        const isActive = lesson._id === currentLessonId;
+                        const isCompleted = lesson.isCompleted;
+                        const isLocked = status === 'locked';
+                        
+                        return (
+                          <button
+                            key={lesson._id}
+                            onClick={() => !isLocked && onLessonClick(lesson)}
+                            disabled={isLocked}
+                            className={cn(
+                              "w-full p-3 pl-8 flex items-center gap-3 transition-all text-left",
+                              "hover:bg-muted/80",
+                              isActive && "bg-primary/10 border-l-4 border-primary shadow-sm",
+                              isLocked && "opacity-50 cursor-not-allowed hover:bg-transparent"
                             )}
-                          </div>
-
-                          {/* Lesson info */}
-                          <div className="flex-1 min-w-0">
-                            <p className={cn(
-                              "text-sm font-medium truncate",
-                              isActive && "text-primary font-semibold"
-                            )}>
-                              {localIndex + 1}. {lesson.title}
-                            </p>
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <span className="capitalize">{lesson.contentType}</span>
-                              {isCompleted && (
-                                <>
-                                  <span>•</span>
-                                  <span className="text-green-600">Completed</span>
-                                </>
-                              )}
-                              {isActive && (
-                                <>
-                                  <span>•</span>
-                                  <span className="text-primary font-medium">Current</span>
-                                </>
-                              )}
-                              {isLocked && (
-                                <>
-                                  <span>•</span>
-                                  <span className="text-muted-foreground">Locked</span>
-                                </>
+                          >
+                            {/* Status icon */}
+                            <div className="flex-shrink-0">
+                              {isCompleted ? (
+                                <CheckCircle2 className="h-5 w-5 text-green-600" />
+                              ) : isActive ? (
+                                <PlayCircle className="h-5 w-5 text-primary fill-primary/20" />
+                              ) : isLocked ? (
+                                <Lock className="h-5 w-5 text-muted-foreground" />
+                              ) : (
+                                <Circle className="h-5 w-5 text-muted-foreground" />
                               )}
                             </div>
-                          </div>
-                        </button>
-                      );
-                    })}
+
+                            {/* Lesson info */}
+                            <div className="flex-1 min-w-0">
+                              <p className={cn(
+                                "text-sm font-medium truncate",
+                                isActive && "text-primary font-semibold"
+                              )}>
+                                {index + 1}. {lesson.title}
+                              </p>
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <span className="capitalize">{lesson.contentType}</span>
+                                {isCompleted && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="text-green-600">Completed</span>
+                                  </>
+                                )}
+                                {isActive && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="text-primary font-medium">Current</span>
+                                  </>
+                                )}
+                                {isLocked && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="text-muted-foreground">Locked</span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
                   </div>
                 )}
               </div>

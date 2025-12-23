@@ -52,7 +52,21 @@ updateCourse: builder.mutation({
   invalidatesTags: ["COURSE"],
 }),
 
+getCourseCurriculum: builder.query({
+      query: (courseId: string) => ({
+        url: `/course/${courseId}/curriculum`,
+        method: "GET",
+      }),
+      providesTags: ["COURSE", "PROGRESS"],
+    }),
 
+    // Get specific heavy lesson content on-demand
+    getLessonContent: builder.query({
+      query: (lessonId: string) => ({
+        url: `/course/lessons/${lessonId}`,
+        method: "GET",
+      }),
+    }),
     // Delete course
     deleteCourse: builder.mutation({
       query: (id) => ({
@@ -70,5 +84,7 @@ export const {
   useGetCourseBySlugQuery,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
-  useGetCourseByIdQuery
+  useGetCourseByIdQuery,
+  useGetCourseCurriculumQuery,
+  useGetLessonContentQuery,
 } = courseApi;

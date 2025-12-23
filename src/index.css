@@ -107,7 +107,9 @@
   --popover-foreground: oklch(0.145 0 0);
 
   /* Education Platform Primary - Deep Indigo */
-  --primary: oklch(0.53 0.28 276); /* adjust as needed */
+  /* --primary: oklch(0.53 0.28 276); */
+  --primary: oklch(71.3% 0.132 174);
+  
   --primary-foreground: oklch(0.985 0 0);
   --primary-dark: oklch(0.44 0.25 276);
 
@@ -138,10 +140,18 @@
   --info-foreground: oklch(0.985 0 0);
 
   /* Gradients */
---gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  --gradient-hero: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+
+ --gradient-primary: linear-gradient(135deg, hsl(168 76% 36%) 0%, hsl(180 70% 42%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(28 95% 55%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(168 76% 36% / 0.1) 0%, hsl(38 92% 50% / 0.1) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.9) 0%, hsl(0 0% 100% / 0.7) 100%);
+
+
+
+/* --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  --gradient-hero: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); */
   --gradient-card: linear-gradient(180deg, var(--background) 0%, var(--muted) 100%);
-  --gradient-hero: linear-gradient(135deg, hsl(210, 100%, 98%) 0%, hsl(210, 60%, 92%) 50%, hsl(210, 80%, 88%) 100%);
+  /* --gradient-hero: linear-gradient(135deg, hsl(210, 100%, 98%) 0%, hsl(210, 60%, 92%) 50%, hsl(210, 80%, 88%) 100%); */
     --gradient-accent: linear-gradient(135deg, hsl(262 83% 58% / 0.1), hsl(210 100% 56% / 0.1));
   /* Shadows */
   --shadow-soft: 0 2px 10px -2px hsl(var(--primary) / 0.1);
