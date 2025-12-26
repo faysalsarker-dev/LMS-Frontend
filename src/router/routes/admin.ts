@@ -26,6 +26,7 @@ import AssignmentPage from "@/pages/admin/assignment/AssignmentPage";
 import withAuth from "../withAuth";
 import { UserRoles } from "@/interface";
 import CreateLesson from "@/components/modules/CreateLesson/CreateLesson";
+import { LessonFormMain } from "@/components/modules/lesson-editor";
 
 
 const AppSettings = lazy(() => import("@/pages/admin/app-setting/AppSettings"));
@@ -80,7 +81,7 @@ export const adminRoutes = [
 
   },
   {
-    Component: withAuth(CreateLesson,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
+    Component: withAuth(LessonFormMain,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
     path: "/dashboard/lesson",
     name: "Lessons",
     icon: BookOpen,

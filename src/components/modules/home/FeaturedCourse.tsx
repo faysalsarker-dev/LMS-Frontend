@@ -37,7 +37,7 @@ const FeaturedCourses = () => {
 
   return (
     <section className="py-20 bg-muted/30 overflow-hidden">
-      <div className="container mx-auto px-4">
+      <div className=" px-4">
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -64,7 +64,7 @@ const FeaturedCourses = () => {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 max-w-6xl mx-auto"
         >
           {isLoading
             ? Array.from({ length: 3 }).map((_, i) => (

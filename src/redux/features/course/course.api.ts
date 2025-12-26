@@ -57,6 +57,7 @@ getCourseCurriculum: builder.query({
         url: `/course/${courseId}/curriculum`,
         method: "GET",
       }),
+      keepUnusedDataFor: 18000,
       providesTags: ["COURSE", "PROGRESS"],
     }),
 

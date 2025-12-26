@@ -1,0 +1,464 @@
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { toast } from 'sonner';
+import { Save, Loader2, BookOpen } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+
+import { TypeSelector } from './TypeSelector';
+import { VideoModule } from './VideoModule';
+import { DocModule } from './DocModule';
+import { QuizModule } from './QuizModule';
+import { AssignmentModule } from './AssignmentModule';
+import { AudioModule } from './AudioModule';
+import { LESSON_TYPE_CONFIG, STATUS_CONFIG, type IQuestion, type ITranscript, type LessonStatus, type LessonType } from '@/interface/lesson.type';
+import { useCreateLessonMutation } from '@/redux/features/lesson/lesson.api';
+import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
+import { useGetAllMilestonesQuery } from '@/redux/features/milestone/milestone.api';
+import type { ICourse, IMilestone } from '@/interface';
+
+
+const lessonSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(200),
+  description: z.string().max(1000).optional(),
+  type: z.enum(['video', 'audio', 'doc', 'quiz', 'assignment']),
+  order: z.number().min(0),
+  status: z.enum(['draft', 'published', 'archived']),
+  courseId: z.string().min(1, 'Course is required'),
+  milestoneId: z.string().min(1, 'Milestone is required'),
+});
+
+type LessonFormData = z.infer<typeof lessonSchema>;
+
+export function LessonFormMain() {
+  const [createLesson, { isLoading: isSubmitting }] = useCreateLessonMutation();
+  const { data: coursesData, isLoading: isCoursesLoading } = useGetAllCoursesQuery({ page: 1, limit: 100 });
+  
+  const [lessonType, setLessonType] = useState<LessonType>('video');
+  const [status, setStatus] = useState<LessonStatus>('draft');
+  const [selectedCourseId, setSelectedCourseId] = useState<string>('');
+  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>('');
+  
+  // Fetch milestones based on selected course
+  const { data: milestonesData } = useGetAllMilestonesQuery(
+    { page: 1, limit: 100, course: selectedCourseId },
+    { skip: !selectedCourseId }
+  );
+  
+  // Video state
+  const [videoUrl, setVideoUrl] = useState('');
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoDuration, setVideoDuration] = useState(0);
+  
+  // Audio state
+  const [audioUrl, setAudioUrl] = useState('');
+  const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [transcripts, setTranscripts] = useState<ITranscript[]>([]);
+  
+  // Doc state
+  const [docContent, setDocContent] = useState('');
+  
+  // Quiz state
+  const [questions, setQuestions] = useState<IQuestion[]>([]);
+  
+  // Assignment state
+  const [assignmentInstruction, setAssignmentInstruction] = useState('');
+  const [maxMarks, setMaxMarks] = useState(100);
+  const [deadline, setDeadline] = useState<Date | undefined>(undefined);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+    reset,
+  } = useForm<LessonFormData>({
+    resolver: zodResolver(lessonSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+      type: 'video' as LessonType,
+      order: 0,
+      status: 'draft' as LessonStatus,
+      courseId: '',
+      milestoneId: '',
+    },
+  });
+
+  const handleTypeChange = (type: LessonType) => {
+    setLessonType(type);
+    setValue('type', type);
+   
+    if (type !== 'video') {
+      setVideoUrl('');
+      setVideoFile(null);
+      setVideoDuration(0);
+    }
+    if (type !== 'audio') {
+      setAudioUrl('');
+      setAudioFile(null);
+      setTranscripts([]);
+    }
+    if (type !== 'doc') {
+      setDocContent('');
+    }
+    if (type !== 'quiz') {
+      setQuestions([]);
+    }
+    if (type !== 'assignment') {
+      setAssignmentInstruction('');
+      setMaxMarks(100);
+      setDeadline(undefined);
+    }
+  };
+
+  const handleCourseChange = (courseId: string) => {
+    setSelectedCourseId(courseId);
+    setSelectedMilestoneId(''); // Reset milestone when course changes
+    setValue('courseId', courseId);
+    setValue('milestoneId', '');
+  };
+
+  const handleMilestoneChange = (milestoneId: string) => {
+    setSelectedMilestoneId(milestoneId);
+    setValue('milestoneId', milestoneId);
+  };
+
+  const onSubmit = async (data: LessonFormData) => {
+    try {
+      // Build FormData for Multer compatibility
+      const formData = new FormData();
+      
+      // Common fields
+      formData.append('title', data.title);
+      formData.append('description', data.description || '');
+      formData.append('type', lessonType);
+      formData.append('order', String(data.order));
+      formData.append('status', status);
+      formData.append('course', data.courseId);
+      formData.append('milestone', data.milestoneId);
+      
+
+
+
+
+
+
+
+
+
+
+      // Type-specific fields
+      switch (lessonType) {
+        case 'video':
+          if (videoFile) {
+            formData.append('videoFile', videoFile);
+          } else if (videoUrl) {
+            formData.append('videoUrl', videoUrl);
+          }
+          formData.append('videoDuration', String(videoDuration));
+          break;
+          
+        case 'audio':
+          if (audioFile) {
+            formData.append('audioFile', audioFile);
+          } else if (audioUrl) {
+            formData.append('audioUrl', audioUrl);
+          }
+          formData.append('transcripts', JSON.stringify(transcripts));
+          break;
+          
+        case 'doc':
+          formData.append('doc', docContent);
+          break;
+          
+   case 'quiz': {
+  const questionsWithAnswer = questions.map(q => {
+    const correctOption = q.options?.find(o => o.isCorrect);
+    return {
+      ...q,
+      correctAnswer: correctOption ? correctOption.text : null
+    };
+  });
+
+  formData.append('questions', JSON.stringify(questionsWithAnswer));
+  break;
+}
+
+          
+        case 'assignment':
+          formData.append('assignmentInstruction', assignmentInstruction);
+          formData.append('maxMarks', String(maxMarks));
+          if (deadline) {
+            formData.append('deadline', deadline.toISOString());
+          }
+          break;
+      }
+            console.log('FormData contents:');
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+      await createLesson(formData).unwrap();
+      
+      toast.success('Lesson saved successfully!', {
+        description: `"${data.title}" has been saved as ${status}.`,
+      });
+
+      // Reset form
+      reset();
+      setSelectedCourseId('');
+      setSelectedMilestoneId('');
+      
+    } catch (error) {
+      console.error('Error saving lesson:', error);
+      toast.error('Failed to save lesson', {
+        description: error instanceof Error ? error.message : 'Please try again or contact support.',
+      });
+    }
+  };
+
+  const renderTypeModule = () => {
+    switch (lessonType) {
+      case 'video':
+        return (
+          <VideoModule
+            videoUrl={videoUrl}
+            videoFile={videoFile}
+            videoDuration={videoDuration}
+            onUrlChange={setVideoUrl}
+            onFileChange={setVideoFile}
+            onDurationChange={setVideoDuration}
+          />
+        );
+      case 'audio':
+        return (
+          <AudioModule
+            audioUrl={audioUrl}
+            audioFile={audioFile}
+            transcripts={transcripts}
+            onUrlChange={setAudioUrl}
+            onFileChange={setAudioFile}
+            onTranscriptsChange={setTranscripts}
+          />
+        );
+      case 'doc':
+        return (
+          <DocModule
+            content={docContent}
+            onChange={setDocContent}
+          />
+        );
+      case 'quiz':
+        return (
+          <QuizModule
+            control={control}
+            register={register}
+            questions={questions}
+            onQuestionsChange={setQuestions}
+          />
+        );
+      case 'assignment':
+        return (
+          <AssignmentModule
+            instruction={assignmentInstruction}
+            maxMarks={maxMarks}
+            deadline={deadline}
+            onInstructionChange={setAssignmentInstruction}
+            onMaxMarksChange={setMaxMarks}
+            onDeadlineChange={setDeadline}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  const courses = coursesData?.data.data || [];
+  const milestones = milestonesData?.data || [];
+
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg gradient-primary">
+            <BookOpen className="w-5 h-5 text-primary-foreground" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold text-foreground">Create Lesson</h1>
+            <p className="text-sm text-muted-foreground">Add a new lesson to your course</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <Select value={status} onValueChange={(v) => setStatus(v as LessonStatus)}>
+            <SelectTrigger className="w-[140px]">
+              <Badge className={STATUS_CONFIG[status].color}>
+                {STATUS_CONFIG[status].label}
+              </Badge>
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(STATUS_CONFIG).map(([key, config]) => (
+                <SelectItem key={key} value={key}>
+                  <Badge className={config.color}>{config.label}</Badge>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button 
+            onClick={handleSubmit(onSubmit)} 
+            disabled={isSubmitting} 
+            className="gap-2 min-w-[120px]"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                Save Lesson
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {/* Basic Info Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Basic Information</CardTitle>
+          <CardDescription>Set the title, course, and description for this lesson</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Lesson Title *</Label>
+              <Input
+                id="title"
+                {...register('title')}
+                placeholder="Enter lesson title..."
+                className={errors.title ? 'border-destructive' : ''}
+              />
+              {errors.title && (
+                <p className="text-xs text-destructive">{errors.title.message}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="order">Display Order</Label>
+              <Input
+                id="order"
+                type="number"
+                min={0}
+                {...register('order', { valueAsNumber: true })}
+                placeholder="0"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="courseId">Course *</Label>
+              <Select value={selectedCourseId} onValueChange={handleCourseChange}>
+                <SelectTrigger className={errors.courseId ? 'border-destructive' : ''}>
+                  <SelectValue placeholder="Select a course" />
+                </SelectTrigger>
+                <SelectContent>
+
+
+                  {isCoursesLoading  ? (
+                    <div className="p-2 text-sm text-muted-foreground">Loading courses...</div>
+                  ) : courses?.length === 0 ? (
+                    <div className="p-2 text-sm text-muted-foreground">No courses available</div>
+                  ) : (
+                    courses?.map((course: ICourse) => (
+                      <SelectItem key={course._id} value={course._id}>
+                        {course.title || "Untitled Course"}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+              {errors.courseId && (
+                <p className="text-xs text-destructive">{errors.courseId.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="milestoneId">Milestone *</Label>
+              <Select 
+                value={selectedMilestoneId} 
+                onValueChange={handleMilestoneChange}
+                disabled={!selectedCourseId}
+              >
+                <SelectTrigger className={errors.milestoneId ? 'border-destructive' : ''}>
+                  <SelectValue placeholder={selectedCourseId ? "Select a milestone" : "Select course first"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {milestones?.length === 0 ? (
+                    <div className="p-2 text-sm text-muted-foreground">
+                      {selectedCourseId ? 'No milestones available for this course' : 'Select a course first'}
+                    </div>
+                  ) : (
+                    milestones?.map((milestone: IMilestone) => (
+                      <SelectItem key={milestone._id} value={milestone._id}>
+                        {milestone.title || "Untitled Milestone"}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+              {errors.milestoneId && (
+                <p className="text-xs text-destructive">{errors.milestoneId.message}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              {...register('description')}
+              placeholder="Brief description of what students will learn..."
+              rows={3}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Type Selector */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Content Type</CardTitle>
+          <CardDescription>Choose the type of content for this lesson</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <TypeSelector value={lessonType} onChange={handleTypeChange} />
+        </CardContent>
+      </Card>
+
+      {/* Type-specific Module */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            {LESSON_TYPE_CONFIG[lessonType].label} Content
+          </CardTitle>
+          <CardDescription>{LESSON_TYPE_CONFIG[lessonType].description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {renderTypeModule()}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

@@ -27,7 +27,7 @@ const Home = () => {
       <FeaturedCourse />
 
       {/* Instructor Section: Humanize and add expertise */}
-      <InstructorSpotlight />
+      {/* <InstructorSpotlight /> */}
 
       {/* Testimonials: Real learner success stories */}
       <Testimonial />

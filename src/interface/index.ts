@@ -115,11 +115,11 @@ export interface ILesson {
   milestone: string;
   course: string;
   order?: number;
-  contentType: "video" | "doc" | "quiz" | "assignment";
+  type: "video" | "doc" | "quiz" | "assignment";
   videoUrl?: string;
   videoSourceType?: "link" | "upload";
-  docContent?: string;
-  quiz?: IQuiz;
+  doc?: string;
+  questions?: IQuiz;
   status?: "active" | "inactive";
   viewCount?: number;
   createdAt?: Date;

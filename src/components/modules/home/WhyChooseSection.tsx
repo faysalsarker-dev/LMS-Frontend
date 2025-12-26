@@ -1,106 +1,255 @@
 import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
-import { Check, Play, Users, Star, Clock, ArrowRight } from "lucide-react";
+import { Play, Users, Star, Clock, ArrowRight, Sparkles, GraduationCap } from "lucide-react";
+
+const features = [
+  {
+    icon: Play,
+    title: "Expert-Led Courses",
+    description: "Learn from top industry professionals and world-class educators.",
+    color: "from-primary to-primary/60",
+  },
+  {
+    icon: Sparkles,
+    title: "Interactive Learning",
+    description: "Engage through immersive lessons, quizzes, and real-world projects.",
+    color: "from-accent to-accent/60",
+  },
+  {
+    icon: Users,
+    title: "Global Community",
+    description: "Connect with millions of learners from across the world.",
+    color: "from-success to-success/60",
+  },
+  {
+    icon: GraduationCap,
+    title: "Certified Excellence",
+    description: "Earn prestigious certificates recognized by global employers.",
+    color: "from-blue-500 to-secondary/60",
+  },
+  {
+    icon: Clock,
+    title: "Flexible Schedule",
+    description: "Study at your own pace, anytime and anywhere you want.",
+    color: "from-accent to-success",
+  },
+  {
+    icon: ArrowRight,
+    title: "Career Growth",
+    description: "Gain practical skills to advance your career in any industry.",
+    color: "from-success to-primary",
+  },
+];
+
+const FloatingShape = ({ delay, size, x, y, color }: { delay: number; size: number; x: number; y: number; color: string }) => (
+  <motion.div
+    className={`absolute rounded-full ${color} blur-3xl`}
+    style={{ 
+      width: size, 
+      height: size, 
+      left: `${x}%`, 
+      top: `${y}%`,
+    }}
+    animate={{
+      x: [0, 30, -20, 0],
+      y: [0, -30, 20, 0],
+      scale: [1, 1.1, 0.9, 1],
+      opacity: [0.3, 0.5, 0.3],
+    }}
+    transition={{
+      duration: 8,
+      delay,
+      repeat: Infinity,
+      ease: "easeInOut",
+    }}
+  />
+);
+
+const AnimatedLetter = ({ char, delay, x, y }: { char: string; delay: number; x: number; y: number }) => (
+  <motion.span
+    className="absolute text-4xl md:text-5xl font-bold text-primary/30 select-none pointer-events-none"
+    style={{ left: `${x}%`, top: `${y}%` }}
+    animate={{
+      y: [0, -15, 0],
+      rotate: [0, 5, -5, 0],
+      opacity: [0.1, 0.2, 0.1],
+    }}
+    transition={{
+      duration: 4,
+      delay,
+      repeat: Infinity,
+      ease: "easeInOut",
+    }}
+  >
+    {char}
+  </motion.span>
+);
 
 export default function WhyChooseSection() {
-  const features = [
-    {
-      icon: <Check className="h-8 w-8 text-green-500" />,
-      title: "Expert-Led Courses",
-      description: "Learn from top industry professionals and world-class educators.",
-    },
-    {
-      icon: <Play className="h-8 w-8 text-blue-500" />,
-      title: "Interactive Learning",
-      description: "Engage through immersive lessons, quizzes, and real-world projects.",
-    },
-    {
-      icon: <Users className="h-8 w-8 text-pink-500" />,
-      title: "Global Community",
-      description: "Connect with millions of learners from across the world.",
-    },
-    {
-      icon: <Star className="h-8 w-8 text-yellow-400" />,
-      title: "Certified Excellence",
-      description: "Earn prestigious certificates recognized by global employers.",
-    },
-    {
-      icon: <Clock className="h-8 w-8 text-purple-500" />,
-      title: "Flexible Schedule",
-      description: "Study at your own pace, anytime and anywhere you want.",
-    },
-    {
-      icon: <ArrowRight className="h-8 w-8 text-cyan-500" />,
-      title: "Career Growth",
-      description: "Gain practical skills to advance your career in any industry.",
-    },
-  ];
+  const letters = ['A', 'B', 'C', '学', '习', 'E', 'F', '中'];
 
   return (
-    <section className="relative py-24 bg-gradient-to-b from-white via-muted/30 to-white ">
-      {/* Decorative background gradient circles */}
-  <div className="overflow-hidden max-w-6xl mx-auto">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute -top-20 -right-20 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-pink-400/20 rounded-full blur-3xl" />
-          </div>
-    
-          <div className="container mx-auto px-4 relative z-10">
-            {/* Header */}
+    <section className="relative py-24 overflow-hidden bg-background">
+      {/* Floating gradient shapes */}
+      <FloatingShape delay={0} size={300} x={-5} y={10} color="bg-primary/70" />
+      <FloatingShape delay={2} size={250} x={85} y={60} color="bg-accent/60" />
+      <FloatingShape delay={4} size={200} x={50} y={80} color="bg-success/50" />
+
+      {/* Floating letters */}
+      {letters.map((char, i) => (
+        <AnimatedLetter 
+          key={i} 
+          char={char} 
+          delay={i * 0.5} 
+          x={5 + i * 12} 
+          y={10 + (i % 4) * 20}
+        />
+      ))}
+
+      {/* Animated SVG lines */}
+      <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+        <motion.path
+          d="M0,200 C200,100 400,300 600,200 S1000,100 1200,200"
+          stroke="hsl(var(--primary) / 0.1)"
+          strokeWidth="2"
+          fill="none"
+          initial={{ pathLength: 0 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 2.5, ease: "easeInOut" }}
+        />
+        <motion.path
+          d="M0,400 C300,300 500,500 800,400 S1100,300 1400,400"
+          stroke="hsl(var(--accent) / 0.1)"
+          strokeWidth="2"
+          fill="none"
+          initial={{ pathLength: 0 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 2.5, delay: 0.5, ease: "easeInOut" }}
+        />
+      </svg>
+
+      <div className="max-w-6xl relative mx-auto px-4">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20"
+          >
+            <Star className="w-4 h-4 text-accent" />
+            <span className="text-sm font-semibold text-foreground">Why Choose Us</span>
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="text-3xl md:text-5xl font-bold mb-4"
+          >
+            <span className="bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text">
+              Transform Your Learning
+            </span>
+            <br />
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Experience
+            </span>
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+            className="text-muted-foreground text-lg max-w-2xl mx-auto"
+          >
+            Empowering learners worldwide with cutting-edge online education designed for your success.
+          </motion.p>
+        </motion.div>
+
+        {/* Feature Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {features.map((feature, index) => (
             <motion.div
-              className="text-center mb-16"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
+              key={index}
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true }}
+              transition={{
+                delay: index * 0.1,
+                type: "spring",
+                stiffness: 100,
+              }}
+              whileHover={{ y: -8, scale: 1.02 }}
+              className="group relative"
             >
-              <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Why Choose EduPlatform?
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Empowering learners in China and beyond with cutting-edge online education designed for your success.
-              </p>
-            </motion.div>
-    
-            {/* Feature Cards */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
+              <div className="relative h-full p-8 rounded-3xl bg-card/60 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-500 overflow-hidden">
+                {/* Hover gradient background */}
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
-                  viewport={{ once: true }}
+                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
+                />
+
+                {/* Animated corner accent */}
+                <motion.div
+                  className={`absolute -top-10 -right-10 w-32 h-32 rounded-full bg-gradient-to-br ${feature.color} opacity-10 blur-2xl group-hover:opacity-30 transition-opacity duration-500`}
+                  animate={{
+                    scale: [1, 1.2, 1],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+
+                {/* Icon */}
+                <motion.div
+                  className="relative mb-6"
+                  transition={{ duration: 0.5 }}
                 >
-                  <Card
-                    className="relative p-8 text-center backdrop-blur-lg bg-white/70 border border-gray-100 shadow-lg hover:shadow-2xl hover:scale-[1.03] transition-transform duration-300 rounded-2xl"
-                  >
-                    <div className="flex justify-center mb-4">
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: index * 0.1 + 0.2, type: "spring", stiffness: 120 }}
-                      >
-                        {feature.icon}
-                      </motion.div>
-                    </div>
-                    <h3 className="font-semibold text-xl mb-2 text-gray-900">{feature.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {feature.description}
-                    </p>
-    
-                    {/* Subtle highlight line */}
-                    <motion.div
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[3px] bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-                      whileHover={{ width: "60%" }}
-                      transition={{ duration: 0.4 }}
-                    />
-                  </Card>
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
+                    <feature.icon className="w-7 h-7 text-white" />
+                  </div>
+                  {/* Icon glow */}
+                  <motion.div
+                    className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${feature.color} blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-300`}
+                  />
                 </motion.div>
-              ))}
-            </div>
-          </div>
-  </div>
+
+                {/* Content */}
+                <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
+                  {feature.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
+
+                {/* Bottom accent line */}
+                <motion.div
+                  className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r ${feature.color}`}
+                  initial={{ width: "0%" }}
+                  whileInView={{ width: "100%" }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 + 0.5, duration: 0.6 }}
+                />
+
+             
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+   
+      </div>
     </section>
   );
 }
