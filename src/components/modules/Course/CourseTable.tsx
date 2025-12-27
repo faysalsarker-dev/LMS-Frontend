@@ -155,30 +155,30 @@ handleApiError(err)
                       <Skeleton className="h-12 w-16 rounded-md bg-gray-200" />
                     )}
                   </TableCell>
-                  <TableCell className="font-medium">{course.title}</TableCell>
-                  <TableCell>{course.level}</TableCell>
-                  <TableCell>{course.status}</TableCell>
+                  <TableCell className="font-medium">{course?.title}</TableCell>
+                  <TableCell>{course?.level}</TableCell>
+                  <TableCell>{course?.status}</TableCell>
                   <TableCell>
-                    {course.price} {course.currency}
+                    {course?.price} {course?.currency}
                   </TableCell>
-                  <TableCell>{course.totalEnrolled}</TableCell>
-                  <TableCell>{course.averageRating.toFixed(1)}</TableCell>
+                  <TableCell>{course?.totalEnrolled}</TableCell>
+                  <TableCell>{course?.averageRating?.toFixed(1)}</TableCell>
                   <TableCell className="text-right space-x-2">
                     <Button
                       type="button"
-                      onClick={() => onUpdate(course.slug)}
+                      onClick={() => onUpdate(course?.slug)}
                       size="sm"
                       variant="outline"
                     >
                       Edit
                     </Button>
                     <Button
-                      onClick={() => confirmDelete(course._id)}
+                      onClick={() => confirmDelete(course?._id)}
                       size="sm"
                       variant="destructive"
-                      disabled={deleting && deleteId === course._id}
+                      disabled={deleting && deleteId === course?._id}
                     >
-                      {deleting && deleteId === course._id
+                      {deleting && deleteId === course?._id
                         ? "Deleting..."
                         : "Delete"}
                     </Button>

@@ -1,9 +1,26 @@
 import { Button } from '@/components/ui/button';
-import { buttonHoverVariants, containerVariants, itemVariants } from '@/pages/Student/course/QuizLesson';
 import { motion } from 'framer-motion';
 import { Play } from 'lucide-react';
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
+  },
+  exit: { opacity: 0, y: -20 },
+};
 
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -10 },
+};
+
+const buttonHoverVariants = {
+  hover: { scale: 1.02, transition: { duration: 0.2 } },
+  tap: { scale: 0.98 },
+};
 
 export default function IdleState({ onStart, hasTimer }: { onStart: () => void; hasTimer: boolean }) {
   return (

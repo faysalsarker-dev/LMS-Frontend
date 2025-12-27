@@ -3,7 +3,7 @@ import TrustBar from "@/components/modules/home/TrustBar";
 import WhyChooseSection from "@/components/modules/home/WhyChooseSection";
 import LearningPaths from "@/components/modules/home/LearningPaths";
 import FeaturedCourse from "@/components/modules/home/FeaturedCourse";
-import InstructorSpotlight from "@/components/modules/home/InstructorSpotlight";
+// import InstructorSpotlight from "@/components/modules/home/InstructorSpotlight";
 import Testimonial from "@/components/custom/Testimonial";
 import FaqSection from "@/components/modules/home/FaqSection";
 import NewsletterCTA from "@/components/modules/home/NewsletterCTA";

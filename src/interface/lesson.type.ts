@@ -54,10 +54,14 @@ export const QUESTION_TYPE_CONFIG = {
 
 export interface ILessonFormData {
   title: string;
-  description: string;
+  description?: string;
   type: LessonType;
   order: number;
   status: LessonStatus;
+ courseId: string;     
+  milestoneId: string;
+
+
   // Video fields
   videoUrl?: string;
   videoFile?: File | null;
@@ -67,7 +71,7 @@ export interface ILessonFormData {
   audioFile?: File | null;
   transcripts?: ITranscript[];
   // Doc fields
-  docContent?: string;
+  doc?: string;
   // Quiz fields
   questions?: IQuestion[];
   // Assignment fields
@@ -81,31 +85,31 @@ export const LESSON_TYPE_CONFIG = {
     label: 'Video',
     icon: 'Play',
     description: 'Upload or link a video lesson',
-    color: 'hsl(var(--primary))',
+    color: 'var(--primary)',
   },
   audio: {
     label: 'Audio',
     icon: 'Headphones',
     description: 'Audio content with transcripts',
-    color: 'hsl(var(--accent))',
+    color: 'var(--accent)',
   },
   doc: {
     label: 'Document',
     icon: 'FileText',
     description: 'Rich text document content',
-    color: 'hsl(var(--info))',
+    color: 'var(--info)',
   },
   quiz: {
     label: 'Quiz',
     icon: 'HelpCircle',
     description: 'Interactive quiz questions',
-    color: 'hsl(var(--warning))',
+    color: 'var(--warning)',
   },
   assignment: {
     label: 'Assignment',
     icon: 'ClipboardList',
     description: 'Graded assignment submission',
-    color: 'hsl(var(--success))',
+    color: 'var(--success)',
   },
 } as const;
 

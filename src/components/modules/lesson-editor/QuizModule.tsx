@@ -49,6 +49,9 @@ const createDefaultQuestion = (type: QuestionType): IQuestion => {
   }
 };
 
+// Helper function to convert frontend format to backend format
+
+
 export function QuizModule({ questions, onQuestionsChange }: QuizModuleProps) {
   const addQuestion = () => {
     onQuestionsChange([...questions, createDefaultQuestion('mcq')]);
@@ -58,6 +61,7 @@ export function QuizModule({ questions, onQuestionsChange }: QuizModuleProps) {
     onQuestionsChange(questions.filter((_, i) => i !== index));
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateQuestion = (index: number, field: keyof IQuestion, value: any) => {
     const updated = [...questions];
     updated[index] = { ...updated[index], [field]: value };
@@ -99,10 +103,20 @@ export function QuizModule({ questions, onQuestionsChange }: QuizModuleProps) {
     value: string | boolean
   ) => {
     const updated = [...questions];
-    updated[questionIndex].options[optionIndex] = {
-      ...updated[questionIndex].options[optionIndex],
-      [field]: value,
-    };
+    
+    // If setting isCorrect to true, uncheck all other options (for single correct answer)
+    if (field === 'isCorrect' && value === true) {
+      updated[questionIndex].options = updated[questionIndex].options.map((opt, idx) => ({
+        ...opt,
+        isCorrect: idx === optionIndex,
+      }));
+    } else {
+      updated[questionIndex].options[optionIndex] = {
+        ...updated[questionIndex].options[optionIndex],
+        [field]: value,
+      };
+    }
+    
     onQuestionsChange(updated);
   };
 

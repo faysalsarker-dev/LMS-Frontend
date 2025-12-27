@@ -37,9 +37,10 @@ const buttonHoverVariants = {
 };
 
 // Main Quiz Component
-export default function QuizLesson({question}: {question: QuizQuestion}) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function QuizLesson({questions}: {questions: any}) {
   // Sample question for demo
-
+const question = questions[0];
 
   const [quizState, setQuizState] = useState<QuizState>("idle");
   const [countdown, setCountdown] = useState(0);
@@ -53,7 +54,8 @@ export default function QuizLesson({question}: {question: QuizQuestion}) {
       
       const correct = Array.isArray(question.correctAnswer)
         ? question.correctAnswer.some(
-            (a) => a.toLowerCase().trim() === answer.toLowerCase().trim()
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (a:any) => a.toLowerCase().trim() === answer.toLowerCase().trim()
           )
         : question.correctAnswer.toLowerCase().trim() === answer.toLowerCase().trim();
       

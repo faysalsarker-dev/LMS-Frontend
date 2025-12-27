@@ -1,9 +1,36 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { buttonHoverVariants, containerVariants, itemVariants } from '@/pages/Student/course/QuizLesson';
 import { motion } from 'framer-motion';
 import { ArrowRight, Volume2 } from 'lucide-react';
+
+
+
+
+
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
+  },
+  exit: { opacity: 0, y: -20 },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -10 },
+};
+
+const buttonHoverVariants = {
+  hover: { scale: 1.02, transition: { duration: 0.2 } },
+  tap: { scale: 0.98 },
+};
+
+
+
 
 
 export interface QuizQuestion {
@@ -85,8 +112,7 @@ console.log(question,'question');
       <motion.div variants={itemVariants} className="space-y-3">
         {question.type === "mcq" ? (
          <>
-                <div>hdfdfadksjfadskjfd</div>
-              <MCQOptions options={question.options} onSelect={onSelectOption} />
+              <MCQOptions options={question?.options} onSelect={onSelectOption} />
          </>
         ) : null}
 
@@ -133,7 +159,7 @@ function MCQOptions({
   options,
   onSelect,
 }: {
-  options: { text: string }[];
+  options?: { text: string }[];
   onSelect: (option: string) => void;
 }) {
 
@@ -145,7 +171,7 @@ function MCQOptions({
 
   return (
     <div className="grid gap-3">
-      {options.map((option, index) => (
+      {options?.map((option, index) => (
         <motion.button
           key={index}
           variants={buttonHoverVariants}

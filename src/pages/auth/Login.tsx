@@ -13,6 +13,7 @@ import FloatingElements from "@/components/modules/auth/FloatingElements";
 import { useLoginMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { toast } from 'react-hot-toast';
 import { loginSchema, type LoginFormValues } from "@/schema/auth";
+import DemoAccess from "@/components/shared/DemoAccess";
 
 
 
@@ -29,20 +30,24 @@ const Login = () => {
   const from = location.state?.from?.pathname || "/";
 
   // React Hook Form setup
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      remember: false,
-    },
-  });
+
+
+const {
+  register,
+  handleSubmit,
+  watch,
+  setValue,
+  formState: { errors, isSubmitting },
+} = useForm<LoginFormValues>({
+  resolver: zodResolver(loginSchema),
+  defaultValues: {
+    email: "",
+    password: "",
+    remember: false,
+  },
+  mode: "onSubmit",
+});
+
 
   const rememberValue = watch("remember");
 
@@ -90,15 +95,15 @@ const Login = () => {
     },
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleSubmit(onSubmit)();
-  };
+  // const handleFormSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   handleSubmit(onSubmit)();
+  // };
 
   return (
     <div className="relative min-h-screen flex bg-background overflow-hidden">
       <FloatingElements />
-
+<DemoAccess />
       <div className="w-full flex items-center justify-center p-6 sm:p-12">
         <motion.div
           className="w-full max-w-md z-10"
@@ -124,7 +129,7 @@ const Login = () => {
                 </motion.div>
               </CardHeader>
               <CardContent className="pt-4">
-                <div onSubmit={handleFormSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                   {/* Email field */}
                   <motion.div 
                     className="space-y-2"
@@ -191,11 +196,7 @@ const Login = () => {
                         {...register("password")}
                         onFocus={() => setFocusedField("password")}
                         onBlur={() => setFocusedField(null)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleFormSubmit(e);
-                          }
-                        }}
+                       
                       />
                       <button
                         type="button"
@@ -246,7 +247,7 @@ const Login = () => {
                       </Label>
                     </div>
                     <Link
-                      to="/forgot-password"
+                      to="/forget-password"
                       className="text-sm text-primary hover:text-primary/80 font-medium transition-colors"
                     >
                       Forgot password?
@@ -260,8 +261,7 @@ const Login = () => {
                     transition={{ delay: 0.7 }}
                   >
                     <Button
-                      type="button"
-                      onClick={handleFormSubmit}
+                      type="submit"
                       className="w-full h-12 rounded-xl text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-soft transition-all group"
                       disabled={isSubmitting || isLoginLoading}
                     >
@@ -282,7 +282,7 @@ const Login = () => {
                       )}
                     </Button>
                   </motion.div>
-                </div>
+                </form>
 
                 {/* Divider */}
                 <motion.div

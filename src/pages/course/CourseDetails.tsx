@@ -255,7 +255,9 @@ const isEnrolled = !isUserLoading && user.courses?.includes(course?._id);
                           </div>
                           <div className="flex items-center gap-2">
                             <Calendar className="w-4 h-4 text-violet-500" />
-                            <span>Updated {format(course.updatedAt, "MMMM dd, yyyy")}</span>
+<span>
+  Updated {course?.updatedAt ? format(new Date(course?.updatedAt), "MMMM dd, yyyy") : "Recently"}
+</span>
                           </div>
                         </div>
 

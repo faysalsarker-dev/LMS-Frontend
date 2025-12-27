@@ -16,7 +16,6 @@ interface McqAnswerSectionProps {
 
 export function McqAnswerSection({
   question,
-  questionIndex,
   onUpdateOption,
   onAddOption,
   onRemoveOption,

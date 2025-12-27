@@ -15,7 +15,7 @@ const Users = lazy(() => import("@/pages/admin/Users"));
 const CreateCourse = lazy(() => import("@/pages/admin/CreateCourse"));
 const AllCourses = lazy(() => import("@/pages/admin/AllCourses"));
 const MilestoneDashboardPage = lazy(() => import("@/pages/admin/Milestone"));
-const LessonPage = lazy(() => import("@/pages/admin/LessonPage"));
+// const LessonPage = lazy(() => import("@/pages/admin/LessonPage"));
 import EnrolmentPage from "@/pages/Enrolment/EnrolmentPage";
 import { CategoryPage } from "@/pages/admin/category/CategoryPage";
 
@@ -25,7 +25,6 @@ import UserPromoUsagePage from "@/pages/admin/promo/UserPromoUsagePage";
 import AssignmentPage from "@/pages/admin/assignment/AssignmentPage";
 import withAuth from "../withAuth";
 import { UserRoles } from "@/interface";
-import CreateLesson from "@/components/modules/CreateLesson/CreateLesson";
 import { LessonFormMain } from "@/components/modules/lesson-editor";
 
 
