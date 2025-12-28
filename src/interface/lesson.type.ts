@@ -11,7 +11,6 @@ export type QuestionType = 'mcq' | 'true_false' | 'fill_blank' | 'short_answer' 
 
 export interface IQuestionOption {
   text: string;
-  isCorrect: boolean;
 }
 
 export interface IQuestion {

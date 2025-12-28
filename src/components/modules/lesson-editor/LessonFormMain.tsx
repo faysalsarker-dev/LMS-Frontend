@@ -24,7 +24,6 @@ import { useCreateLessonMutation } from '@/redux/features/lesson/lesson.api';
 import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
 import { useGetAllMilestonesQuery } from '@/redux/features/milestone/milestone.api';
 import type { ICourse, IMilestone } from '@/interface';
-import { convertToBackendFormat } from '@/utils/convertFromBackendFormat';
 
 
 const lessonSchema = z.object({
@@ -134,99 +133,6 @@ export function LessonFormMain() {
     setValue('milestoneId', milestoneId);
   };
 
-//   const onSubmit = async (data: LessonFormData) => {
-//     try {
-//       // Build FormData for Multer compatibility
-//       const formData = new FormData();
-      
-//       // Common fields
-//       formData.append('title', data.title);
-//       formData.append('description', data.description || '');
-//       formData.append('type', lessonType);
-//       formData.append('order', String(data.order));
-//       formData.append('status', status);
-//       formData.append('course', data.courseId);
-//       formData.append('milestone', data.milestoneId);
-      
-
-
-
-
-
-
-
-
-
-
-//       // Type-specific fields
-//       switch (lessonType) {
-//         case 'video':
-//           if (videoFile) {
-//             formData.append('videoFile', videoFile);
-//           } else if (videoUrl) {
-//             formData.append('videoUrl', videoUrl);
-//           }
-//           formData.append('videoDuration', String(videoDuration));
-//           break;
-          
-//         case 'audio':
-//           if (audioFile) {
-//             formData.append('audioFile', audioFile);
-//           } else if (audioUrl) {
-//             formData.append('audioUrl', audioUrl);
-//           }
-//           formData.append('transcripts', JSON.stringify(transcripts));
-//           break;
-          
-//         case 'doc':
-//           formData.append('doc', docContent);
-//           break;
-          
-//    case 'quiz': {
-//   const questionsWithAnswer = questions.map(q => {
-//     const correctOption = q.options?.find(o => o.isCorrect);
-//     return {
-//       ...q,
-//       correctAnswer: correctOption ? correctOption.text : null
-//     };
-//   });
-
-//   formData.append('questions', JSON.stringify(questionsWithAnswer));
-//   break;
-// }
-
-          
-//         case 'assignment':
-//           formData.append('assignmentInstruction', assignmentInstruction);
-//           formData.append('maxMarks', String(maxMarks));
-//           if (deadline) {
-//             formData.append('deadline', deadline.toISOString());
-//           }
-//           break;
-//       }
-//             console.log('FormData contents:');
-//       for (const [key, value] of formData.entries()) {
-//         console.log(`${key}:`, value);
-//       }
-//       await createLesson(formData).unwrap();
-      
-//       toast.success('Lesson saved successfully!', {
-//         description: `"${data.title}" has been saved as ${status}.`,
-//       });
-
-//       // Reset form
-//       reset();
-//       setSelectedCourseId('');
-//       setSelectedMilestoneId('');
-      
-//     } catch (error) {
-//       console.error('Error saving lesson:', error);
-//       toast.error('Failed to save lesson', {
-//         description: error instanceof Error ? error.message : 'Please try again or contact support.',
-//       });
-//     }
-//   };
-
 
 
 
@@ -270,58 +176,8 @@ const onSubmit = async (data: LessonFormData) => {
         break;
         
       case 'quiz': {
-        // Validate questions before submitting
-        if (!questions || questions.length === 0) {
-          toast.error('Quiz validation failed', {
-            description: 'Please add at least one question to the quiz.',
-          });
-          return;
-        }
-
-        // Check if all questions have correct answers
-        const invalidQuestions = questions.filter((q, index) => {
-          if (q.type === 'mcq' || q.type === 'true_false') {
-            const hasCorrectOption = q.options?.some(o => o.isCorrect);
-            if (!hasCorrectOption) {
-              console.warn(`Question ${index + 1} has no correct answer selected`);
-              return true;
-            }
-          }
-          return false;
-        });
-
-        if (invalidQuestions.length > 0) {
-          toast.error('Quiz validation failed', {
-            description: `${invalidQuestions.length} question(s) are missing correct answers.`,
-          });
-          return;
-        }
-
-        // Convert questions to backend format
-        const backendQuestions = questions.map(convertToBackendFormat);
-        
-        // Additional validation: ensure all questions have required fields
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const incompleteQuestions = backendQuestions.filter((q: any, index) => {
-          if (!q.questionText || q.questionText.trim() === '') {
-            console.warn(`Question ${index + 1} has no question text`);
-            return true;
-          }
-          if ((q.type === 'mcq' || q.type === 'true_false') && (!q.options || q.options.length < 2)) {
-            console.warn(`Question ${index + 1} needs at least 2 options`);
-            return true;
-          }
-          return false;
-        });
-
-        if (incompleteQuestions.length > 0) {
-          toast.error('Quiz validation failed', {
-            description: 'Some questions are incomplete. Please check all questions.',
-          });
-          return;
-        }
-
-        formData.append('questions', JSON.stringify(backendQuestions));
+      
+        formData.append('questions', JSON.stringify(questions));
         break;
       }
         
@@ -456,7 +312,7 @@ const onSubmit = async (data: LessonFormData) => {
 
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-2">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
