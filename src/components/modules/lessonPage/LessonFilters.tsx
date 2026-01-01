@@ -9,7 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { LessonType, LessonStatus, Course, Milestone } from '@/types/lesson.types';
+import type { LessonType, LessonStatus } from '@/interface/lesson.type';
+import type { ICourse, IMilestone } from '@/interface';
 
 interface LessonFiltersProps {
   search: string;
@@ -24,8 +25,8 @@ interface LessonFiltersProps {
   onMilestoneChange: (value: string) => void;
   onReset: () => void;
   hasActiveFilters: boolean;
-  courses: Course[];
-  milestones: Milestone[];
+  courses: ICourse[];
+  milestones: IMilestone[];
   isLoadingCourses?: boolean;
   isLoadingMilestones?: boolean;
 }
@@ -41,8 +42,9 @@ const lessonTypeOptions = [
 
 const statusOptions = [
   { value: 'all', label: 'All Status' },
-  { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'Inactive' },
+  { value: 'published', label: 'Published' },
+  { value: 'archived', label: 'Archived' },
+  { value: 'draft', label: 'Draft' },
 ];
 
 export function LessonFilters({
@@ -63,6 +65,8 @@ export function LessonFilters({
   isLoadingCourses,
   isLoadingMilestones,
 }: LessonFiltersProps) {
+
+  console.log(milestones);
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -116,22 +120,22 @@ export function LessonFilters({
         </Select>
 
         {/* Course Filter */}
-        {/* <Select value={course} onValueChange={onCourseChange} disabled={isLoadingCourses}>
+        <Select value={course} onValueChange={onCourseChange} disabled={isLoadingCourses}>
           <SelectTrigger className="h-10 rounded-xl bg-background border-border">
             <SelectValue placeholder={isLoadingCourses ? 'Loading...' : 'All Courses'} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Courses</SelectItem>
-            {courses.map((c) => (
+            {courses?.map((c) => (
               <SelectItem key={c._id} value={c._id}>
                 {c.title}
               </SelectItem>
             ))}
           </SelectContent>
-        </Select> */}
+        </Select>
 
         {/* Milestone Filter */}
-        {/* <Select
+       <Select
           value={milestone}
           onValueChange={onMilestoneChange}
           disabled={isLoadingMilestones || course === 'all'}
@@ -149,13 +153,13 @@ export function LessonFilters({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Milestones</SelectItem>
-            {milestones.map((m) => (
+            {milestones?.map((m) => (
               <SelectItem key={m._id} value={m._id}>
                 {m.title}
               </SelectItem>
             ))}
           </SelectContent>
-        </Select> */}
+        </Select> 
       </div>
 
       {/* Reset Button */}

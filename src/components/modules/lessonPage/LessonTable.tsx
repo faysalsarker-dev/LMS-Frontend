@@ -11,10 +11,11 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LessonActions } from './LessonActions';
-import type { Lesson, LessonType } from '@/types/lesson.types';
+import type {  LessonType } from '@/interface/lesson.type';
+import type { ILesson } from '@/interface';
 
 interface LessonTableProps {
-  lessons: Lesson[];
+  lessons: ILesson[];
   isLoading: boolean;
   onRefetch: () => void;
 }
@@ -135,7 +136,7 @@ export function LessonTable({ lessons, isLoading, onRefetch }: LessonTableProps)
             <EmptyState />
           ) : (
             <AnimatePresence mode="popLayout">
-              {lessons.map((lesson, index) => {
+              {lessons.map((lesson:ILesson, index) => {
                 const TypeIcon = typeConfig[lesson.type]?.icon || FileText;
                 const typeInfo = typeConfig[lesson.type];
 
@@ -170,14 +171,22 @@ export function LessonTable({ lessons, isLoading, onRefetch }: LessonTableProps)
                     </TableCell>
                     <TableCell>
                       <Badge
-                        variant={lesson.status === 'active' ? 'default' : 'secondary'}
+                        variant={lesson.status === 'published' ? 'default' : 'secondary'}
                         className={`rounded-full ${
-                          lesson.status === 'active'
+                          lesson.status === 'archived'
+                            ? 'bg-secondary/10 text-secondary border-secondary/20'
+                            : 'bg-muted text-muted-foreground'
+                        }
+                        ${
+                          lesson.status === 'published'
                             ? 'bg-success/10 text-success border-success/20'
                             : 'bg-muted text-muted-foreground'
-                        }`}
+                        }
+                        
+                        
+                        `}
                       >
-                        {lesson.status === 'active' ? 'Active' : 'Inactive'}
+                        {lesson.status}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -186,9 +195,13 @@ export function LessonTable({ lessons, isLoading, onRefetch }: LessonTableProps)
                       </span>
                     </TableCell>
                     <TableCell>
-                      <span className="text-muted-foreground">
-                        {lesson.milestone?.title || '—'}
-                      </span>
+                   <span className="text-muted-foreground">
+  {typeof lesson.milestone === "string"
+    ? "—"
+    : lesson.milestone?.title}
+</span>
+
+
                     </TableCell>
                     <TableCell>
                       <LessonActions lesson={lesson} onDeleteSuccess={onRefetch} />

@@ -11,7 +11,7 @@ const CoursePlayer = lazy(() =>
   }))
 );
 import { UserRoles } from "@/interface";
-import Profile from "@/pages/Student/Profile";
+import Profile from "@/pages/profile/Profile";
 import withAuth from "../withAuth";
 
 

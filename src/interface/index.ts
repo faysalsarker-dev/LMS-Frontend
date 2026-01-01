@@ -112,15 +112,15 @@ export interface ILesson {
   _id: string;
   title: string;
   slug: string;
-  milestone: string;
-  course: string;
+  milestone: IMilestone | string | null;
+  course: ICourse | string;
   order?: number;
   type: "video" | "doc" | "quiz" | "assignment";
   videoUrl?: string;
   videoSourceType?: "link" | "upload";
   doc?: string;
   questions?: IQuiz;
-  status?: "active" | "inactive";
+  status?: "published" | "archived" | "draft";
   viewCount?: number;
   createdAt?: Date;
   updatedAt?: Date;

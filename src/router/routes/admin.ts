@@ -12,9 +12,9 @@ import {
 
 const AdminDashboard = lazy(() => import("@/pages/admin/Dashboard"));
 const Users = lazy(() => import("@/pages/admin/Users"));
-const CreateCourse = lazy(() => import("@/pages/admin/CreateCourse"));
-const AllCourses = lazy(() => import("@/pages/admin/AllCourses"));
-const MilestoneDashboardPage = lazy(() => import("@/pages/admin/Milestone"));
+const CreateCourse = lazy(() => import("@/pages/admin/course/CreateCourse"));
+const AllCourses = lazy(() => import("@/pages/admin/course/AllCourses"));
+const MilestoneDashboardPage = lazy(() => import("@/pages/admin/milestone/Milestone"));
 // const LessonPage = lazy(() => import("@/pages/admin/LessonPage"));
 import EnrolmentPage from "@/pages/Enrolment/EnrolmentPage";
 import { CategoryPage } from "@/pages/admin/category/CategoryPage";
@@ -26,7 +26,7 @@ import AssignmentPage from "@/pages/admin/assignment/AssignmentPage";
 import withAuth from "../withAuth";
 import { UserRoles } from "@/interface";
 import { LessonFormMain } from "@/components/modules/lesson-editor";
-import LessonPage from "@/pages/admin/LessonPage";
+import LessonPage from "@/pages/admin/lesson/LessonPage";
 
 
 const AppSettings = lazy(() => import("@/pages/admin/app-setting/AppSettings"));

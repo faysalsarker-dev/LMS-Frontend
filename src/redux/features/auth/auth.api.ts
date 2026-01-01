@@ -86,6 +86,7 @@ export const authApi = baseApi.injectEndpoints({
          params: { courses: includeCourses, wishlist: includeWishlist },
       }),
       providesTags: ["USER"],
+      keepUnusedDataFor: 60 * 60 * 3
     }),
 
     getAll: builder.query({

@@ -3,6 +3,8 @@ import { lazy } from "react";
 
 import withAuth from "./withAuth";
 import CheckoutPage from "@/pages/Checkout/CheckoutPage";
+import EditLessonPage from "@/pages/admin/lesson/EditLessonPage";
+import { UserRoles } from "@/interface";
 
 
 const CourseDetails = lazy(() => import("@/pages/course/CourseDetails"));
@@ -33,6 +35,11 @@ export const invisibleRoutes = [
   {
     Component: withAuth(CheckoutPage),
     path: "/checkout/:slug",
+    name: "Course Details",
+  },
+  {
+    Component: withAuth(EditLessonPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
+    path: "/dashboard/lesson/:id/edit",
     name: "Course Details",
   },
 

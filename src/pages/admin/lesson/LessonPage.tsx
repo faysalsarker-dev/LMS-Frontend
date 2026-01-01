@@ -4,12 +4,12 @@ import { Plus, BookOpen, RefreshCw, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 import { useGetAllLessonsQuery } from '@/redux/features/lesson/lesson.api';
-import { useGetCourseStatsQuery } from '@/redux/features/overview/overview.api';
 import { useGetAllMilestonesQuery } from '@/redux/features/milestone/milestone.api';
 import { LessonFilters } from '@/components/modules/lessonPage/LessonFilters';
 import { LessonTable } from '@/components/modules/lessonPage/LessonTable';
 import { LessonPagination } from '@/components/modules/lessonPage/LessonPagination';
 import { useLessonFilters } from '@/components/modules/lessonPage/hook/useLessonFilters';
+import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
 
 
 export default function LessonPage() {
@@ -21,7 +21,6 @@ export default function LessonPage() {
     type,
     course,
     milestone,
-    page,
     setSearch,
     setStatus,
     setType,
@@ -43,7 +42,7 @@ export default function LessonPage() {
   } = useGetAllLessonsQuery(queryParams);
 
   // Fetch courses and milestones for filters
-  const { data: courses = [], isLoading: isLoadingCourses } = useGetCourseStatsQuery();
+  const { data: courses = [], isLoading: isLoadingCourses } = useGetAllCoursesQuery({});
   const { data: milestones = [], isLoading: isLoadingMilestones } = useGetAllMilestonesQuery(
     course !== 'all' ? course : undefined
   );
@@ -70,7 +69,7 @@ export default function LessonPage() {
         >
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl gradient-primary shadow-glow">
-              <BookOpen className="h-7 w-7 text-primary-foreground" />
+              <BookOpen className="h-7 w-7 text-primary" />
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground">
@@ -83,7 +82,7 @@ export default function LessonPage() {
           </div>
 
           <Button
-            onClick={() => navigate('/dashboard/lesson/create')}
+            onClick={() => navigate('/dashboard/lesson-create')}
             className="rounded-xl h-11 px-6 gap-2 gradient-primary shadow-glow hover:shadow-lg transition-shadow"
           >
             <Plus className="h-5 w-5" />
@@ -106,7 +105,7 @@ export default function LessonPage() {
             onMilestoneChange={setMilestone}
             onReset={resetFilters}
             hasActiveFilters={hasActiveFilters}
-            courses={courses}
+            courses={courses?.data?.data}
             milestones={milestones?.data}
             isLoadingCourses={isLoadingCourses}
             isLoadingMilestones={isLoadingMilestones}
