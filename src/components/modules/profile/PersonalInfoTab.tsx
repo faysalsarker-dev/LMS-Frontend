@@ -1,64 +1,20 @@
-// import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-// import { Label } from "@/components/ui/label";
-// import type { IUser } from "@/interface";
-// import type { JSX } from "react";
-
-
-// interface IPersonalInfoTabProps {
-//   userInfo: IUser;
-// }
-
-// const PersonalInfoTab = ({ userInfo }: IPersonalInfoTabProps): JSX.Element => {
-//   const { name, email, phone, address } = userInfo;
-
-//   return (
-//     <Card className="shadow-md border border-border">
-//       <CardHeader>
-//         <CardTitle>Personal Information</CardTitle>
-//         <CardDescription>Your account details</CardDescription>
-//       </CardHeader>
-//       <CardContent>
-//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//           <div>
-//             <Label className="text-muted-foreground">Full Name</Label>
-//             <div className="mt-2 font-medium">{name}</div>
-//           </div>
-//           <div>
-//             <Label className="text-muted-foreground">Email</Label>
-//             <div className="mt-2 font-medium">{email}</div>
-//           </div>
-//           <div>
-//             <Label className="text-muted-foreground">Phone</Label>
-//             <div className="mt-2 font-medium">{phone || "-"}</div>
-//           </div>
-//           <div>
-//             <Label className="text-muted-foreground">Address</Label>
-//             <div className="mt-2 font-medium">
-//               {address?.city || address?.country
-//                 ? `${address?.city || ""} ${address?.country ? `, ${address.country}` : ""}`
-//                 : "-"}
-//             </div>
-//           </div>
-//         </div>
-//       </CardContent>
-//     </Card>
-//   );
-// };
-
-// export default PersonalInfoTab
-
-
-
-
-
 import { motion } from "framer-motion";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+import { format } from "date-fns";
+import { 
+  User, 
+  Mail, 
+  Phone, 
+  MapPin, 
+  Calendar, 
+  Briefcase,
+  GraduationCap,
+  Globe
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import type { IUser } from "@/interface";
-import type { JSX } from "react";
-import { Mail, Phone, MapPin, User as UserIcon } from "lucide-react";
 
-interface IPersonalInfoTabProps {
+interface PersonalInfoTabProps {
   userInfo: IUser;
 }
 
@@ -67,105 +23,98 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
+      staggerChildren: 0.1,
     }
   }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, x: -20 },
+  hidden: { opacity: 0, y: 10 },
   visible: {
     opacity: 1,
-    x: 0,
+    y: 0,
     transition: { duration: 0.4 }
   }
 };
 
-const PersonalInfoTab = ({ userInfo }: IPersonalInfoTabProps): JSX.Element => {
-  const { name, email, phone, address } = userInfo;
+interface InfoItemProps {
+  icon: React.ElementType;
+  label: string;
+  value: string | undefined;
+}
+
+const InfoItem = ({ icon: Icon, label, value }: InfoItemProps) => (
+  <motion.div 
+    className="flex items-center gap-4 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors"
+    variants={itemVariants}
+  >
+    <div className="p-2 bg-primary/10 rounded-lg">
+      <Icon className="w-5 h-5 text-primary" />
+    </div>
+    <div className="flex-1">
+      <p className="text-sm text-muted-foreground">{label}</p>
+      <p className="font-medium text-foreground">{value || 'Not provided'}</p>
+    </div>
+  </motion.div>
+);
+
+export const PersonalInfoTab = ({ userInfo }: PersonalInfoTabProps) => {
+  const { name, email, phone, address, createdAt, role } = userInfo;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+    <motion.div 
+      className="space-y-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
     >
-      <Card className="shadow-lg border-0">
+      {/* Basic Info */}
+      <Card className="border-0 shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl">Personal Information</CardTitle>
-          <CardDescription className="text-base">Your account details and contact information</CardDescription>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <User className="w-5 h-5 text-primary" />
+            Basic Information
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          >
-            <motion.div
-              variants={itemVariants}
-              whileHover={{ scale: 1.02 }}
-              className="p-5 rounded-xl bg-gradient-card border shadow-sm hover:shadow-md transition-all"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <UserIcon className="w-5 h-5 text-primary" />
-                </div>
-                <Label className="text-muted-foreground text-sm">Full Name</Label>
-              </div>
-              <div className="font-semibold text-lg">{name}</div>
-            </motion.div>
-
-            <motion.div
-              variants={itemVariants}
-              whileHover={{ scale: 1.02 }}
-              className="p-5 rounded-xl bg-gradient-card border shadow-sm hover:shadow-md transition-all"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Mail className="w-5 h-5 text-primary" />
-                </div>
-                <Label className="text-muted-foreground text-sm">Email</Label>
-              </div>
-              <div className="font-semibold text-lg break-all">{email}</div>
-            </motion.div>
-
-            <motion.div
-              variants={itemVariants}
-              whileHover={{ scale: 1.02 }}
-              className="p-5 rounded-xl bg-gradient-card border shadow-sm hover:shadow-md transition-all"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Phone className="w-5 h-5 text-primary" />
-                </div>
-                <Label className="text-muted-foreground text-sm">Phone</Label>
-              </div>
-              <div className="font-semibold text-lg">{phone || "Not provided"}</div>
-            </motion.div>
-
-            <motion.div
-              variants={itemVariants}
-              whileHover={{ scale: 1.02 }}
-              className="p-5 rounded-xl bg-gradient-card border shadow-sm hover:shadow-md transition-all"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <MapPin className="w-5 h-5 text-primary" />
-                </div>
-                <Label className="text-muted-foreground text-sm">Address</Label>
-              </div>
-              <div className="font-semibold text-lg">
-                {address?.city || address?.country
-                  ? `${address?.city || ""} ${address?.country ? `, ${address.country}` : ""}`
-                  : "Not provided"}
-              </div>
-            </motion.div>
-          </motion.div>
+        <CardContent className="grid gap-4 sm:grid-cols-2">
+          <InfoItem icon={User} label="Full Name" value={name} />
+          <InfoItem icon={Mail} label="Email Address" value={email} />
+          <InfoItem icon={Phone} label="Phone Number" value={phone} />
+          <InfoItem icon={MapPin} label="Location" value={`Country:${address?.country}, City:${address?.city}`} />
         </CardContent>
       </Card>
+
+      {/* Account Info */}
+      <Card className="border-0 shadow-lg">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Briefcase className="w-5 h-5 text-primary" />
+            Account Details
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4 sm:grid-cols-2">
+          <motion.div 
+            className="flex items-center gap-4 p-4 rounded-xl bg-muted/30"
+            variants={itemVariants}
+          >
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <GraduationCap className="w-5 h-5 text-primary" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm text-muted-foreground">Account Type</p>
+              <Badge variant="secondary" className="mt-1 capitalize">
+                {role || 'Student'}
+              </Badge>
+            </div>
+          </motion.div>
+          <InfoItem 
+            icon={Calendar} 
+            label="Member Since" 
+            value={createdAt ? format(new Date(createdAt), "MMMM dd, yyyy") : undefined} 
+          />
+        </CardContent>
+      </Card>
+
     </motion.div>
   );
 };
-
-export default PersonalInfoTab;
