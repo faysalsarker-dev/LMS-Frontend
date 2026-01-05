@@ -8,8 +8,9 @@ interface Lesson {
   _id: string;
   title: string;
   order: number;
-  contentType: string;
+  type: string;
   isCompleted: boolean;
+  passed?: boolean;
 }
 
 interface Milestone {
@@ -224,7 +225,7 @@ export function CourseSidebar({
                                   {index + 1}. {lesson.title}
                                 </p>
                                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                  <span className="capitalize">{lesson.contentType}</span>
+                                  <span className={`capitalize  ${lesson?.passed == true && 'text-green-600' || lesson?.passed == false && 'text-red-600'}`}>{lesson.type}</span>
                                   {isCompleted && (
                                     <>
                                       <span>•</span>

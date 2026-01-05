@@ -52,6 +52,7 @@ export interface ICourse  {
     _id:string;
   title: string;
   slug: string;
+  progress?: number;
   description?: string;
   instructor: string;
   milestones: string[];

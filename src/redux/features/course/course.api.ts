@@ -34,6 +34,13 @@ export const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["COURSE"],
     }),
+    getMyEnrolledCourses: builder.query({
+      query: () => ({
+        url: `/course/my-enrolled-courses`,
+        method: "GET",
+      }),
+      providesTags: ["COURSE","PROGRESS"],
+    }),
     getCourseById: builder.query({
       query: (id) => ({
         url: `/course/my-course/${id}`,
@@ -88,4 +95,5 @@ export const {
   useGetCourseByIdQuery,
   useGetCourseCurriculumQuery,
   useGetLessonContentQuery,
+  useGetMyEnrolledCoursesQuery,
 } = courseApi;

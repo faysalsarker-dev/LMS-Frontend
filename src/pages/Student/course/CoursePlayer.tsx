@@ -7,7 +7,7 @@ import { useGetCourseCurriculumQuery, useGetLessonContentQuery } from "@/redux/f
 import { CourseSidebar } from "./CourseSidebar";
 import { CoursePlayerContent } from "./CoursePlayerContent";
 
-import { useCreateProgressMutation } from "@/redux/features/progress/progress.api";
+import { useCreateProgressMutation, useCreateQuizProgressMutation } from "@/redux/features/progress/progress.api";
 import { CourseHeader } from "./CourseHeader";
 import { AnimatePresence, motion } from 'framer-motion';
 import { LessonNavigation } from "./LessonNavigation";
@@ -16,7 +16,7 @@ interface Lesson {
   _id: string;
   title: string;
   order: number;
-  contentType: string;
+  type: string;
   isCompleted: boolean;
 }
 
@@ -30,9 +30,11 @@ interface Milestone {
 export function CoursePlayer() {
   const { id } = useParams();
   const [currentLessonId, setCurrentLessonId] = useState<string | null>(null);
+  const [quizResult, setQuizResult] = useState<boolean | null>(null);
   
   const { data: curriculumData, isLoading: curriculumLoading } = useGetCourseCurriculumQuery(id as string);
   const [progressComplete, { isLoading: isCompletingProgress }] = useCreateProgressMutation();
+  const [createQuizProgress, { isLoading: isCompletingQuizProgress }] = useCreateQuizProgressMutation();
   const { data: lessonContentData, isLoading: lessonContentLoading,refetch } = useGetLessonContentQuery(currentLessonId as string, {
      skip: !currentLessonId,
    });
@@ -59,12 +61,24 @@ export function CoursePlayer() {
 
   const handleLessonComplete = async () => {
     if (!currentLesson || !id || currentLesson.isCompleted) return;
-
     try {
-      await progressComplete({
-        courseId: id,
-        lessonId: currentLesson._id
-      }).unwrap();
+
+console.log("Quiz Result:", quizResult);
+
+if(currentLesson.type === 'quiz'){
+  await createQuizProgress({
+    courseId: id,
+    lessonId: currentLesson._id,
+    passed: quizResult
+  }).unwrap();
+} else {
+  await progressComplete({
+    courseId: id,
+    lessonId: currentLesson._id
+  }).unwrap();
+}
+
+
 
       // Auto-advance to next lesson after completion
       const currentIndex = allLessons.findIndex(l => l._id === currentLesson._id);
@@ -165,6 +179,7 @@ export function CoursePlayer() {
                   <CoursePlayerContent
                     isLoading={lessonContentLoading}
                     lesson={lessonContentData?.data}
+                    setQuizResult={setQuizResult}
                   />
 
                   <LessonNavigation
@@ -173,7 +188,7 @@ export function CoursePlayer() {
                     totalLessons={allLessons.length}
                     isFirstLesson={isFirstLesson}
                     isLastLesson={isLastLesson}
-                    isCompletingProgress={isCompletingProgress}
+                    isCompletingProgress={isCompletingProgress || isCompletingQuizProgress}
                     onComplete={handleLessonComplete}
                     onPrevious={handlePrevLesson}
                     onNext={handleNextLesson}
@@ -212,77 +227,3 @@ export function CoursePlayer() {
 
 
 
-
-  // <div className="lg:col-span-2 space-y-4">
-  //         {currentLesson ? (
-  //           <>
-  //             <CoursePlayerContent
-  //             isLoading={lessonContentLoading}
-  //             lesson={lessonContentData?.data} />
-              
-  //             <div className="space-y-4">
-  //               {/* Complete Button */}
-  //               {!currentLesson.isCompleted && (
-  //                 <Button
-  //                   onClick={handleLessonComplete}
-  //                   disabled={isCompletingProgress}
-  //                   className="w-full"
-  //                   size="lg"
-  //                 >
-  //                   {isCompletingProgress ? (
-  //                     <>
-  //                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-  //                       Saving...
-  //                     </>
-  //                   ) : (
-  //                     <>
-  //                       <CheckCircle className="h-4 w-4 mr-2" />
-  //                       Mark as Complete
-  //                     </>
-  //                   )}
-  //                 </Button>
-  //               )}
-
-  //               {currentLesson.isCompleted && (
-  //                 <div className="w-full p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-center">
-  //                   <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 inline-block mr-2" />
-  //                   <span className="text-green-700 dark:text-green-300 font-medium">
-  //                     Lesson Completed
-  //                   </span>
-  //                 </div>
-  //               )}
-
-  //               <div className="flex justify-between items-center">
-  //                 <Button
-  //                   onClick={handlePrevLesson}
-  //                   disabled={isFirstLesson}
-  //                   variant="outline"
-  //                   className="flex items-center gap-2"
-  //                 >
-  //                   <ChevronLeft className="h-4 w-4" />
-  //                   Previous
-  //                 </Button>
-
-  //                 <div className="text-sm text-muted-foreground">
-  //                   Lesson {currentIndex + 1} of {allLessons.length}
-  //                 </div>
-
-  //                 <Button
-  //                   onClick={handleNextLesson}
-  //                   disabled={isLastLesson}
-  //                   className="flex items-center gap-2"
-  //                 >
-  //                   Next
-  //                   <ChevronRight className="h-4 w-4" />
-  //                 </Button>
-  //               </div>
-  //             </div>
-  //           </>
-  //         ) : (
-  //           <div className="flex items-center justify-center h-96 bg-muted rounded-lg">
-  //             <p className="text-muted-foreground text-center">
-  //               Select a lesson to start learning.
-  //             </p>
-  //           </div>
-  //         )}
-  //       </div>

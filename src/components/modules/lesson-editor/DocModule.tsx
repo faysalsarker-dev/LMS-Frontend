@@ -23,58 +23,7 @@ export function DocModule({ content, onChange }: DocModuleProps) {
       )}
       
       <div className={isLoading ? 'hidden' : 'block'}>
-        {/* <Editor
-             apiKey='3r0h0evcqutrnicto2hw23g2gpsvdol4ehhd5ku45b87xg4f'
-         
-          value={content}
-          onInit={() => setIsLoading(false)}
-          onEditorChange={(newContent) => onChange(newContent)}
-          init={{
-            height: 400,
-            menubar: true,
-            plugins: [
-              'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-              'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-              'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
-            ],
-            toolbar: 'undo redo | blocks | ' +
-              'bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter ' +
-              'alignright alignjustify | bullist numlist outdent indent | ' +
-              'table | removeformat | help',
-            table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
-            table_default_styles: {
-              borderCollapse: 'collapse',
-              width: '100%',
-            },
-            table_default_attributes: {
-              border: '1',
-            },
-            content_style: `
-              body { 
-                font-family: Inter, system-ui, sans-serif; 
-                font-size: 14px; 
-                padding: 1rem;
-                color: #1a1a2e;
-              }
-              table { 
-                border-collapse: collapse; 
-                width: 100%; 
-              }
-              table td, table th { 
-                border: 1px solid #e2e8f0; 
-                padding: 8px 12px; 
-              }
-              table th {
-                background-color: #f8fafc;
-                font-weight: 600;
-              }
-            `,
-            skin: 'oxide',
-            branding: false,
-            promotion: false,
-          }}
-        /> */}
-
+     
         <Editor
   apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
   value={content}

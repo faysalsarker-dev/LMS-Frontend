@@ -31,7 +31,7 @@ import {
 import type { ICategory } from "@/interface";
 import { handleApiError } from "@/utils/errorHandler";
 
-export const CategoryPage: React.FC = () => {
+ const CategoryPage: React.FC = () => {
   const { data, isLoading, refetch } = useGetAllCategorysQuery({});
   const [deleteCategory, { isLoading: isDeleting }] = useDeleteCategoryMutation();
   const categories = data?.data as ICategory[];
@@ -221,3 +221,5 @@ export const CategoryPage: React.FC = () => {
     </div>
   );
 };
+
+export default CategoryPage;

@@ -1,4 +1,4 @@
-export { LessonFormMain } from './LessonFormMain';
+
 export { TypeSelector } from './TypeSelector';
 export { VideoModule } from './VideoModule';
 export { DocModule } from './DocModule';

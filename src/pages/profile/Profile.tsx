@@ -55,7 +55,6 @@ const ProfilePage = () => {
   const courses = useMemo(() => userInfo?.courses || [], [userInfo]);
   const wishlist = useMemo(() => userInfo?.wishList || [], [userInfo]);
 
-console.log('User Info:', userInfo);
 
   const handleLogout = async () => {
     await logout(undefined);

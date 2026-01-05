@@ -43,41 +43,78 @@ export function AssignmentModule({
         )}
         
         <div className={isLoading ? 'hidden' : 'block'}>
-          <Editor
-            tinymceScriptSrc="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js"
-            value={instruction}
+
+
+
+
+        <Editor
+  apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+ value={instruction}
             onInit={() => setIsLoading(false)}
             onEditorChange={(content) => onInstructionChange(content)}
-            init={{
-              height: 300,
-              menubar: false,
-              plugins: [
-                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
-                'anchor', 'searchreplace', 'visualblocks', 'code',
-                'insertdatetime', 'media', 'table', 'help', 'wordcount'
-              ],
-              toolbar: 'undo redo | blocks | ' +
-                'bold italic underline | alignleft aligncenter alignright | ' +
-                'bullist numlist | table | removeformat',
-              table_default_styles: {
-                borderCollapse: 'collapse',
-                width: '100%',
-              },
-              content_style: `
-                body { 
-                  font-family: Inter, system-ui, sans-serif; 
-                  font-size: 14px; 
-                  padding: 1rem;
-                }
-                table td, table th { 
-                  border: 1px solid #e2e8f0; 
-                  padding: 8px 12px; 
-                }
-              `,
-              branding: false,
-              promotion: false,
-            }}
-          />
+  init={{
+    height: 400,
+    menubar: true,
+    plugins: [
+      'advlist',
+      'autolink',
+      'lists',
+      'link',
+      'image',
+      'charmap',
+      'preview',
+      'anchor',
+      'searchreplace',
+      'visualblocks',
+      'code',
+      'fullscreen',
+      'insertdatetime',
+      'media',
+      'table',
+      'help',
+      'wordcount'
+    ],
+    toolbar:
+      'undo redo | blocks | ' +
+      'bold italic underline | forecolor backcolor | ' +
+      'alignleft aligncenter alignright | ' +
+      'bullist numlist outdent indent | ' +
+      'table link image | code help',
+    table_toolbar:
+      'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | ' +
+      'tableinsertcolbefore tableinsertcolafter tabledeletecol',
+    content_style: `
+      body {
+        font-family: Inter, system-ui, sans-serif;
+        font-size: 14px;
+        padding: 1rem;
+        color: #1a1a2e;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      table td, table th {
+        border: 1px solid #e2e8f0;
+        padding: 8px 12px;
+      }
+      table th {
+        background-color: #f8fafc;
+        font-weight: 600;
+      }
+    `,
+    branding: false,
+    promotion: false,
+  }}
+/>
+
+
+
+
+
+
+
+        
         </div>
       </div>
 

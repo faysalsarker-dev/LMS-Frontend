@@ -10,6 +10,14 @@ export const progressApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["PROGRESS"],
     }),
+    createQuizProgress: builder.mutation({
+      query: (data) => ({
+        url: "/progress/complete-quiz",         
+        method: "POST",       
+        data: data,          
+      }),
+      invalidatesTags: ["PROGRESS"],
+    }),
     getProgress: builder.query({
       query: (params) => {
         return {
@@ -26,5 +34,6 @@ export const progressApi = baseApi.injectEndpoints({
 
 export const {
 useGetProgressQuery,
-useCreateProgressMutation
+useCreateProgressMutation,
+useCreateQuizProgressMutation
 } = progressApi;

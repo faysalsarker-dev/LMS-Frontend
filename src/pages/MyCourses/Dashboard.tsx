@@ -1,15 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUserInfoQuery } from '@/redux/features/auth/auth.api';
 import type { ICourse } from '@/interface';
-import MyCourseCard, { MyCourseCardLg } from '@/components/modules/profile/MyCourseCard';
 import { PlayCircle, BookOpen, Trophy } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from 'framer-motion';
+import EnrolledCourseCard from '@/components/shared/EnrolledCourseCard';
+import { useGetMyEnrolledCoursesQuery } from '@/redux/features/course/course.api';
 
 const Dashboard = () => {
   const { data } = useUserInfoQuery({
     includeCourses: true
   });
+  const { data: enrolledCoursesData , isLoading: isEnrolledCoursesLoading} = useGetMyEnrolledCoursesQuery({});
+
+console.log(enrolledCoursesData,'enrolledCoursesData');
+
 
   const user = data?.data;
 
@@ -140,16 +145,16 @@ const Dashboard = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {user?.courses && user.courses.length > 0 ? (
+                      {enrolledCoursesData?.data && enrolledCoursesData?.data?.length > 0 ? (
                         <>
-                          {/* Desktop View */}
+                      
                           <motion.div 
-                            className="hidden md:block space-y-4"
+                            className=" space-y-4"
                             variants={containerVariants}
                             initial="hidden"
                             animate="visible"
                           >
-                            {user.courses.map((course: ICourse, index: number) => (
+                            {enrolledCoursesData?.data?.map((course: ICourse, index: number) => (
                               <motion.div
                                 key={course._id}
                                 variants={itemVariants}
@@ -157,27 +162,7 @@ const Dashboard = () => {
                                 whileHover={{ scale: 1.02 }}
                                 transition={{ type: "spring" as const, stiffness: 300, damping: 20 }}
                               >
-                                <MyCourseCardLg course={course} />
-                              </motion.div>
-                            ))}
-                          </motion.div>
-
-                          {/* Mobile View */}
-                          <motion.div 
-                            className="md:hidden space-y-4"
-                            variants={containerVariants}
-                            initial="hidden"
-                            animate="visible"
-                          >
-                            {user.courses.map((course: ICourse, index: number) => (
-                              <motion.div
-                                key={course._id}
-                                variants={itemVariants}
-                                custom={index}
-                                whileHover={{ scale: 1.02 }}
-                                transition={{ type: "spring" as const, stiffness: 300, damping: 20 }}
-                              >
-                                <MyCourseCard course={course} />
+                                <EnrolledCourseCard course={course} />
                               </motion.div>
                             ))}
                           </motion.div>

@@ -38,7 +38,7 @@ const lessonSchema = z.object({
 
 type LessonFormData = z.infer<typeof lessonSchema>;
 
-export function LessonFormMain() {
+export default function LessonFormMain() {
   const [createLesson, { isLoading: isSubmitting }] = useCreateLessonMutation();
   const { data: coursesData, isLoading: isCoursesLoading } = useGetAllCoursesQuery({ page: 1, limit: 100 });
   

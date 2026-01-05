@@ -1,8 +1,10 @@
+import type { UserRole } from "@/interface";
 import { adminRoutes } from "./routes/admin";
 
 
-type UserRole = "instructor" | "admin" | "super_admin";
+
 
 export const getRoutesByRole = (role: UserRole) => {
-  return adminRoutes.filter((route) => route.roles.includes(role));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return adminRoutes.filter((route) => route.roles.includes(role as any));
 };

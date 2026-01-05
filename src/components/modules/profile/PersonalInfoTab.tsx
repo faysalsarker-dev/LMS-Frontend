@@ -8,7 +8,6 @@ import {
   Calendar, 
   Briefcase,
   GraduationCap,
-  Globe
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
