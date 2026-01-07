@@ -181,14 +181,24 @@ const onSubmit = async (data: LessonFormData) => {
         break;
       }
         
-      case 'assignment':
-        formData.append('assignmentInstruction', assignmentInstruction);
-        formData.append('maxMarks', String(maxMarks));
-        if (deadline) {
-          formData.append('deadline', deadline.toISOString());
-        }
-        break;
+   
+
+        case 'assignment': {
+  const assignment = {
+    instruction: assignmentInstruction,
+    maxMarks,
+    ...(deadline && { deadline: deadline.toISOString() }),
+  };
+
+  formData.append('assignment', JSON.stringify(assignment));
+  break;
+}
+
+
+
     }
+
+    
 
     // Debug log in development
     if (process.env.NODE_ENV === 'development') {

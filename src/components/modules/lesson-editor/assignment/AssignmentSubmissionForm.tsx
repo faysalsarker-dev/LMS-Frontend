@@ -1,41 +1,38 @@
 import { useState, useCallback, type ChangeEvent, type DragEvent } from 'react';
 import { motion } from 'framer-motion';
-import { Upload, X, FileText, ArrowLeft, Loader2 } from 'lucide-react';
+import { Upload, X, FileText, Loader2, ArrowLeft } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
-import type { IAssignmentSchema, ICreateSubmissionData } from '@/types/studentAssignment.types';
+import type { IAssignmentSchema, ICreateSubmissionData } from '@/interface/studentAssignment.types';
 
-interface SubmissionStep2Props {
+interface AssignmentSubmissionFormProps {
   assignment: IAssignmentSchema;
   isSubmitting: boolean;
-  onBack: () => void;
+  onCancel: () => void;
   onSubmit: (data: Omit<ICreateSubmissionData, 'assignmentId'>) => void;
 }
 
 const MAX_TEXT_LENGTH = 5000;
+const ACCEPTED_TYPES = 'video/*,audio/*,application/pdf';
 
-const containerVariants = {
-  hidden: { opacity: 0, x: 20 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
-  exit: { opacity: 0, x: -20 },
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
 };
 
-const SubmissionStep2 = ({
+const AssignmentSubmissionForm = ({
   assignment,
   isSubmitting,
-  onBack,
+  onCancel,
   onSubmit,
-}: SubmissionStep2Props) => {
+}: AssignmentSubmissionFormProps) => {
   const [textResponse, setTextResponse] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  const { submissionType } = assignment;
-  const showTextArea = submissionType === 'text' || submissionType === 'both';
-  const showFileUpload = submissionType === 'file' || submissionType === 'both';
 
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value.length <= MAX_TEXT_LENGTH) {
@@ -73,20 +70,11 @@ const SubmissionStep2 = ({
 
   const handleSubmit = () => {
     const data: Omit<ICreateSubmissionData, 'assignmentId'> = {};
-    if (showTextArea && textResponse.trim()) {
-      data.textResponse = textResponse.trim();
-    }
-    if (showFileUpload && file) {
-      data.file = file;
-    }
+   
     onSubmit(data);
   };
 
-  const isValid = () => {
-    if (submissionType === 'text') return textResponse.trim().length > 0;
-    if (submissionType === 'file') return file !== null;
-    return textResponse.trim().length > 0 || file !== null;
-  };
+
 
   const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`;
@@ -96,28 +84,27 @@ const SubmissionStep2 = ({
 
   return (
     <motion.div
-      variants={containerVariants}
       initial="hidden"
       animate="visible"
-      exit="exit"
+      variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
       className="space-y-6"
     >
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={onBack} disabled={isSubmitting}>
+      <motion.div variants={itemVariants} className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" onClick={onCancel} disabled={isSubmitting}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
           <h2 className="text-lg font-semibold text-foreground">Submit Your Work</h2>
           <p className="text-sm text-muted-foreground">{assignment.title}</p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Text Response */}
-      {showTextArea && (
-        <div className="space-y-2">
+     
+        <motion.div variants={itemVariants} className="space-y-2">
           <Label htmlFor="response" className="text-sm font-medium">
-            Your Response
+            Your Response 
           </Label>
           <Textarea
             id="response"
@@ -136,13 +123,14 @@ const SubmissionStep2 = ({
               {textResponse.length}/{MAX_TEXT_LENGTH}
             </span>
           </div>
-        </div>
-      )}
+        </motion.div>
+   
 
-      {/* File Upload */}
-      {showFileUpload && (
-        <div className="space-y-2">
-          <Label className="text-sm font-medium">Attachment</Label>
+
+        <motion.div variants={itemVariants} className="space-y-2">
+          <Label className="text-sm font-medium">
+            Attachment 
+          </Label>
           
           {!file ? (
             <div
@@ -150,25 +138,28 @@ const SubmissionStep2 = ({
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               className={`
-                relative border-2 border-dashed rounded-lg p-8 text-center transition-colors
+                relative border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer
                 ${isDragging 
                   ? 'border-primary bg-primary/5' 
-                  : 'border-muted-foreground/25 hover:border-primary/50'
+                  : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/50'
                 }
               `}
+              onClick={() => document.getElementById('file-upload')?.click()}
             >
               <input
+                id="file-upload"
                 type="file"
                 onChange={handleFileChange}
                 disabled={isSubmitting}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                accept={ACCEPTED_TYPES}
+                className="hidden"
               />
               <Upload className={`h-10 w-10 mx-auto mb-3 ${isDragging ? 'text-primary' : 'text-muted-foreground'}`} />
               <p className="text-sm text-muted-foreground">
                 <span className="font-medium text-primary">Click to upload</span> or drag and drop
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                PDF, DOC, ZIP, or any file up to 10MB
+                PDF, Video, or Audio files up to 50MB
               </p>
             </div>
           ) : (
@@ -195,22 +186,22 @@ const SubmissionStep2 = ({
               </Button>
             </motion.div>
           )}
-        </div>
-      )}
+        </motion.div>
+    
 
-      {/* Submit Button */}
-      <div className="flex gap-3 pt-2">
+      {/* Submit Buttons */}
+      <motion.div variants={itemVariants} className="flex gap-3 pt-2">
         <Button
           variant="outline"
-          onClick={onBack}
+          onClick={onCancel}
           disabled={isSubmitting}
           className="flex-1"
         >
-          Back
+          Cancel
         </Button>
         <Button
           onClick={handleSubmit}
-          disabled={!isValid() || isSubmitting}
+          disabled={isSubmitting}
           className="flex-1"
         >
           {isSubmitting ? (
@@ -222,9 +213,9 @@ const SubmissionStep2 = ({
             'Submit Assignment'
           )}
         </Button>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
 
-export default SubmissionStep2;
+export default AssignmentSubmissionForm;

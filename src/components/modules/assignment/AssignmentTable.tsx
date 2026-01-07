@@ -13,7 +13,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { IAssignmentSubmission, SubmissionStatus, SubmissionType } from '@/types/assignment.types';
+import type { IAssignmentSubmission, SubmissionStatus, SubmissionType } from '@/interface/assignment.types';
 
 interface AssignmentTableProps {
   submissions: IAssignmentSubmission[];

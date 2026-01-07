@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { Button } from '@/components/ui/button';
-import type { IAssignmentMeta } from '@/types/assignment.types';
+import type { IAssignmentMeta } from '@/interface/assignment.types';
 
 interface AssignmentPaginationProps {
   meta: IAssignmentMeta;

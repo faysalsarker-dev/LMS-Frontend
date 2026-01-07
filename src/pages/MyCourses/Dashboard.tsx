@@ -8,12 +8,9 @@ import EnrolledCourseCard from '@/components/shared/EnrolledCourseCard';
 import { useGetMyEnrolledCoursesQuery } from '@/redux/features/course/course.api';
 
 const Dashboard = () => {
-  const { data } = useUserInfoQuery({
-    includeCourses: true
-  });
+  const { data } = useUserInfoQuery({});
   const { data: enrolledCoursesData , isLoading: isEnrolledCoursesLoading} = useGetMyEnrolledCoursesQuery({});
 
-console.log(enrolledCoursesData,'enrolledCoursesData');
 
 
   const user = data?.data;

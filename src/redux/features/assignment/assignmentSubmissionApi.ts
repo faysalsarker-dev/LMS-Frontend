@@ -39,6 +39,13 @@ export const assignmentApi = baseApi.injectEndpoints({
       }),
       providesTags: ["ASSIGNMENT"],
     }),
+    getAssignmentByLessonId: builder.query({
+      query: (id) => ({
+        url: `/assignment/lesson-assignment/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["ASSIGNMENT"],
+    }),
 
     // ---------------------------
     // Update Assignment Submission
@@ -87,4 +94,5 @@ export const {
   useUpdateAssignmentMutation,
   useReviewAssignmentMutation,
   useDeleteAssignmentMutation,
+  useGetAssignmentByLessonIdQuery
 } = assignmentApi;
