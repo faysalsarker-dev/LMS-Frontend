@@ -11,6 +11,7 @@ import AssignmentResult from './AssignmentResult';
 
 import type { IAssignmentSchema, ICreateSubmissionData } from '@/interface/studentAssignment.types';
 import { useCreateAssignmentMutation, useGetAssignmentByLessonIdQuery } from '@/redux/features/assignment/assignmentSubmissionApi';
+import { useParams } from 'react-router';
 
 interface AssignmentLessonProps {
   assignment: IAssignmentSchema;
@@ -35,13 +36,12 @@ const AssignmentLessonSkeleton = () => (
 
 const AssignmentLesson = ({ assignment, lessonId }: AssignmentLessonProps) => {
   const [view, setView] = useState<ViewState>('instruction');
-
+   const { id } = useParams<{ id: string }>();
   const { data: submissionsData, isLoading, refetch } = useGetAssignmentByLessonIdQuery(lessonId);
   const [createSubmission, { isLoading: isSubmitting }] = useCreateAssignmentMutation();
+  const submissions = submissionsData?.data || null;
+  const hasSubmission = !isLoading && !!submissions;
 
-  const submissions = submissionsData?.data || [];
-  const latestSubmission = submissions[0];
-  const hasSubmission = submissions.length > 0;
 
   // Determine effective view: show result if has submission and not explicitly viewing form
   const effectiveView = hasSubmission && view === 'instruction' ? 'result' : view;
@@ -50,20 +50,25 @@ const AssignmentLesson = ({ assignment, lessonId }: AssignmentLessonProps) => {
   const handleCancelForm = () => setView(hasSubmission ? 'result' : 'instruction');
 
   const handleSubmit = async (data: Omit<ICreateSubmissionData, 'assignmentId'>) => {
-    try {
-      const result = await createSubmission({
-        assignmentId: assignment._id,
-        ...data,
-      }).unwrap();
-
-      if (result.success) {
-        toast.success('Assignment submitted successfully!');
-        setView('result');
-        refetch();
-      }
-    } catch {
-      toast.error('Failed to submit assignment. Please try again.');
+  try {
+    const formData = new FormData();
+    formData.append('textResponse', data.textResponse ?? '');
+    formData.append('lesson', lessonId);
+    formData.append('course', id!);
+    if (data.file) {
+      formData.append('file', data.file);
     }
+
+    const result = await createSubmission(formData).unwrap();
+
+    if (result.success) {
+      toast.success('Assignment submitted successfully!');
+      setView('result');
+      refetch();
+    }
+  } catch {
+    toast.error('Failed to submit assignment. Please try again.');
+  }
   };
 
   if (isLoading) {
@@ -84,7 +89,6 @@ const AssignmentLesson = ({ assignment, lessonId }: AssignmentLessonProps) => {
               <BookOpen className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">{assignment.title}</h3>
               <p className="text-xs text-muted-foreground">
                 {effectiveView === 'instruction' && 'Review instructions'}
                 {effectiveView === 'form' && 'Submit your work'}
@@ -121,7 +125,6 @@ const AssignmentLesson = ({ assignment, lessonId }: AssignmentLessonProps) => {
                 transition={{ duration: 0.3 }}
               >
                 <AssignmentSubmissionForm
-                  assignment={assignment}
                   isSubmitting={isSubmitting}
                   onCancel={handleCancelForm}
                   onSubmit={handleSubmit}
@@ -129,7 +132,7 @@ const AssignmentLesson = ({ assignment, lessonId }: AssignmentLessonProps) => {
               </motion.div>
             )}
 
-            {effectiveView === 'result' && latestSubmission && (
+            {effectiveView === 'result' && submissions && (
               <motion.div
                 key="result"
                 initial={{ opacity: 0, y: 20 }}
@@ -139,7 +142,7 @@ const AssignmentLesson = ({ assignment, lessonId }: AssignmentLessonProps) => {
               >
                 <AssignmentResult
                   assignment={assignment}
-                  submission={latestSubmission}
+                  submission={submissions}
                   onResubmit={handleOpenForm}
                 />
               </motion.div>

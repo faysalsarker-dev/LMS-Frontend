@@ -55,7 +55,7 @@ const itemVariants = {
 const AssignmentResult = ({ assignment, submission, onResubmit }: AssignmentResultProps) => {
   const statusConfig = getStatusConfig(submission.status);
   const StatusIcon = statusConfig.icon;
-  
+  console.log('submission in AssignmentResult:', submission);
   const isPassed = submission.result !== undefined && 
     assignment.passingMarks !== undefined && 
     submission.result >= assignment.passingMarks;
@@ -106,7 +106,12 @@ const AssignmentResult = ({ assignment, submission, onResubmit }: AssignmentResu
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Submitted At</span>
-              <span className="font-medium">{format(new Date(submission.submittedAt), 'PPP p')}</span>
+              <span className="font-medium">
+  {submission?.submittedAt
+    ? format(new Date(submission.submittedAt), 'PPPpp')
+    : '—'}
+</span>
+
             </div>
             
             {submission.textResponse && (

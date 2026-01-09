@@ -4,7 +4,7 @@ import { lazy } from "react";
 import withAuth from "./withAuth";
 import CheckoutPage from "@/pages/Checkout/CheckoutPage";
 import EditLessonPage from "@/pages/admin/lesson/EditLessonPage";
-import { UserRoles } from "@/interface";
+import { UserRoles } from "@/interface/user.type";
 
 
 const CourseDetails = lazy(() => import("@/pages/course/CourseDetails"));

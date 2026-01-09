@@ -4,8 +4,6 @@ export type AssignmentSubmissionType = 'file' | 'text' | 'both';
 export type AssignmentStatus = 'pending' | 'reviewed' | 'graded';
 
 export interface IAssignmentSchema {
-  _id: string;
-  title: string;
   instruction: string;
   deadline: string;
   maxMarks: number;
@@ -33,7 +31,7 @@ export interface IStudentSubmission {
 export interface ICreateSubmissionData {
   assignmentId: string;
   textResponse?: string;
-  file?: File;
+  file?: File | null;
 }
 
 export interface ISubmissionResponse {

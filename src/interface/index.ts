@@ -1,238 +1,59 @@
-export interface SingleFileUploadProps {
-  onChange: (file: File | null) => void;
-  value?: File | string | null;
+// ---- Audio ----
+export interface IAudio {
+  url: string;
+  duration?: number;
+  transcripts: {
+    language: string;
+    text: string;
+  }[];
 }
 
-
-export interface UserFilters {
-  search?: string;
-  role?: string;
-  isActive?: string;
-  page: number;
-  limit: number;
-  sortBy: string;
-  sortOrder: string;
-
-}
-
-
-
-
-export const UserRoles = {
-  STUDENT: "student",
-  INSTRUCTOR: "instructor",
-  ADMIN: "admin",
-  SUPER_ADMIN: "super_admin",
-} as const;
-
-export type UserRole = "admin" | "instructor" | "super_admin" | "student";
-
-export interface IUser {
-  _id:string;
-  name: string;
-  email: string;
-  phone: string;
-  role: UserRole;
-  isActive: boolean;
-  isVerified: boolean;
-  profile?: string;
-  courses: ICourse[];
-
-  address: {
-    country?: string;
-    city?: string;
-  };
-  createdAt:Date;
-  updateAt:Date;
-}
-
-
-
-export interface ICourse  {
-    _id:string;
-  title: string;
-  slug: string;
-  progress?: number;
-  description?: string;
-  instructor: string;
-  milestones: string[];
-  thumbnail?: string | null;
-  tags: string[];
-  skills: string[];
-  level: "Beginner" | "Intermediate" | "Advanced";
-  language: string;
-  prerequisites: string[];
-  requirements: string[];
-  price: number;
-  currency: string;
-  isDiscounted: boolean;
-  discountPrice: number;
-  status: "draft" | "published" | "archived";
-  averageRating: number;
-  totalEnrolled: number;
-  enrolledStudents:[];
-  duration: string; 
-  totalLectures: number;
-  certificateAvailable: boolean;
-  resources: string[]; 
-  isFeatured:boolean;
-
-}
-
-
-
-export interface IMilestone {
-    _id:string;
-  title: string;
-  course?:ICourse | string;
-  order: number;
-  status: "active" | "inactive";
-  lesson: string[] | ILesson[];
-  createdAt:Date;
-  updatedAt:Date;
-}
-
-
-
-// ✅ Option structure for quiz questions
-export interface IQuizOption {
-  text: string;
-  isCorrect?: boolean; // optional if you allow marking answers
-}
-
-// ✅ Quiz structure
-export interface IQuiz {
-  question: string;
-  options: IQuizOption[];
-  correctAnswer: string;
+// ---- Question ----
+export interface IQuestion {
+  type: "mcq" | "true_false" | "fill_blank" | "short_answer" | "audio";
+  questionText: string;
+  audio?: string | null;
+  options?: { text: string }[];
+  correctAnswer?: string | string[] | boolean | Record<string, any>;
   explanation?: string;
-  timer?: number | null; 
+  timer?: number | null;
 }
 
+// ---- Video ----
+export interface IVideo {
+  url: string;
+  duration?: number;
+}
+
+// ---- Assignment ----
+export interface IAssignment {
+  instruction: string;
+  maxMarks?: number;
+  allowMultipleSubmissions?: boolean;
+  passingMarks?: number | null;
+  deadline: Date | null;
+}
+
+// ---- Lesson ----
 export interface ILesson {
   _id: string;
   title: string;
   slug: string;
-  milestone: IMilestone | string | null;
-  course: ICourse | string;
+  milestone: string; // ObjectId replaced with string
+  course: string;    // ObjectId replaced with string
   order?: number;
-  type: "video" | "doc" | "quiz" | "assignment";
-  videoUrl?: string;
-  videoSourceType?: "link" | "upload";
+
+  type: "video" | "doc" | "quiz" | "audio" | "assignment";
+
   doc?: string;
-  questions?: IQuiz;
-  status?: "published" | "archived" | "draft";
+  questions?: IQuestion[] | null;
+  video?: IVideo | null;
+  audio?: IAudio | null;
+  assignment?: IAssignment | null;
+
+  status?: "active" | "inactive";
   viewCount?: number;
+
   createdAt?: Date;
   updatedAt?: Date;
-}
-
-
-
-
-
-export type ContentType = "video" | "doc" | "quiz" | "assignment";
-export type LessonStatus = "active" | "inactive" | undefined;
-export type VideoSourceType = string | undefined;
-export type VideoStorageType = "cdn" | "external";
-
-export interface VideoMeta {
-  filename?: string;
-  size?: number;
-  mimeType?: string;
-  duration?: number;
-  storage: VideoStorageType;
-}
-
-export interface QuizOption {
-  text: string;
-  isCorrect?: boolean;
-}
-
-export interface QuizData {
-  question: string;
-  options: QuizOption[];
-  correctAnswer: string;
-  explanation?: string;
-  timer?: number | null; 
-}
-
-
-export interface LessonFormData {
-  title?: string;
-  order?: number;
-  contentType?: "video" | "doc" | "quiz" | "assignment";
-  status?: "active" | "inactive";
-  course?: string;
-  milestone?: string;
-  videoUrl?: string;
-  videoSourceType?: string;
-  docContent?: string;
-  quiz?: QuizData;
-  videoFile: File | string | null ;
-
-}
-
-export interface UploadProgress {
-  progress: number;
-  status: "idle" | "uploading" | "processing" | "success" | "error";
-  error?: string;
-}
-
-
-export interface ICategory {
-  _id?:string;
-  title: string;
-  description?: string;
-  thumbnail?: string | null;
-  totalCourse?: number;
-}
-
-
-
-
-export interface IEnrollment {
-  _id: string;
-  user: IUser | string; 
-  course: ICourse | string;
-  status: "active" | "completed" | "cancelled";
-  paymentStatus: "pending" | "paid" | "failed";
-  method:"alipay" | "wechat" ;
-  enrolledAt: Date;
-  completedAt?: Date;
-}
-
-
-
-export interface ITestimonial {
-  _id:string;
-  review: string;
-  user: Partial<IUser>;
-  course: Partial<ICourse>;
-  rating: number;
-  createdAt:Date;
-  updatedAt:Date;
-}
-
-
-export interface IPromo {
-  _id: string;
-  code: string;
-  discount: number;
-  type: "percentage" | "fixed";
-  maxUsage: number;
-  usedCount: number;
-  isActive: boolean;
-  expireDate: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface IPromoPayload {
-  code: string;
-  discount: number;
-  type: "percentage" | "fixed";
-  maxUsage: number;
-  expireDate: string;
-  isActive?: boolean;
 }

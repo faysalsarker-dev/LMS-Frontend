@@ -10,9 +10,9 @@ const CoursePlayer = lazy(() =>
     default: m.CoursePlayer,
   }))
 );
-import { UserRoles } from "@/interface";
 import Profile from "@/pages/profile/Profile";
 import withAuth from "../withAuth";
+import { UserRoles } from "@/interface/user.type";
 
 
 
