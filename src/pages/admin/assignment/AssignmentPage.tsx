@@ -54,7 +54,6 @@ const AssignmentsPage = () => {
   const { data: lessonsData, isLoading: isLoadingLessons } = useGetAllMilestonesQuery(
     filters.course !== 'all' ? filters.course : undefined
   );
-  console.log(lessonsData,'assigment');
 
   // Mutations
   const [reviewSubmission, { isLoading: isReviewing }] = useReviewAssignmentMutation();
@@ -111,14 +110,20 @@ const AssignmentsPage = () => {
     feedback?: string;
   }) => {
     if (!selectedSubmission) return;
-
+console.log(reviewData,'reviewData');
     try {
-      await reviewSubmission({
-        id: selectedSubmission._id,
-        status: reviewData.status,
-        result: reviewData.result,
-        feedback: reviewData.feedback,
-      });
+
+
+
+     await reviewSubmission({
+  id: selectedSubmission._id,
+  data: {
+    status: reviewData.status,
+    marks: reviewData.result,
+    feedback: reviewData.feedback,
+  },
+});
+
 
       toast.success('Review submitted successfully');
       setDialogOpen(false);

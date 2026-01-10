@@ -51,6 +51,7 @@ export const AssignmentDialog = ({
   const [feedback, setFeedback] = useState<string>('');
 
   const handleSubmit = async () => {
+    console.log('Submitting review with data:', { status, result, feedback });
     await onSubmit({
       status,
       result: result ? Number(result) : undefined,
