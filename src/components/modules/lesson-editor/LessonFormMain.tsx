@@ -23,7 +23,8 @@ import { LESSON_TYPE_CONFIG, STATUS_CONFIG, type IQuestion, type ITranscript, ty
 import { useCreateLessonMutation } from '@/redux/features/lesson/lesson.api';
 import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
 import { useGetAllMilestonesQuery } from '@/redux/features/milestone/milestone.api';
-import type { ICourse, IMilestone } from '@/interface';
+import type { ICourse } from '@/interface/course.types';
+import type { IMilestone } from '@/interface/milestone.types';
 
 
 const lessonSchema = z.object({

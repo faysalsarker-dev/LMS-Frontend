@@ -10,7 +10,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { LessonType, LessonStatus } from '@/interface/lesson.type';
-import type { ICourse, IMilestone } from '@/interface';
+import type { ICourse } from '@/interface/course.types';
+import type { IMilestone } from '@/interface/milestone.types';
 
 interface LessonFiltersProps {
   search: string;

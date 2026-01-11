@@ -4,7 +4,7 @@ import { Clock, Star, Users, BookOpen, Crown, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { memo, useState } from "react";
-import type { ICourse } from "@/interface";
+import type { ICourse } from "@/interface/course.types";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const CourseCard = memo(({ course }: { course: ICourse }) => {

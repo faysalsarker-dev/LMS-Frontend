@@ -11,6 +11,7 @@ export type QuestionType = 'mcq' | 'true_false' | 'fill_blank' | 'short_answer' 
 
 export interface IQuestionOption {
   text: string;
+  isCorrect?: boolean;
 }
 
 export interface IQuestion {
@@ -26,6 +27,7 @@ export interface IQuestion {
   // For audio type
   audioFile?: File | null;
   audioUrl?: string;
+  
 }
 
 export const QUESTION_TYPE_CONFIG = {

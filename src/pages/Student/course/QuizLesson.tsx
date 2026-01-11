@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle, Lightbulb, Play, Clock, ArrowRight, Volume2, AlertCircle } from "lucide-react";
+import { DownloadQuestionPDFButton } from "@/utils/generateQuestionPDF";
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -368,6 +369,14 @@ function ActiveState({
         {question.type === "short_answer" && (
           <ShortAnswerInput value={selectedAnswer} onChange={onInputChange} onSubmit={onSubmit} />
         )}
+      
+<DownloadQuestionPDFButton
+  question={question}
+  showAnswer={false}
+/>
+
+
+
       </motion.div>
     </motion.div>
   );

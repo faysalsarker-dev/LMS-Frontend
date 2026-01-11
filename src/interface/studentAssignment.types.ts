@@ -8,10 +8,10 @@ export interface IAssignmentSchema {
   deadline: string;
   maxMarks: number;
   passingMarks: number;
-  submissionType: AssignmentSubmissionType;
+  submissionType?: AssignmentSubmissionType;
   allowMultipleSubmissions: boolean;
-  courseId: string;
-  lessonId: string;
+  course?: string;
+  lesson?: string;
 }
 
 export interface IStudentSubmission {

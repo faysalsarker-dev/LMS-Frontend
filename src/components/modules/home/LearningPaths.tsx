@@ -3,7 +3,7 @@ import { Card, } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
 import { useGetAllCategorysQuery } from '@/redux/features/category/category.api';
-import type { ICategory } from '@/interface';
+import type { ICategory } from '@/interface/category.types';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // Skeleton Card

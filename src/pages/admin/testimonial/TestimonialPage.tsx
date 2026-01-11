@@ -16,7 +16,7 @@ import { useDeleteTestimonialMutation, useGetAllTestimonialsAdminQuery } from "@
 import TestimonialTable from "@/components/modules/Testimonial/TestimonialTable";
 import { UpdateTestimonialDialog } from "./UpdateTestimonialDialog";
 import { handleApiError } from "@/utils/errorHandler";
-import type { ITestimonial } from "@/interface";
+import type { ITestimonial } from "@/interface/testimonial.types";
 
 export default function TestimonialsPage() {
   const [page, setPage] = useState(1);

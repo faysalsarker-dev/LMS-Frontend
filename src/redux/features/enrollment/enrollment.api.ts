@@ -8,7 +8,7 @@ export const enrolmentApi = baseApi.injectEndpoints({
         method: "POST",
         data: data,
       }),
-      invalidatesTags: ["ENROLMENT"],
+      invalidatesTags: ["ENROLMENT", "COURSE","USER","PROMO","PROGRESS"],
     }),
 
     getAllEnrolments: builder.query({

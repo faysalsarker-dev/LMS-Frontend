@@ -10,10 +10,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { DeleteLessonDialog } from './DeleteLessonDialog';
-import type { Lesson } from '@/types/lesson.types';
+import type { ILesson } from '@/interface';
 
 interface LessonActionsProps {
-  lesson: Lesson;
+  lesson: ILesson;
   onDeleteSuccess: () => void;
 }
 

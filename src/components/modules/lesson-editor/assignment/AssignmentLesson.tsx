@@ -14,7 +14,7 @@ import { useCreateAssignmentMutation, useGetAssignmentByLessonIdQuery } from '@/
 import { useParams } from 'react-router';
 
 interface AssignmentLessonProps {
-  assignment: IAssignmentSchema;
+  assignment?: IAssignmentSchema  ;
   lessonId: string;
 }
 
@@ -110,7 +110,7 @@ const AssignmentLesson = ({ assignment, lessonId }: AssignmentLessonProps) => {
                 transition={{ duration: 0.3 }}
               >
                 <AssignmentInstruction
-                  assignment={assignment}
+                  assignment={assignment!}
                   onSubmit={handleOpenForm}
                 />
               </motion.div>
@@ -141,7 +141,7 @@ const AssignmentLesson = ({ assignment, lessonId }: AssignmentLessonProps) => {
                 transition={{ duration: 0.3 }}
               >
                 <AssignmentResult
-                  assignment={assignment}
+                  assignment={assignment!}
                   submission={submissions}
                   onResubmit={handleOpenForm}
                 />

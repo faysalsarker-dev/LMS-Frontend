@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import UpdateCourse from "./UpdateCourse";
-import type { ICourse } from "@/interface";
+import type { ICourse } from "@/interface/course.types";
 import { useDeleteCourseMutation } from "@/redux/features/course/course.api";
 import {
   AlertDialog,

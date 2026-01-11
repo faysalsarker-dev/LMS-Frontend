@@ -12,6 +12,14 @@ export const promoApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["PROMO"],
     }),
+    redeemPromo: builder.mutation({
+      query: (data) => ({
+        url: "/promo/redeem",
+        method: "POST",
+        data: data,
+      }),
+      invalidatesTags: ["PROMO"],
+    }),
 
     // Get all Promos
     getMyPromos: builder.query({
@@ -100,5 +108,6 @@ export const {
   useUpdatePromoMutation,
   useDeletePromoMutation,
   useGetMyPromosQuery,
-  useGetAnalyticsQuery
+  useGetAnalyticsQuery,
+  useRedeemPromoMutation
 } = promoApi;

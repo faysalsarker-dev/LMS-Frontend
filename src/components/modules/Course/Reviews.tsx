@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import _Rating from "react-rating";
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import type { ITestimonial } from "@/interface";
+import type { ITestimonial } from "@/interface/testimonial.types";
 
 
 interface ReviewsProps {

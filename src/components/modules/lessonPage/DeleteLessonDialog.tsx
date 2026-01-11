@@ -9,11 +9,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import type { Lesson } from '@/types/lesson.types';
 import { useDeleteLessonMutation } from '@/redux/features/lesson/lesson.api';
+import type { ILesson } from '@/interface';
+import toast from 'react-hot-toast';
+import { handleApiError } from '@/utils/errorHandler';
 
 interface DeleteLessonDialogProps {
-  lesson: Lesson;
+  lesson: ILesson;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
@@ -29,19 +31,13 @@ export function DeleteLessonDialog({
 
   const handleDelete = async () => {
     try {
-      await deleteLesson(lesson._id);
-      toast({
-        title: 'Lesson deleted',
-        description: `"${lesson.title}" has been deleted successfully.`,
-      });
+      await deleteLesson(lesson._id).unwrap();
+      toast.success('Lesson deleted successfully!');
+   
       onOpenChange(false);
       onSuccess();
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to delete lesson. Please try again.',
-        variant: 'destructive',
-      });
+  handleApiError(error)
     }
   };
 

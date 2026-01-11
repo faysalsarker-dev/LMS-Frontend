@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import CourseCard, { CourseCardSkeleton } from "@/components/modules/Course/CourseCard";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
-import type { ICourse } from "@/interface";
+import type { ICourse } from "@/interface/course.types";
 
 const containerVariants: Variants = {
   hidden: {},

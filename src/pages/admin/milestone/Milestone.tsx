@@ -51,9 +51,11 @@ import {
   useGetAllMilestonesQuery,
   useDeleteMilestoneMutation,
 } from "@/redux/features/milestone/milestone.api";
-import type { ICourse, IMilestone } from "@/interface";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { IMilestone } from "@/interface/milestone.types";
+import { handleApiError } from "@/utils/errorHandler";
+import type { ICourse } from "@/interface/course.types";
 
 export default function MilestoneDashboardPage() {
   // Pagination & filters
@@ -100,7 +102,7 @@ export default function MilestoneDashboardPage() {
       toast.success("Milestone deleted successfully");
       refetch();
     } catch (error) {
-      toast.error("Failed to delete milestone");
+handleApiError(error)
     }
   };
 

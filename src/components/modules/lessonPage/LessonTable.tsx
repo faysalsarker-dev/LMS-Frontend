@@ -195,13 +195,14 @@ export function LessonTable({ lessons, isLoading, onRefetch }: LessonTableProps)
                       </span>
                     </TableCell>
                     <TableCell>
-                   <span className="text-muted-foreground">
-  {typeof lesson.milestone === "string"
-    ? "—"
-    : lesson.milestone?.title}
-</span>
-
-
+                      <span className="text-muted-foreground">
+                        {typeof lesson.milestone === "string"
+                          ? "—"
+                          : lesson.milestone && typeof lesson.milestone === "object" && "title" in lesson.milestone
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          ? (lesson.milestone as any).title
+                          : "—"}
+                      </span>
                     </TableCell>
                     <TableCell>
                       <LessonActions lesson={lesson} onDeleteSuccess={onRefetch} />

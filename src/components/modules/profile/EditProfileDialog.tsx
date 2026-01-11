@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import {  User, Mail, Phone, MapPin, FileText, Loader2 } from "lucide-react";
+import {  User, Mail, Phone, MapPin, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -10,9 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import type { IUser } from "@/interface";
+import type { IUser } from "@/interface/user.types";
 import { toast } from "sonner";
 
 interface EditProfileDialogProps {
@@ -71,7 +70,7 @@ const EditProfileDialog = ({
               whileHover={{ scale: 1.02 }}
             >
               <Avatar className="w-24 h-24 border-4 border-primary/20">
-                <AvatarImage src={userInfo.avatar} alt={userInfo.name} />
+                <AvatarImage src={userInfo.profile} alt={userInfo.name} />
                 <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-primary to-secondary text-primary-foreground">
                   {initials}
                 </AvatarFallback>
@@ -145,7 +144,21 @@ const EditProfileDialog = ({
               <Input
                 id="address"
                 name="address"
-                value={formData.address}
+                value={formData.address.country}
+                onChange={handleChange}
+                placeholder="Enter your location"
+                className="rounded-xl"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="address" className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-muted-foreground" />
+                Location
+              </Label>
+              <Input
+                id="address"
+                name="address"
+                value={formData.address.city}
                 onChange={handleChange}
                 placeholder="Enter your location"
                 className="rounded-xl"

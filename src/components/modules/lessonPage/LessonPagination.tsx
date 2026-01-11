@@ -1,10 +1,10 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import type { LessonMeta } from '@/types/lesson.types';
 
 interface LessonPaginationProps {
-  meta: LessonMeta;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  meta: any;
   onPageChange: (page: number) => void;
 }
 

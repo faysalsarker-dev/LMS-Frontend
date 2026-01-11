@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { ICourse } from "@/interface";
+import type { ICourse } from "@/interface/course.types";
 import { CoursesTabSkeleton } from "./ProfileSkeleton";
 
 interface WishlistTabProps {
@@ -138,7 +138,7 @@ const WishlistCourseCard = ({
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-        {course.category && (
+        {course?.category && (
           <Badge className="absolute top-3 left-3" variant="secondary">
             {typeof course.category === 'string' ? course.category : course.category.name}
           </Badge>
@@ -149,11 +149,7 @@ const WishlistCourseCard = ({
           <h4 className="font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
             {course.title}
           </h4>
-          {course.instructor && (
-            <p className="text-sm text-muted-foreground mt-1">
-              by {typeof course.instructor === 'string' ? course.instructor : course.instructor.name}
-            </p>
-          )}
+        
         </div>
         
         <div className="flex items-center justify-between">

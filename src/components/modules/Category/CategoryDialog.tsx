@@ -12,13 +12,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
-import type { ICategory } from "@/interface";
 import {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
 } from "@/redux/features/category/category.api";
 import { handleApiError } from "@/utils/errorHandler";
 import FileUpload from "@/components/ui/FileUpload";
+import type { ICategory } from "@/interface/category.types";
 
 type Props = {
   open: boolean;

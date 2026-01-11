@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, AlertTriangle } from "lucide-react";
+import { motion } from "framer-motion";
+import { LogOut } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,

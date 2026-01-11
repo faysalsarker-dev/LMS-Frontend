@@ -24,10 +24,11 @@ import { Label } from "@/components/ui/label";
 import { toast } from "react-hot-toast";
 
 
-import type { ICourse, IMilestone } from "@/interface";
 import { handleApiError } from "@/utils/errorHandler";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
 import { useCreateMilestoneMutation, useUpdateMilestoneMutation } from "@/redux/features/milestone/milestone.api";
+import type { IMilestone } from "@/interface/milestone.types";
+import type { ICourse } from "@/interface/course.types";
 
 type MilestoneFormValues = {
   title: string;

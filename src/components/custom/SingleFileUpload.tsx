@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CircleUserRoundIcon, XIcon, Edit2 } from "lucide-react";
 import { useFileUpload } from "@/hooks/use-file-upload";
-import type { SingleFileUploadProps } from "@/interface";
 
 
 
-export default function SingleFileUpload({ onChange, value }: SingleFileUploadProps) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function SingleFileUpload({ onChange, value }: any) {
   const [{ files }, { removeFile, openFileDialog, getInputProps }] = useFileUpload({
     accept: "image/*",
     multiple: false,

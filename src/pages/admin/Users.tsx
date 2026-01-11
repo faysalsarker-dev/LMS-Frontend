@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Plus, Users as UsersIcon} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { IUser, UserFilters } from "@/interface";
+import type { IUser } from "@/interface/user.types";
 import { UserStats } from "@/components/modules/User/UserStats";
 import UserDialog from "@/components/modules/User/UserDialog";
 import Filters from "@/components/modules/User/UserFilters";
@@ -15,7 +15,8 @@ import { UserTable } from "@/components/modules/User/UserTable";
 
 
 export default function UserManagement() {
-  const [filters, setFilters] = useState<UserFilters>({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [filters, setFilters] = useState<any>({
     search: "",
     role: "",
     isActive: "",
@@ -57,7 +58,7 @@ break;
 
 
 
-  const handleFilterChange = useCallback((key: keyof UserFilters, value: string | number) => {
+  const handleFilterChange = useCallback((key: string, value: string | number) => {
     setFilters(prev => ({
       ...prev,
       [key]: value,

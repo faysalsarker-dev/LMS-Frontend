@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { ICourse } from "@/interface";
+import type { ICourse } from "@/interface/course.types";
 import { CoursesTabSkeleton } from "./ProfileSkeleton";
 import EnrolledCourseCard from "@/components/shared/EnrolledCourseCard";
 

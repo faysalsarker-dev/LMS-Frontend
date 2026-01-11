@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, User, Mail, Shield, Lock, Phone } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import type { IUser } from "@/interface";
+import type { IUser } from "@/interface/user.types";
 import { useUpdateMutation } from "@/redux/features/auth/auth.api";
 
 interface UserDialogProps {

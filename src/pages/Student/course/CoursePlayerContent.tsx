@@ -1,7 +1,7 @@
 import VideoPlayer from "@/components/VideoPlayer";
 import { DocLesson } from "./DocLesson";
 import  QuizLesson  from "./QuizLesson";
-import type { IAssignment, ILesson } from "@/interface";
+import type { ILesson } from "@/interface";
 import AssignmentLesson from "@/components/modules/lesson-editor/assignment/AssignmentLesson";
 
 type CoursePlayerContentProps = {
@@ -18,17 +18,17 @@ if(isLoading){
   return <div>Loading...</div>
 }
 
-const url =`https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`
   switch (lesson?.type) {
     case "video":
-      return <VideoPlayer url={url} />;
+      return <VideoPlayer url={lesson.video?.url as string} />;
     case "doc":
       return <DocLesson doc={lesson?.doc} />;
    case "quiz":
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return <QuizLesson questions={lesson?.questions as any} setQuizResult={setQuizResult} />;
    case "assignment":
-  return <AssignmentLesson assignment={lesson?.assignment as IAssignment} lessonId={lesson?._id} />;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return lesson?.assignment ? <AssignmentLesson assignment={lesson.assignment as any} lessonId={lesson._id} /> : <div>No assignment available</div>;
     default:
       return <div>Unsupported lesson type</div>;
   }

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { formatNumber, formatCurrency } from '@/utils/timezone';
-import type { ICourse } from '@/interface';
+import type { ICourse } from '@/interface/course.types';
 
 interface CoursesTableProps {
   courses: ICourse[];

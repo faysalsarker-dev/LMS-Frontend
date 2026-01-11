@@ -4,7 +4,7 @@ import { Card, CardContent } from "../ui/card";
 import { Progress } from "../ui/progress";
 import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
-import type { ICourse } from "@/interface";
+import type { ICourse } from "@/interface/course.types";
 
 const EnrolledCourseCard = ({ course }: { course: ICourse  }) => {
 

@@ -45,6 +45,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 
 import { useGetLessonByIdQuery, useUpdateLessonMutation } from '@/redux/features/lesson/lesson.api';
+import { handleApiError } from '@/utils/errorHandler';
 
 
 // Base lesson schema
@@ -78,7 +79,7 @@ export default function EditLessonPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: lesson, isLoading: isLoadingLesson, isError, error, refetch } = useGetLessonByIdQuery(id!);
+  const { data: lesson, isLoading: isLoadingLesson, isError,  refetch } = useGetLessonByIdQuery(id!);
     const lessonData = lesson?.data;
 
   const [updateLesson, { isLoading: isUpdating }] = useUpdateLessonMutation();
@@ -211,7 +212,7 @@ export default function EditLessonPage() {
       toast.success('Lesson updated successfully!');
       navigate('/dashboard/lesson');
     } catch (err) {
-      toast.error(err?.data?.message || 'Failed to update lesson. Please try again.');
+handleApiError(err);
     }
   };
 
@@ -227,6 +228,7 @@ export default function EditLessonPage() {
     }]);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateQuestion = (index: number, field: string, value: any) => {
     const updated = [...questions];
     updated[index] = { ...updated[index], [field]: value };
@@ -304,9 +306,7 @@ export default function EditLessonPage() {
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <Card className="w-full max-w-md">
           <CardContent className="pt-6 text-center">
-            <p className="text-destructive mb-4">
-              {error?.message || 'Failed to load lesson'}
-            </p>
+          
             <div className="flex gap-3 justify-center">
               <Button variant="outline" onClick={() => refetch()}>
                 Try Again

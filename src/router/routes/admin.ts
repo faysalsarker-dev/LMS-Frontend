@@ -6,7 +6,6 @@ import {
   BookOpen,
   Layers,
   Flag,
-  Settings,
   Award,
   ClipboardCheck,
   Folder,
@@ -30,7 +29,6 @@ const UserPromoUsagePage = lazy(() => import("@/pages/admin/promo/UserPromoUsage
 const AssignmentPage = lazy(() => import("@/pages/admin/assignment/AssignmentPage"));
 const LessonFormMain = lazy(() => import("@/components/modules/lesson-editor/LessonFormMain"));
 const LessonPage = lazy(() => import("@/pages/admin/lesson/LessonPage"));
-const AppSettings = lazy(() => import("@/pages/admin/app-setting/AppSettings"));
 
 
 export const adminRoutes = [
@@ -125,11 +123,5 @@ export const adminRoutes = [
     icon: Award,
     roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
   },
-  {
-    Component: withAuth(AppSettings, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
-    path: "/dashboard/app-settings",
-    name: "App Settings",
-    icon: Settings,
-    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
-  },
+
 ];

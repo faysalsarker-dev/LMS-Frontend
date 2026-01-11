@@ -1,347 +1,355 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useParams, useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
-import { Check, CreditCard, Shield, Lock, Loader2,  XCircle } from 'lucide-react';
-import { useParams } from 'react-router'
-import toast, { Toaster } from 'react-hot-toast';
-import { useGetCourseBySlugQuery } from '@/redux/features/course/course.api';
-import type { ICourse } from '@/interface';
-import { useCreateEnrolmentMutation } from '@/redux/features/enrollment/enrollment.api';
-import { Card } from '@/components/ui/card';
+import { ArrowLeft, ShoppingBag, AlertTriangle, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@radix-ui/react-dropdown-menu';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  CourseCard,
+  PricingSummary,
+  PromoCodeInput,
+  PaymentMethodSelector,
+  CheckoutStatus,
+  TrustBadges,
+} from '@/components/modules/checkout';
 
+import type { 
+  CheckoutStep, 
+  PromoCode, 
+  CheckoutPayload, 
+  CheckoutCourse, 
+  PricingBreakdown 
+} from '@/interface/checkout.types';
+import type { PaymentMethod } from '@/interface/enrolment.types';
+import { useGetCourseBySlugQuery } from '@/redux/features/course/course.api';
+import { useCreateEnrolmentMutation } from '@/redux/features/enrollment/enrollment.api';
+import { useRedeemPromoMutation } from '@/redux/features/promo/promo.api';
 
-const AlipayIcon = () => (
-    <svg className="w-8 h-8" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="48" height="48" fill="white"/>
-        <path d="M24 4C12.96 4 4 12.96 4 24C4 35.04 12.96 44 24 44C35.04 44 44 35.04 44 24C44 12.96 35.04 4 24 4Z" fill="#1677FF"/>
-        <path d="M28.8 14.4H19.2V28.8H28.8V14.4Z" fill="white"/>
-        <path d="M24 33.6C16.8 33.6 11.2 28 11.2 20.8H14.4C14.4 26.24 18.24 30.4 24 30.4C29.76 30.4 33.6 26.24 33.6 20.8H36.8C36.8 28 31.2 33.6 24 33.6Z" fill="white"/>
-    </svg>
-);
-const WechatPayIcon = () => (
-    <svg className="w-8 h-8" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="48" height="48" fill="white"/>
-        <path d="M24 4C12.96 4 4 12.96 4 24C4 35.04 12.96 44 24 44C35.04 44 44 35.04 44 24C44 12.96 35.04 4 24 4Z" fill="#09BB07"/>
-        <circle cx="16" cy="18" r="2" fill="white"/>
-        <circle cx="32" cy="18" r="2" fill="white"/>
-        <path d="M24 34C18.96 34 14.8 30.64 13.04 26H34.96C33.2 30.64 29.04 34 24 34Z" fill="white"/>
-    </svg>
-);
+// Helper function for pricing calculation
+function calculatePricing(
+  course: CheckoutCourse,
+  promoDiscount: number = 0
+): PricingBreakdown {
+  const originalPrice = course.isDiscounted && course.discountPrice 
+    ? course.discountPrice 
+    : course.price;
+  
+  const discountAmount = course.isDiscounted && course.discountPrice 
+    ? course.price - course.discountPrice 
+    : 0;
+  
+  const finalAmount = Math.max(0, originalPrice - promoDiscount);
+  
+  return {
+    originalPrice: course.price,
+    discountAmount,
+    promoDiscount,
+    finalAmount,
+    currency: course.currency,
+  };
+}
 
+export default function CheckoutPage() {
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
 
+  // API hooks
+  const { data: courseData, isLoading: courseLoading, error: courseError } = 
+    useGetCourseBySlugQuery(slug);
+  const [redeemPromo, { isLoading: promoLoading }] = useRedeemPromoMutation();
+  const [processCheckout, { isLoading: checkoutLoading }] = useCreateEnrolmentMutation();
 
+  // Local state
+  const [step, setStep] = useState<CheckoutStep>('review');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
+  const [appliedPromo, setAppliedPromo] = useState<PromoCode | null>(null);
+  const [promoDiscount, setPromoDiscount] = useState(0);
 
+  const course = courseData?.data;
+  const isEnrolled = false; // This should come from actual enrollment check
+  const isLoading = courseLoading;
 
+  // Calculate pricing
+  const pricing = useMemo(() => {
+    if (!course) return null;
+    return calculatePricing(course, promoDiscount);
+  }, [course, promoDiscount]);
 
-type PaymentMethod = "alipay" | "wechat";
-
-const CheckoutPage = () => {
-  const { slug } = useParams();
-  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod | null>(null);
-
-  const { 
-    data, 
-    isLoading: isCourseLoading, 
-    isError: isCourseError, 
-  } = useGetCourseBySlugQuery(slug || '');
-
-  const course = data?.data as ICourse;
- 
-  const [createEnrolment, { isLoading: isMutating }] = useCreateEnrolmentMutation();
-
-  const handleCheckout = async () => {
-    if (!selectedPayment) {
-      toast.error('Please select a payment method to proceed.');
-      return;
+  // Handle promo code application
+  const handleApplyPromo = async (code: string): Promise<boolean> => {
+    if (!pricing || !course) {
+      toast.error('Unable to apply promo code at this time');
+      return false;
     }
-    
-    if (!course?._id) {
-        toast.error('Course details are missing. Cannot proceed with enrollment.');
-        return;
-    }
 
-    const enrolData = {
-      course: course._id,
-      method: selectedPayment,
-    };
-
-    const loadingToastId = toast.loading(`Processing ${selectedPayment} payment...`);
-    
     try {
-      const result = await createEnrolment(enrolData).unwrap();
-      
-      toast.success(
-        result.data?.message || 'Payment successful! You are now enrolled.',
-        { id: loadingToastId }
-      );
+      const result = await redeemPromo({
+        code,
+        orderAmount: course.isDiscounted && course.discountPrice 
+          ? course.discountPrice 
+          : course.price,
+      }).unwrap();
 
-      console.log('Simulation: Redirecting to:', result.data?.redirectUrl || '/dashboard');
-
-    } catch (error) {
-      console.error("Enrollment error:", error);
-      
-      let errorMessage = 'An unexpected error occurred during checkout.';
-      
-      
-      if (typeof error === 'object' && error !== null && 'data' in error && error.data && typeof error.data === 'object' && 'message' in error.data && typeof error.data.message === 'string') {
-          errorMessage = error.data.message;
-      } else if (error instanceof Error) {
-          errorMessage = error.message;
+      if (result.success && result.data?.promo) {
+        setAppliedPromo(result.data.promo);
+        setPromoDiscount(result.data.discount || 0);
+        toast.success(`Promo code "${code}" applied successfully!`);
+        return true;
+      } else {
+        toast.error('Invalid promo code');
+        return false;
       }
-
-      toast.error(
-        errorMessage,
-        { id: loadingToastId }
-      );
+    } catch (error: any) {
+      // Handle specific error messages
+      const errorMessage = error?.data?.message || 
+                          error?.message || 
+                          'Invalid or expired promo code';
+      
+      toast.error(errorMessage);
+      return false;
     }
   };
 
-  const isCheckoutDisabled = isMutating || !selectedPayment || isCourseLoading || isCourseError;
+  // Handle promo removal
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setPromoDiscount(0);
+    toast.success('Promo code removed');
+  };
 
-  if (isCourseLoading) {
+  // Handle checkout
+  const handleCheckout = async () => {
+    if (!course || !pricing || !selectedPaymentMethod) {
+      toast.error('Please select a payment method');
+      return;
+    }
+
+    setStep('processing');
+
+    try {
+      const payload: CheckoutPayload = {
+        course: course._id,
+        originalPrice: pricing.originalPrice,
+        discountAmount: pricing.discountAmount + pricing.promoDiscount,
+        finalAmount: pricing.finalAmount,
+        currency: pricing.currency,
+        paymentMethod: selectedPaymentMethod,
+        promoCodeUsed: appliedPromo?.code,
+      };
+
+      const result = await processCheckout(payload).unwrap();
+
+      if (result.success) {
+        setStep('success');
+        toast.success('Enrollment completed successfully!');
+      } else {
+        setStep('failed');
+        toast.error('Payment failed. Please try again.');
+      }
+    } catch (error: any) {
+      setStep('failed');
+      const errorMessage = error?.data?.message || 
+                          error?.message || 
+                          'Payment processing failed. Please try again.';
+      toast.error(errorMessage);
+    }
+  };
+
+  // Handle retry
+  const handleRetry = () => {
+    setStep('review');
+  };
+
+  // Handle go to course
+  const handleGoToCourse = () => {
+    navigate(`/courses/${slug}`);
+  };
+
+  // Loading state
+  if (isLoading) {
     return (
-        <div className="min-h-screen flex items-center justify-center p-4">
-            <Loader2 className="w-8 h-8 animate-spin text-primary mr-2" />
-            <span className="text-lg font-semibold text-muted-foreground">Loading course details...</span>
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          <Skeleton className="h-8 w-32 mb-8" />
+          <div className="grid lg:grid-cols-5 gap-8">
+            <div className="lg:col-span-3 space-y-6">
+              <Skeleton className="h-64 w-full rounded-xl" />
+              <Skeleton className="h-32 w-full rounded-xl" />
+            </div>
+            <div className="lg:col-span-2 space-y-6">
+              <Skeleton className="h-48 w-full rounded-xl" />
+              <Skeleton className="h-48 w-full rounded-xl" />
+            </div>
+          </div>
         </div>
-    );
-  }
-
-  if (isCourseError || !course) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="p-8 max-w-lg text-center border-red-500/30">
-          <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-red-600 mb-2">Error Loading Course</h2>
-          
-          <Button onClick={() => window.location.reload()} className="mt-4">
-            Reload Page
-          </Button>
-        </Card>
       </div>
     );
   }
 
+  // Error state
+  if (courseError || !course) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md w-full mx-4"
+        >
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Course Not Found</AlertTitle>
+            <AlertDescription>
+              The course you're trying to purchase doesn't exist or is no longer available.
+            </AlertDescription>
+          </Alert>
+          <Button 
+            onClick={() => navigate('/courses')}
+            className="mt-4 w-full"
+          >
+            Browse Courses
+          </Button>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Already enrolled state
+  if (isEnrolled) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md w-full mx-4 text-center"
+        >
+          <div className="w-20 h-20 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-6">
+            <ShoppingBag className="h-10 w-10 text-success" />
+          </div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">
+            Already Enrolled!
+          </h2>
+          <p className="text-muted-foreground mb-6">
+            You're already enrolled in this course. Start learning now!
+          </p>
+          <Button 
+            onClick={() => navigate(`/courses/${slug}`)}
+            className="gap-2 gradient-primary text-primary-foreground"
+          >
+            Continue Learning
+          </Button>
+        </motion.div>
+      </div>
+    );
+  }
+
+  const canCheckout = selectedPaymentMethod !== null && pricing !== null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4 sm:p-6 lg:p-8 font-sans">
-      <Toaster position="top-center" reverseOrder={false} />
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-5xl"
-      >
-        <div className="text-center mb-10">
+    <>
+      {/* Status Overlays */}
+      <CheckoutStatus 
+        step={step}
+        courseName={course.title}
+        onRetry={handleRetry}
+        onGoToCourse={handleGoToCourse}
+      />
+
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          {/* Header */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="space-y-3"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-4 mb-8"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
-              <Lock className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-medium text-primary">Secure Checkout</span>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate(-1)}
+              className="rounded-full"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Checkout</h1>
+              <p className="text-sm text-muted-foreground">Complete your enrollment</p>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400">
-              Complete Your Enrollment
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-base max-w-2xl mx-auto">
-              You're one step away from joining the course. Secure payment processing is handled below.
-            </p>
           </motion.div>
-        </div>
 
-        <div className="grid lg:grid-cols-5 gap-8">
-          {/* Course Info Card */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="lg:col-span-3"
-          >
-            <Card className="border-gray-200 dark:border-gray-700 p-0 shadow-xl hover:shadow-2xl transition-all duration-300 h-full overflow-hidden">
-              <div className="aspect-[16/9] relative overflow-hidden bg-gray-200 dark:bg-gray-800">
-                <img
-                  src={course?.thumbnail || ''}
-                  alt={course.title}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-[1.02]"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = "https://placehold.co/800x450/4f46e5/ffffff?text=Image+Not+Found";
-                  }}
-                />
-              </div>
-              
-              <div className="p-6 space-y-6">
-                <div className="space-y-3">
-                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white leading-snug">{course.title}</h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{course.description}</p>
-                </div>
+          {/* Main Content */}
+          <div className="grid lg:grid-cols-5 gap-8">
+            {/* Left Column - Course & Payment */}
+            <div className="lg:col-span-3 space-y-6">
+              <CourseCard course={course} />
+              <PaymentMethodSelector
+                selected={selectedPaymentMethod}
+                onSelect={setSelectedPaymentMethod}
+                disabled={step === 'processing'}
+              />
+            </div>
 
-                <Separator />
-
-                <div className="bg-indigo-50 dark:bg-gray-800 rounded-xl p-5 space-y-4 shadow-inner">
-                  <div className="flex items-center justify-between">
-                    <span className="text-base font-medium text-gray-600 dark:text-gray-300">Total Price</span>
-                    <span className="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">
-                      ${course.price.toFixed(2)}
-                    </span>
-                  </div>
+            {/* Right Column - Pricing & Actions */}
+            <div className="lg:col-span-2 space-y-6">
+              {pricing && (
+                <>
+                  <PromoCodeInput
+                    appliedPromo={appliedPromo}
+                    onApply={handleApplyPromo}
+                    onRemove={handleRemovePromo}
+                    isLoading={promoLoading}
+                  />
                   
-                  <div className="flex items-start gap-3 pt-3 border-t border-indigo-100 dark:border-gray-700">
-                    <Shield className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
-                    <div className="space-y-1">
-                      <p className="text-sm font-semibold text-gray-800 dark:text-white">Risk-Free Enrollment</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Enjoy our 30-Day Money-Back Guarantee. Your satisfaction is our priority.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
-
-          {/* Payment Section */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-            className="lg:col-span-2"
-          >
-            <Card className="border-gray-200 dark:border-gray-700 shadow-xl h-full flex flex-col p-6">
-              <div className="flex-1 space-y-6">
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    <CreditCard className="w-6 h-6 text-indigo-500" />
-                    Select Payment Method
-                  </h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Choose one of the secure options below to complete your payment.</p>
-                </div>
-
-                <div className="space-y-3">
-                  {/* AliPay Option */}
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className={`w-full relative justify-start transition-all duration-200 h-16 text-left p-4 ${
-                        selectedPayment === "alipay"
-                          ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950 shadow-md ring-2 ring-indigo-500"
-                          : "border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
-                      }`}
-                      onClick={() => setSelectedPayment("alipay")}
-                    >
-                      <div className="flex items-center gap-4 w-full">
-                        <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
-                          <AlipayIcon />
-                        </div>
-                        <span className="font-semibold text-lg text-gray-800 dark:text-white">AliPay</span>
-                      </div>
-                      {selectedPayment === "alipay" && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="absolute right-4 bg-indigo-500 rounded-full p-1.5 shadow-lg"
-                        >
-                          <Check className="w-4 h-4 text-white" />
-                        </motion.div>
-                      )}
-                    </Button>
-                  </motion.div>
-
-                  {/* WeChat Pay Option */}
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className={`w-full relative justify-start transition-all duration-200 h-16 text-left p-4 ${
-                        selectedPayment === "wechat"
-                          ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-950 shadow-md ring-2 ring-indigo-500"
-                          : "border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
-                      }`}
-                      onClick={() => setSelectedPayment("wechat")}
-                    >
-                      <div className="flex items-center gap-4 w-full">
-                        <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
-                          <WechatPayIcon />
-                        </div>
-                        <span className="font-semibold text-lg text-gray-800 dark:text-white">WeChat Pay</span>
-                      </div>
-                      {selectedPayment === "wechat" && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="absolute right-4 bg-indigo-500 rounded-full p-1.5 shadow-lg"
-                        >
-                          <Check className="w-4 h-4 text-white" />
-                        </motion.div>
-                      )}
-                    </Button>
-                  </motion.div>
-                </div>
-
-                <Separator className="dark:bg-gray-700" />
-
-                <div className="space-y-4">
-                  <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 space-y-3">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">Course Price</span>
-                      <span className="font-semibold text-gray-800 dark:text-white">${course.price.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">Processing Fee</span>
-                      <span className="font-semibold text-green-500">$0.00</span>
-                    </div>
-                    <Separator className="my-2 dark:bg-gray-700" />
-                    <div className="flex justify-between items-center pt-1">
-                      <span className="font-extrabold text-xl text-gray-900 dark:text-white">Total Due</span>
-                      <span className="text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">
-                        ${course.price.toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  <PricingSummary
+                    pricing={pricing}
+                    appliedPromo={appliedPromo}
+                    originalPrice={course.price}
+                    isDiscounted={course.isDiscounted}
+                  />
+                </>
+              )}
 
               {/* Checkout Button */}
-              <div className="mt-6 space-y-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
                 <Button
-                  size="lg"
-                  className="w-full h-12 text-base font-semibold shadow-lg bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-all"
                   onClick={handleCheckout}
-                  disabled={isCheckoutDisabled}
+                  disabled={!canCheckout || checkoutLoading}
+                  className="w-full h-14 text-lg font-semibold gap-2 gradient-primary text-primary-foreground shadow-glow hover:opacity-90 transition-opacity"
+                  size="lg"
                 >
-                  {isMutating ? (
+                  {checkoutLoading ? (
                     <>
-                      <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                      Processing Payment...
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Processing...
                     </>
                   ) : (
                     <>
-                      <Check className="w-5 h-5 mr-2" />
-                      Confirm Enrollment
+                      <ShoppingBag className="h-5 w-5" />
+                      Complete Purchase
                     </>
                   )}
                 </Button>
 
-                <p className="text-xs text-center text-gray-500 dark:text-gray-400 leading-relaxed px-2">
-                  By confirming, you agree to our{" "}
-                  <a href="#" className="text-indigo-600 hover:underline font-medium dark:text-indigo-400">
-                    Terms of Service
-                  </a>{" "}
-                  and{" "}
-                  <a href="#" className="text-indigo-600 hover:underline font-medium dark:text-indigo-400">
-                    Refund Policy
-                  </a>
-                </p>
-              </div>
-            </Card>
-          </motion.div>
-        </div>
-      </motion.div>
-    </div>
-  );
-};
+                {!selectedPaymentMethod && (
+                  <p className="text-center text-sm text-muted-foreground mt-2">
+                    Select a payment method to continue
+                  </p>
+                )}
+              </motion.div>
+            </div>
+          </div>
 
-export default CheckoutPage;
+          {/* Trust Badges */}
+          <div className="mt-12">
+            <TrustBadges />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

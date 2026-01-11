@@ -28,7 +28,7 @@ import {
   useDeleteCategoryMutation,
   useGetAllCategorysQuery,
 } from "@/redux/features/category/category.api";
-import type { ICategory } from "@/interface";
+import type { ICategory } from "@/interface/category.types";
 import { handleApiError } from "@/utils/errorHandler";
 
  const CategoryPage: React.FC = () => {

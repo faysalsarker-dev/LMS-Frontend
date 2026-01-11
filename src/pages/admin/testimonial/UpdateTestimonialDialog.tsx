@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { handleApiError } from "@/utils/errorHandler";
-import type { ITestimonial } from "@/interface";
+import type { ITestimonial } from "@/interface/testimonial.types";
 import { Textarea } from "@/components/ui/textarea";
 
 

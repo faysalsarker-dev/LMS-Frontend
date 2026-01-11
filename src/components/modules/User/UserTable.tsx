@@ -27,7 +27,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { IUser, UserFilters } from '@/interface';
+import type { IUser } from '@/interface/user.types';
 import { UserProfileDrawer } from './UserProfileDrawer';
 
 interface UserTableProps {
@@ -40,8 +40,10 @@ interface UserTableProps {
     totalPages:number;
   };
   onUserAction: (action: string, user: IUser) => void;
-  filters: UserFilters;
-  onFiltersChange: (filters: UserFilters) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  filters: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onFiltersChange: (filters:any) => void;
   selectedUsers: string[];
   onSelectedUsersChange: (userIds: string[]) => void;
 }

@@ -77,7 +77,6 @@ const formatCurrency = (amount: number, currency: string) => {
 
 
 
-
 export const EnrolmentTable = ({ enrolments, isLoading, onView }: EnrolmentTableProps) => {
   return (
     <div className="rounded-md border">
@@ -94,20 +93,33 @@ export const EnrolmentTable = ({ enrolments, isLoading, onView }: EnrolmentTable
             <TableHead className="text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
           {isLoading ? (
             <TableSkeleton />
-          ) : enrolments.length === 0 ? (
+          ) : enrolments?.length === 0 ? (
             <EmptyState />
           ) : (
-            enrolments?.map((enrolment, index) => {
-              const status = statusVariants[enrolment.status] || { variant: 'default', label: 'Cancelled' };
-              const paymentStatus = paymentStatusVariants[enrolment.paymentStatus];
-              const methodInfo = paymentMethodIcons[enrolment.paymentMethod];
-              // const MethodIcon = methodInfo.icon;
+            enrolments.map((enrolment, index) => {
+              /** ---------------- SAFE MAPPINGS ---------------- */
+              const status =
+                statusVariants[enrolment.status as EnrolmentStatus] ??
+                { variant: 'outline', label: enrolment.status ?? 'Unknown' };
 
-              const MethodIcon = paymentMethodIcons[enrolment.paymentMethod]?.icon || CreditCard;
+              const paymentStatus =
+                paymentStatusVariants[enrolment.paymentStatus as PaymentStatus] ??
+                { variant: 'outline', label: enrolment.paymentStatus ?? 'Unknown' };
 
+              const methodInfo =
+                paymentMethodIcons[enrolment.paymentMethod as PaymentMethod] ??
+                { icon: CreditCard, label: enrolment.paymentMethod ?? 'Unknown' };
+
+              const MethodIcon = methodInfo.icon;
+
+              /** ---------------- SAFE DATE ---------------- */
+              const enrolledDate = enrolment.enrolledAt
+                ? format(new Date(enrolment.enrolledAt), 'MMM d, yyyy')
+                : '—';
 
               return (
                 <motion.tr
@@ -115,50 +127,62 @@ export const EnrolmentTable = ({ enrolments, isLoading, onView }: EnrolmentTable
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2, delay: index * 0.03 }}
-                  className="border-b transition-colors hover:bg-muted/50"
+                  className="border-b hover:bg-muted/50"
                 >
+                  {/* USER */}
                   <TableCell>
-                    <div>
-                      <p className="font-medium">{enrolment?.user?.name}</p>
-                      <p className="text-sm text-muted-foreground">{enrolment?.user?.email}</p>
-                    </div>
+                    <p className="font-medium">{enrolment.user?.name ?? '—'}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {enrolment.user?.email ?? '—'}
+                    </p>
                   </TableCell>
+
+                  {/* COURSE */}
+                  <TableCell className="font-medium">
+                    {enrolment.course?.title ?? '—'}
+                  </TableCell>
+
+                  {/* STATUS */}
                   <TableCell>
-                    <span className="font-medium">{enrolment?.course?.title}</span>
+                    <Badge variant={status.variant}>{status.label}</Badge>
                   </TableCell>
+
+                  {/* PAYMENT STATUS */}
                   <TableCell>
-                    <Badge variant={status.variant}>{status?.label}</Badge>
+                    <Badge variant={paymentStatus.variant}>
+                      {paymentStatus.label}
+                    </Badge>
                   </TableCell>
-                  <TableCell>
-                    <Badge variant={paymentStatus.variant}>{paymentStatus?.label}</Badge>
-                  </TableCell>
+
+                  {/* AMOUNT */}
                   <TableCell>
                     <span className="font-medium">
-                      {formatCurrency(enrolment?.finalAmount, enrolment?.currency)}
+                      {formatCurrency(enrolment.finalAmount ?? 0, enrolment.currency ?? 'USD')}
                     </span>
-                    {enrolment?.discountAmount > 0 && (
+
+                    {enrolment.discountAmount > 0 && (
                       <p className="text-xs text-muted-foreground line-through">
-                        {formatCurrency(enrolment?.originalPrice, enrolment?.currency)}
+                        {formatCurrency(enrolment.originalPrice ?? 0, enrolment.currency ?? 'USD')}
                       </p>
                     )}
                   </TableCell>
+
+                  {/* METHOD */}
                   <TableCell>
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       <MethodIcon className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm">{methodInfo?.label}</span>
+                      <span className="text-sm">{methodInfo.label}</span>
                     </div>
                   </TableCell>
-                  <TableCell>
-                    <span className="text-sm text-muted-foreground">
-                      {format(new Date(enrolment?.enrolledAt), 'MMM d, yyyy')}
-                    </span>
+
+                  {/* DATE */}
+                  <TableCell className="text-sm text-muted-foreground">
+                    {enrolledDate}
                   </TableCell>
+
+                  {/* ACTION */}
                   <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onView(enrolment)}
-                    >
+                    <Button size="sm" variant="ghost" onClick={() => onView(enrolment)}>
                       <Eye className="h-4 w-4 mr-1" />
                       View
                     </Button>

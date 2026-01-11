@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/select';
 import type { EnrolmentFiltersState, EnrolmentStatus, PaymentStatus, PaymentMethod } from '@/interface/enrolment.types';
 import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
-import type { ICourse } from '@/interface';
+import type { ICourse } from '@/interface/course.types';
 
 
 interface EnrolmentFiltersProps {

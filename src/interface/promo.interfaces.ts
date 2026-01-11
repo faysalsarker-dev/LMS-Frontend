@@ -1,7 +1,7 @@
-import type { IUser } from ".";
+import type { IUser } from "./user.types";
 
 export interface IPromoUsage {
-  user: string | IUser ;
+  user: IUser ;
   usedAt: Date;
 }
 

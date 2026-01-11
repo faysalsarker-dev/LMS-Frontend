@@ -19,7 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import type { ITestimonial } from "@/interface";
+import type { ITestimonial } from "@/interface/testimonial.types";
 import { Star, Trash2, PencilLine, Calendar } from "lucide-react";
 import {
   Tooltip,

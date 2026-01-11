@@ -14,6 +14,7 @@ export interface IQuestion {
   questionText: string;
   audio?: string | null;
   options?: { text: string }[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   correctAnswer?: string | string[] | boolean | Record<string, any>;
   explanation?: string;
   timer?: number | null;
@@ -51,7 +52,7 @@ export interface ILesson {
   audio?: IAudio | null;
   assignment?: IAssignment | null;
 
-  status?: "active" | "inactive";
+  status?: "published" | "draft" | "archived";
   viewCount?: number;
 
   createdAt?: Date;

@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
-import type { IUser } from "@/interface";
+import type { IUser } from "@/interface/user.types";
 
 interface UserProfileDrawerProps {
   user: IUser | null;

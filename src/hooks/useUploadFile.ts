@@ -1,4 +1,5 @@
-import type { UploadProgress } from "@/interface";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useState, useCallback } from "react";
 
 interface UseUploadFileOptions {
@@ -16,7 +17,7 @@ export function useUploadFile(options: UseUploadFileOptions = {}) {
     onError,
   } = options;
 
-  const [uploadState, setUploadState] = useState<UploadProgress>({
+  const [uploadState, setUploadState] = useState<any>({
     progress: 0,
     status: "idle",
   });

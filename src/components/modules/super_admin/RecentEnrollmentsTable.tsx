@@ -17,10 +17,10 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { formatToDhaka, formatRelative, formatToISO } from '@/utils/timezone';
-import type { IEnrollment } from '@/interface';
+import type { IEnrolment } from '@/interface/enrolment.types';
 
 interface RecentEnrollmentsTableProps {
-  enrollments: IEnrollment[];
+  enrollments: IEnrolment[];
 }
 
 const statusColors = {

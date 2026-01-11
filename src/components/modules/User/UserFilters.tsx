@@ -5,12 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { UserFilters } from "@/interface";
 
 interface UserFiltersProps {
-  filters: UserFilters;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  filters: any;
   activeFiltersCount: number;
-  onFilterChange: (key: keyof UserFilters, value: string | number) => void;
+  onFilterChange: (key: string, value: string | number) => void;
   onClearFilters: () => void;
 }
 

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import type { IUser } from "@/interface";
+import type { IUser } from "@/interface/user.types";
 
 interface ProfileHeaderProps {
   userInfo: IUser;
@@ -23,7 +23,7 @@ const itemVariants = {
 };
 
 export const ProfileHeader = ({ userInfo, onEditClick, onLogoutClick }: ProfileHeaderProps) => {
-  const { name, email, createdAt, avatar, role } = userInfo;
+  const { name, email, createdAt, profile, role } = userInfo;
   const initials = name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
 
   return (
@@ -43,7 +43,7 @@ export const ProfileHeader = ({ userInfo, onEditClick, onLogoutClick }: ProfileH
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-opacity" />
               <Avatar className="w-32 h-32 border-4 border-background shadow-2xl relative">
-                <AvatarImage src={avatar} alt={name} className="object-cover" />
+                <AvatarImage src={profile} alt={name} className="object-cover" />
                 <AvatarFallback className="text-3xl font-bold bg-gradient-to-br from-primary to-secondary text-primary-foreground">
                   {initials}
                 </AvatarFallback>

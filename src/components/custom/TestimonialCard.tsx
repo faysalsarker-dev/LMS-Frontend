@@ -4,7 +4,7 @@ import _Rating from "react-rating";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import React from "react";
-import type { ITestimonial } from "@/interface";
+import type { ITestimonial } from "@/interface/testimonial.types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ReactRating = _Rating as unknown as React.FC<any>;
