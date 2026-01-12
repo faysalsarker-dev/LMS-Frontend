@@ -6,7 +6,6 @@ import { Plus, Users as UsersIcon} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { IUser } from "@/interface/user.types";
-import { UserStats } from "@/components/modules/User/UserStats";
 import UserDialog from "@/components/modules/User/UserDialog";
 import Filters from "@/components/modules/User/UserFilters";
 import { useGetAllQuery, useUpdateMutation } from '@/redux/features/auth/auth.api';
@@ -59,7 +58,8 @@ break;
 
 
   const handleFilterChange = useCallback((key: string, value: string | number) => {
-    setFilters(prev => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setFilters((prev:any) => ({
       ...prev,
       [key]: value,
       ...(key !== 'page' && { page: 1 }) 
@@ -126,7 +126,7 @@ break;
       </motion.div>
 
       {/* User Stats */}
-      <UserStats />
+ 
 
 
       {/* Filters Section */}

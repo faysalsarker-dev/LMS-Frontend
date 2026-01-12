@@ -70,7 +70,6 @@ export function RecentEnrollmentsTable({ enrollments }: RecentEnrollmentsTablePr
                 ? { title: 'Unknown Course', price: 0 }
                 : enrollment.course;
 
-            const profileImg = user?.profile ?? undefined;
             const userInitial = user?.name?.charAt(0)?.toUpperCase() ?? 'U';
 
             return (
@@ -84,15 +83,7 @@ export function RecentEnrollmentsTable({ enrollments }: RecentEnrollmentsTablePr
                 {/* Student Info */}
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8">
-                      {profileImg ? (
-                        <AvatarImage src={profileImg} alt={user.name} />
-                      ) : (
-                        <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                          {userInitial}
-                        </AvatarFallback>
-                      )}
-                    </Avatar>
+                 
                     <div>
                       <p className="font-medium text-sm">{user.name}</p>
                       <p className="text-xs text-muted-foreground">

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUserInfoQuery } from '@/redux/features/auth/auth.api';
-import type { ICourse } from '@/interface';
+import type { ICourse } from '@/interface/course.types';
 import { PlayCircle, BookOpen, Trophy } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from 'framer-motion';
@@ -9,7 +9,7 @@ import { useGetMyEnrolledCoursesQuery } from '@/redux/features/course/course.api
 
 const Dashboard = () => {
   const { data } = useUserInfoQuery({});
-  const { data: enrolledCoursesData , isLoading: isEnrolledCoursesLoading} = useGetMyEnrolledCoursesQuery({});
+  const { data: enrolledCoursesData } = useGetMyEnrolledCoursesQuery({});
 
 
 
@@ -57,6 +57,7 @@ const Dashboard = () => {
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-6 lg:py-12">
         {/* Hero Section with Illustration */}
+        
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
