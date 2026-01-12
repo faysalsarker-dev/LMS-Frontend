@@ -40,7 +40,7 @@ import { handleApiError } from "@/utils/errorHandler";
 import { currencies } from "@/utils/currency";
 import { useCreateCourseMutation } from "@/redux/features/course/course.api";
 import { useGetAllCategorysQuery } from "@/redux/features/category/category.api";
-import type { ICategory } from "@/interface";
+import type { ICategory } from "@/interface/category.types";
 import { useNavigate } from "react-router";
 
 type FormValues = {

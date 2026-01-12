@@ -30,11 +30,14 @@ export interface UserRoleStats {
   admin: number;
   instructor: number;
   student: number;
+  super_admin: number;
 }
 
 export interface UserStatusStats {
   active: number;
   inactive: number;
+  verified: number;
+  unverified: number;
   banned: number;
 }
 

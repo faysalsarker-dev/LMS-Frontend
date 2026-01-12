@@ -1,4 +1,4 @@
-import type { UserRole } from "@/interface";
+import type { UserRole } from "@/interface/user.types";
 import { adminRoutes } from "./routes/admin";
 
 

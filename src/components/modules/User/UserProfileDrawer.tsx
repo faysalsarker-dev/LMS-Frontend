@@ -207,7 +207,7 @@ export function UserProfileDrawer({ user, open, onOpenChange }: UserProfileDrawe
                   <div className="space-y-3">
                     {user.courses.map((course) => (
                       <div
-                        key={course._id}
+                        key={course?._id}
                         className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                       >
                         {course.thumbnail && (

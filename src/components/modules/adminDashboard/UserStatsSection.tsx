@@ -1,157 +1,3 @@
-// import { motion } from 'framer-motion';
-// import { Users, UserCheck, UserX, Shield, GraduationCap, User } from 'lucide-react';
-// import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-// import { Skeleton } from '@/components/ui/skeleton';
-// import type { DashboardUserStats } from '@/interface/dashboard.types';
-
-// interface UserStatsSectionProps {
-//   userStats: DashboardUserStats | undefined;
-//   isLoading: boolean;
-// }
-
-// const containerVariants = {
-//   hidden: { opacity: 0 },
-//   visible: {
-//     opacity: 1,
-//     transition: {
-//       staggerChildren: 0.08,
-//     },
-//   },
-// };
-
-// const itemVariants = {
-//   hidden: { opacity: 0, y: 15 },
-//   visible: { opacity: 1, y: 0 },
-// };
-
-// const roleIcons = {
-//   admin: Shield,
-//   instructor: GraduationCap,
-//   student: User,
-// };
-
-// const statusIcons = {
-//   active: UserCheck,
-//   inactive: Users,
-//   banned: UserX,
-// };
-
-// const statusColors = {
-//   active: 'text-success',
-//   inactive: 'text-muted-foreground',
-//   banned: 'text-destructive',
-// };
-
-// export const UserStatsSection = ({ userStats, isLoading }: UserStatsSectionProps) => {
-//   if (isLoading) {
-//     return (
-//       <div className="grid gap-4 md:grid-cols-2">
-//         <Card>
-//           <CardHeader>
-//             <Skeleton className="h-5 w-24" />
-//           </CardHeader>
-//           <CardContent className="space-y-4">
-//             {[1, 2, 3].map((i) => (
-//               <div key={i} className="flex items-center justify-between">
-//                 <Skeleton className="h-4 w-20" />
-//                 <Skeleton className="h-6 w-12" />
-//               </div>
-//             ))}
-//           </CardContent>
-//         </Card>
-//         <Card>
-//           <CardHeader>
-//             <Skeleton className="h-5 w-24" />
-//           </CardHeader>
-//           <CardContent className="space-y-4">
-//             {[1, 2, 3].map((i) => (
-//               <div key={i} className="flex items-center justify-between">
-//                 <Skeleton className="h-4 w-20" />
-//                 <Skeleton className="h-6 w-12" />
-//               </div>
-//             ))}
-//           </CardContent>
-//         </Card>
-//       </div>
-//     );
-//   }
-
-//   if (!userStats) return null;
-
-//   return (
-//     <motion.div
-//       variants={containerVariants}
-//       initial="hidden"
-//       animate="visible"
-//       className="grid gap-4 md:grid-cols-2"
-//     >
-//       {/* User Roles */}
-//       <motion.div variants={itemVariants}>
-//         <Card>
-//           <CardHeader className="pb-3">
-//             <CardTitle className="text-base font-semibold flex items-center gap-2">
-//               <Users className="h-4 w-4 text-primary" />
-//               User Roles
-//             </CardTitle>
-//           </CardHeader>
-//           <CardContent className="space-y-4">
-//             {Object.entries(userStats.roles).map(([role, count]) => {
-//               const Icon = roleIcons[role as keyof typeof roleIcons];
-//               return (
-//                 <motion.div
-//                   key={role}
-//                   whileHover={{ x: 4 }}
-//                   className="flex items-center justify-between py-1"
-//                 >
-//                   <div className="flex items-center gap-3">
-//                     <div className="rounded-lg bg-secondary p-2">
-//                       <Icon className="h-4 w-4 text-muted-foreground" />
-//                     </div>
-//                     <span className="text-sm font-medium capitalize">{role}s</span>
-//                   </div>
-//                   <span className="text-lg font-bold">{count?.toLocaleString()}</span>
-//                 </motion.div>
-//               );
-//             })}
-//           </CardContent>
-//         </Card>
-//       </motion.div>
-
-//       {/* User Status */}
-//       <motion.div variants={itemVariants}>
-//         <Card>
-//           <CardHeader className="pb-3">
-//             <CardTitle className="text-base font-semibold flex items-center gap-2">
-//               <UserCheck className="h-4 w-4 text-success" />
-//               User Status
-//             </CardTitle>
-//           </CardHeader>
-//           <CardContent className="space-y-4">
-//             {Object?.entries(userStats?.status).map(([status, count]) => {
-//               const Icon = statusIcons[status as keyof typeof statusIcons];
-//               const colorClass = statusColors[status as keyof typeof statusColors];
-//               return (
-//                 <motion.div
-//                   key={status}
-//                   whileHover={{ x: 4 }}
-//                   className="flex items-center justify-between py-1"
-//                 >
-//                   <div className="flex items-center gap-3">
-//                     <div className="rounded-lg bg-secondary p-2">
-//                       <Icon className={`h-4 w-4 ${colorClass}`} />
-//                     </div>
-//                     <span className="text-sm font-medium capitalize">{status}</span>
-//                   </div>
-//                   <span className="text-lg font-bold">{count?.toLocaleString()}</span>
-//                 </motion.div>
-//               );
-//             })}
-//           </CardContent>
-//         </Card>
-//       </motion.div>
-//     </motion.div>
-//   );
-// };
 
 
 import { motion } from 'framer-motion';
@@ -209,10 +55,10 @@ const itemVariants = {
 --------------------------------------------- */
 
 const roleIcons: Record<RoleKey, LucideIcon> = {
-  students: User,
-  instructors: GraduationCap,
-  admins: Shield,
-  superAdmins: Shield,
+  student: User,
+  instructor: GraduationCap,
+  admin: Shield,
+  super_admin: Shield,
 };
 
 const statusIcons: Record<StatusKey, LucideIcon> = {
@@ -220,6 +66,7 @@ const statusIcons: Record<StatusKey, LucideIcon> = {
   inactive: Users,
   verified: UserCheck,
   unverified: UserX,
+  banned: UserX,
 };
 
 const statusColors: Record<StatusKey, string> = {
@@ -227,6 +74,7 @@ const statusColors: Record<StatusKey, string> = {
   inactive: 'text-muted-foreground',
   verified: 'text-primary',
   unverified: 'text-destructive',
+  banned: 'text-destructive',
 };
 
 /* --------------------------------------------

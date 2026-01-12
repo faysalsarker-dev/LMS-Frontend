@@ -11,6 +11,7 @@ import {
 import { useAppDispatch } from "@/redux/hooks";
 import { CoursesTab, LogoutDialog, PersonalInfoTab, ProfileHeader, ProfilePageSkeleton, ProfileStats, SettingsTab, WishlistTab } from "@/components/modules/profile";
 import EditProfileDialog from "@/components/modules/profile/EditProfileDialog";
+import { useGetMyEnrolledCoursesQuery } from "@/redux/features/course/course.api";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -47,12 +48,13 @@ const ProfilePage = () => {
   const dispatch = useAppDispatch();
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
   const { data, isLoading, refetch } = useUserInfoQuery({
-    includeCourses: true,
     includeWishlist: true,
   });
 
+  const { data: enrolledCourses } = useGetMyEnrolledCoursesQuery(undefined);
+
   const userInfo = useMemo(() => data?.data, [data]);
-  const courses = useMemo(() => userInfo?.courses || [], [userInfo]);
+  const courses = useMemo(() => enrolledCourses?.data || [], [enrolledCourses]);
   const wishlist = useMemo(() => userInfo?.wishList || [], [userInfo]);
 
 

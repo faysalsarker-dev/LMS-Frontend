@@ -101,6 +101,7 @@ export default function CheckoutPage() {
         toast.error('Invalid promo code');
         return false;
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       // Handle specific error messages
       const errorMessage = error?.data?.message || 
@@ -148,6 +149,7 @@ export default function CheckoutPage() {
         setStep('failed');
         toast.error('Payment failed. Please try again.');
       }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setStep('failed');
       const errorMessage = error?.data?.message || 
@@ -299,6 +301,7 @@ export default function CheckoutPage() {
                     onApply={handleApplyPromo}
                     onRemove={handleRemovePromo}
                     isLoading={promoLoading}
+                    error={null}
                   />
                   
                   <PricingSummary

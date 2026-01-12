@@ -1,7 +1,6 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useParams } from "react-router";
-// import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,7 +22,7 @@ import { useGetCourseBySlugQuery } from "@/redux/features/course/course.api";
 import { useAddToWishlistMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { LoadingSkeleton } from "@/components/modules/Course/LoadingSkeleton";
 import { format } from "date-fns";
-import type { IMilestone } from "@/interface";
+import type { IMilestone } from "@/interface/milestone.types";
 import Reviews from "@/components/modules/Course/Reviews";
 
 

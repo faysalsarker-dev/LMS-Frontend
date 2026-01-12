@@ -2,19 +2,16 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
   Settings, 
-  Bell, 
   Lock, 
   Globe, 
   Moon, 
   Sun,
   ChevronRight,
   Shield,
-  Mail
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
@@ -68,8 +65,6 @@ const SettingItem = ({ icon: Icon, title, description, action }: SettingItemProp
 );
 
 export const SettingsTab = () => {
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [pushNotifications, setPushNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
   return (
@@ -80,38 +75,7 @@ export const SettingsTab = () => {
       animate="visible"
     >
       {/* Notifications */}
-      <Card className="border-0 shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Bell className="w-5 h-5 text-primary" />
-            Notifications
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <SettingItem
-            icon={Mail}
-            title="Email Notifications"
-            description="Receive updates about your courses via email"
-            action={
-              <Switch 
-                checked={emailNotifications} 
-                onCheckedChange={setEmailNotifications}
-              />
-            }
-          />
-          <SettingItem
-            icon={Bell}
-            title="Push Notifications"
-            description="Get notified about new lessons and announcements"
-            action={
-              <Switch 
-                checked={pushNotifications} 
-                onCheckedChange={setPushNotifications}
-              />
-            }
-          />
-        </CardContent>
-      </Card>
+ 
 
       {/* Preferences */}
       <Card className="border-0 shadow-lg">
@@ -175,24 +139,6 @@ export const SettingsTab = () => {
                 <div className="text-left">
                   <h4 className="font-medium text-foreground">Change Password</h4>
                   <p className="text-sm text-muted-foreground">Update your password regularly</p>
-                </div>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </Button>
-          </motion.div>
-          <Separator />
-          <motion.div variants={itemVariants}>
-            <Button 
-              variant="ghost" 
-              className="w-full justify-between p-4 h-auto rounded-xl hover:bg-muted/50"
-            >
-              <div className="flex items-center gap-4">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Shield className="w-5 h-5 text-primary" />
-                </div>
-                <div className="text-left">
-                  <h4 className="font-medium text-foreground">Two-Factor Authentication</h4>
-                  <p className="text-sm text-muted-foreground">Add an extra layer of security</p>
                 </div>
               </div>
               <ChevronRight className="w-5 h-5 text-muted-foreground" />

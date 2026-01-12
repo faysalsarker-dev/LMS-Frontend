@@ -6,6 +6,7 @@ import {
   LogOut,
   LayoutDashboard,
   BookOpenText,
+  TrainTrack,
 } from 'lucide-react';
 
 import {
@@ -155,11 +156,19 @@ const [open,setOpen]=useState(false)
 
           {
   userInfo?.data && (
-    <DropdownMenuItem asChild>
+    <>
+       <DropdownMenuItem asChild>
       <Link to="/my-courses" className="flex items-center gap-2">
         <BookOpenText  className="w-4 h-4" /> My Courses
       </Link>
     </DropdownMenuItem>
+    <DropdownMenuItem asChild>
+      <Link to="/my-dashboard" className="flex items-center gap-2">
+        <TrainTrack  className="w-4 h-4" /> My Dashboard
+      </Link>
+    </DropdownMenuItem>
+    </>
+ 
   )
 }
 

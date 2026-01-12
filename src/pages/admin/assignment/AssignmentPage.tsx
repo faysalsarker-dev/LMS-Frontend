@@ -105,7 +105,7 @@ const AssignmentsPage = () => {
   };
 
   const handleSubmitReview = async (reviewData: {
-    status: 'reviewed' | 'graded';
+    status: string;
     result?: number;
     feedback?: string;
   }) => {
