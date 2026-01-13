@@ -32,6 +32,7 @@ export const courseApi = baseApi.injectEndpoints({
         url: `/course/${slug}`,
         method: "GET",
       }),
+      keepUnusedDataFor: 60 * 60 * 2,
       providesTags: ["COURSE"],
     }),
     getMyEnrolledCourses: builder.query({
@@ -39,14 +40,25 @@ export const courseApi = baseApi.injectEndpoints({
         url: `/course/my-enrolled-courses`,
         method: "GET",
       }),
+      keepUnusedDataFor: 60 * 60 * 1,
       providesTags: ["COURSE","PROGRESS"],
+    }),
+    getMyWishlistCourses: builder.query({
+      query: () => ({
+        url: `/course/my-wishlist-courses`,
+        method: "GET",
+      }),
+     keepUnusedDataFor: 60 * 60 * 1,
+
+      providesTags: ["COURSE","PROGRESS","USER"],
     }),
     getCourseById: builder.query({
       query: (id) => ({
         url: `/course/my-course/${id}`,
         method: "GET",
       }),
-      providesTags: ["COURSE"],
+      keepUnusedDataFor: 60 * 60 * 5,
+      providesTags: ["COURSE","PROGRESS"],
     }),
 
     // Update course
@@ -64,7 +76,7 @@ getCourseCurriculum: builder.query({
         url: `/course/${courseId}/curriculum`,
         method: "GET",
       }),
-      keepUnusedDataFor: 18000,
+      keepUnusedDataFor: 60 * 60 * 5,
       providesTags: ["COURSE", "PROGRESS"],
     }),
 
@@ -74,6 +86,7 @@ getCourseCurriculum: builder.query({
         url: `/course/lessons/${lessonId}`,
         method: "GET",
       }),
+      keepUnusedDataFor: 60 * 60 * 5,
     }),
     // Delete course
     deleteCourse: builder.mutation({
@@ -96,4 +109,5 @@ export const {
   useGetCourseCurriculumQuery,
   useGetLessonContentQuery,
   useGetMyEnrolledCoursesQuery,
+  useGetMyWishlistCoursesQuery,
 } = courseApi;

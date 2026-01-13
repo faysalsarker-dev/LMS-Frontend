@@ -21,6 +21,7 @@ export const categoryApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+      keepUnusedDataFor: 60 * 60 * 5,
       providesTags: ["CATEGORY"],
     }),
 
@@ -31,6 +32,7 @@ export const categoryApi = baseApi.injectEndpoints({
         url: `/category/${slug}`,
         method: "GET",
       }),
+        keepUnusedDataFor: 60 * 60 * 1,
       providesTags: ["CATEGORY"],
     }),
 

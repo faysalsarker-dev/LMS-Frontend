@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BookOpen, Heart, Award, Clock } from "lucide-react";
+import { BookOpen, Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface ProfileStatsProps {
@@ -32,34 +32,17 @@ const stats = [
     icon: Heart,
     color: 'from-rose-500 to-rose-600',
     bgColor: 'bg-rose-500/10',
-  },
-  {
-    key: 'completed',
-    label: 'Completed',
-    icon: Award,
-    color: 'from-emerald-500 to-emerald-600',
-    bgColor: 'bg-emerald-500/10',
-  },
-  {
-    key: 'hours',
-    label: 'Hours Learned',
-    icon: Clock,
-    color: 'from-amber-500 to-amber-600',
-    bgColor: 'bg-amber-500/10',
-  },
+  }
 ];
 
 export const ProfileStats = ({ 
   enrolledCourses, 
   wishlistCount, 
-  completedCourses = 0, 
-  hoursLearned = 0 
 }: ProfileStatsProps) => {
   const values: Record<string, number> = {
     enrolled: enrolledCourses,
     wishlist: wishlistCount,
-    completed: completedCourses,
-    hours: hoursLearned,
+
   };
 
   return (

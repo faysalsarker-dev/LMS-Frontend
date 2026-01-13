@@ -2,14 +2,23 @@ import { motion } from 'framer-motion';
 import { BookOpen, Award, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { CourseProgress } from '@/interface/student.types';
+import type { IUserProgressData } from '@/interface/student.types';
+
+
+
+
+
 
 interface StatsCardsProps {
-  progress: CourseProgress | undefined;
+  progress: IUserProgressData | undefined;
   isLoading: boolean;
 }
 
 const StatsCards = ({ progress, isLoading }: StatsCardsProps) => {
+
+console.log('StatsCards progress prop:', progress);
+
+
   const stats = [
     {
       label: 'Lessons Completed',

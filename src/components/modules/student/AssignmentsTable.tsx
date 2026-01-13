@@ -14,10 +14,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import type { Assignment, CourseProgress } from '@/interface/student.types';
+import type { Assignment,IUserProgressData } from '@/interface/student.types';
 
 interface AssignmentsTableProps {
-  progress: CourseProgress | undefined;
+  progress: IUserProgressData | undefined;
   isLoading: boolean;
 }
 

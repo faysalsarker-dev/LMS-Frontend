@@ -72,7 +72,7 @@ const handleWishlistToggle = async ()=>{
 
 
 
-const isInWishlist = !isUserLoading && user.wishlist?.includes(course?._id);
+const isInWishlist = !isUserLoading && user?.wishlist?.includes(course?._id);
 
 
 

@@ -1,5 +1,3 @@
-
-
 import { motion } from 'framer-motion';
 import {
   Users,
@@ -8,7 +6,7 @@ import {
   Shield,
   GraduationCap,
   User,
- type LucideIcon,
+  type LucideIcon,
 } from 'lucide-react';
 
 import {
@@ -51,17 +49,19 @@ const itemVariants = {
 };
 
 /* --------------------------------------------
- Icon Maps (MATCH BACKEND KEYS)
+ Icon Maps (SAFE)
 --------------------------------------------- */
 
-const roleIcons: Record<RoleKey, LucideIcon> = {
+const DefaultIcon: LucideIcon = User;
+
+const roleIcons: Partial<Record<RoleKey, LucideIcon>> = {
   student: User,
   instructor: GraduationCap,
   admin: Shield,
   super_admin: Shield,
 };
 
-const statusIcons: Record<StatusKey, LucideIcon> = {
+const statusIcons: Partial<Record<StatusKey, LucideIcon>> = {
   active: UserCheck,
   inactive: Users,
   verified: UserCheck,
@@ -69,7 +69,7 @@ const statusIcons: Record<StatusKey, LucideIcon> = {
   banned: UserX,
 };
 
-const statusColors: Record<StatusKey, string> = {
+const statusColors: Partial<Record<StatusKey, string>> = {
   active: 'text-success',
   inactive: 'text-muted-foreground',
   verified: 'text-primary',
@@ -78,20 +78,20 @@ const statusColors: Record<StatusKey, string> = {
 };
 
 /* --------------------------------------------
- Reusable Stat Row
+ Reusable Stat Row (CRASH-PROOF)
 --------------------------------------------- */
 
 interface StatRowProps {
   label: string;
   value: number;
-  icon: LucideIcon;
+  icon?: LucideIcon;
   iconClass?: string;
 }
 
 const StatRow = ({
   label,
   value,
-  icon: Icon,
+  icon: Icon = DefaultIcon,
   iconClass,
 }: StatRowProps) => {
   return (
@@ -102,9 +102,15 @@ const StatRow = ({
     >
       <div className="flex items-center gap-3">
         <div className="rounded-lg bg-secondary p-2">
-          <Icon className={`h-4 w-4 ${iconClass ?? 'text-muted-foreground'}`} />
+          <Icon
+            className={`h-4 w-4 ${
+              iconClass ?? 'text-muted-foreground'
+            }`}
+          />
         </div>
-        <span className="text-sm font-medium capitalize">{label}</span>
+        <span className="text-sm font-medium capitalize">
+          {label}
+        </span>
       </div>
 
       <span className="text-lg font-bold">
@@ -122,7 +128,7 @@ export const UserStatsSection = ({
   userStats,
   isLoading,
 }: UserStatsSectionProps) => {
-  /* ---------- Loading State ---------- */
+  /* ---------- Loading ---------- */
   if (isLoading) {
     return (
       <div className="grid gap-4 md:grid-cols-2">
@@ -169,13 +175,13 @@ export const UserStatsSection = ({
           </CardHeader>
 
           <CardContent className="space-y-3">
-            {(Object.entries(userStats.roles) as [RoleKey, number][]).map(
+            {Object.entries(userStats.roles).map(
               ([role, count]) => (
                 <StatRow
                   key={role}
                   label={role}
                   value={count}
-                  icon={roleIcons[role]}
+                  icon={roleIcons[role as RoleKey]}
                 />
               )
             )}
@@ -194,18 +200,19 @@ export const UserStatsSection = ({
           </CardHeader>
 
           <CardContent className="space-y-3">
-            {(Object.entries(userStats.status) as [
-              StatusKey,
-              number
-            ][]).map(([status, count]) => (
-              <StatRow
-                key={status}
-                label={status}
-                value={count}
-                icon={statusIcons[status]}
-                iconClass={statusColors[status]}
-              />
-            ))}
+            {Object.entries(userStats.status).map(
+              ([status, count]) => (
+                <StatRow
+                  key={status}
+                  label={status}
+                  value={count}
+                  icon={statusIcons[status as StatusKey]}
+                  iconClass={
+                    statusColors[status as StatusKey]
+                  }
+                />
+              )
+            )}
           </CardContent>
         </motion.div>
       </Card>

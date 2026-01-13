@@ -37,6 +37,8 @@ export const testimonialApi = baseApi.injectEndpoints({
         url: `/testimonial/course/${courseId}`,
         method: "GET",
       }),
+            keepUnusedDataFor: 60 * 60 * 5,
+
       providesTags: ["TESTIMONIAL"],
     }),
 
@@ -46,6 +48,8 @@ export const testimonialApi = baseApi.injectEndpoints({
         url: "/testimonial/top",
         method: "GET",
       }),
+            keepUnusedDataFor: 60 * 60 * 5,
+
       providesTags: ["TESTIMONIAL"],
     }),
     getMyTestimonials: build.query({
@@ -53,6 +57,8 @@ export const testimonialApi = baseApi.injectEndpoints({
         url: `/testimonial/my-review/${courseId}`,
         method: "GET",
       }),
+            keepUnusedDataFor: 60 * 60 * 5,
+
       providesTags: ["TESTIMONIAL"],
     }),
 

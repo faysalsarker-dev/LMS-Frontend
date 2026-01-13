@@ -32,6 +32,7 @@ export const milestoneApi = baseApi.injectEndpoints({
         url: `/milestone/${id}`,
         method: "GET",
       }),
+      keepUnusedDataFor: 60 * 60 * 2,
       providesTags: ["MILESTONE"],
     }),
 

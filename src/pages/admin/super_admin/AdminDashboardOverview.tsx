@@ -109,8 +109,8 @@ const AdminDashboardPage = () => {
               index={0}
             />
             <StatCard
-              label="Total Enrollments"
-              value={dashboardData?.summary?.totalEnrolments?.toLocaleString() || '—'}
+              label="Total Transactions"
+              value={dashboardData?.summary?.totalTransactions?.toLocaleString() || '—'}
               icon={GraduationCap}
               variant="accent"
               index={1}

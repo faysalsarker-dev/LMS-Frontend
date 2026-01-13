@@ -61,3 +61,41 @@ export interface GetEnrolledCoursesResponse {
 export interface GetProgressResponse {
   progress: CourseProgress;
 }
+
+
+
+
+export interface IProgressOverview {
+  progressPercentage: number;
+  isCompleted: boolean;
+  completedAt: string | null;
+  totalLessonsCompleted: number;
+}
+
+export interface IQuizStats {
+  totalAttempted: number;
+  passed: number;
+  failed: number;
+}
+
+export type AssignmentStatus = "graded" | "pending" | "submitted";
+
+export interface IAssignmentSubmission {
+  lessonName: string;
+  status: AssignmentStatus;
+  marks: number | null;
+  feedback: string | null;
+  date: string; // ISO string
+}
+
+export interface IAssignmentStats {
+  avgMarks: number;
+  submissions: IAssignmentSubmission[];
+}
+
+export interface IUserProgressData {
+  overview: IProgressOverview;
+  quizStats: IQuizStats;
+  assignmentStats: IAssignmentStats;
+  certificateUrl?: string | null;
+}

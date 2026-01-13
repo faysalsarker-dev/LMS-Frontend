@@ -4,10 +4,10 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { CourseProgress } from '@/interface/student.types';
+import type { IUserProgressData } from '@/interface/student.types';
 
 interface ProgressSectionProps {
-  progress: CourseProgress | undefined;
+  progress: IUserProgressData | undefined;
   isLoading: boolean;
 }
 
@@ -47,7 +47,7 @@ const ProgressSection = ({ progress, isLoading }: ProgressSectionProps) => {
               <Trophy className="h-5 w-5 text-primary" />
               Course Progress
             </CardTitle>
-            {progress.isCompleted && (
+            {progress.overview.isCompleted && (
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}

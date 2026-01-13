@@ -58,7 +58,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
-     invalidatesTags: ["USER"],
+     invalidatesTags: ["USER","COURSE"],
 
     }),
     forgetPassword: builder.mutation({

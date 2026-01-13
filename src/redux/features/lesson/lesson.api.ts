@@ -32,6 +32,7 @@ export const lessonApi = baseApi.injectEndpoints({
         url: `/lesson/${id}`,
         method: "GET",
       }),
+      keepUnusedDataFor: 60 * 60 * 2,
       providesTags: ["LESSON"],
     }),
 
