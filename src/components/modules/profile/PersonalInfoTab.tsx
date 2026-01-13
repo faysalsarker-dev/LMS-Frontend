@@ -59,7 +59,7 @@ const InfoItem = ({ icon: Icon, label, value }: InfoItemProps) => (
 
 export const PersonalInfoTab = ({ userInfo }: PersonalInfoTabProps) => {
   const { name, email, phone, address, createdAt, role } = userInfo;
-
+console.log("UserInfo in PersonalInfoTab:", userInfo);
   return (
     <motion.div 
       className="space-y-6"

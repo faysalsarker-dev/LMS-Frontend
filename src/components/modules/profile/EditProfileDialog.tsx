@@ -288,17 +288,13 @@ const EditProfileDialog = ({
     formData.append("name", data.name);
     formData.append("phone", data.phone);
     
-    // Append address as a stringified object if your backend expects it that way
-    // or append individual keys: formData.append("address[city]", data.address.city)
     formData.append("address", JSON.stringify(data.address));
-
-    // Append file if selected
     if (data.profileImage) {
       formData.append("file", data.profileImage);
     }
 
     try {
-      await updateUser({ id: userInfo._id, data: formData }).unwrap();
+      await updateUser(formData).unwrap();
       toast.success('Profile updated successfully!');
       onSuccess?.();
       onOpenChange(false);

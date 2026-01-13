@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, ShoppingCart, ArrowRight, Trash2 } from "lucide-react";
+import { Heart, ShoppingCart, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,7 @@ const cardVariants = {
   }
 };
 
-export const WishlistTab = ({ wishlist, isLoading, onRemoveFromWishlist }: WishlistTabProps) => {
+export const WishlistTab = ({ wishlist, isLoading }: WishlistTabProps) => {
   if (isLoading) {
     return <CoursesTabSkeleton />;
   }
@@ -100,7 +100,6 @@ export const WishlistTab = ({ wishlist, isLoading, onRemoveFromWishlist }: Wishl
             <motion.div key={course._id} variants={cardVariants}>
               <WishlistCourseCard 
                 course={course} 
-                onRemove={onRemoveFromWishlist}
               />
             </motion.div>
           ))}
@@ -110,82 +109,79 @@ export const WishlistTab = ({ wishlist, isLoading, onRemoveFromWishlist }: Wishl
   );
 };
 
-const WishlistCourseCard = ({ 
-  course, 
-  onRemove 
-}: { 
-  course: ICourse; 
-  onRemove?: (id: string) => void;
+const WishlistCourseCard = ({
+  course,
+}: {
+  course: ICourse;
 }) => {
+  const finalPrice =
+    course.isDiscounted && course.discountPrice
+      ? course.discountPrice
+      : course.price;
+
   return (
-    <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 group relative">
-      {/* Remove button */}
-      {onRemove && (
-        <motion.button
-          className="absolute top-3 right-3 z-10 bg-background/80 backdrop-blur-sm p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive hover:text-destructive-foreground"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => onRemove(course._id)}
-        >
-          <Trash2 className="w-4 h-4" />
-        </motion.button>
-      )}
-      
+    <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 group">
+      {/* Thumbnail */}
       <div className="relative h-40 overflow-hidden">
         <img
-          src={course.thumbnail || '/placeholder.svg'}
+          src={course.thumbnail || "/placeholder.svg"}
           alt={course.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-        {course?.category && (
-          <Badge className="absolute top-3 left-3" variant="secondary">
-            {typeof course.category === 'string' ? course.category : course.category.name}
+
+        {/* Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+
+        {/* Discount badge */}
+        {course.isDiscounted && (
+          <Badge className="absolute top-3 left-3 bg-rose-500 text-white">
+            {Math.round(
+              ((course.price - (course.discountPrice ?? 0)) /
+                course.price) *
+                100
+            )}
+            % OFF
           </Badge>
         )}
       </div>
-      <CardContent className="p-4 space-y-4">
-        <div>
-          <h4 className="font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-            {course.title}
-          </h4>
-        
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <div className="flex items-baseline gap-2">
-            {course.discountPrice ? (
-              <>
-                <span className="text-lg font-bold text-primary">
-                  ${course.discountPrice}
-                </span>
-                <span className="text-sm text-muted-foreground line-through">
-                  ${course.price}
-                </span>
-              </>
-            ) : (
-              <span className="text-lg font-bold text-primary">
-                {course.price === 0 ? 'Free' : `$${course.price}`}
-              </span>
-            )}
+
+      <CardContent className="p-4 space-y-3">
+        {/* Title */}
+        <h4 className="font-semibold line-clamp-2 group-hover:text-primary transition-colors">
+          {course.title}
+        </h4>
+
+        {/* Rating */}
+        {course.averageRating && (
+          <div className="flex items-center gap-1 text-amber-500 text-sm">
+            <span>★</span>
+            <span className="font-medium">
+              {course.averageRating.toFixed(1)}
+            </span>
+            <span className="text-muted-foreground">
+              ({course.totalEnrolled})
+            </span>
           </div>
-          {course.rating && (
-            <div className="flex items-center gap-1 text-amber-500">
-              <span>★</span>
-              <span className="text-sm font-medium">{course.rating}</span>
-            </div>
+        )}
+
+        {/* Price */}
+        <div className="flex items-center gap-2">
+          <span className="text-lg font-bold text-primary">
+            {finalPrice === 0 ? "Free" : `$${finalPrice}`}
+          </span>
+
+          {course.isDiscounted && (
+            <span className="text-sm line-through text-muted-foreground">
+              ${course.price}
+            </span>
           )}
         </div>
 
-        <Button 
-          variant="default" 
-          size="sm" 
-          className="w-full rounded-xl gap-2"
-          asChild
-        >
-          <Link to={`/courses/${course.slug || course._id}`}>
+        {/* CTA */}
+        <Button asChild size="sm" className="w-full rounded-xl gap-2">
+          <Link to={`/courses/${course.slug}`}>
             <ShoppingCart className="w-4 h-4" />
-            Enroll Now
+            View Course
           </Link>
         </Button>
       </CardContent>

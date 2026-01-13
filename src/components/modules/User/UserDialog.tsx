@@ -37,7 +37,7 @@ type FormData = {
 }
 
 export default function UserDialog({ open, onOpenChange, onSuccess, mode = "create", user ,isLoading }: UserDialogProps) {
-const [update]=useUpdateMutation();
+const [update,{isLoading:isUpdating}]=useUpdateMutation();
   const {
     register,
     handleSubmit,
@@ -416,11 +416,11 @@ const [update]=useUpdateMutation();
               </Button>
               <Button 
                 type="submit" 
-                disabled={isLoading}
+                disabled={isLoading || isUpdating}
                 className="w-full sm:w-auto bg-gradient-primary hover:opacity-90 shadow-elegant"
               >
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isLoading
+                {isLoading || isUpdating
                   ? isUpdate
                     ? "Updating..."
                     : "Creating..."

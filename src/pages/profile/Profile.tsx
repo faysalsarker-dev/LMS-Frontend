@@ -47,11 +47,9 @@ const ProfilePage = () => {
 
   const dispatch = useAppDispatch();
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
-  const { data, isLoading, refetch } = useUserInfoQuery({
-    includeWishlist: true,
-  });
+  const { data, isLoading, refetch } = useUserInfoQuery(undefined);
 
-  const { data: enrolledCourses } = useGetMyEnrolledCoursesQuery(undefined);
+  const { data: enrolledCourses,isLoading:isCourseLoading } = useGetMyEnrolledCoursesQuery(undefined);
   const {data:wishlistData,isLoading:isWishlistData}=useGetMyWishlistCoursesQuery(undefined)
 
   const userInfo = useMemo(() => data?.data, [data]);
@@ -149,11 +147,11 @@ const ProfilePage = () => {
             </TabsContent>
 
             <TabsContent value="courses" className="mt-6">
-              <CoursesTab courses={courses} isLoading={false} />
+              <CoursesTab courses={courses} isLoading={isCourseLoading} />
             </TabsContent>
 
             <TabsContent value="wishlist" className="mt-6">
-              <WishlistTab wishlist={wishlist} isLoading={false} />
+              <WishlistTab wishlist={wishlist} isLoading={isWishlistData} />
             </TabsContent>
 
             <TabsContent value="settings" className="mt-6">

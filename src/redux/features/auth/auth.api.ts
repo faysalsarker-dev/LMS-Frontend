@@ -26,8 +26,8 @@ export const authApi = baseApi.injectEndpoints({
       }),
     }),
     update: builder.mutation({
-      query: ({id,payload}) => ({
-        url: `/user/update?${id}`,
+      query: (payload) => ({
+        url: `/user/update`,
         method: "PUT",
         data: payload,
       }),
@@ -80,10 +80,9 @@ export const authApi = baseApi.injectEndpoints({
 
     }),
     userInfo: builder.query({
-      query: ({ includeCourses, includeWishlist}) => ({
+      query: () => ({
         url: `/user/me`,
         method: "GET",
-         params: { courses: includeCourses, wishlist: includeWishlist },
       }),
       providesTags: ["USER"],
       keepUnusedDataFor: 60 * 60 * 3
