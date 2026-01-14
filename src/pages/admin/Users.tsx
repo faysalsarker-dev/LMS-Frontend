@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import type { IUser } from "@/interface/user.types";
 import UserDialog from "@/components/modules/User/UserDialog";
 import Filters from "@/components/modules/User/UserFilters";
-import { useGetAllQuery, useUpdateMutation } from '@/redux/features/auth/auth.api';
+import { useDeleteUserMutation, useGetAllQuery, useUpdateUserMutation } from '@/redux/features/auth/auth.api';
 import { UserTable } from "@/components/modules/User/UserTable";
 
 
@@ -28,7 +28,8 @@ export default function UserManagement() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingUser, setEditingUser] = useState<IUser | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-const [update]=useUpdateMutation();
+const [update]=useUpdateUserMutation();
+const [deleteUser]=useDeleteUserMutation();
 
   const users = data?.data?.data || [] as IUser[];
   const meta = data?.data?.meta;
@@ -50,10 +51,10 @@ break;
               await update({id:user?._id||"",payload:{isActive:true}}).unwrap();
               break;
       case "delete":
-
+deleteUser(user._id||"").unwrap();
       break;
     }
-  }, [update]);
+  }, [update, deleteUser]);
 
 
 

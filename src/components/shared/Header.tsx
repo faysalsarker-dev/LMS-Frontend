@@ -32,20 +32,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { authApi, useLogoutMutation, useUserInfoQuery } from '@/redux/features/auth/auth.api';
-import { useAppDispatch } from '@/redux/hooks';
+
+import {  useUserInfoQuery } from '@/redux/features/auth/auth.api';
+
 import { useState } from 'react';
 import Logo from './Logo';
+import { LogoutDialog } from './LogoutDialog';
 
 export const Header = () => {
   const location = useLocation();
@@ -54,18 +46,13 @@ export const Header = () => {
 
 
 
-      const [logout] = useLogoutMutation();
-const [open,setOpen]=useState(false)
+const [open,setOpen]=useState<boolean>(false)
 
 
 
-  const dispatch = useAppDispatch();
 
 
-   const handleLogout = async () => {
-       await logout(undefined);
-    dispatch(authApi.util.resetApiState());
-   }
+
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -280,21 +267,10 @@ const [open,setOpen]=useState(false)
 
 
 
-
-<AlertDialog open={open} onOpenChange={setOpen}>
-  <AlertDialogContent>
-    <AlertDialogHeader>
-      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-      <AlertDialogDescription>
-        This action cannot be undone. This will Logout  your account
-      </AlertDialogDescription>
-    </AlertDialogHeader>
-    <AlertDialogFooter>
-      <AlertDialogCancel>Cancel</AlertDialogCancel>
-      <AlertDialogAction onClick={handleLogout}>Continue</AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog>
+<LogoutDialog
+  open={open}
+  setOpen={setOpen}
+/>
 
 
 

@@ -1,15 +1,11 @@
 import { 
   Search, 
-  User, 
-  Settings, 
+
   LogOut, 
   Sun, 
   Moon, 
   Monitor,
-  Mail,
-  CreditCard,
-  Shield,
-  HelpCircle
+
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -22,18 +18,17 @@ import {
   DropdownMenuTrigger,
 
 } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useTheme } from '@/hooks/useTheme';
 import { useUserInfoQuery } from '@/redux/features/auth/auth.api';
+import { LogoutDialog } from '../shared/LogoutDialog';
+import { useState } from 'react';
 
 
 export function Header() {
   const { setTheme } = useTheme();
-  const {data } = useUserInfoQuery({
-      includeCourses: false,
-  includeWishlist: false,
-  })
+  const {data } = useUserInfoQuery(undefined)
+const [open,setOpen]=useState<boolean>(false)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-header-border bg-header-glass/95 backdrop-blur-md supports-[backdrop-filter]:bg-header-glass/80">
@@ -108,7 +103,7 @@ export function Header() {
                   <div className="flex items-center gap-3">
                     <Avatar className="h-12 w-12">
                       <AvatarImage 
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" 
+                        src={data?.data?.profile}
                         alt="Admin Avatar" 
                       />
                       <AvatarFallback className="bg-gradient-to-br from-primary to-primary-hover text-white font-semibold">
@@ -133,39 +128,8 @@ export function Header() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               
-              <DropdownMenuItem className="cursor-pointer hover:bg-muted/50 transition-colors">
-                <User className="mr-3 h-4 w-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
-              
-              <DropdownMenuItem className="cursor-pointer hover:bg-muted/50 transition-colors">
-                <Mail className="mr-3 h-4 w-4" />
-                <span>Messages</span>
-                <Badge variant="secondary" className="ml-auto h-5 px-2 text-xs">3</Badge>
-              </DropdownMenuItem>
-              
-              <DropdownMenuItem className="cursor-pointer hover:bg-muted/50 transition-colors">
-                <CreditCard className="mr-3 h-4 w-4" />
-                <span>Billing</span>
-              </DropdownMenuItem>
-              
-              <DropdownMenuSeparator />
-              
-              <DropdownMenuItem className="cursor-pointer hover:bg-muted/50 transition-colors">
-                <Settings className="mr-3 h-4 w-4" />
-                <span>Settings</span>
-              </DropdownMenuItem>
-              
-              <DropdownMenuItem className="cursor-pointer hover:bg-muted/50 transition-colors">
-                <Shield className="mr-3 h-4 w-4" />
-                <span>Security</span>
-              </DropdownMenuItem>
-              
-              <DropdownMenuItem className="cursor-pointer hover:bg-muted/50 transition-colors">
-                <HelpCircle className="mr-3 h-4 w-4" />
-                <span>Help & Support</span>
-              </DropdownMenuItem>
-              
+         
+          
               <DropdownMenuSeparator />
               
               <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive hover:bg-destructive/10 transition-colors">
@@ -178,10 +142,19 @@ export function Header() {
 )
 }
 
-          {/* User Menu */}
+         
    
         </div>
       </div>
+
+
+
+<LogoutDialog
+  open={open}
+  setOpen={setOpen}
+/>
+
+
     </header>
   );
 }

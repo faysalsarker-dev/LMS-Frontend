@@ -155,7 +155,7 @@ const ProfilePage = () => {
             </TabsContent>
 
             <TabsContent value="settings" className="mt-6">
-              <SettingsTab />
+              <SettingsTab user={userInfo} />
             </TabsContent>
           </Tabs>
         </motion.div>

@@ -34,6 +34,24 @@ export const authApi = baseApi.injectEndpoints({
      invalidatesTags: ["USER"],
 
     }),
+    updateUser: builder.mutation({
+      query: ({id,payload}) => ({
+        url: `/user/update-user/${id}`,
+        method: "PUT",
+        data: payload,
+      }),
+     invalidatesTags: ["USER"],
+
+    }),
+    updatePassword: builder.mutation({
+      query: (payload) => ({
+        url: `/user/update-password`,
+        method: "PUT",
+        data: payload,
+      }),
+     invalidatesTags: ["USER"],
+
+    }),
     sendOtp: builder.mutation({
       query: (email) => ({
         url: "/user/send-otp",
@@ -108,6 +126,14 @@ export const authApi = baseApi.injectEndpoints({
   providesTags: ["USER"],
 }),
 
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: `/user/delete/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["USER"],
+    }),
+
 
   }),
 });
@@ -123,5 +149,8 @@ export const {
   useForgetPasswordMutation,
   useResetPasswordMutation,
   useGetAllQuery,
-  useAddToWishlistMutation
+  useAddToWishlistMutation,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+  useUpdatePasswordMutation
 } = authApi;

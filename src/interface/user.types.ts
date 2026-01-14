@@ -17,6 +17,6 @@ export interface IUser {
     city?: string;
   };
   createdAt:Date;
-  updateAt:Date;
+  updatedAt:string;
 }
 

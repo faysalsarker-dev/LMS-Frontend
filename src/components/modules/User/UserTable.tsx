@@ -13,7 +13,6 @@ import {
   ArrowUpDown,
   ChevronLeft,
   ChevronRight,
-  Eye,
   CreditCard,
   BookOpen,
   DollarSign
@@ -28,7 +27,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { IUser } from '@/interface/user.types';
-import { UserProfileDrawer } from './UserProfileDrawer';
 
 interface UserTableProps {
   data: IUser[];
@@ -91,7 +89,6 @@ export function UserTable({
     user: null,
     action: '',
   });
-  const [viewingUser, setViewingUser] = useState<IUser | null>(null);
 
   const handleActionClick = (action: 'block' | 'delete' | 'unblock', user: IUser) => {
     setDialogState({ isOpen: true, user, action });
@@ -391,13 +388,6 @@ export function UserTable({
                               <DropdownMenuContent align="end" className="w-48">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuItem 
-                                  onClick={() => setViewingUser(user)}
-                                  className="cursor-pointer"
-                                >
-                                  <Eye className="mr-2 h-4 w-4" />
-                                  View Profile
-                                </DropdownMenuItem>
-                                <DropdownMenuItem 
                                   onClick={() => onUserAction("edit", user)}
                                   className="cursor-pointer"
                                 >
@@ -496,12 +486,7 @@ export function UserTable({
         </Card>
       </motion.div>
 
-      {/* User Profile Drawer */}
-      <UserProfileDrawer
-        user={viewingUser}
-        open={!!viewingUser}
-        onOpenChange={(open) => !open && setViewingUser(null)}
-      />
+    
 
       {/* Confirmation Dialog */}
       {dialogContent && (

@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, User, Mail, Shield, Lock, Phone } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import type { IUser } from "@/interface/user.types";
-import { useUpdateMutation } from "@/redux/features/auth/auth.api";
+import { useRegisterMutation, useUpdateUserMutation } from "@/redux/features/auth/auth.api";
 
 interface UserDialogProps {
   open: boolean;
@@ -37,7 +37,8 @@ type FormData = {
 }
 
 export default function UserDialog({ open, onOpenChange, onSuccess, mode = "create", user ,isLoading }: UserDialogProps) {
-const [update,{isLoading:isUpdating}]=useUpdateMutation();
+const [update,{isLoading:isUpdating}]=useUpdateUserMutation();
+const [registerUser,{isLoading:isRegistering}]=useRegisterMutation();
   const {
     register,
     handleSubmit,
@@ -91,7 +92,19 @@ const [update,{isLoading:isUpdating}]=useUpdateMutation();
 
   const onSubmit = async (data: FormData) => {
     try {
-      const payload = {
+
+if(mode==="create"){
+registerUser({
+        name: `${data.firstName} ${data.lastName}`.trim(),
+        email: data.email,
+        password: data.password,
+        phone: data.phone,
+        role: data.role,
+        isActive: data.isActive,
+        isVerified: data.isVerified,
+      }).unwrap();
+}else{
+ const payload = {
         name: `${data.firstName} ${data.lastName}`.trim(),
         email: data.email,
         phone: data.phone,
@@ -103,6 +116,12 @@ const [update,{isLoading:isUpdating}]=useUpdateMutation();
 
       await update({id:user?._id||"",payload}).unwrap();
 
+}
+
+
+
+
+     
       onSuccess();
       onOpenChange(false);
     } catch (error) {
@@ -420,7 +439,7 @@ const [update,{isLoading:isUpdating}]=useUpdateMutation();
                 className="w-full sm:w-auto bg-gradient-primary hover:opacity-90 shadow-elegant"
               >
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isLoading || isUpdating
+                {isLoading || isUpdating || isRegistering
                   ? isUpdate
                     ? "Updating..."
                     : "Creating..."

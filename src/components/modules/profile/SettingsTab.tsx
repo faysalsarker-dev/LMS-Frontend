@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { 
   Settings, 
@@ -19,6 +19,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTheme } from "@/hooks/useTheme";
+import { ChangePasswordDialog } from "../User/ChangePasswordDialog";
+import type { IUser } from "@/interface/user.types";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -64,8 +67,27 @@ const SettingItem = ({ icon: Icon, title, description, action }: SettingItemProp
   </motion.div>
 );
 
-export const SettingsTab = () => {
-  const [darkMode, setDarkMode] = useState(false);
+type SettingsTabProps = {
+  user: Partial<IUser>;
+};
+
+export const SettingsTab = ({ user }: SettingsTabProps) => {
+  
+
+ const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+const [open, setOpen] = useState(false);
+
+  // Avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+
+ if (!mounted) return null;
+
+  const isDark = theme === "dark";
+
 
   return (
     <motion.div 
@@ -86,14 +108,16 @@ export const SettingsTab = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          <SettingItem
-            icon={darkMode ? Moon : Sun}
-            title="Dark Mode"
-            description="Toggle dark mode appearance"
+            <SettingItem
+            icon={isDark ? Moon : Sun}
+            title={isDark ? "Dark Mode" : "Light Mode"}
+            description={`Currently using ${isDark ? "dark" : "light"} theme`}
             action={
-              <Switch 
-                checked={darkMode} 
-                onCheckedChange={setDarkMode}
+              <Switch
+                checked={isDark}
+                onCheckedChange={(checked) =>
+                  setTheme(checked ? "dark" : "light")
+                }
               />
             }
           />
@@ -130,13 +154,14 @@ export const SettingsTab = () => {
           <motion.div variants={itemVariants}>
             <Button 
               variant="ghost" 
+onClick={()=>setOpen(true)}
               className="w-full justify-between p-4 h-auto rounded-xl hover:bg-muted/50"
             >
               <div className="flex items-center gap-4">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <Lock className="w-5 h-5 text-primary" />
                 </div>
-                <div className="text-left">
+                <div className="text-left" >
                   <h4 className="font-medium text-foreground">Change Password</h4>
                   <p className="text-sm text-muted-foreground">Update your password regularly</p>
                 </div>
@@ -146,6 +171,15 @@ export const SettingsTab = () => {
           </motion.div>
         </CardContent>
       </Card>
+
+
+<ChangePasswordDialog
+  open={open}
+  setOpen={setOpen}
+  user={user}
+/>
+
+
     </motion.div>
   );
 };

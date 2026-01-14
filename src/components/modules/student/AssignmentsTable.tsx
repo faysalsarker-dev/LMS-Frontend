@@ -59,7 +59,6 @@ const AssignmentRow = ({ assignment, index }: { assignment: Assignment; index: n
 
   const [expanded, setExpanded] = useState(false);
   const Icon = getTypeIcon(assignment.type);
-  const shouldTruncate = assignment?.feedback && assignment?.feedback?.length > 80;
   return (
     <>
       <motion.tr
@@ -74,8 +73,8 @@ const AssignmentRow = ({ assignment, index }: { assignment: Assignment; index: n
               <Icon className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="font-medium">{assignment.title}</p>
-              <p className="text-xs text-muted-foreground capitalize">{assignment.type}</p>
+              <p className="font-medium">{assignment.title || "title"}</p>
+             
             </div>
           </div>
         </TableCell>
