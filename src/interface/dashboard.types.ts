@@ -4,7 +4,7 @@ export interface DashboardUser {
   _id: string;
   name: string;
   email: string;
-  avatar?: string;
+  profile?: string;
 }
 
 export interface DashboardCourse {

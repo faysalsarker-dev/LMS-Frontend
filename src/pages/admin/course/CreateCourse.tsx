@@ -299,8 +299,9 @@ console.log(data.category);
                         <SelectValue placeholder="Select course status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="draft">📝 Draft</SelectItem>
-                        <SelectItem value="archived">📦 Archived</SelectItem>
+                        <SelectItem value="draft">Draft</SelectItem>
+                        <SelectItem value="archived">Archived</SelectItem>
+                        <SelectItem value="published">Published</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

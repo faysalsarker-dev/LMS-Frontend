@@ -54,6 +54,7 @@ export default function LessonFormMain() {
     { skip: !selectedCourseId }
   );
   
+
   // Video state
   const [videoUrl, setVideoUrl] = useState('');
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -202,31 +203,18 @@ const onSubmit = async (data: LessonFormData) => {
     
 
     // Debug log in development
-    if (process.env.NODE_ENV === 'development') {
-      console.log('FormData contents:');
-      for (const [key, value] of formData.entries()) {
-        if (key === 'questions') {
-          console.log(`${key}:`, JSON.parse(value as string));
-        } else {
-          console.log(`${key}:`, value);
-        }
-      }
-    }
+  
 
     await createLesson(formData).unwrap();
     
-    toast.success('Lesson saved successfully!', {
-      description: `"${data.title}" has been saved as ${status}.`,
-    });
+    toast.success('Lesson saved successfully!');
 
     // Reset form and state
     reset();
     setSelectedCourseId('');
     setSelectedMilestoneId('');
-    setQuestions([]); // Clear questions array
-    
+    setQuestions([]);
     // Optional: Navigate to lessons list or show success page
-    // navigate('/lessons');
     
   } catch (error) {
     console.error('Error saving lesson:', error);

@@ -59,30 +59,63 @@ const {
   }, [user, isUserLoading, navigate]);
 
   // Form submission handler
-  const onSubmit = async (data: LoginFormValues) => {
-    try {
-      await login({
-        email: data.email,
-        password: data.password,
-        remember: data.remember,
-      }).unwrap();
+  // const onSubmit = async (data: LoginFormValues) => {
+  //   try {
+  //     await login({
+  //       email: data.email,
+  //       password: data.password,
+  //       remember: data.remember,
+  //     }).unwrap();
 
-      toast.success("Login successful!");
-      navigate(from, { replace: true });
-      window.location.reload();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      console.error("Login error:", err);
+  //     toast.success("Login successful!");
+  //     navigate(from, { replace: true });
+  //     window.location.reload();
+  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   } catch (err: any) {
+  //     console.error("Login error:", err);
 
-      const message = err?.data?.message || err?.error || "Something went wrong";
+  //     const message = err?.data?.message || err?.error || "Something went wrong";
 
-      if (message === "Account is not verified") {
-        return navigate(`/verify-account/${data.email}`);
-      }
+  //     if (message === "Account is not verified") {
+  //       return navigate(`/verify-account/${data.email}`);
+  //     }
 
-      toast.error(message);
+  //     toast.error(message);
+  //   }
+  // };
+
+const onSubmit = async (data: LoginFormValues) => {
+  try {
+    await login({
+      email: data.email,
+      password: data.password,
+      remember: data.remember,
+    }).unwrap();
+
+    toast.success("Login successful!");
+    navigate(from, { replace: true });
+    window.location.reload();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    console.error("Login error:", err);
+
+    const message = err?.data?.message || err?.error || "Something went wrong";
+
+    if (message === "Account is not verified") {
+      navigate(`/verify-account/${data.email}`);
+      return; // Add return here too
     }
-  };
+
+    toast.error(message);
+    // The error is already handled, no need to re-throw
+    // React Hook Form will automatically reset isSubmitting to false
+  }
+};
+
+
+
+
+
 
   const inputVariants = {
     focused: { 
@@ -95,10 +128,7 @@ const {
     },
   };
 
-  // const handleFormSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   handleSubmit(onSubmit)();
-  // };
+ 
 
   return (
     <div className="relative min-h-screen flex bg-background overflow-hidden">

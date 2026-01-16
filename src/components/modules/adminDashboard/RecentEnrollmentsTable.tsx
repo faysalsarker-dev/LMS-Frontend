@@ -33,20 +33,15 @@ const paymentStatusVariants: Record<PaymentStatus, { variant: 'default' | 'secon
   refunded: { variant: 'secondary', label: 'Refunded' },
 };
 
-// const formatCurrency = (amount: number, currency: string = 'USD') => {
-//   return new Intl.NumberFormat('en-US', {
-//     style: 'currency',
-//     currency: currency,
-//   }).format(amount);
-// };
+
 
 const getInitials = (name: string) => {
   return name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
+    ?.split(' ')
+    ?.map((n) => n[0])
+    ?.join('')
+    ?.toUpperCase()
+    ?.slice(0, 2);
 };
 
 const TableSkeleton = () => (
@@ -129,28 +124,28 @@ export const RecentEnrollmentsTable = ({ enrollments, isLoading }: RecentEnrollm
                         <TableCell>
                           <div className="flex items-center gap-3">
                             <Avatar className="h-10 w-10">
-                              <AvatarImage src={enrollment.user.avatar} alt={enrollment.user.name} />
+                              <AvatarImage src={enrollment?.user?.profile} alt={enrollment?.user?.name} />
                               <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                                {getInitials(enrollment.user.name)}
+                                {getInitials(enrollment?.user?.name)}
                               </AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium text-sm">{enrollment.user.name}</p>
-                              <p className="text-xs text-muted-foreground">{enrollment.user.email}</p>
+                              <p className="font-medium text-sm">{enrollment?.user?.name}</p>
+                              <p className="text-xs text-muted-foreground">{enrollment?.user?.email}</p>
                             </div>
                           </div>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-3">
-                            {enrollment.course.thumbnail && (
+                            {enrollment?.course?.thumbnail && (
                               <img
-                                src={enrollment.course.thumbnail}
-                                alt={enrollment.course.title}
+                                src={enrollment?.course?.thumbnail}
+                                alt={enrollment?.course?.title}
                                 className="h-10 w-14 rounded object-cover"
                               />
                             )}
                             <span className="text-sm font-medium line-clamp-1 max-w-[180px]">
-                              {enrollment.course.title}
+                              {enrollment?.course?.title}
                             </span>
                           </div>
                         </TableCell>
@@ -161,9 +156,9 @@ export const RecentEnrollmentsTable = ({ enrollments, isLoading }: RecentEnrollm
                           <Badge variant={paymentStatus.variant}>{paymentStatus.label}</Badge>
                         </TableCell>
                         <TableCell>
-                          {/* <span className="font-semibold text-sm">
-                            {formatCurrency(enrollment.finalAmount, enrollment.currency)}
-                          </span> */}
+                          <span className="font-semibold text-sm">
+                            {enrollment?.finalAmount}
+                          </span>
                         </TableCell>
                         <TableCell>
                           <span className="text-sm text-muted-foreground">
