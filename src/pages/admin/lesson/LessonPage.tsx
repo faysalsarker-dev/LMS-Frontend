@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
 import { Plus, BookOpen, RefreshCw, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 import { useGetAllLessonsQuery } from '@/redux/features/lesson/lesson.api';
 import { useGetAllMilestonesQuery } from '@/redux/features/milestone/milestone.api';
@@ -13,6 +14,7 @@ import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
 
 
 export default function LessonPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const {
@@ -73,10 +75,10 @@ export default function LessonPage() {
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-                Lessons
+                {t("lessonPage.lessons")}
               </h1>
               <p className="text-muted-foreground">
-                Manage all course lessons
+                {t("lessonPage.manageAllLessons")}
               </p>
             </div>
           </div>
@@ -86,7 +88,7 @@ export default function LessonPage() {
             className="rounded-xl h-11 px-6 gap-2 gradient-primary shadow-glow hover:shadow-lg transition-shadow"
           >
             <Plus className="h-5 w-5" />
-            Create Lesson
+            {t("lessonPage.createLesson")}
           </Button>
         </motion.div>
 
@@ -122,7 +124,7 @@ export default function LessonPage() {
             <div className="flex items-center gap-3">
               <AlertCircle className="h-5 w-5 text-destructive" />
               <p className="text-destructive font-medium">
-                Failed to load lessons. Please try again.
+                {t("lessonPage.failedToLoad")}
               </p>
             </div>
             <Button
@@ -132,7 +134,7 @@ export default function LessonPage() {
               className="rounded-xl gap-2 border-destructive/20 text-destructive hover:bg-destructive/10"
             >
               <RefreshCw className="h-4 w-4" />
-              Retry
+              {t("lessonPage.retry")}
             </Button>
           </motion.div>
         )}
@@ -145,7 +147,7 @@ export default function LessonPage() {
             className="mb-4 flex items-center gap-2 text-muted-foreground"
           >
             <RefreshCw className="h-4 w-4 animate-spin" />
-            <span className="text-sm">Updating...</span>
+            <span className="text-sm">{t("lessonPage.updating")}</span>
           </motion.div>
         )}
 

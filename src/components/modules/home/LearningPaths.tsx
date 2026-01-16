@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { useGetAllCategorysQuery } from '@/redux/features/category/category.api';
 import type { ICategory } from '@/interface/category.types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTranslation } from 'react-i18next';
 
 // Skeleton Card
 const LearningPathCardSkeleton = () => {
@@ -22,6 +23,7 @@ const LearningPathCardSkeleton = () => {
 };
 
 const LearningPaths = () => {
+  const { t } = useTranslation();
   const { data, isLoading } = useGetAllCategorysQuery({});
   const categories = data?.data as ICategory[];
 
@@ -36,13 +38,13 @@ const LearningPaths = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Choose Your{' '}
+            {t('home.learningPaths.chooseYour')}{' '}
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Learning Path
+              {t('home.learningPaths.learningPath')}
             </span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Whether you're advancing your career or exploring the world, we have the perfect path for you
+            {t('home.learningPaths.description')}
           </p>
         </motion.div>
 
@@ -77,7 +79,7 @@ const LearningPaths = () => {
                     </h3>
                     <p className="text-muted-foreground mb-4 text-sm">{path.description}</p>
                     <div className="flex items-center justify-between pt-4 border-t">
-                      <span className="text-sm text-muted-foreground">{path.totalCourse} courses</span>
+                      <span className="text-sm text-muted-foreground">{path.totalCourse} {t('home.learningPaths.courses')}</span>
                       <ArrowRight className="w-5 h-5 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                     </div>
                   </Card>

@@ -14,10 +14,12 @@ import { useLoginMutation, useUserInfoQuery } from "@/redux/features/auth/auth.a
 import { toast } from 'react-hot-toast';
 import { loginSchema, type LoginFormValues } from "@/schema/auth";
 import DemoAccess from "@/components/shared/DemoAccess";
+import { useTranslation } from "react-i18next";
 
 
 
 const Login = () => {
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   
@@ -92,16 +94,16 @@ const onSubmit = async (data: LoginFormValues) => {
       remember: data.remember,
     }).unwrap();
 
-    toast.success("Login successful!");
+    toast.success(t("auth.loginSuccessful"));
     navigate(from, { replace: true });
     window.location.reload();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("Login error:", err);
 
-    const message = err?.data?.message || err?.error || "Something went wrong";
+    const message = err?.data?.message || err?.error || t("common.somethingWentWrong");
 
-    if (message === "Account is not verified") {
+    if (message === t("auth.accountNotVerified")) {
       navigate(`/verify-account/${data.email}`);
       return; // Add return here too
     }
@@ -155,7 +157,7 @@ const onSubmit = async (data: LoginFormValues) => {
                   transition={{ delay: 0.5 }}
                 >
                   <Sparkles size={16} className="text-secondary" />
-                  <span>Continue where you left off</span>
+                  <span>{t("auth.continueWhereLeftOff")}</span>
                 </motion.div>
               </CardHeader>
               <CardContent className="pt-4">
@@ -168,7 +170,7 @@ const onSubmit = async (data: LoginFormValues) => {
                     transition={{ delay: 0.4 }}
                   >
                     <Label htmlFor="email" className="text-foreground font-medium">
-                      Email Address
+                      {t("auth.email")}
                     </Label>
                     <motion.div
                       className="relative"
@@ -180,7 +182,7 @@ const onSubmit = async (data: LoginFormValues) => {
                       <Input
                         id="email"
                         type="email"
-                        placeholder="Enter your email"
+                        placeholder={t("auth.emailPlaceholder")}
                         className="pl-12 h-12 rounded-xl border-border/50 bg-muted/30 focus:bg-background transition-all"
                         {...register("email")}
                         onFocus={() => setFocusedField("email")}
@@ -209,7 +211,7 @@ const onSubmit = async (data: LoginFormValues) => {
                     transition={{ delay: 0.5 }}
                   >
                     <Label htmlFor="password" className="text-foreground font-medium">
-                      Password
+                      {t("auth.password")}
                     </Label>
                     <motion.div
                       className="relative"
@@ -221,7 +223,7 @@ const onSubmit = async (data: LoginFormValues) => {
                       <Input
                         id="password"
                         type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password"
+                        placeholder={t("auth.passwordPlaceholder")}
                         className="pl-12 pr-12 h-12 rounded-xl border-border/50 bg-muted/30 focus:bg-background transition-all"
                         {...register("password")}
                         onFocus={() => setFocusedField("password")}
@@ -273,14 +275,14 @@ const onSubmit = async (data: LoginFormValues) => {
                         htmlFor="remember" 
                         className="text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
                       >
-                        Remember me
+                        {t("auth.rememberMe")}
                       </Label>
                     </div>
                     <Link
                       to="/forget-password"
                       className="text-sm text-primary hover:text-primary/80 font-medium transition-colors"
                     >
-                      Forgot password?
+                      {t("auth.forgotPassword.forgotPasswordTitle")}
                     </Link>
                   </motion.div>
 
@@ -302,11 +304,11 @@ const onSubmit = async (data: LoginFormValues) => {
                           animate={{ opacity: 1 }}
                         >
                           <Loader2 className="h-5 w-5 animate-spin" />
-                          Signing In...
+                          {t("auth.signingIn")}
                         </motion.div>
                       ) : (
                         <span className="flex items-center justify-center gap-2">
-                          Sign In
+                          {t("auth.signIn")}
                           <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                         </span>
                       )}
@@ -326,7 +328,7 @@ const onSubmit = async (data: LoginFormValues) => {
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
                     <span className="bg-card px-2 text-muted-foreground">
-                      New to LinguaLearn?
+                      {t("auth.newToLinguaLearn")}
                     </span>
                   </div>
                 </motion.div>
@@ -342,7 +344,7 @@ const onSubmit = async (data: LoginFormValues) => {
                     to="/register"
                     className="inline-flex items-center gap-2 text-foreground hover:text-primary font-medium transition-colors group"
                   >
-                    Create an account
+                    {t("auth.createAccount")}
                     <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </motion.div>
@@ -357,13 +359,13 @@ const onSubmit = async (data: LoginFormValues) => {
               transition={{ delay: 1 }}
             >
               <p>
-                By signing in, you agree to our{" "}
+                {t("auth.bySigningIn")}{" "}
                 <Link to="/terms" className="text-primary hover:underline">
-                  Terms of Service
+                  {t("auth.termsOfService")}
                 </Link>{" "}
-                and{" "}
+                {t("auth.and")}{" "}
                 <Link to="/privacy" className="text-primary hover:underline">
-                  Privacy Policy
+                  {t("auth.privacyPolicy")}
                 </Link>
               </p>
             </motion.div>

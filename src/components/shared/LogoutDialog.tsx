@@ -15,6 +15,7 @@ import { useNavigate } from "react-router";
 import { handleApiError } from "@/utils/errorHandler";
 import { useAppDispatch } from "@/redux/hooks";
 import { LogOut, DoorOpen, Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type LogoutDialogProps = {
   open: boolean;
@@ -56,6 +57,7 @@ const doorVariants = {
 };
 
 export const LogoutDialog = ({ open, setOpen }: LogoutDialogProps) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [logout, { isLoading }] = useLogoutMutation();
   const dispatch = useAppDispatch();
@@ -65,7 +67,7 @@ export const LogoutDialog = ({ open, setOpen }: LogoutDialogProps) => {
       await logout(undefined);
       dispatch(authApi.util.resetApiState());
 
-      toast.success("Logged out successfully");
+      toast.success(t("logout.loggedOutSuccessfully"));
 
       setOpen(false);
       navigate("/", { replace: true });
@@ -151,14 +153,13 @@ export const LogoutDialog = ({ open, setOpen }: LogoutDialogProps) => {
             <AlertDialogHeader className="space-y-3">
               <motion.div variants={itemVariants}>
                 <AlertDialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-                  Leaving so soon?
+                  {t("logout.leavingSoSoon")}
                 </AlertDialogTitle>
               </motion.div>
 
               <motion.div variants={itemVariants}>
                 <AlertDialogDescription className="text-center text-muted-foreground text-base leading-relaxed">
-                  You'll be signed out and redirected to the home page. Your
-                  learning progress is safely saved.
+                  {t("logout.signOutMessage")}
                 </AlertDialogDescription>
               </motion.div>
             </AlertDialogHeader>
@@ -170,7 +171,7 @@ export const LogoutDialog = ({ open, setOpen }: LogoutDialogProps) => {
                     variant="outline"
                     className="w-full h-12 rounded-xl border-2 hover:bg-muted/50 transition-all duration-300 font-medium"
                   >
-                    Stay & Learn
+                    {t("logout.stayAndLearn")}
                   </Button>
                 </AlertDialogCancel>
               </motion.div>
@@ -194,12 +195,12 @@ export const LogoutDialog = ({ open, setOpen }: LogoutDialogProps) => {
                       >
                         <LogOut className="w-4 h-4" />
                       </motion.div>
-                      Signing out...
+                      {t("logout.signingOut")}
                     </>
                   ) : (
                     <>
                       <LogOut className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                      Sign Out
+                      {t("logout.signOut")}
                     </>
                   )}
                 </Button>

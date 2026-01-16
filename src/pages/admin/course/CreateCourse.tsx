@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -66,6 +67,7 @@ type FormValues = {
 
 
 const CreateCourse: React.FC = () => {
+  const { t } = useTranslation();
     const { data, isLoading:categoryLoading} = useGetAllCategorysQuery({});
   const category = data?.data 
   const [createCourse, { isLoading }] = useCreateCourseMutation();
@@ -143,7 +145,7 @@ console.log(data.category);
 
     await createCourse(formData);
 
-    toast.success("✨ Course created successfully!");
+    toast.success(t("course.courseCreatedSuccessfully"));
     navigate('/dashboard/courses')
     reset();
     setThumbnailFile(null);
@@ -162,10 +164,10 @@ console.log(data.category);
         
           <div className="space-y-4">
             <h1 className="text-5xl font-bold bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent">
-              Create New Course
+              {t("course.createNewCourse")}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Build an engaging learning experience that inspires and educates your students
+              {t("course.buildEngagingExperience")}
             </p>
           </div>
         </div>
@@ -173,8 +175,8 @@ console.log(data.category);
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-12">
           {/* Basic Information */}
           <FormSection
-            title="Course Fundamentals"
-            description="The essential details that define your course"
+            title={t("course.courseFundamentals")}
+            description={t("course.essentialDetails")}
             icon={<BookOpen className="h-6 w-6" />}
           >
    <div className="grid gap-6 mb-6">
@@ -186,11 +188,11 @@ console.log(data.category);
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <Target className="h-4 w-4 text-primary" />
-                      <Label className="text-sm font-medium">Course Title</Label>
+                      <Label className="text-sm font-medium">{t("course.courseTitle")}</Label>
                     </div>
                     <Input
                       {...register("title", { required: true })}
-                      placeholder="Enter an engaging course title"
+                      placeholder={t("course.courseTitlePlaceholder")}
                       className="h-12  border-border focus:border-primary/50 transition-colors"
                     />
                   </div>
@@ -206,11 +208,11 @@ console.log(data.category);
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4 text-primary" />
-                    <Label className="text-sm font-medium">Course Description</Label>
+                    <Label className="text-sm font-medium">{t("course.courseDescription")}</Label>
                   </div>
                   <Textarea
                     {...register("description")}
-                    placeholder="Describe what students will learn and achieve"
+                    placeholder={t("course.courseDescriptionPlaceholder")}
                     className=" border-border min-h-[220px] focus:border-primary/50 transition-colors resize-none"
                   />
                 </div>
@@ -220,8 +222,8 @@ console.log(data.category);
 
           {/* Course Configuration */}
           <FormSection
-            title="Course Configuration"
-            description="Define the structure and accessibility of your course"
+            title={t("course.courseConfiguration")}
+            description={t("course.defineStructure")}
             icon={<Settings className="h-6 w-6" />}
           >
             <div className="grid grid-cols-2 gap-8">
@@ -229,11 +231,11 @@ console.log(data.category);
   <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <Timer className="h-4 w-4 text-primary" />
-                    <Label className="text-sm font-medium">Course Duration</Label>
+                    <Label className="text-sm font-medium">{t("course.courseDuration")}</Label>
                   </div>
                   <Input
                     {...register("duration")}
-                    placeholder="Enter course duration (e.g., 4 weeks)"
+                    placeholder={t("course.durationPlaceholder")}
                     className=" border-border  focus:border-primary/50 transition-colors resize-none"
                   />
                 </div>
@@ -242,11 +244,11 @@ console.log(data.category);
   <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <List className="h-4 w-4 text-primary" />
-                    <Label className="text-sm font-medium">Total Lectures</Label>
+                    <Label className="text-sm font-medium">{t("course.totalLectures")}</Label>
                   </div>
                               <Input
                   {...register("totalLectures", { required: true })}
-                  placeholder="Enter total number of lectures"
+                  placeholder={t("course.totalLecturesPlaceholder")}
                   type="number"
                   className="h-12 border-border focus:border-primary/50 transition-colors"
                 />
@@ -269,16 +271,16 @@ console.log(data.category);
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <Users className="h-4 w-4 text-primary" />
-                      <Label className="text-sm font-medium">Difficulty Level</Label>
+                      <Label className="text-sm font-medium">{t("course.difficultyLevel")}</Label>
                     </div>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger className="h-12 w-full  border-border hover:border-primary/50">
-                        <SelectValue placeholder="Select difficulty level" />
+                        <SelectValue placeholder={t("course.selectDifficultyLevel")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Beginner">🌱 Beginner</SelectItem>
-                        <SelectItem value="Intermediate">⚡ Intermediate</SelectItem>
-                        <SelectItem value="Advanced">🚀 Advanced</SelectItem>
+                        <SelectItem value="Beginner">🌱 {t("course.beginner")}</SelectItem>
+                        <SelectItem value="Intermediate">⚡ {t("course.intermediate")}</SelectItem>
+                        <SelectItem value="Advanced">🚀 {t("course.advanced")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -292,16 +294,16 @@ console.log(data.category);
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4 text-primary" />
-                      <Label className="text-sm font-medium">Course Status</Label>
+                      <Label className="text-sm font-medium">{t("course.courseStatus")}</Label>
                     </div>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger className="h-12 w-full border-border hover:border-primary/50">
-                        <SelectValue placeholder="Select course status" />
+                        <SelectValue placeholder={t("course.selectCourseStatus")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="archived">Archived</SelectItem>
-                        <SelectItem value="published">Published</SelectItem>
+                        <SelectItem value="draft">{t("lesson.draft")}</SelectItem>
+                        <SelectItem value="archived">{t("lesson.archived")}</SelectItem>
+                        <SelectItem value="published">{t("lesson.published")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -315,16 +317,16 @@ console.log(data.category);
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <TagIcon className="h-4 w-4 text-primary" />
-                      <Label className="text-sm font-medium">Category</Label>
+                      <Label className="text-sm font-medium">{t("course.category")}</Label>
                     </div>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger className="h-12 w-full border-border hover:border-primary/50">
-                        <SelectValue placeholder="Select category " />
+                        <SelectValue placeholder={t("course.selectCategory")} />
                       </SelectTrigger>
                       <SelectContent>
                         
 {categoryLoading ? (
-                  <p className="text-sm p-2">Loading courses...</p>
+                  <p className="text-sm p-2">{t("course.loadingCategories")}</p>
                 ) : (
                   category?.map((c:ICategory) => (
                     <SelectItem key={c._id} value={c._id!}>
@@ -569,12 +571,12 @@ console.log(data.category);
                 {isLoading ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground mr-3"></div>
-                    Creating Your Course...
-                  </>
+                    {t("course.creatingYourCourse")}
+                  </> 
                 ) : (
                   <>
                     <Save className="h-5 w-5 mr-3" />
-                    Create Course
+                    {t("course.createCourse")}
                   </>
                 )}
               </Button>

@@ -3,8 +3,11 @@ import { useGetTopTestimonialsQuery } from "@/redux/features/testimonial/testimo
 import { Marquee } from "../magicui/marquee";
 import TestimonialCard from "./TestimonialCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "react-i18next";
 
 const Testimonial = () => {
+  const { t } = useTranslation();
+
   const { data, isLoading, isError } = useGetTopTestimonialsQuery({});
   const testimonials = data?.data || [];
 
@@ -18,11 +21,11 @@ const Testimonial = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-            What Our Students Say
+            {t('home.testimonial.title')}
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Join thousands of successful learners who have transformed their
-            careers
+                      {t('home.testimonial.description')}
+
           </p>
         </div>
 

@@ -1,39 +1,42 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, HelpCircle, MessageCircle, BookOpen, CreditCard, Award, Clock, Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-const faqs = [
-  {
-    icon: BookOpen,
-    question: "How do I get started with courses?",
-    answer: "Simply create an account, browse our course catalog, and enroll in any course that interests you. You can start learning immediately after enrollment with lifetime access to all materials."
-  },
-  {
-    icon: CreditCard,
-    question: "What payment methods do you accept?",
-    answer: "We accept all major credit cards, PayPal, Alipay, WeChat Pay, and bank transfers. We also offer flexible payment plans for premium courses."
-  },
-  {
-    icon: Award,
-    question: "Do I get a certificate after completion?",
-    answer: "Yes! Upon completing any course, you'll receive a verified certificate that you can share on LinkedIn, add to your resume, or present to employers."
-  },
-  {
-    icon: Clock,
-    question: "How long do I have access to a course?",
-    answer: "Once enrolled, you have lifetime access to the course materials. Learn at your own pace, revisit content anytime, and access future updates for free."
-  },
-  {
-    icon: MessageCircle,
-    question: "Is there support if I get stuck?",
-    answer: "Absolutely! Each course has a dedicated Q&A section, and our community forums are active 24/7. Premium members also get direct mentor support."
-  },
-  {
-    icon: HelpCircle,
-    question: "Can I get a refund if I'm not satisfied?",
-    answer: "Yes, we offer a 30-day money-back guarantee on all courses. If you're not satisfied for any reason, contact us for a full refund, no questions asked."
-  }
-];
+export default function FAQSection() {
+  const { t } = useTranslation();
+  const faqs = [
+    {
+      icon: BookOpen,
+      question: t("home.faq.howDoIGetStarted"),
+      answer: t("home.faq.getStartedAnswer")
+    },
+    {
+      icon: CreditCard,
+      question: t("home.faq.whatPaymentMethods"),
+      answer: t("home.faq.paymentMethodsAnswer")
+    },
+    {
+      icon: Award,
+      question: t("home.faq.doIGetCertificate"),
+      answer: t("home.faq.certificateAnswer")
+    },
+    {
+      icon: Clock,
+      question: t("home.faq.howLongAccess"),
+      answer: t("home.faq.accessAnswer")
+    },
+    {
+      icon: MessageCircle,
+      question: t("home.faq.isThereSupport"),
+      answer: t("home.faq.supportAnswer")
+    },
+    {
+      icon: HelpCircle,
+      question: t("home.faq.canIGetRefund"),
+      answer: t("home.faq.refundAnswer")
+    }
+  ];
 
 const FAQItem = ({ faq, index, isOpen, onClick }: { 
   faq: typeof faqs[0]; 
@@ -113,7 +116,6 @@ const FAQItem = ({ faq, index, isOpen, onClick }: {
   );
 };
 
-export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
@@ -148,16 +150,16 @@ export default function FAQSection() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6"
           >
             <HelpCircle className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Got Questions?</span>
+            <span className="text-sm font-medium text-primary">{t("home.faq.gotQuestions")}</span>
           </motion.div>
           
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
             <span className="bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
-              Frequently Asked Questions
+              {t("home.faq.frequentlyAskedQuestions")}
             </span>
           </h2>
           <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
-            Everything you need to know about our platform.
+            {t("home.faq.everythingYouNeed")}
           </p>
         </motion.div>
 
@@ -230,14 +232,14 @@ export default function FAQSection() {
                       whileHover={{ scale: 1.05 }}
                     >
                       <div className="text-2xl font-bold text-primary">24/7</div>
-                      <div className="text-xs text-muted-foreground">Support</div>
+                      <div className="text-xs text-muted-foreground">{t("home.faq.support")}</div>
                     </motion.div>
                     <motion.div
                       className="bg-background/50 rounded-xl p-4 border border-border/50"
                       whileHover={{ scale: 1.05 }}
                     >
                       <div className="text-2xl font-bold text-primary">{"<2h"}</div>
-                      <div className="text-xs text-muted-foreground">Response</div>
+                      <div className="text-xs text-muted-foreground">{t("home.faq.response")}</div>
                     </motion.div>
                   </div>
 
@@ -252,7 +254,7 @@ export default function FAQSection() {
                       <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
                         <HelpCircle className="w-3 h-3 text-primary" />
                       </div>
-                      <span className="text-xs text-muted-foreground">How do I start?</span>
+                      <span className="text-xs text-muted-foreground">{t("home.faq.howDoIStart")}</span>
                     </motion.div>
                     <motion.div
                       className="flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 border border-primary/20 ml-6"
@@ -260,7 +262,7 @@ export default function FAQSection() {
                       whileInView={{ x: 0, opacity: 1 }}
                       transition={{ delay: 0.5 }}
                     >
-                      <span className="text-xs text-primary">Just click enroll! 🎉</span>
+                      <span className="text-xs text-primary">{t("home.faq.justClickEnroll")}</span>
                     </motion.div>
                   </div>
                 </div>

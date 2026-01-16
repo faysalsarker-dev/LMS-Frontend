@@ -35,16 +35,35 @@ import {
 
 import {  useUserInfoQuery } from '@/redux/features/auth/auth.api';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Logo from './Logo';
 import { LogoutDialog } from './LogoutDialog';
+import { toggleLanguage, getCurrentLanguage } from '@/utils/language';
 
 export const Header = () => {
   const location = useLocation();
-   const { data: userInfo } = useUserInfoQuery({});
+  const { data: userInfo } = useUserInfoQuery({});
+  const { i18n } = useTranslation();
+  const [currentLang, setCurrentLang] = useState<string>(getCurrentLanguage(i18n));
 
+  // Sync language state with i18n changes
+  useEffect(() => {
+    const handleLanguageChange = (lng: string) => {
+      const baseLang = lng.split("-")[0];
+      setCurrentLang(baseLang === "zh" ? "zh" : "en");
+    };
 
+    i18n.on("languageChanged", handleLanguageChange);
+    
+    return () => {
+      i18n.off("languageChanged", handleLanguageChange);
+    };
+  }, [i18n]);
 
+  const handleLanguageToggle = () => {
+    toggleLanguage(i18n);
+  };
 
 const [open,setOpen]=useState<boolean>(false)
 
@@ -54,11 +73,12 @@ const [open,setOpen]=useState<boolean>(false)
 
 
 
+  const { t } = useTranslation();
   const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Courses', href: '/courses' },
-    { name: 'About', href: '/about' },
-    { name: 'Contact', href: '/contact' },
+    { name: t('navbar.home'), href: '/' },
+    { name: t('navbar.courses'), href: '/courses' },
+    { name: t('navbar.about'), href: '/about' },
+    { name: t('navbar.contact'), href: '/contact' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -111,7 +131,7 @@ const [open,setOpen]=useState<boolean>(false)
                   >
 
 
-                    My Courses </Link>
+                    {t('navbar.myCourses')} </Link>
                   </NavigationMenuLink>
                  
            
@@ -124,6 +144,16 @@ const [open,setOpen]=useState<boolean>(false)
 
           {/* Right Side */}
           <div className="flex items-center space-x-4">
+            {/* Language Toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleLanguageToggle}
+              className="font-medium"
+            >
+              {currentLang.toUpperCase()}
+            </Button>
+            
             {userInfo?.data ? (
               // Avatar Dropdown (like Udemy)
               <DropdownMenu>
@@ -133,11 +163,11 @@ const [open,setOpen]=useState<boolean>(false)
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-48" align="end">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuLabel>{t('navbar.myAccount')}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link to="/profile" className="flex items-center gap-2">
-                      <User className="w-4 h-4" /> Profile
+                      <User className="w-4 h-4" /> {t('navbar.profile')}
                     </Link>
                   </DropdownMenuItem>
 
@@ -146,12 +176,12 @@ const [open,setOpen]=useState<boolean>(false)
     <>
        <DropdownMenuItem asChild>
       <Link to="/my-courses" className="flex items-center gap-2">
-        <BookOpenText  className="w-4 h-4" /> My Courses
+        <BookOpenText  className="w-4 h-4" /> {t('navbar.myCourses')}
       </Link>
     </DropdownMenuItem>
     <DropdownMenuItem asChild>
       <Link to="/my-dashboard" className="flex items-center gap-2">
-        <TrainTrack  className="w-4 h-4" /> My Dashboard
+        <TrainTrack  className="w-4 h-4" /> {t('navbar.myDashboard')}
       </Link>
     </DropdownMenuItem>
     </>
@@ -166,7 +196,7 @@ const [open,setOpen]=useState<boolean>(false)
     userInfo?.data?.role === 'instructor') && (
     <DropdownMenuItem asChild>
       <Link to="/dashboard" className="flex items-center gap-2">
-        <LayoutDashboard className="w-4 h-4" /> Dashboard
+        <LayoutDashboard className="w-4 h-4" /> {t('navbar.dashboard')}
       </Link>
     </DropdownMenuItem>
   )
@@ -174,7 +204,7 @@ const [open,setOpen]=useState<boolean>(false)
 
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={()=>setOpen(!open)} className="text-red-500 cursor-pointer">
-                    <LogOut className="w-4 h-4" /> Log out
+                    <LogOut className="w-4 h-4" /> {t('navbar.logOut')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -182,12 +212,12 @@ const [open,setOpen]=useState<boolean>(false)
               <div className="hidden sm:flex items-center space-x-2">
                 <Link to="/login">
                   <Button variant="ghost" size="sm">
-                    Log In
+                    {t('navbar.logIn')}
                   </Button>
                 </Link>
                 <Link to="/register">
                   <Button size="sm" className="bg-gradient-primary">
-                    Sign Up
+                    {t('navbar.signUp')}
                   </Button>
                 </Link>
               </div>
@@ -227,11 +257,11 @@ const [open,setOpen]=useState<boolean>(false)
                     <div className="flex flex-col gap-2">
                       <Link to="/dashboard/profile">
                         <Button variant="outline" className="w-full">
-                          Profile
+                          {t('navbar.profile')}
                         </Button>
                       </Link>
                       <Button onClick={()=>setOpen(!open)} variant="destructive" className="w-full">
-                        Log Out
+                        {t('navbar.logOut')}
                       </Button>
 
 
@@ -241,12 +271,12 @@ const [open,setOpen]=useState<boolean>(false)
                     <div className="flex flex-col gap-2">
                       <Link to="/login">
                         <Button variant="outline" className="w-full">
-                          Log In
+                          {t('navbar.logIn')}
                         </Button>
                       </Link>
                       <Link to="/register">
                         <Button className="w-full bg-gradient-primary">
-                          Sign Up
+                          {t('navbar.signUp')}
                         </Button>
                       </Link>
                     </div>

@@ -1,44 +1,47 @@
 import { motion } from "framer-motion";
 import { Play, Users, Star, Clock, ArrowRight, Sparkles, GraduationCap } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-const features = [
-  {
-    icon: Play,
-    title: "Expert-Led Courses",
-    description: "Learn from top industry professionals and world-class educators.",
-    color: "from-primary to-primary/60",
-  },
-  {
-    icon: Sparkles,
-    title: "Interactive Learning",
-    description: "Engage through immersive lessons, quizzes, and real-world projects.",
-    color: "from-accent to-accent/60",
-  },
-  {
-    icon: Users,
-    title: "Global Community",
-    description: "Connect with millions of learners from across the world.",
-    color: "from-success to-success/60",
-  },
-  {
-    icon: GraduationCap,
-    title: "Certified Excellence",
-    description: "Earn prestigious certificates recognized by global employers.",
-    color: "from-blue-500 to-secondary/60",
-  },
-  {
-    icon: Clock,
-    title: "Flexible Schedule",
-    description: "Study at your own pace, anytime and anywhere you want.",
-    color: "from-accent to-success",
-  },
-  {
-    icon: ArrowRight,
-    title: "Career Growth",
-    description: "Gain practical skills to advance your career in any industry.",
-    color: "from-success to-primary",
-  },
-];
+export default function WhyChooseSection() {
+  const { t } = useTranslation();
+  const features = [
+    {
+      icon: Play,
+      title: t("home.whyChoose.expertLedCourses"),
+      description: t("home.whyChoose.expertLedDescription"),
+      color: "from-primary to-primary/60",
+    },
+    {
+      icon: Sparkles,
+      title: t("home.whyChoose.interactiveLearning"),
+      description: t("home.whyChoose.interactiveDescription"),
+      color: "from-accent to-accent/60",
+    },
+    {
+      icon: Users,
+      title: t("home.whyChoose.globalCommunity"),
+      description: t("home.whyChoose.globalCommunityDescription"),
+      color: "from-success to-success/60",
+    },
+    {
+      icon: GraduationCap,
+      title: t("home.whyChoose.certifiedExcellence"),
+      description: t("home.whyChoose.certifiedDescription"),
+      color: "from-blue-500 to-secondary/60",
+    },
+    {
+      icon: Clock,
+      title: t("home.whyChoose.flexibleSchedule"),
+      description: t("home.whyChoose.flexibleDescription"),
+      color: "from-accent to-success",
+    },
+    {
+      icon: ArrowRight,
+      title: t("home.whyChoose.careerGrowth"),
+      description: t("home.whyChoose.careerGrowthDescription"),
+      color: "from-success to-primary",
+    },
+  ];
 
 const FloatingShape = ({ delay, size, x, y, color }: { delay: number; size: number; x: number; y: number; color: string }) => (
   <motion.div
@@ -84,7 +87,6 @@ const AnimatedLetter = ({ char, delay, x, y }: { char: string; delay: number; x:
   </motion.span>
 );
 
-export default function WhyChooseSection() {
   const letters = ['A', 'B', 'C', '学', '习', 'E', 'F', '中'];
 
   return (
@@ -146,7 +148,7 @@ export default function WhyChooseSection() {
             className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20"
           >
             <Star className="w-4 h-4 text-accent" />
-            <span className="text-sm font-semibold text-foreground">Why Choose Us</span>
+            <span className="text-sm font-semibold text-foreground">{t('home.whyChoose.whyChooseUs')}</span>
           </motion.div>
 
           <motion.h2
@@ -157,11 +159,11 @@ export default function WhyChooseSection() {
             className="text-3xl md:text-5xl font-bold mb-4"
           >
             <span className="bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text">
-              Transform Your Learning
+              {t('home.whyChoose.transformLearning')}
             </span>
             <br />
             <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Experience
+              {t('home.whyChoose.experience')}
             </span>
           </motion.h2>
 
@@ -172,7 +174,7 @@ export default function WhyChooseSection() {
             transition={{ delay: 0.4 }}
             className="text-muted-foreground text-lg max-w-2xl mx-auto"
           >
-            Empowering learners worldwide with cutting-edge online education designed for your success.
+            {t('home.whyChoose.description')}
           </motion.p>
         </motion.div>
 

@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import CourseCard, { CourseCardSkeleton } from "@/components/modules/Course/CourseCard";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
 import type { ICourse } from "@/interface/course.types";
+import { useTranslation } from "react-i18next";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -27,6 +28,7 @@ const cardVariants: Variants = {
 };
 
 const FeaturedCourses = () => {
+  const { t } = useTranslation();
   const { data, isLoading } = useGetAllCoursesQuery({
     limit: 3,
     page: 1,
@@ -47,14 +49,13 @@ const FeaturedCourses = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Featured{" "}
+            {t("home.featuredCourses.featured")}{" "}
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Courses
+              {t("home.featuredCourses.courses")}
             </span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Start learning with our most loved courses, chosen by thousands of
-            successful students.
+            {t("home.featuredCourses.description")}
           </p>
         </motion.div>
 
@@ -92,7 +93,7 @@ const FeaturedCourses = () => {
               size="lg"
               className="bg-gradient-primary hover:opacity-90 text-white shadow-glow group"
             >
-              Explore All Courses
+              {t("home.featuredCourses.exploreAllCourses")}
               <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
             </Button>
           </Link>

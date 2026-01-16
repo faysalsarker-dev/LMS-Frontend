@@ -1,32 +1,35 @@
 import { motion } from 'framer-motion';
 import { Users, BookOpen, Award, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
-const stats = [
-  {
-    icon: Users,
-    value: '50,000+',
-    label: 'Active Students',
-    gradient: 'from-primary to-primary/60',
-  },
-  {
-    icon: BookOpen,
-    value: '200+',
-    label: 'Expert Courses',
-    gradient: 'from-accent to-accent/60',
-  },
-  {
-    icon: Award,
-    value: '95%',
-    label: 'Success Rate',
-    gradient: 'from-success to-success/60',
-  },
-  {
-    icon: Globe,
-    value: '120+',
-    label: 'Countries',
-    gradient: 'from-primary to-accent',
-  }
-];
+const TrustBar = () => {
+  const { t } = useTranslation();
+  const stats = [
+    {
+      icon: Users,
+      value: '50,000+',
+      label: t('home.trustBar.activeStudents'),
+      gradient: 'from-primary to-primary/60',
+    },
+    {
+      icon: BookOpen,
+      value: '200+',
+      label: t('home.trustBar.expertCourses'),
+      gradient: 'from-accent to-accent/60',
+    },
+    {
+      icon: Award,
+      value: '95%',
+      label: t('home.trustBar.successRate'),
+      gradient: 'from-success to-success/60',
+    },
+    {
+      icon: Globe,
+      value: '120+',
+      label: t('home.trustBar.countries'),
+      gradient: 'from-primary to-accent',
+    }
+  ];
 
 const FloatingParticle = ({ delay, x, y }: { delay: number; x: number; y: number }) => (
   <motion.div
@@ -46,7 +49,6 @@ const FloatingParticle = ({ delay, x, y }: { delay: number; x: number; y: number
   />
 );
 
-const TrustBar = () => {
   return (
     <section className="relative max-w-6xl mx-auto py-20 overflow-hidden bg-gradient-to-b from-background via-muted/20 to-background">
       {/* Animated background lines */}
@@ -97,10 +99,10 @@ const TrustBar = () => {
             viewport={{ once: true }}
             className="inline-block px-4 py-1.5 mb-4 text-xs font-semibold tracking-wider uppercase rounded-full bg-primary/10 text-primary border border-primary/20"
           >
-            Trusted Worldwide
+            {t('home.trustBar.trustedWorldwide')}
           </motion.span>
           <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-            Join Our Global Learning Community
+            {t('home.trustBar.joinGlobalCommunity')}
           </h2>
         </motion.div>
 

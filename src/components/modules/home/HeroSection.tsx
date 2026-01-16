@@ -8,8 +8,10 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Play, ArrowRight, Star, Users, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 const HeroSection = () => {
+  const { t } = useTranslation();
   return (
     <section className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden bg-gradient-hero">
 
@@ -70,7 +72,7 @@ const HeroSection = () => {
                 className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6"
               >
                 <Star className="w-4 h-4 text-primary fill-primary" />
-                <span className="text-sm font-semibold text-primary">Trusted by 50,000+ Students</span>
+                <span className="text-sm font-semibold text-primary">{t('home.hero.trustedBy')}</span>
               </motion.div>
 
               {/* Main heading */}
@@ -80,9 +82,9 @@ const HeroSection = () => {
                 transition={{ delay: 0.3 }}
                 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6"
               >
-                Master <span className="bg-gradient-primary bg-clip-text text-transparent">English</span>
+                {t('home.hero.masterEnglish')} <span className="bg-gradient-primary bg-clip-text text-transparent">English</span>
                 <br />
-                <span className="text-foreground/80">Speak With Confidence</span>
+                <span className="text-foreground/80">{t('home.hero.speakWithConfidence')}</span>
               </motion.h1>
 
               {/* Description */}
@@ -92,7 +94,7 @@ const HeroSection = () => {
                 transition={{ delay: 0.4 }}
                 className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto text-center"
               >
-                Transform your English skills with expert-led courses designed for real-world communication. Join learners from 120+ countries.
+                {t('home.hero.description')}
               </motion.p>
 
               {/* CTA buttons */}
@@ -104,14 +106,14 @@ const HeroSection = () => {
               >
                 <Link to="/register">
                   <Button size="lg" className="bg-gradient-primary hover:opacity-90 text-white shadow-glow group">
-                    Get Started Free
+                    {t('home.hero.getStartedFree')}
                     <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
             <Link to="/courses">
                   <Button size="lg" variant="outline" className="border-2 group">
                     <Play className="mr-2 w-4 h-4 group-hover:scale-110 transition-transform" />
-                    Explore Courses
+                    {t('home.hero.exploreCourses')}
                   </Button>
                    </Link>
                 </motion.div>
@@ -126,15 +128,15 @@ const HeroSection = () => {
               >
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-primary" />
-                  <span className="font-semibold">50,000+ Students</span>
+                  <span className="font-semibold">{t('home.hero.students')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Star className="w-5 h-5 text-warning fill-warning" />
-                  <span className="font-semibold">4.9/5 Rating</span>
+                  <span className="font-semibold">{t('home.hero.rating')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-success" />
-                  <span className="font-semibold">95% Success Rate</span>
+                  <span className="font-semibold">{t('home.hero.successRate')}</span>
                 </div>
               </motion.div>
             </motion.div>

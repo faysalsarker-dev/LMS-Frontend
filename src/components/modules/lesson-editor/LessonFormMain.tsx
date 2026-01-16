@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { Save, Loader2, BookOpen } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,7 +20,7 @@ import { DocModule } from './DocModule';
 import { QuizModule } from './QuizModule';
 import { AssignmentModule } from './AssignmentModule';
 import { AudioModule } from './AudioModule';
-import { LESSON_TYPE_CONFIG, STATUS_CONFIG, type IQuestion, type ITranscript, type LessonStatus, type LessonType } from '@/interface/lesson.type';
+import { STATUS_CONFIG, type IQuestion, type ITranscript, type LessonStatus, type LessonType } from '@/interface/lesson.type';
 import { useCreateLessonMutation } from '@/redux/features/lesson/lesson.api';
 import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
 import { useGetAllMilestonesQuery } from '@/redux/features/milestone/milestone.api';
@@ -40,6 +41,7 @@ const lessonSchema = z.object({
 type LessonFormData = z.infer<typeof lessonSchema>;
 
 export default function LessonFormMain() {
+  const { t } = useTranslation();
   const [createLesson, { isLoading: isSubmitting }] = useCreateLessonMutation();
   const { data: coursesData, isLoading: isCoursesLoading } = useGetAllCoursesQuery({ page: 1, limit: 100 });
   
@@ -207,7 +209,7 @@ const onSubmit = async (data: LessonFormData) => {
 
     await createLesson(formData).unwrap();
     
-    toast.success('Lesson saved successfully!');
+    toast.success(t('lesson.lessonSavedSuccessfully'));
 
     // Reset form and state
     reset();
@@ -220,7 +222,7 @@ const onSubmit = async (data: LessonFormData) => {
     console.error('Error saving lesson:', error);
     
     // More detailed error handling
-    let errorMessage = 'Please try again or contact support.';
+    let errorMessage = t('common.pleaseTryAgain');
     
     if (error instanceof Error) {
       errorMessage = error.message;
@@ -235,7 +237,7 @@ const onSubmit = async (data: LessonFormData) => {
       }
     }
     
-    toast.error('Failed to save lesson', {
+    toast.error(t('lesson.failedToSaveLesson'), {
       description: errorMessage,
     });
   }
@@ -319,21 +321,21 @@ const onSubmit = async (data: LessonFormData) => {
             <BookOpen className="w-5 h-5 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">Create Lesson</h1>
-            <p className="text-sm text-muted-foreground">Add a new lesson to your course</p>
+            <h1 className="text-2xl font-semibold text-foreground">{t('lesson.createLesson')}</h1>
+            <p className="text-sm text-muted-foreground">{t('lesson.addNewLesson')}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <Select value={status} onValueChange={(v) => setStatus(v as LessonStatus)}>
             <SelectTrigger className="w-[140px]">
               <Badge className={STATUS_CONFIG[status].color}>
-                {STATUS_CONFIG[status].label}
+                {t(`lesson.${status}`)}
               </Badge>
             </SelectTrigger>
             <SelectContent>
               {Object.entries(STATUS_CONFIG).map(([key, config]) => (
                 <SelectItem key={key} value={key}>
-                  <Badge className={config.color}>{config.label}</Badge>
+                  <Badge className={config.color}>{t(`lesson.${key}`)}</Badge>
                 </SelectItem>
               ))}
             </SelectContent>
@@ -346,12 +348,12 @@ const onSubmit = async (data: LessonFormData) => {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Saving...
+                {t('common.saving')}
               </>
             ) : (
               <>
                 <Save className="w-4 h-4" />
-                Save Lesson
+                {t('lesson.saveLesson')}
               </>
             )}
           </Button>
@@ -361,17 +363,17 @@ const onSubmit = async (data: LessonFormData) => {
       {/* Basic Info Card */}
       <Card>
         <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
-          <CardDescription>Set the title, course, and description for this lesson</CardDescription>
+          <CardTitle>{t('lesson.basicInformation')}</CardTitle>
+          <CardDescription>{t('lesson.setTitleCourseDescription')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Lesson Title *</Label>
+              <Label htmlFor="title">{t('lesson.lessonTitle')} *</Label>
               <Input
                 id="title"
                 {...register('title')}
-                placeholder="Enter lesson title..."
+                placeholder={t('lesson.lessonTitlePlaceholder')}
                 className={errors.title ? 'border-destructive' : ''}
               />
               {errors.title && (
@@ -379,35 +381,35 @@ const onSubmit = async (data: LessonFormData) => {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="order">Display Order</Label>
+              <Label htmlFor="order">{t('lesson.displayOrder')}</Label>
               <Input
                 id="order"
                 type="number"
                 min={0}
                 {...register('order', { valueAsNumber: true })}
-                placeholder="0"
+                placeholder={t('lesson.orderPlaceholder')}
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="courseId">Course *</Label>
+              <Label htmlFor="courseId">{t('lesson.course')} *</Label>
               <Select value={selectedCourseId} onValueChange={handleCourseChange}>
                 <SelectTrigger className={errors.courseId ? 'border-destructive' : ''}>
-                  <SelectValue placeholder="Select a course" />
+                  <SelectValue placeholder={t('lesson.selectCourse')} />
                 </SelectTrigger>
                 <SelectContent>
 
 
                   {isCoursesLoading  ? (
-                    <div className="p-2 text-sm text-muted-foreground">Loading courses...</div>
+                    <div className="p-2 text-sm text-muted-foreground">{t('lesson.loadingCourses')}</div>
                   ) : courses?.length === 0 ? (
-                    <div className="p-2 text-sm text-muted-foreground">No courses available</div>
+                    <div className="p-2 text-sm text-muted-foreground">{t('lesson.noCoursesAvailable')}</div>
                   ) : (
                     courses?.map((course: ICourse) => (
                       <SelectItem key={course._id} value={course._id}>
-                        {course.title || "Untitled Course"}
+                        {course.title || t('lesson.untitledCourse')}
                       </SelectItem>
                     ))
                   )}
@@ -419,24 +421,24 @@ const onSubmit = async (data: LessonFormData) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="milestoneId">Milestone *</Label>
+              <Label htmlFor="milestoneId">{t('lesson.milestone')} *</Label>
               <Select 
                 value={selectedMilestoneId} 
                 onValueChange={handleMilestoneChange}
                 disabled={!selectedCourseId}
               >
                 <SelectTrigger className={errors.milestoneId ? 'border-destructive' : ''}>
-                  <SelectValue placeholder={selectedCourseId ? "Select a milestone" : "Select course first"} />
+                  <SelectValue placeholder={selectedCourseId ? t('lesson.selectMilestone') : t('lesson.selectCourseFirst')} />
                 </SelectTrigger>
                 <SelectContent>
                   {milestones?.length === 0 ? (
                     <div className="p-2 text-sm text-muted-foreground">
-                      {selectedCourseId ? 'No milestones available for this course' : 'Select a course first'}
+                      {selectedCourseId ? t('lesson.noMilestonesAvailable') : t('lesson.selectCourseFirst')}
                     </div>
                   ) : (
                     milestones?.map((milestone: IMilestone) => (
                       <SelectItem key={milestone._id} value={milestone._id}>
-                        {milestone.title || "Untitled Milestone"}
+                        {milestone.title || t('lesson.untitledMilestone')}
                       </SelectItem>
                     ))
                   )}
@@ -449,11 +451,11 @@ const onSubmit = async (data: LessonFormData) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{t('lesson.description')}</Label>
             <Textarea
               id="description"
               {...register('description')}
-              placeholder="Brief description of what students will learn..."
+              placeholder={t('lesson.descriptionPlaceholder')}
               rows={3}
             />
           </div>
@@ -463,8 +465,8 @@ const onSubmit = async (data: LessonFormData) => {
       {/* Type Selector */}
       <Card>
         <CardHeader>
-          <CardTitle>Content Type</CardTitle>
-          <CardDescription>Choose the type of content for this lesson</CardDescription>
+          <CardTitle>{t('lesson.contentType')}</CardTitle>
+          <CardDescription>{t('lesson.chooseContentType')}</CardDescription>
         </CardHeader>
         <CardContent>
           <TypeSelector value={lessonType} onChange={handleTypeChange} />
@@ -475,9 +477,9 @@ const onSubmit = async (data: LessonFormData) => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            {LESSON_TYPE_CONFIG[lessonType].label} Content
+            {t(`lesson.${lessonType === 'doc' ? 'document' : lessonType}Label`)} {t('lesson.content')}
           </CardTitle>
-          <CardDescription>{LESSON_TYPE_CONFIG[lessonType].description}</CardDescription>
+          <CardDescription>{t(`lesson.${lessonType === 'doc' ? 'document' : lessonType}Description`)}</CardDescription>
         </CardHeader>
         <CardContent>
           {renderTypeModule()}

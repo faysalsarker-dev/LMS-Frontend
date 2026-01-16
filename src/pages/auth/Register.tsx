@@ -13,6 +13,7 @@ import FloatingIcon from "@/components/modules/auth/FloatingIcon";
 import { useRegisterMutation } from "@/redux/features/auth/auth.api";
 import toast from "react-hot-toast";
 import { handleApiError } from "@/utils/errorHandler";
+import { useTranslation } from "react-i18next";
 
 type FormValues = {
   firstName: string;
@@ -26,6 +27,7 @@ type FormValues = {
 
 
 const Register = () => {
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [registerMutation] = useRegisterMutation();
   const navigate = useNavigate()
@@ -50,9 +52,9 @@ const Register = () => {
     if (/[0-9]/.test(passwordValue)) score += 1;
     if (/[^A-Za-z0-9]/.test(passwordValue)) score += 1;
     
-    if (score <= 2) return { score: 1, label: "Weak", color: "bg-destructive" };
-    if (score <= 4) return { score: 2, label: "Medium", color: "bg-accent" };
-    return { score: 3, label: "Strong", color: "bg-success" };
+    if (score <= 2) return { score: 1, label: t("auth.register.weak"), color: "bg-destructive" };
+    if (score <= 4) return { score: 2, label: t("auth.register.medium"), color: "bg-accent" };
+    return { score: 3, label: t("auth.register.strong"), color: "bg-success" };
   }, [passwordValue]);
 
 
@@ -67,7 +69,7 @@ const Register = () => {
 
     const res = await registerMutation(userInfo).unwrap();
 
-    toast.success(res?.message || "Account created successfully!");
+    toast.success(res?.message || t("auth.accountCreated"));
 
     if (res?.success) {
       return navigate(`/verify-account/${data.email}`);
@@ -146,8 +148,8 @@ const Register = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold mb-2">Create Your Account</h2>
-            <p className="text-muted-foreground text-sm">Start your English learning journey today</p>
+            <h2 className="text-2xl font-bold mb-2">{t("auth.register.createYourAccount")}</h2>
+            <p className="text-muted-foreground text-sm">{t("auth.register.startJourney")}</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -159,24 +161,24 @@ const Register = () => {
               transition={{ duration: 0.4, delay: 0.4 }}
             >
               <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-sm font-medium">First Name</Label>
+                <Label htmlFor="firstName" className="text-sm font-medium">{t("auth.register.firstName")}</Label>
                 <div className="relative group">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 transition-colors group-focus-within:text-primary" />
                   <Input
                     id="firstName"
-                    placeholder="John"
+                    placeholder={t("auth.register.firstNamePlaceholder")}
                     {...register("firstName", { required: true })}
                     className="pl-10"
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-sm font-medium">Last Name</Label>
+                <Label htmlFor="lastName" className="text-sm font-medium">{t("auth.register.lastName")}</Label>
                 <div className="relative group">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 transition-colors group-focus-within:text-primary" />
                   <Input
                     id="lastName"
-                    placeholder="Doe"
+                    placeholder={t("auth.register.lastNamePlaceholder")}
                     {...register("lastName", { required: true })}
                     className="pl-10"
                   />
@@ -191,13 +193,13 @@ const Register = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.5 }}
             >
-              <Label htmlFor="email" className="text-sm font-medium">Email Address</Label>
+              <Label htmlFor="email" className="text-sm font-medium">{t("auth.email")}</Label>
               <div className="relative group">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 transition-colors group-focus-within:text-primary" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder="john@example.com"
+                  placeholder={t("auth.register.emailPlaceholder")}
                   {...register("email", { required: true })}
                   className="pl-10"
                 />
@@ -211,13 +213,13 @@ const Register = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.55 }}
             >
-              <Label htmlFor="phone" className="text-sm font-medium">Phone Number</Label>
+              <Label htmlFor="phone" className="text-sm font-medium">{t("auth.register.phoneNumber")}</Label>
               <div className="relative group">
                 <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 transition-colors group-focus-within:text-primary" />
                 <Input
                   id="phone"
                   type="tel"
-                  placeholder="+1 (555) 000-0000"
+                  placeholder={t("auth.register.phonePlaceholder")}
                   {...register("phone", { required: true })}
                   className="pl-10"
                 />
@@ -231,13 +233,13 @@ const Register = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.6 }}
             >
-              <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+              <Label htmlFor="password" className="text-sm font-medium">{t("auth.password")}</Label>
               <div className="relative group">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 transition-colors group-focus-within:text-primary" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Create a secure password"
+                  placeholder={t("auth.register.passwordPlaceholder")}
                   {...register("password", { required: true })}
                   className="pl-10 pr-10"
                 />
@@ -279,10 +281,10 @@ const Register = () => {
                       passwordStrength.score === 2 ? "text-accent" :
                       passwordStrength.score === 3 ? "text-success" : "text-muted-foreground"
                     }`}>
-                      {passwordStrength.label || "Enter password"}
+                      {passwordStrength.label || t("auth.register.enterPassword")}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      {passwordValue.length} characters
+                      {passwordValue.length} {t("auth.register.characters")}
                     </span>
                   </div>
                 </motion.div>
@@ -302,13 +304,13 @@ const Register = () => {
                 {...register("agreeToTerms", { required: true })}
               />
               <Label htmlFor="agreeToTerms" className="text-sm leading-relaxed">
-                I agree to the{" "}
+                {t("auth.register.agreeToTerms")}{" "}
                 <Link to="/terms" className="text-primary hover:underline font-medium">
-                  Terms of Service
+                  {t("auth.termsOfService")}
                 </Link>{" "}
-                and{" "}
+                {t("auth.and")}{" "}
                 <Link to="/privacy" className="text-primary hover:underline font-medium">
-                  Privacy Policy
+                  {t("auth.privacyPolicy")}
                 </Link>
               </Label>
             </motion.div>
@@ -332,12 +334,12 @@ const Register = () => {
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                     />
-                    Creating Account...
-                  </>
+                    {t("auth.register.creatingAccount")}
+                  </> 
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4" />
-                    Create Free Account
+                    {t("auth.register.createFreeAccount")}
                   </>
                 )}
               </Button>
@@ -351,9 +353,9 @@ const Register = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.8 }}
           >
-            <span className="text-muted-foreground text-sm">Already have an account? </span>
+            <span className="text-muted-foreground text-sm">{t("auth.register.alreadyHaveAccount")} </span>
             <Link to="/login" className="text-primary hover:underline font-medium text-sm">
-              Sign in
+              {t("auth.register.signInLink")}
             </Link>
           </motion.div>
 

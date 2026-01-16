@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { ArrowRight, Play, Sparkles, BookOpen, Users, Zap } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const floatingIcons = [
   { Icon: BookOpen, x: "10%", y: "20%", delay: 0 },
@@ -11,6 +12,7 @@ const floatingIcons = [
 ];
 
 export default function SimpleCTA() {
+  const { t } = useTranslation();
   return (
     <section className="relative py-24 md:py-32 overflow-hidden">
       {/* Animated Background */}
@@ -89,7 +91,7 @@ export default function SimpleCTA() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8"
           >
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Start Your Journey</span>
+            <span className="text-sm font-medium text-primary">{t("home.newsletter.startYourJourney")}</span>
           </motion.div>
 
           {/* Heading */}
@@ -101,7 +103,7 @@ export default function SimpleCTA() {
             className="text-4xl md:text-6xl font-bold mb-6"
           >
             <span className="bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
-              Ready to Start Learning?
+              {t("home.newsletter.readyToStartLearning")}
             </span>
           </motion.h2>
 
@@ -113,7 +115,7 @@ export default function SimpleCTA() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto"
           >
-            Join thousands of learners gaining real-world skills — start your journey today.
+            {t("home.newsletter.joinThousands")}
           </motion.p>
 
           {/* Buttons */}
@@ -127,7 +129,7 @@ export default function SimpleCTA() {
             <Link to="/register">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button size="lg" className="group px-8 py-6 text-base bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg shadow-primary/25">
-                  Start Learning Now
+                  {t("home.newsletter.startLearningNow")}
                   <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </motion.div>
@@ -137,7 +139,7 @@ export default function SimpleCTA() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button size="lg" variant="outline" className="group px-8 py-6 text-base border-primary/30 hover:bg-primary/10">
                   <Play className="mr-2 w-5 h-5" />
-                  Browse Courses
+                  {t("home.newsletter.browseCourses")}
                 </Button>
               </motion.div>
             </Link>
@@ -163,7 +165,7 @@ export default function SimpleCTA() {
                   />
                 ))}
               </div>
-              <span className="text-sm">50,000+ students enrolled</span>
+              <span className="text-sm">{t("home.newsletter.studentsEnrolled")}</span>
             </div>
             <div className="h-4 w-px bg-border hidden sm:block" />
             <div className="flex items-center gap-1">
@@ -179,7 +181,7 @@ export default function SimpleCTA() {
                   <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                 </motion.svg>
               ))}
-              <span className="text-sm ml-1">4.9 rating</span>
+              <span className="text-sm ml-1">{t("home.newsletter.rating")}</span>
             </div>
           </motion.div>
         </motion.div>

@@ -10,6 +10,7 @@ import { handleApiError } from "@/utils/errorHandler";
 import { Lock, ArrowLeft, Eye, EyeOff, KeyRound, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type FormValues = {
   email: string;
@@ -17,6 +18,7 @@ type FormValues = {
 };
 
 export default function ResetPassword() {
+  const { t } = useTranslation();
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ export default function ResetPassword() {
 
   const onSubmit = async (data: FormValues) => {
     if (!id || !token) {
-      toast.error("Invalid reset link");
+      toast.error(t("auth.resetPassword.invalidResetLink"));
       return;
     }
     try {
@@ -68,14 +70,14 @@ export default function ResetPassword() {
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-destructive/10 flex items-center justify-center">
             <Lock className="w-8 h-8 text-destructive" />
           </div>
-          <p className="text-lg font-medium text-foreground mb-2">Invalid Reset Link</p>
+          <p className="text-lg font-medium text-foreground mb-2">{t("auth.resetPassword.invalidResetLink")}</p>
           <p className="text-sm text-muted-foreground mb-4">
-            This password reset link is invalid or has expired. Please request a new one.
+            {t("auth.resetPassword.invalidLinkMessage")}
           </p>
           <Link to="/forgot-password">
             <Button variant="outline">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Request New Link
+              {t("auth.resetPassword.requestNewLink")}
             </Button>
           </Link>
         </motion.div>
@@ -105,7 +107,7 @@ export default function ResetPassword() {
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span className="text-sm font-medium">Back to Login</span>
+            <span className="text-sm font-medium">{t("auth.resetPassword.backToLogin")}</span>
           </Link>
         </motion.div>
 
@@ -127,10 +129,10 @@ export default function ResetPassword() {
               </motion.div>
 
               <CardTitle className="text-2xl font-bold text-foreground">
-                Reset Password
+                {t("auth.resetPassword.resetPasswordTitle")}
               </CardTitle>
               <p className="text-muted-foreground text-sm mt-2">
-                Create a new secure password for your account.
+                {t("auth.resetPassword.createNewPassword")}
               </p>
             </CardHeader>
 
@@ -145,12 +147,12 @@ export default function ResetPassword() {
                 >
                   <label className="text-sm font-medium text-foreground flex items-center gap-2">
                     <Lock className="w-4 h-4 text-muted-foreground" />
-                    New Password
+                    {t("auth.resetPassword.newPassword")}
                   </label>
                   <div className="relative">
                     <Input
                       type={showPassword ? "text" : "password"}
-                      placeholder="Enter your new password"
+                      placeholder={t("auth.resetPassword.newPasswordPlaceholder")}
                       {...form.register("newPassword", { required: true })}
                       className="h-12 bg-background border-border/50 focus:border-primary/50 transition-colors pl-4 pr-12"
                     />
@@ -175,13 +177,13 @@ export default function ResetPassword() {
                   transition={{ delay: 0.35 }}
                   className="space-y-2 p-3 bg-muted/50 rounded-lg"
                 >
-                  <p className="text-xs font-medium text-muted-foreground">Password should contain:</p>
+                  <p className="text-xs font-medium text-muted-foreground">{t("auth.resetPassword.passwordRequirements")}</p>
                   <div className="grid grid-cols-2 gap-1">
                     {[
-                      "At least 8 characters",
-                      "One uppercase letter",
-                      "One lowercase letter",
-                      "One number",
+                      t("auth.resetPassword.atLeast8Chars"),
+                      t("auth.resetPassword.oneUppercase"),
+                      t("auth.resetPassword.oneLowercase"),
+                      t("auth.resetPassword.oneNumber"),
                     ].map((req, index) => (
                       <div key={index} className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <CheckCircle2 className="w-3 h-3" />
@@ -209,12 +211,12 @@ export default function ResetPassword() {
                           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                           className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
                         />
-                        Resetting...
+                        {t("auth.resetPassword.resetting")}
                       </>
                     ) : (
                       <>
                         <Lock className="w-4 h-4" />
-                        Reset Password
+                        {t("auth.resetPassword.resetPasswordButton")}
                       </>
                     )}
                   </Button>
@@ -229,12 +231,12 @@ export default function ResetPassword() {
                 className="mt-6 pt-6 border-t border-border/50 text-center"
               >
                 <p className="text-sm text-muted-foreground">
-                  Remember your password?{" "}
+                  {t("auth.resetPassword.rememberPassword")}{" "}
                   <Link
                     to="/login"
                     className="text-primary hover:text-primary/80 font-medium transition-colors"
                   >
-                    Sign in
+                    {t("auth.signIn")}
                   </Link>
                 </p>
               </motion.div>
@@ -249,7 +251,7 @@ export default function ResetPassword() {
           transition={{ delay: 0.6 }}
           className="text-center text-xs text-muted-foreground mt-6"
         >
-          Protected by industry-standard encryption
+          {t("auth.resetPassword.protectedBy")}
         </motion.p>
       </div>
     </div>

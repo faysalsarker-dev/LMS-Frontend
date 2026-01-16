@@ -1,14 +1,17 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router";
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, MapPin, Phone } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import Logo from "./Logo";
 
-const publicRoutes = [
-  { path: "/", name: "Home" },
-  { path: "/courses", name: "Courses" },
-  { path: "/about", name: "About" },
-  { path: "/contact", name: "Contact" },
-];
+const Footer = () => {
+  const { t } = useTranslation();
+  const publicRoutes = [
+    { path: "/", name: t("navbar.home") },
+    { path: "/courses", name: t("navbar.courses") },
+    { path: "/about", name: t("navbar.about") },
+    { path: "/contact", name: t("navbar.contact") },
+  ];
 
 // Social media links
 const socialLinks = [
@@ -32,7 +35,6 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 }
 };
 
-const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -49,7 +51,7 @@ const Footer = () => {
           <motion.div variants={itemVariants} className="space-y-4">
         <div className="flex justify-start">  <Logo /></div>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Empowering learners worldwide with cutting-edge online education designed for success.
+              {t("footer.description")}
             </p>
             {/* Social Media Links */}
             <div className="flex gap-3 pt-2">
@@ -72,7 +74,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <motion.div variants={itemVariants} className="space-y-4">
-            <h4 className="text-foreground font-semibold">Quick Links</h4>
+            <h4 className="text-foreground font-semibold">{t("footer.quickLinks")}</h4>
             <ul className="space-y-2">
               {publicRoutes.map((route, index) => (
                 <li key={index}>
@@ -90,9 +92,9 @@ const Footer = () => {
 
           {/* Resources */}
           <motion.div variants={itemVariants} className="space-y-4">
-            <h4 className="text-foreground font-semibold">Resources</h4>
+            <h4 className="text-foreground font-semibold">{t("footer.resources")}</h4>
             <ul className="space-y-2">
-              {["Help Center", "Blog", "Tutorials", "FAQs"].map((item, index) => (
+              {[t("footer.helpCenter"), t("footer.blog"), t("footer.tutorials"), t("footer.faqs")].map((item, index) => (
                 <li key={index}>
                   <a
                     href="#"
@@ -108,7 +110,7 @@ const Footer = () => {
 
           {/* Contact Info */}
           <motion.div variants={itemVariants} className="space-y-4">
-            <h4 className="text-foreground font-semibold">Contact Us</h4>
+            <h4 className="text-foreground font-semibold">{t("footer.contactUs")}</h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-3 text-sm text-muted-foreground">
                 <MapPin className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
@@ -140,10 +142,10 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
             <p>
-              © {currentYear} HLC. All rights reserved.
+              © {currentYear} HLC. {t("footer.allRightsReserved")}
             </p>
             <p className="flex items-center gap-1">
-              Developed by{" "}
+              {t("footer.developedBy")}{" "}
               <span className="font-medium text-foreground">Faysal Sarker</span>
             </p>
           </div>

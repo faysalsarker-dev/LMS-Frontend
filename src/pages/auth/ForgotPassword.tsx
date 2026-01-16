@@ -8,12 +8,14 @@ import { handleApiError } from "@/utils/errorHandler";
 import { useForgetPasswordMutation } from "@/redux/features/auth/auth.api";
 import { Mail, ArrowLeft, KeyRound, Send } from "lucide-react";
 import { Link } from "react-router";
+import { useTranslation } from "react-i18next";
 
 type FormValues = {
   email: string;
 };
 
 export default function ForgotPassword() {
+  const { t } = useTranslation();
   const [forgotPassword, { isLoading }] = useForgetPasswordMutation();
 
   const form = useForm<FormValues>({
@@ -53,7 +55,7 @@ export default function ForgotPassword() {
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span className="text-sm font-medium">Back to Login</span>
+            <span className="text-sm font-medium">{t("auth.forgotPassword.backToLogin")}</span>
           </Link>
         </motion.div>
 
@@ -75,10 +77,10 @@ export default function ForgotPassword() {
               </motion.div>
 
               <CardTitle className="text-2xl font-bold text-foreground">
-                Forgot Password?
+                {t("auth.forgotPassword.forgotPasswordTitle")}
               </CardTitle>
               <p className="text-muted-foreground text-sm mt-2">
-                No worries! Enter your email and we'll send you a reset link.
+                {t("auth.forgotPassword.noWorries")}
               </p>
             </CardHeader>
 
@@ -93,12 +95,12 @@ export default function ForgotPassword() {
                 >
                   <label className="text-sm font-medium text-foreground flex items-center gap-2">
                     <Mail className="w-4 h-4 text-muted-foreground" />
-                    Email Address
+                    {t("auth.email")}
                   </label>
                   <div className="relative">
                     <Input
                       type="email"
-                      placeholder="Enter your email address"
+                      placeholder={t("auth.forgotPassword.emailPlaceholder")}
                       {...form.register("email", { required: true })}
                       className="h-12 bg-background border-border/50 focus:border-primary/50 transition-colors pl-4"
                     />
@@ -123,12 +125,12 @@ export default function ForgotPassword() {
                           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                           className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
                         />
-                        Sending...
+                        {t("auth.forgotPassword.sending")}
                       </>
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
-                        Send Reset Link
+                        {t("auth.forgotPassword.sendResetLink")}
                       </>
                     )}
                   </Button>
@@ -143,12 +145,12 @@ export default function ForgotPassword() {
                 className="mt-6 pt-6 border-t border-border/50 text-center"
               >
                 <p className="text-sm text-muted-foreground">
-                  Remember your password?{" "}
+                  {t("auth.forgotPassword.rememberPassword")}{" "}
                   <Link
                     to="/login"
                     className="text-primary hover:text-primary/80 font-medium transition-colors"
                   >
-                    Sign in
+                    {t("auth.signIn")}
                   </Link>
                 </p>
               </motion.div>
@@ -163,7 +165,7 @@ export default function ForgotPassword() {
           transition={{ delay: 0.6 }}
           className="text-center text-xs text-muted-foreground mt-6"
         >
-          Protected by industry-standard encryption
+          {t("auth.forgotPassword.protectedBy")}
         </motion.p>
       </div>
     </div>

@@ -133,8 +133,7 @@ const [open, setOpen] = useState(false);
                 <SelectContent>
                   <SelectItem value="en">English</SelectItem>
                   <SelectItem value="es">Spanish</SelectItem>
-                  <SelectItem value="fr">French</SelectItem>
-                  <SelectItem value="de">German</SelectItem>
+
                 </SelectContent>
               </Select>
             }
