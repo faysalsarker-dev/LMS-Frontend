@@ -148,6 +148,13 @@
 "description":"加入數千名成功學習者的行列，他們已經成功改變了自己的職業生涯"
     }
   },
+  "profile":{
+"studentsWolcome":"歡迎回來",
+"studentsWolcomeDiscription":"準備好繼續你的學習之旅了嗎？讓我們從你上次中斷的地方繼續。",
+"MyCourses": "我的課程",
+"MyPractices":"我的實踐"
+
+  },
   "auth": {
     "email": "电子邮件地址",
     "emailPlaceholder": "输入您的电子邮件",

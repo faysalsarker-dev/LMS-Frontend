@@ -63,6 +63,7 @@ const Courses = () => {
     level: "all",
     page: 1,
     limit: 9,
+    status:'published'
   });
 
   useEffect(() => {
@@ -111,6 +112,8 @@ const Courses = () => {
       level: "all",
       page: 1,
       limit: 9,
+    status:'published'
+
     });
   };
 

@@ -15,7 +15,7 @@ export const router = createBrowserRouter([
   {
       Component: Layout,
             path: '/',
-            // error:NotFoundPage,
+            // errorElement: <NotFoundPage />,
             children:[
          ...generateRoutes(publicRoutes),
          ...generateRoutes(invisibleRoutes),

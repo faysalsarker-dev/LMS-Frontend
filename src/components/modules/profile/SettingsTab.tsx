@@ -12,16 +12,12 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { useTheme } from "@/hooks/useTheme";
 import { ChangePasswordDialog } from "../User/ChangePasswordDialog";
 import type { IUser } from "@/interface/user.types";
+import { useTranslation } from "react-i18next";
+import { getCurrentLanguage, toggleLanguage } from "@/utils/language";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -72,13 +68,43 @@ type SettingsTabProps = {
 };
 
 export const SettingsTab = ({ user }: SettingsTabProps) => {
-  
 
  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 const [open, setOpen] = useState(false);
 
-  // Avoid hydration mismatch
+
+
+ const { i18n } = useTranslation();
+  const [currentLang, setCurrentLang] = useState<string>(getCurrentLanguage(i18n));
+
+  // Sync language state with i18n changes
+  useEffect(() => {
+    const handleLanguageChange = (lng: string) => {
+      const baseLang = lng.split("-")[0];
+      setCurrentLang(baseLang === "zh" ? "zh" : "en");
+    };
+
+    i18n.on("languageChanged", handleLanguageChange);
+    
+    return () => {
+      i18n.off("languageChanged", handleLanguageChange);
+    };
+  }, [i18n]);
+
+  const handleLanguageToggle = () => {
+    toggleLanguage(i18n);
+  };
+
+
+
+
+
+
+
+
+
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -87,7 +113,7 @@ const [open, setOpen] = useState(false);
  if (!mounted) return null;
 
   const isDark = theme === "dark";
-
+const isEn = currentLang === "en"
 
   return (
     <motion.div 
@@ -121,23 +147,22 @@ const [open, setOpen] = useState(false);
               />
             }
           />
-          <SettingItem
-            icon={Globe}
-            title="Language"
-            description="Choose your preferred language"
-            action={
-              <Select defaultValue="en">
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="es">Spanish</SelectItem>
+      <SettingItem
+  icon={Globe}
+  title="Language"
+  description={
+    isEn
+      ? "English (EN) – Switch to Chinese"
+      : "中文 (ZH) – 切换到英文"
+  }
+  action={
+    <Switch
+      checked={!isEn}
+      onClick={handleLanguageToggle}
+    />
+  }
+/>
 
-                </SelectContent>
-              </Select>
-            }
-          />
         </CardContent>
       </Card>
 

@@ -4,13 +4,14 @@ import type { ICourse } from '@/interface/course.types';
 import { PlayCircle, BookOpen, Trophy } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from 'framer-motion';
-import EnrolledCourseCard from '@/components/shared/EnrolledCourseCard';
+import EnrolledCourseCard, { EnrolledCourseCardLg } from '@/components/shared/EnrolledCourseCard';
 import { useGetMyEnrolledCoursesQuery } from '@/redux/features/course/course.api';
+import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
   const { data } = useUserInfoQuery({});
   const { data: enrolledCoursesData } = useGetMyEnrolledCoursesQuery({});
-
+const { t }=useTranslation()
 
 
   const user = data?.data;
@@ -72,7 +73,7 @@ const Dashboard = () => {
                 transition={{ delay: 0.3, duration: 0.6 }}
                 className="text-4xl lg:text-5xl font-bold text-white"
               >
-                Welcome back, {user?.name}! 👋
+                {t('profile.studentsWolcome')}, {user?.name}! 👋
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, x: -20 }}
@@ -80,7 +81,7 @@ const Dashboard = () => {
                 transition={{ delay: 0.4, duration: 0.6 }}
                 className="text-lg text-white/90"
               >
-                Ready to continue your learning journey? Let's pick up where you left off.
+               {t('profile.studentsWolcomeDiscription')}
               </motion.p>
               
               {/* Quick Stats */}
@@ -115,14 +116,14 @@ const Dashboard = () => {
                 className="p-3  data-[state=active]:bg-primary/30 data-[state=active]:text-primary transition-all duration-300"
               >
                 <BookOpen className="h-4 w-4 mr-2" />
-                My Courses
+                {t('profile.MyCourses')}
               </TabsTrigger>
               <TabsTrigger 
                 value="practices"
                 className="p-3 data-[state=active]:bg-primary/30 data-[state=active]:text-primary transition-all duration-300"
               >
                 <Trophy className="h-4 w-4 mr-2" />
-                My Practices
+               {t('profile.MyPractices')}
               </TabsTrigger>
             </TabsList>
 
@@ -147,7 +148,7 @@ const Dashboard = () => {
                         <>
                       
                           <motion.div 
-                            className=" space-y-4"
+                            className=" space-y-4 md:hidden"
                             variants={containerVariants}
                             initial="hidden"
                             animate="visible"
@@ -161,6 +162,26 @@ const Dashboard = () => {
                                 transition={{ type: "spring" as const, stiffness: 300, damping: 20 }}
                               >
                                 <EnrolledCourseCard course={course} />
+                              </motion.div>
+                            ))}
+                          </motion.div>
+
+
+                          <motion.div 
+                            className=" space-y-6 md:block hidden "
+                            variants={containerVariants}
+                            initial="hidden"
+                            animate="visible"
+                          >
+                            {enrolledCoursesData?.data?.map((course: ICourse, index: number) => (
+                              <motion.div
+                                key={course._id}
+                                variants={itemVariants}
+                                custom={index}
+                                whileHover={{ scale: 1.02 }}
+                                transition={{ type: "spring" as const, stiffness: 300, damping: 20 }}
+                              >
+                                <EnrolledCourseCardLg course={course} />
                               </motion.div>
                             ))}
                           </motion.div>

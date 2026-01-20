@@ -148,6 +148,12 @@
 "description":"Join thousands of successful learners who have transformed their careers"
     }
   },
+  "profile":{
+"studentsWolcome":"Welcome back",
+"studentsWolcomeDiscription":"Ready to continue your learning journey? Let's pick up where you left off",
+"MyCourses": "My Courses",
+"MyPractices":"My Practices"
+  },
   "auth": {
     "email": "Email Address",
     "emailPlaceholder": "Enter your email",
