@@ -13,7 +13,7 @@ import FloatingElements from "@/components/modules/auth/FloatingElements";
 import { useLoginMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { toast } from 'react-hot-toast';
 import { loginSchema, type LoginFormValues } from "@/schema/auth";
-import DemoAccess from "@/components/shared/DemoAccess";
+// import DemoAccess from "@/components/shared/DemoAccess";
 import { useTranslation } from "react-i18next";
 
 
@@ -60,59 +60,35 @@ const {
     }
   }, [user, isUserLoading, navigate]);
 
-  // Form submission handler
-  // const onSubmit = async (data: LoginFormValues) => {
-  //   try {
-  //     await login({
-  //       email: data.email,
-  //       password: data.password,
-  //       remember: data.remember,
-  //     }).unwrap();
 
-  //     toast.success("Login successful!");
-  //     navigate(from, { replace: true });
-  //     window.location.reload();
-  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //   } catch (err: any) {
-  //     console.error("Login error:", err);
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      await login({
+        email: data.email,
+        password: data.password,
+        remember: data.remember,
+      }).unwrap();
 
-  //     const message = err?.data?.message || err?.error || "Something went wrong";
 
-  //     if (message === "Account is not verified") {
-  //       return navigate(`/verify-account/${data.email}`);
-  //     }
 
-  //     toast.error(message);
-  //   }
-  // };
+      toast.success("Login successful!");
+      navigate(from, { replace: true });
+      window.location.reload();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error("Login error:", err);
 
-const onSubmit = async (data: LoginFormValues) => {
-  try {
-    await login({
-      email: data.email,
-      password: data.password,
-      remember: data.remember,
-    }).unwrap();
+      const message = err?.data?.message || err?.error || "Something went wrong";
 
-    toast.success(t("auth.loginSuccessful"));
-    navigate(from, { replace: true });
-    window.location.reload();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err: any) {
-    console.error("Login error:", err);
+      if (message === "Account is not verified") {
+        return navigate(`/verify-account/${data.email}`);
+      }
 
-    const message = err?.data?.message || err?.error || t("common.somethingWentWrong");
-
-    if (message === t("auth.accountNotVerified")) {
-      navigate(`/verify-account/${data.email}`);
-      return; // Add return here too
+      toast.error(message);
     }
+  };
 
-    toast.error(message);
-    // The error is already handled, no need to re-throw
-    // React Hook Form will automatically reset isSubmitting to false
-  }
-};
+
 
 
 
@@ -135,7 +111,7 @@ const onSubmit = async (data: LoginFormValues) => {
   return (
     <div className="relative min-h-screen flex bg-background overflow-hidden">
       <FloatingElements />
-<DemoAccess />
+{/* <DemoAccess /> */}
       <div className="w-full flex items-center justify-center p-6 sm:p-12">
         <motion.div
           className="w-full max-w-md z-10"
