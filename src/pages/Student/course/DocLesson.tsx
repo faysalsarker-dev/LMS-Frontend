@@ -14,16 +14,16 @@ export function DocLesson({ doc }: DocLessonProps) {
   }
 
   return (
-    <motion.div
-      className="p-6 bg-white rounded-2xl shadow-lg overflow-y-auto max-h-[70vh] prose prose-sm sm:prose lg:prose-lg dark:prose-invert border border-gray-100"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div
-        className="space-y-4"
-        dangerouslySetInnerHTML={{ __html: doc }}
-      />
-    </motion.div>
+   <motion.div
+  className="p-6 bg-white rounded-2xl shadow-lg overflow-y-auto max-h-[70vh] border border-gray-100"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+>
+  <div
+    className="prose prose-sm sm:prose lg:prose-lg dark:prose-invert max-w-none"
+    dangerouslySetInnerHTML={{ __html: doc }}
+  />
+</motion.div>
   );
 }

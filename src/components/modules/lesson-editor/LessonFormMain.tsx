@@ -26,6 +26,7 @@ import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
 import { useGetAllMilestonesQuery } from '@/redux/features/milestone/milestone.api';
 import type { ICourse } from '@/interface/course.types';
 import type { IMilestone } from '@/interface/milestone.types';
+import { useNavigate } from 'react-router';
 
 
 const lessonSchema = z.object({
@@ -44,7 +45,7 @@ export default function LessonFormMain() {
   const { t } = useTranslation();
   const [createLesson, { isLoading: isSubmitting }] = useCreateLessonMutation();
   const { data: coursesData, isLoading: isCoursesLoading } = useGetAllCoursesQuery({ page: 1, limit: 100 });
-  
+  const navigate =useNavigate()
   const [lessonType, setLessonType] = useState<LessonType>('video');
   const [status, setStatus] = useState<LessonStatus>('draft');
   const [selectedCourseId, setSelectedCourseId] = useState<string>('');
@@ -72,7 +73,6 @@ export default function LessonFormMain() {
   
   // Quiz state
   const [questions, setQuestions] = useState<IQuestion[]>([]);
-  
   // Assignment state
   const [assignmentInstruction, setAssignmentInstruction] = useState('');
   const [maxMarks, setMaxMarks] = useState(100);
@@ -159,7 +159,7 @@ const onSubmit = async (data: LessonFormData) => {
     switch (lessonType) {
       case 'video':
         if (videoFile) {
-          formData.append('videoFile', videoFile);
+          formData.append('video', videoFile);
         } else if (videoUrl) {
           formData.append('videoUrl', videoUrl);
         }
@@ -180,7 +180,11 @@ const onSubmit = async (data: LessonFormData) => {
         break;
         
       case 'quiz': {
-      
+      const audioQuestion = questions.find(q => q.type === 'audio' && q.audioFile);
+
+if (audioQuestion?.audioFile) {
+  formData.append('audioFile', audioQuestion.audioFile);
+}
         formData.append('questions', JSON.stringify(questions));
         break;
       }
@@ -216,7 +220,7 @@ const onSubmit = async (data: LessonFormData) => {
     setSelectedCourseId('');
     setSelectedMilestoneId('');
     setQuestions([]);
-    // Optional: Navigate to lessons list or show success page
+    navigate('/dashboard/lesson')
     
   } catch (error) {
     console.error('Error saving lesson:', error);

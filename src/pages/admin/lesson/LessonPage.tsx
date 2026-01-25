@@ -46,8 +46,13 @@ export default function LessonPage() {
   // Fetch courses and milestones for filters
   const { data: courses = [], isLoading: isLoadingCourses } = useGetAllCoursesQuery({});
   const { data: milestones = [], isLoading: isLoadingMilestones } = useGetAllMilestonesQuery(
-    course !== 'all' ? course : undefined
+     { page: 1, limit: 100, course: course },
+    { skip: !course }
   );
+
+
+
+
 
   const lessons = lessonsData?.data || [];
   const meta = lessonsData?.meta || {

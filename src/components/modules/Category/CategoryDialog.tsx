@@ -78,7 +78,7 @@ export const CategoryDialog: React.FC<Props> = ({
     setIsSubmitting(true);
     try {
       if (initial?._id) {
-        await updateCategory({ id: initial._id, body: formData }).unwrap();
+        await updateCategory({ CategoryId: initial._id, formData: formData }).unwrap();
         toast.success("Category updated successfully");
       } else {
         await createCategory(formData).unwrap();

@@ -1,7 +1,7 @@
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { Header } from '../../components/dashboard/Header';
 import { AppSidebar } from '../../components/dashboard/Sidebar';
-import { Outlet } from 'react-router';
+import { Outlet, ScrollRestoration } from 'react-router';
 
 
 
@@ -14,6 +14,7 @@ export function AdminLayout() {
           <Header />
           <main className="flex-1 overflow-auto">
             <Outlet/>
+            <ScrollRestoration />
           </main>
         </div>
       </div>

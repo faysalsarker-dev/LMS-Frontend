@@ -67,7 +67,6 @@ export function LessonFilters({
   isLoadingMilestones,
 }: LessonFiltersProps) {
 
-  console.log(milestones);
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -80,7 +79,7 @@ export function LessonFilters({
         <span className="text-sm font-medium text-muted-foreground">Filters</span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="flex justify-around flex-wrap gap-4">
         {/* Search Input */}
         <div className="relative xl:col-span-2">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -93,7 +92,7 @@ export function LessonFilters({
         </div>
 
         {/* Status Filter */}
-        <Select value={status} onValueChange={onStatusChange}>
+        <Select value={status} onValueChange={onStatusChange} >
           <SelectTrigger className="h-10 rounded-xl bg-background border-border">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
@@ -121,19 +120,21 @@ export function LessonFilters({
         </Select>
 
         {/* Course Filter */}
-        <Select value={course} onValueChange={onCourseChange} disabled={isLoadingCourses}>
-          <SelectTrigger className="h-10 rounded-xl bg-background border-border">
-            <SelectValue placeholder={isLoadingCourses ? 'Loading...' : 'All Courses'} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Courses</SelectItem>
-            {courses?.map((c) => (
-              <SelectItem key={c._id} value={c._id}>
-                {c.title}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+
+          <Select value={course} onValueChange={onCourseChange} disabled={isLoadingCourses}>
+            <SelectTrigger className="h-10 rounded-xl bg-background border-border">
+              <SelectValue placeholder={isLoadingCourses ? 'Loading...' : 'All Courses'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Courses</SelectItem>
+              {courses?.map((c) => (
+                <SelectItem key={c._id} value={c._id}>
+                  {c.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
 
         {/* Milestone Filter */}
        <Select

@@ -1,25 +1,12 @@
 import { motion } from 'framer-motion';
-import {  useNavigate } from 'react-router';
 
 import { PracticeForm } from '@/components/modules/practice';
-import type { PracticeFormData } from '@/components/modules/practice';
-import toast from 'react-hot-toast';
-import { useCreatePracticeMutation } from '@/hooks/usePracticeApi';
+
 
 const CreatePracticePage = () => {
-  const navigate = useNavigate();
-  const { createPractice, isLoading } = useCreatePracticeMutation();
 
-  const handleSubmit = async (data: PracticeFormData) => {
-    try {
-      await createPractice(data);
-      toast.success('Practice created successfully!');
-      navigate('/admin/practices');
-    } catch (error) {
-      toast.error('Failed to create practice');
-    }
-  };
 
+ 
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -36,7 +23,7 @@ const CreatePracticePage = () => {
           </p>
         </div>
 
-        <PracticeForm onSubmit={handleSubmit} isSubmitting={isLoading} />
+        <PracticeForm  />
       </div>
     </motion.div>
   );

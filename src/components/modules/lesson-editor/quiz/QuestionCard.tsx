@@ -22,10 +22,12 @@ interface QuestionCardProps {
   question: IQuestion;
   questionIndex: number;
   onRemove: () => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onUpdate: (field: keyof IQuestion, value: any) => void;
   onUpdateOption: (optionIndex: number, field: 'text' | 'isCorrect', value: string | boolean) => void;
   onAddOption: () => void;
   onRemoveOption: (optionIndex: number) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onTypeChange: (type: any) => void;
 }
 

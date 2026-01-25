@@ -1,14 +1,22 @@
-import { useState, useRef } from 'react';
+
+
+import { useState, useRef, useEffect } from 'react';
 import { Upload, Link, X, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
-import type { IQuestion } from '@/interface/lesson.type';
+
+interface IQuestion {
+  audioFile?: File | null;
+  audioUrl?: string;
+  correctAnswer?: string;
+}
 
 interface AudioAnswerSectionProps {
   question: IQuestion;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onUpdateField: (field: 'audioFile' | 'audioUrl' | 'correctAnswer', value: any) => void;
 }
 
@@ -16,23 +24,57 @@ export function AudioAnswerSection({
   question,
   onUpdateField,
 }: AudioAnswerSectionProps) {
-  const [audioMode, setAudioMode] = useState<'file' | 'url'>(question.audioUrl ? 'url' : 'file');
+  const [audioMode, setAudioMode] = useState<'file' | 'url'>('file');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [audioPreview, setAudioPreview] = useState<string | null>(null);
+
+  // Initialize audio mode based on existing data
+  useEffect(() => {
+    if (question.audioUrl) {
+      setAudioMode('url');
+      setAudioPreview(question.audioUrl);
+    } else if (question.audioFile) {
+      setAudioMode('file');
+      setAudioPreview(URL.createObjectURL(question.audioFile));
+    }
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      onUpdateField('audioFile', file);
+      // Clear URL when file is uploaded
       onUpdateField('audioUrl', '');
+      onUpdateField('audioFile', file);
       setAudioPreview(URL.createObjectURL(file));
     }
   };
 
   const handleUrlChange = (url: string) => {
-    onUpdateField('audioUrl', url);
+    // Clear file when URL is provided
     onUpdateField('audioFile', null);
-    setAudioPreview(url);
+    onUpdateField('audioUrl', url);
+    setAudioPreview(url || null);
+    
+    // Clear file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleModeChange = (mode: 'file' | 'url') => {
+    setAudioMode(mode);
+    
+    // Clear the opposite mode when switching
+    if (mode === 'file') {
+      onUpdateField('audioUrl', '');
+      setAudioPreview(question.audioFile ? URL.createObjectURL(question.audioFile) : null);
+    } else {
+      onUpdateField('audioFile', null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      setAudioPreview(question.audioUrl || null);
+    }
   };
 
   const clearAudio = () => {
@@ -44,13 +86,15 @@ export function AudioAnswerSection({
     }
   };
 
-  const currentAudioSrc = audioPreview || question.audioUrl || (question.audioFile ? URL.createObjectURL(question.audioFile) : null);
+  const currentAudioSrc = audioMode === 'file' 
+    ? (question.audioFile ? (audioPreview || URL.createObjectURL(question.audioFile)) : null)
+    : (question.audioUrl || null);
 
   return (
     <div className="space-y-4">
       <div className="space-y-3">
         <Label>Question Audio</Label>
-        <Tabs value={audioMode} onValueChange={(v) => setAudioMode(v as 'file' | 'url')}>
+        <Tabs value={audioMode} onValueChange={handleModeChange}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="file" className="gap-2">
               <Upload className="w-4 h-4" />
@@ -67,7 +111,7 @@ export function AudioAnswerSection({
               className={cn(
                 'border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors',
                 'hover:border-primary hover:bg-primary/5',
-                question.audioFile && 'border-success bg-success/5'
+                question.audioFile && 'border-green-500 bg-green-50'
               )}
               onClick={() => fileInputRef.current?.click()}
             >
@@ -80,7 +124,7 @@ export function AudioAnswerSection({
               />
               <Volume2 className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
               {question.audioFile ? (
-                <p className="text-sm text-success">{question.audioFile.name}</p>
+                <p className="text-sm text-green-600 font-medium">{question.audioFile.name}</p>
               ) : (
                 <p className="text-sm text-muted-foreground">
                   Click to upload audio file

@@ -3,6 +3,7 @@ import { DocLesson } from "./DocLesson";
 import  QuizLesson  from "./QuizLesson";
 import type { ILesson } from "@/interface";
 import AssignmentLesson from "@/components/modules/lesson-editor/assignment/AssignmentLesson";
+import AudioPlayer from "./AudioPlayer";
 
 type CoursePlayerContentProps = {
   lesson?: ILesson;
@@ -23,6 +24,8 @@ if(isLoading){
       return <VideoPlayer url={lesson.video?.url as string} />;
     case "doc":
       return <DocLesson doc={lesson?.doc} />;
+    case "audio":
+      return <AudioPlayer audio={lesson?.audio} />;
    case "quiz":
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return <QuizLesson questions={lesson?.questions as any} setQuizResult={setQuizResult} />;

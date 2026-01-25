@@ -1,10 +1,7 @@
 // Practice Types - TypeScript definitions for Practice Management
-
-export type PracticeType = 'pronunciation' | 'vocabulary' | 'grammar' | 'exercise' | 'quiz' | 'other';
-export type DifficultyLevel = 'Beginner' | 'Intermediate' | 'Advanced';
+// Updated to match MongoDB schema
 
 export interface PracticeItem {
-  _id?: string;
   content: string;
   pronunciation?: string;
   audioUrl?: string;
@@ -13,14 +10,17 @@ export interface PracticeItem {
   order: number;
 }
 
-export interface PracticeCategory {
+export interface Course {
   _id: string;
   name: string;
+  slug?: string;
+  description?: string;
 }
 
 export interface PracticeCreator {
   _id: string;
   name: string;
+  email?: string;
 }
 
 export interface Practice {
@@ -28,17 +28,13 @@ export interface Practice {
   title: string;
   slug: string;
   description?: string;
-  type: PracticeType;
-  category?: PracticeCategory;
+  course?: Course | string; // Can be populated or just ID
   items: PracticeItem[];
-  difficulty: DifficultyLevel;
-  estimatedTime?: string;
-  tags?: string[];
   thumbnail?: string;
   isActive: boolean;
-  createdBy?: PracticeCreator;
   totalItems: number;
   usageCount: number;
+  createdBy?: PracticeCreator;
   createdAt: string;
   updatedAt: string;
 }
@@ -46,12 +42,8 @@ export interface Practice {
 export interface PracticeFormData {
   title: string;
   description?: string;
-  type: PracticeType;
-  category?: string;
+  course?: string; // Course ID
   items: PracticeItem[];
-  difficulty: DifficultyLevel;
-  estimatedTime?: string;
-  tags?: string[];
   thumbnail?: string;
   isActive: boolean;
 }
@@ -59,12 +51,10 @@ export interface PracticeFormData {
 export interface PracticeFilters {
   page?: number;
   limit?: number;
-  type?: PracticeType | '';
-  difficulty?: DifficultyLevel | '';
-  category?: string;
+  course?: string;
   isActive?: boolean | '';
   search?: string;
-  sortBy?: 'createdAt' | 'title' | 'usageCount';
+  sortBy?: 'createdAt' | 'title' | 'usageCount' | 'totalItems';
   sortOrder?: 'asc' | 'desc';
 }
 
@@ -72,6 +62,11 @@ export interface PracticeStats {
   totalPractices: number;
   activePractices: number;
   totalItems: number;
+  totalUsage: number;
+  practicesByCourse?: {
+    courseName: string;
+    count: number;
+  }[];
   mostUsedPractice?: Practice;
 }
 
@@ -87,4 +82,35 @@ export interface PracticesResponse {
 
 export interface PracticeResponse {
   data: Practice;
+  message?: string;
+}
+
+export type CreatePracticeRequest = PracticeFormData;
+
+export interface UpdatePracticeRequest extends Partial<PracticeFormData> {
+  _id: string;
+}
+
+export interface DeletePracticeResponse {
+  success: boolean;
+  message: string;
+}
+
+// Utility type for practice creation/update payloads
+export type PracticePayload = Omit<Practice, '_id' | 'slug' | 'totalItems' | 'usageCount' | 'createdAt' | 'updatedAt'>;
+
+// Type guard to check if course is populated
+export function isCoursePopulated(course: Course | string | undefined): course is Course {
+  return typeof course === 'object' && course !== null && '_id' in course;
+}
+
+// Helper to get course ID
+export function getCourseId(course: Course | string | undefined): string | undefined {
+  if (!course) return undefined;
+  return isCoursePopulated(course) ? course._id : course;
+}
+
+// Helper to get course name
+export function getCourseName(course: Course | string | undefined): string | undefined {
+  return isCoursePopulated(course) ? course.name : undefined;
 }

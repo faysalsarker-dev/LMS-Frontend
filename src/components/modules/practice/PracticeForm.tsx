@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
 import {
   Form,
   FormControl,
@@ -25,102 +24,91 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ImageIcon, Loader2, Save, X } from 'lucide-react';
-import { useState } from 'react';
-import { useGetCategoriesQuery } from '@/hooks/usePracticeApi';
 import { PracticeItemManager } from './PracticeItemManager';
-import type { PracticeFormData, PracticeItem, Practice } from './practice.types';
+import type { PracticeFormData, PracticeItem, Course } from './practice.types';
+import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
+import { useCreatePracticeMutation } from '@/redux/features/practice/practice.api';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router';
 
 const practiceSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').max(200),
   description: z.string().max(2000).optional(),
-  type: z.enum(['pronunciation', 'vocabulary', 'grammar', 'exercise', 'quiz', 'other']),
-  difficulty: z.enum(['Beginner', 'Intermediate', 'Advanced']),
-  category: z.string().optional(),
-  estimatedTime: z.string().optional(),
-  tags: z.array(z.string()).optional(),
+  course: z.string().optional(),
   thumbnail: z.string().optional(),
-  isActive: z.boolean(),
+  isActive: z.boolean().default(true),
   items: z.array(
     z.object({
-      _id: z.string().optional(),
       content: z.string().min(1, 'Content is required'),
       pronunciation: z.string().optional(),
       audioUrl: z.string().optional(),
       imageUrl: z.string().optional(),
-      description: z.string().optional(),
-      order: z.number(),
+      description: z.string().max(500, 'Description must be 500 characters or less').optional(),
+      order: z.number().default(0),
     })
-  ),
+  ).default([]),
 });
 
-interface PracticeFormProps {
-  initialData?: Practice;
-  onSubmit: (data: PracticeFormData) => Promise<void>;
-  isSubmitting: boolean;
-}
-
-export const PracticeForm = ({
-  initialData,
-  onSubmit,
-  isSubmitting,
-}: PracticeFormProps) => {
-  const { data: categories } = useGetCategoriesQuery();
-  const [tagInput, setTagInput] = useState('');
+export const PracticeForm = () => {
+  const navigate = useNavigate();
+  const { data: coursesResponse } = useGetAllCoursesQuery({ page: 1, limit: 1000 });
+  const [createPractice, { isLoading }] = useCreatePracticeMutation();
 
   const form = useForm<PracticeFormData>({
     resolver: zodResolver(practiceSchema),
     defaultValues: {
-      title: initialData?.title || '',
-      description: initialData?.description || '',
-      type: initialData?.type || 'vocabulary',
-      difficulty: initialData?.difficulty || 'Beginner',
-      category: initialData?.category?._id || '',
-      estimatedTime: initialData?.estimatedTime || '',
-      tags: initialData?.tags || [],
-      thumbnail: initialData?.thumbnail || '',
-      isActive: initialData?.isActive ?? true,
-      items: initialData?.items || [],
+      title: '',
+      description: '',
+      course: '',
+      thumbnail: '',
+      isActive: true,
+      items: [],
     },
   });
 
-  const tags = form.watch('tags') || [];
   const items = form.watch('items') || [];
-
-  const handleAddTag = () => {
-    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-      form.setValue('tags', [...tags, tagInput.trim()]);
-      setTagInput('');
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    form.setValue(
-      'tags',
-      tags.filter((t) => t !== tagToRemove)
-    );
-  };
+  const thumbnail = form.watch('thumbnail');
 
   const handleItemsChange = (newItems: PracticeItem[]) => {
-    form.setValue('items', newItems);
+    const itemsWithOrder = newItems.map((item, index) => ({
+      ...item,
+      order: index
+    }));
+    form.setValue('items', itemsWithOrder);
   };
 
   const handleThumbnailUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const fakeUrl = URL.createObjectURL(file);
-      form.setValue('thumbnail', fakeUrl);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        form.setValue('thumbnail', reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const handleFormSubmit = async (data: PracticeFormData) => {
-    await onSubmit(data);
+    try {
+      const payload = {
+        ...data,
+        course: data.course === 'none' || !data.course ? undefined : data.course,
+      };
+
+      await createPractice(payload).unwrap();
+      toast.success('Practice created successfully');
+      navigate('/practices');
+    } catch (error: any) {
+      toast.error(error?.data?.message || 'Failed to create practice');
+    }
   };
+
+  const courses = coursesResponse?.data?.data || [];
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
         <div className="grid gap-6 lg:grid-cols-3">
-          {/* Main Form */}
           <div className="lg:col-span-2 space-y-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -141,9 +129,13 @@ export const PracticeForm = ({
                         <FormControl>
                           <Input
                             placeholder="Enter practice title..."
+                            maxLength={200}
                             {...field}
                           />
                         </FormControl>
+                        <FormDescription className="text-xs">
+                          Slug will be auto-generated from the title
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -159,136 +151,72 @@ export const PracticeForm = ({
                           <Textarea
                             placeholder="Describe this practice..."
                             rows={4}
+                            maxLength={2000}
                             {...field}
                           />
                         </FormControl>
+                        <FormDescription className="text-xs">
+                          {field.value?.length || 0} / 2000 characters
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <FormField
-                      control={form.control}
-                      name="type"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Type *</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select type" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="pronunciation">
-                                Pronunciation
-                              </SelectItem>
-                              <SelectItem value="vocabulary">Vocabulary</SelectItem>
-                              <SelectItem value="grammar">Grammar</SelectItem>
-                              <SelectItem value="exercise">Exercise</SelectItem>
-                              <SelectItem value="quiz">Quiz</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="difficulty"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Difficulty *</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select difficulty" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="Beginner">Beginner</SelectItem>
-                              <SelectItem value="Intermediate">
-                                Intermediate
-                              </SelectItem>
-                              <SelectItem value="Advanced">Advanced</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <FormField
-                      control={form.control}
-                      name="category"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Category</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select category" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {categories?.map((category) => (
-                                <SelectItem
-                                  key={category._id}
-                                  value={category._id}
-                                >
-                                  {category.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="estimatedTime"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Estimated Time</FormLabel>
+                  <FormField
+                    control={form.control}
+                    name="course"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Course</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value || 'none'}
+                        >
                           <FormControl>
-                            <Input placeholder="e.g., 15 mins" {...field} />
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a course (optional)" />
+                            </SelectTrigger>
                           </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {courses.map((course: Course) => (
+                              <SelectItem key={course._id} value={course._id}>
+                                {course.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormDescription className="text-xs">
+                          Associate this practice with a course
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* Practice Items */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.1 }}
             >
-              <PracticeItemManager items={items} onChange={handleItemsChange} />
+              <Card>
+                <CardHeader>
+                  <CardTitle>Practice Items</CardTitle>
+                  <FormDescription>
+                    Total items: {items.length}
+                  </FormDescription>
+                </CardHeader>
+                <CardContent>
+                  <PracticeItemManager items={items} onChange={handleItemsChange} />
+                </CardContent>
+              </Card>
             </motion.div>
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-6">
             <motion.div
               initial={{ opacity: 0, x: 20 }}
@@ -321,16 +249,16 @@ export const PracticeForm = ({
                     )}
                   />
 
-                  <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? (
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Saving...
+                        Creating...
                       </>
                     ) : (
                       <>
                         <Save className="mr-2 h-4 w-4" />
-                        {initialData ? 'Update Practice' : 'Create Practice'}
+                        Create Practice
                       </>
                     )}
                   </Button>
@@ -338,7 +266,6 @@ export const PracticeForm = ({
               </Card>
             </motion.div>
 
-            {/* Thumbnail */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -349,10 +276,10 @@ export const PracticeForm = ({
                   <CardTitle>Thumbnail</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {form.watch('thumbnail') ? (
+                  {thumbnail ? (
                     <div className="relative rounded-lg overflow-hidden">
                       <img
-                        src={form.watch('thumbnail')}
+                        src={thumbnail}
                         alt="Thumbnail preview"
                         className="w-full h-40 object-cover"
                       />
@@ -380,59 +307,6 @@ export const PracticeForm = ({
                       />
                     </label>
                   )}
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Tags */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.4 }}
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle>Tags</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Add a tag..."
-                      value={tagInput}
-                      onChange={(e) => setTagInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault();
-                          handleAddTag();
-                        }
-                      }}
-                    />
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      onClick={handleAddTag}
-                    >
-                      Add
-                    </Button>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {tags.map((tag) => (
-                      <Badge
-                        key={tag}
-                        variant="secondary"
-                        className="cursor-pointer"
-                        onClick={() => handleRemoveTag(tag)}
-                      >
-                        {tag}
-                        <X className="ml-1 h-3 w-3" />
-                      </Badge>
-                    ))}
-                    {tags.length === 0 && (
-                      <span className="text-sm text-muted-foreground">
-                        No tags added
-                      </span>
-                    )}
-                  </div>
                 </CardContent>
               </Card>
             </motion.div>
