@@ -1,25 +1,18 @@
 import { motion } from 'framer-motion';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+import {useNavigate, useParams } from 'react-router';
+
 import { Skeleton } from '@/components/ui/skeleton';
-import { Home } from 'lucide-react';
 import { PracticeForm } from '@/components/modules/practice';
 import type { PracticeFormData } from '@/components/modules/practice';
-import { useGetPracticeByIdQuery, useUpdatePracticeMutation } from '@/hooks/usePracticeApi';
 import toast from 'react-hot-toast';
+import { handleApiError } from '@/utils/errorHandler';
+import { useGetSinglePracticeQuery, useUpdatePracticeMutation } from '@/redux/features/practice/practice.api';
 
 const EditPracticePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: practice, isLoading: isLoadingPractice } = useGetPracticeByIdQuery(id || '');
-  const { updatePractice, isLoading: isUpdating } = useUpdatePracticeMutation();
+  const { data: practice, isLoading: isLoadingPractice } = useGetSinglePracticeQuery(id || '');
+  const [ updatePractice, {isLoading: isUpdating }] = useUpdatePracticeMutation();
 
   const handleSubmit = async (data: PracticeFormData) => {
     if (!id) return;
@@ -28,7 +21,7 @@ const EditPracticePage = () => {
       toast.success('Practice updated successfully!');
       navigate('/admin/practices');
     } catch (error) {
-      toast.error('Failed to update practice');
+      handleApiError(error)
     }
   };
 
@@ -59,28 +52,6 @@ const EditPracticePage = () => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6 space-y-6">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/admin/dashboard" className="flex items-center gap-1">
-                  <Home className="h-4 w-4" />
-                  Dashboard
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/admin/practices">Practices</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Edit</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
 
         <div>
           <h1 className="text-3xl font-bold text-foreground">Edit Practice</h1>

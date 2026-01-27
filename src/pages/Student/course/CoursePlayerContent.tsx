@@ -25,7 +25,7 @@ if(isLoading){
     case "doc":
       return <DocLesson doc={lesson?.doc} />;
     case "audio":
-      return <AudioPlayer audio={lesson?.audio} />;
+      return lesson?.audio ? <AudioPlayer audio={lesson.audio} /> : <div>No audio available</div>;
    case "quiz":
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return <QuizLesson questions={lesson?.questions as any} setQuizResult={setQuizResult} />;

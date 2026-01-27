@@ -31,21 +31,6 @@ interface PracticeTableProps {
   onToggleStatus: (id: string, isActive: boolean) => void;
 }
 
-const typeColors: Record<string, string> = {
-  pronunciation: 'bg-primary/10 text-primary',
-  vocabulary: 'bg-accent/10 text-accent',
-  grammar: 'bg-success/10 text-success',
-  exercise: 'bg-warning/10 text-warning',
-  quiz: 'bg-destructive/10 text-destructive',
-  other: 'bg-muted text-muted-foreground',
-};
-
-const difficultyColors: Record<string, string> = {
-  Beginner: 'bg-success/10 text-success',
-  Intermediate: 'bg-warning/10 text-warning',
-  Advanced: 'bg-destructive/10 text-destructive',
-};
-
 export const PracticeTable = ({
   practices,
   selectedIds,
@@ -91,9 +76,7 @@ export const PracticeTable = ({
               />
             </TableHead>
             <TableHead>Title</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Difficulty</TableHead>
-            <TableHead>Category</TableHead>
+            <TableHead>Course</TableHead>
             <TableHead className="text-center">Items</TableHead>
             <TableHead className="text-center">Usage</TableHead>
             <TableHead>Status</TableHead>
@@ -135,19 +118,9 @@ export const PracticeTable = ({
                 </div>
               </TableCell>
               <TableCell>
-                <Badge className={`${typeColors[practice.type]} border-0`}>
-                  {practice.type}
+                <Badge variant="secondary">
+                  {practice.course?.title || '-'}
                 </Badge>
-              </TableCell>
-              <TableCell>
-                <Badge className={`${difficultyColors[practice.difficulty]} border-0`}>
-                  {practice.difficulty}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <span className="text-sm text-muted-foreground">
-                  {practice.category?.name || '-'}
-                </span>
               </TableCell>
               <TableCell className="text-center">
                 <span className="font-medium">{practice.totalItems}</span>

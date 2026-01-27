@@ -17,16 +17,16 @@ import {
   PracticeFilters,
   PracticeList,
 } from '@/components/modules/practice';
+import type { PracticeFilters as PracticeFiltersType } from '@/components/modules/practice/practice.types';
 import { useGetAllPracticesQuery } from '@/redux/features/practice/practice.api';
 
+
 const PracticesPage = () => {
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<PracticeFiltersType>({
     page: 1,
     limit: 8,
     search: '',
-    type: '',
-    difficulty: '',
-    category: '',
+    course: '',
     isActive: '',
     sortBy: 'createdAt',
     sortOrder: 'desc',
@@ -41,8 +41,7 @@ const PracticesPage = () => {
       className="min-h-screen bg-background"
     >
       <div className="container mx-auto px-4 py-6 space-y-6">
-        {/* Breadcrumb */}
-      
+  
 
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -61,7 +60,7 @@ const PracticesPage = () => {
         </div>
 
         {/* Stats */}
-        {/* <PracticeStats /> */}
+        <PracticeStats />
 
         {/* Filters */}
         <PracticeFilters filters={filters} onFiltersChange={setFilters} />

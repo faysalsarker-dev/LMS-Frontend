@@ -1,8 +1,8 @@
 
-import React, { useEffect, useRef, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
-import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, Volume2, Languages, Repeat } from "lucide-react";
+import { motion } from "framer-motion";
+import { Play, Pause, Volume2, Languages } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Transcript {
@@ -34,7 +34,6 @@ export default function AudioPlayer({ audio }: { audio: AudioData }) {
       cursorColor: "#60a5fa",
       barWidth: 2,
       barRadius: 3,
-      responsive: true,
       height: 60,
       url: audio.url,
     });
@@ -133,7 +132,7 @@ export default function AudioPlayer({ audio }: { audio: AudioData }) {
         </div>
       </div>
 
-      <style jsx global>{`
+      <style>{`
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }

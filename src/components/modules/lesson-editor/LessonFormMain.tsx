@@ -322,7 +322,7 @@ if (audioQuestion?.audioFile) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-10 h-10 rounded-lg gradient-primary">
-            <BookOpen className="w-5 h-5 text-primary-foreground" />
+            <BookOpen className="w-5 text-primary" />
           </div>
           <div>
             <h1 className="text-2xl font-semibold text-foreground">{t('lesson.createLesson')}</h1>

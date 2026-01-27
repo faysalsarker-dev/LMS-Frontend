@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   BookOpen,
-  Clock,
   Edit,
   Eye,
   Layers,
@@ -29,21 +28,6 @@ interface PracticeCardProps {
   onToggleStatus: (id: string, isActive: boolean) => void;
   index: number;
 }
-
-const typeColors: Record<string, string> = {
-  pronunciation: 'bg-primary/10 text-primary',
-  vocabulary: 'bg-accent/10 text-accent',
-  grammar: 'bg-success/10 text-success',
-  exercise: 'bg-warning/10 text-warning',
-  quiz: 'bg-destructive/10 text-destructive',
-  other: 'bg-muted text-muted-foreground',
-};
-
-const difficultyColors: Record<string, string> = {
-  Beginner: 'bg-success/10 text-success border-success/20',
-  Intermediate: 'bg-warning/10 text-warning border-warning/20',
-  Advanced: 'bg-destructive/10 text-destructive border-destructive/20',
-};
 
 export const PracticeCard = ({
   practice,
@@ -73,13 +57,6 @@ export const PracticeCard = ({
               <BookOpen className="h-16 w-16 text-primary/30" />
             </div>
           )}
-          
-          {/* Type Badge */}
-          <Badge
-            className={`absolute top-3 left-3 ${typeColors[practice.type]} border-0`}
-          >
-            {practice.type}
-          </Badge>
 
           {/* Dropdown Menu */}
           <DropdownMenu>
@@ -132,18 +109,12 @@ export const PracticeCard = ({
 
         <CardContent className="flex-1 pb-2">
           <div className="flex flex-wrap gap-2 mb-3">
-            <Badge
-              variant="outline"
-              className={difficultyColors[practice.difficulty]}
-            >
-              {practice.difficulty}
+            <Badge variant="secondary">
+              {practice.course?.title}
             </Badge>
-            {practice.category && (
-              <Badge variant="secondary">{practice.category.name}</Badge>
-            )}
           </div>
 
-          <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
+          <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <Layers className="h-3.5 w-3.5" />
               <span>{practice.totalItems} items</span>
@@ -152,31 +123,7 @@ export const PracticeCard = ({
               <TrendingUp className="h-3.5 w-3.5" />
               <span>{practice.usageCount} uses</span>
             </div>
-            {practice.estimatedTime && (
-              <div className="flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5" />
-                <span>{practice.estimatedTime}</span>
-              </div>
-            )}
           </div>
-
-          {practice.tags && practice.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-3">
-              {practice.tags.slice(0, 3).map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs px-2 py-0.5 bg-muted rounded-full text-muted-foreground"
-                >
-                  #{tag}
-                </span>
-              ))}
-              {practice.tags.length > 3 && (
-                <span className="text-xs px-2 py-0.5 text-muted-foreground">
-                  +{practice.tags.length - 3}
-                </span>
-              )}
-            </div>
-          )}
         </CardContent>
 
         <CardFooter className="pt-2 border-t">

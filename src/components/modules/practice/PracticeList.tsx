@@ -16,8 +16,9 @@ import { PracticeTable } from './PracticeTable';
 import { DeletePracticeDialog } from './DeletePracticeDialog';
 import type { Practice, PracticesResponse } from './practice.types';
 import toast from 'react-hot-toast';
-import { useDeletePracticeMutation } from '@/redux/features/practice/practice.api';
 
+import { handleApiError } from '@/utils/errorHandler';
+import { useDeletePracticeMutation } from '@/redux/features/practice/practice.api';
 
 interface PracticeListProps {
   data: PracticesResponse | null;
@@ -59,8 +60,7 @@ export const PracticeList = ({ data, isLoading, onRefetch }: PracticeListProps) 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [practiceToDelete, setPracticeToDelete] = useState<Practice | null>(null);
 
-  const { deletePractice, isLoading: isDeleting } = useDeletePracticeMutation();
-  // const { toggleStatus } = useTogglePracticeStatusMutation();
+  const [deletePractice, { isLoading: isDeleting }] = useDeletePracticeMutation();
 
   const handleDeleteClick = (practice: Practice) => {
     setPracticeToDelete(practice);
@@ -86,7 +86,7 @@ export const PracticeList = ({ data, isLoading, onRefetch }: PracticeListProps) 
       toast.success(`Practice ${isActive ? 'activated' : 'deactivated'}`);
       onRefetch();
     } catch (error) {
-      toast.error('Failed to update status');
+      handleApiError(error)
     }
   };
 
@@ -111,7 +111,8 @@ export const PracticeList = ({ data, isLoading, onRefetch }: PracticeListProps) 
       setSelectedIds([]);
       onRefetch();
     } catch (error) {
-      toast.error('Bulk action failed');
+            handleApiError(error)
+
     }
   };
 
@@ -119,9 +120,7 @@ export const PracticeList = ({ data, isLoading, onRefetch }: PracticeListProps) 
     if (!data?.data) return;
     const exportData = data.data.map((p) => ({
       title: p.title,
-      type: p.type,
-      difficulty: p.difficulty,
-      category: p.category?.name,
+      course: p.course?.title,
       items: p.totalItems,
       usageCount: p.usageCount,
       isActive: p.isActive,

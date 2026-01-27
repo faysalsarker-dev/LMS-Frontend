@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookOpen, CheckCircle, Layers, TrendingUp } from 'lucide-react';
+import { useGetAllPracticesQuery } from '@/redux/features/practice/practice.api';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -31,7 +32,7 @@ const StatCardSkeleton = () => (
 );
 
 export const PracticeStats = () => {
-  const { data: stats, isLoading } = useGetPracticeStatsQuery();
+  const { data: stats, isLoading } = useGetAllPracticesQuery({});
 
   if (isLoading) {
     return (

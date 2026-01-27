@@ -9,40 +9,27 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Search, X, SlidersHorizontal } from 'lucide-react';
-import type { PracticeFilters as PracticeFiltersType, PracticeType, DifficultyLevel } from './practice.types';
-import { useGetCategoriesQuery } from '@/hooks/usePracticeApi';
+import type { PracticeFilters as PracticeFiltersType } from './practice.types';
+import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
+import type { ICourse } from '@/interface/course.types';
 
 interface PracticeFiltersProps {
   filters: PracticeFiltersType;
   onFiltersChange: (filters: PracticeFiltersType) => void;
 }
 
-const practiceTypes: { value: PracticeType; label: string }[] = [
-  { value: 'pronunciation', label: 'Pronunciation' },
-  { value: 'vocabulary', label: 'Vocabulary' },
-  { value: 'grammar', label: 'Grammar' },
-  { value: 'exercise', label: 'Exercise' },
-  { value: 'quiz', label: 'Quiz' },
-  { value: 'other', label: 'Other' },
-];
-
-const difficultyLevels: { value: DifficultyLevel; label: string }[] = [
-  { value: 'Beginner', label: 'Beginner' },
-  { value: 'Intermediate', label: 'Intermediate' },
-  { value: 'Advanced', label: 'Advanced' },
-];
-
 export const PracticeFilters = ({ filters, onFiltersChange }: PracticeFiltersProps) => {
-  const { data: categories } = useGetCategoriesQuery();
+  const { data: courses } = useGetAllCoursesQuery({
+    page: 1,
+    limit: 100,
+  });
 
   const handleClearFilters = () => {
     onFiltersChange({
       page: 1,
       limit: filters.limit,
       search: '',
-      type: '',
-      difficulty: '',
-      category: '',
+      course: '',
       isActive: '',
       sortBy: 'createdAt',
       sortOrder: 'desc',
@@ -51,9 +38,7 @@ export const PracticeFilters = ({ filters, onFiltersChange }: PracticeFiltersPro
 
   const hasActiveFilters =
     filters.search ||
-    filters.type ||
-    filters.difficulty ||
-    filters.category ||
+    filters.course ||
     filters.isActive !== '';
 
   return (
@@ -68,9 +53,9 @@ export const PracticeFilters = ({ filters, onFiltersChange }: PracticeFiltersPro
         <span className="text-sm font-medium">Filters</span>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {/* Search */}
-        <div className="relative xl:col-span-2">
+        <div className="relative lg:col-span-2">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search practices..."
@@ -82,73 +67,25 @@ export const PracticeFilters = ({ filters, onFiltersChange }: PracticeFiltersPro
           />
         </div>
 
-        {/* Type Filter */}
+        {/* Course Filter */}
         <Select
-          value={filters.type || 'all'}
+          value={filters.course || 'all'}
           onValueChange={(value) =>
             onFiltersChange({
               ...filters,
-              type: value === 'all' ? '' : (value as PracticeType),
+              course: value === 'all' ? '' : value,
               page: 1,
             })
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder="Type" />
+            <SelectValue placeholder="Course" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            {practiceTypes.map((type) => (
-              <SelectItem key={type.value} value={type.value}>
-                {type.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {/* Difficulty Filter */}
-        <Select
-          value={filters.difficulty || 'all'}
-          onValueChange={(value) =>
-            onFiltersChange({
-              ...filters,
-              difficulty: value === 'all' ? '' : (value as DifficultyLevel),
-              page: 1,
-            })
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Difficulty" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Levels</SelectItem>
-            {difficultyLevels.map((level) => (
-              <SelectItem key={level.value} value={level.value}>
-                {level.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {/* Category Filter */}
-        <Select
-          value={filters.category || 'all'}
-          onValueChange={(value) =>
-            onFiltersChange({
-              ...filters,
-              category: value === 'all' ? '' : value,
-              page: 1,
-            })
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            {categories?.map((category) => (
-              <SelectItem key={category._id} value={category._id}>
-                {category.name}
+            <SelectItem value="all">All Courses</SelectItem>
+            {courses?.data?.data?.map((course:ICourse) => (
+              <SelectItem key={course._id} value={course._id}>
+                {course.title}
               </SelectItem>
             ))}
           </SelectContent>

@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,92 +25,93 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ImageIcon, Loader2, Save, X } from 'lucide-react';
-import { PracticeItemManager } from './PracticeItemManager';
-import type { PracticeFormData, PracticeItem, Course } from './practice.types';
+import type { Practice } from './practice.types';
 import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
-import { useCreatePracticeMutation } from '@/redux/features/practice/practice.api';
-import { toast } from 'sonner';
-import { useNavigate } from 'react-router';
+import type { ICourse } from '@/interface/course.types';
 
 const practiceSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').max(200),
   description: z.string().max(2000).optional(),
-  course: z.string().optional(),
+  course: z.string().min(1, 'Course is required'),
   thumbnail: z.string().optional(),
-  isActive: z.boolean().default(true),
-  items: z.array(
-    z.object({
-      content: z.string().min(1, 'Content is required'),
-      pronunciation: z.string().optional(),
-      audioUrl: z.string().optional(),
-      imageUrl: z.string().optional(),
-      description: z.string().max(500, 'Description must be 500 characters or less').optional(),
-      order: z.number().default(0),
-    })
-  ).default([]),
+  isActive: z.boolean(),
 });
 
-export const PracticeForm = () => {
-  const navigate = useNavigate();
-  const { data: coursesResponse } = useGetAllCoursesQuery({ page: 1, limit: 1000 });
-  const [createPractice, { isLoading }] = useCreatePracticeMutation();
+type PracticeFormData = z.infer<typeof practiceSchema>;
+
+interface PracticeFormProps {
+  initialData?: Practice;
+  onSubmit: (data: FormData) => Promise<void>;
+  isSubmitting: boolean;
+}
+
+export const PracticeForm = ({
+  initialData,
+  onSubmit,
+  isSubmitting,
+}: PracticeFormProps) => {
+  const { data: courses, isLoading: isLoadingCourses } = useGetAllCoursesQuery({
+    page: 1,
+    limit: 1000,
+  });
+
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
   const form = useForm<PracticeFormData>({
     resolver: zodResolver(practiceSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      course: '',
-      thumbnail: '',
-      isActive: true,
-      items: [],
+      title: initialData?.title || '',
+      description: initialData?.description || '',
+      course: initialData?.course?._id || '',
+      thumbnail: initialData?.thumbnail || '',
+      isActive: initialData?.isActive ?? true,
     },
   });
-
-  const items = form.watch('items') || [];
-  const thumbnail = form.watch('thumbnail');
-
-  const handleItemsChange = (newItems: PracticeItem[]) => {
-    const itemsWithOrder = newItems.map((item, index) => ({
-      ...item,
-      order: index
-    }));
-    form.setValue('items', itemsWithOrder);
-  };
 
   const handleThumbnailUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        form.setValue('thumbnail', reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setThumbnailFile(file);
+      const previewUrl = URL.createObjectURL(file);
+      form.setValue('thumbnail', previewUrl);
     }
+  };
+
+  const handleThumbnailRemove = () => {
+    if (form.watch('thumbnail')?.startsWith('blob:')) {
+      URL.revokeObjectURL(form.watch('thumbnail') || '');
+    }
+    setThumbnailFile(null);
+    form.setValue('thumbnail', '');
   };
 
   const handleFormSubmit = async (data: PracticeFormData) => {
-    try {
-      const payload = {
-        ...data,
-        course: data.course === 'none' || !data.course ? undefined : data.course,
-      };
+    const formData = new FormData();
 
-      await createPractice(payload).unwrap();
-      toast.success('Practice created successfully');
-      navigate('/practices');
-    } catch (error: any) {
-      toast.error(error?.data?.message || 'Failed to create practice');
+    // Append basic fields
+    formData.append('title', data.title);
+    formData.append('course', data.course);
+    formData.append('isActive', String(data.isActive));
+
+    if (data.description) {
+      formData.append('description', data.description);
     }
-  };
 
-  const courses = coursesResponse?.data?.data || [];
+    if (thumbnailFile) {
+      formData.append('file', thumbnailFile);
+    } else if (data.thumbnail && !data.thumbnail.startsWith('blob:')) {
+      formData.append('file', data.thumbnail);
+    }
+
+    await onSubmit(formData);
+  };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
         <div className="grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-6">
+          {/* Main Form */}
+          <div className="lg:col-span-2">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -129,13 +131,9 @@ export const PracticeForm = () => {
                         <FormControl>
                           <Input
                             placeholder="Enter practice title..."
-                            maxLength={200}
                             {...field}
                           />
                         </FormControl>
-                        <FormDescription className="text-xs">
-                          Slug will be auto-generated from the title
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -151,13 +149,9 @@ export const PracticeForm = () => {
                           <Textarea
                             placeholder="Describe this practice..."
                             rows={4}
-                            maxLength={2000}
                             {...field}
                           />
                         </FormControl>
-                        <FormDescription className="text-xs">
-                          {field.value?.length || 0} / 2000 characters
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -168,27 +162,33 @@ export const PracticeForm = () => {
                     name="course"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Course</FormLabel>
+                        <FormLabel>Course *</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          value={field.value || 'none'}
+                          defaultValue={field.value}
+                          disabled={isLoadingCourses}
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select a course (optional)" />
+                              <SelectValue
+                                placeholder={
+                                  isLoadingCourses
+                                    ? 'Loading courses...'
+                                    : 'Select a course'
+                                }
+                              />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="none">None</SelectItem>
-                            {courses.map((course: Course) => (
+                            {courses?.data?.data?.map((course: ICourse) => (
                               <SelectItem key={course._id} value={course._id}>
-                                {course.name}
+                                {course.title}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
-                        <FormDescription className="text-xs">
-                          Associate this practice with a course
+                        <FormDescription>
+                          The course this practice belongs to
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -197,31 +197,14 @@ export const PracticeForm = () => {
                 </CardContent>
               </Card>
             </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle>Practice Items</CardTitle>
-                  <FormDescription>
-                    Total items: {items.length}
-                  </FormDescription>
-                </CardHeader>
-                <CardContent>
-                  <PracticeItemManager items={items} onChange={handleItemsChange} />
-                </CardContent>
-              </Card>
-            </motion.div>
           </div>
 
+          {/* Sidebar */}
           <div className="space-y-6">
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
             >
               <Card>
                 <CardHeader>
@@ -249,16 +232,16 @@ export const PracticeForm = () => {
                     )}
                   />
 
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? (
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Creating...
+                        Saving...
                       </>
                     ) : (
                       <>
                         <Save className="mr-2 h-4 w-4" />
-                        Create Practice
+                        {initialData ? 'Update Practice' : 'Create Practice'}
                       </>
                     )}
                   </Button>
@@ -266,20 +249,21 @@ export const PracticeForm = () => {
               </Card>
             </motion.div>
 
+            {/* Thumbnail */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.3 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
             >
               <Card>
                 <CardHeader>
                   <CardTitle>Thumbnail</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {thumbnail ? (
+                  {form.watch('thumbnail') ? (
                     <div className="relative rounded-lg overflow-hidden">
                       <img
-                        src={thumbnail}
+                        src={form.watch('thumbnail')}
                         alt="Thumbnail preview"
                         className="w-full h-40 object-cover"
                       />
@@ -288,7 +272,7 @@ export const PracticeForm = () => {
                         variant="destructive"
                         size="icon"
                         className="absolute top-2 right-2 h-8 w-8"
-                        onClick={() => form.setValue('thumbnail', '')}
+                        onClick={handleThumbnailRemove}
                       >
                         <X className="h-4 w-4" />
                       </Button>

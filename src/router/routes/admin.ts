@@ -14,8 +14,9 @@ import {
 
 import withAuth from "../withAuth";
 import { UserRoles } from "@/interface/user.type";
-import PracticesPage from "@/pages/admin/practices/PracticesPage";
-import CreatePracticePage from "@/pages/admin/practices/CreatePracticePage";
+import CreatePracticePage from "@/pages/admin/practice/CreatePracticePage";
+import PracticesPage from "@/pages/admin/practice/PracticesPage";
+
 
 // 🔹 Lazy-loaded admin pages
 const AdminDashboard = lazy(() => import("@/pages/admin/Dashboard"));
@@ -91,26 +92,27 @@ export const adminRoutes = [
     roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
   },
   {
+    Component: withAuth(CreatePracticePage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
+    path: "/dashboard/practices/create",
+    name: "Create Practices",
+    icon: BookOpen,
+    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
+  },
+  {
+    Component: withAuth(PracticesPage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
+    path: "/dashboard/practices",
+    name: "Create Practices",
+    icon: BookOpen,
+    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
+  },
+  {
     Component: withAuth(AssignmentPage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
     path: "/dashboard/assignment",
     name: "Assignments",
     icon: ClipboardCheck,
     roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
   },
-  {
-    Component: withAuth(PracticesPage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
-    path: "/dashboard/practice",
-    name: "Practice",
-    icon: ClipboardCheck,
-    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
-  },
-  {
-    Component: withAuth(CreatePracticePage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
-    path: "/dashboard/practices/create",
-    name: "Practice",
-    icon: ClipboardCheck,
-    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
-  },
+
   {
     Component: withAuth(CategoryPage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
     path: "/dashboard/category",

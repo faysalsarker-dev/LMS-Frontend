@@ -94,7 +94,7 @@ export function AudioAnswerSection({
     <div className="space-y-4">
       <div className="space-y-3">
         <Label>Question Audio</Label>
-        <Tabs value={audioMode} onValueChange={handleModeChange}>
+        <Tabs value={audioMode} onValueChange={(mode) => handleModeChange(mode as 'file' | 'url')}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="file" className="gap-2">
               <Upload className="w-4 h-4" />
