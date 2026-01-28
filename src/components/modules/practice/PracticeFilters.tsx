@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/select';
 import { Search, X, SlidersHorizontal } from 'lucide-react';
 import type { PracticeFilters as PracticeFiltersType } from './practice.types';
-import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
+import {  useGetCourseForSelectQuery } from '@/redux/features/course/course.api';
 import type { ICourse } from '@/interface/course.types';
 
 interface PracticeFiltersProps {
@@ -19,10 +19,7 @@ interface PracticeFiltersProps {
 }
 
 export const PracticeFilters = ({ filters, onFiltersChange }: PracticeFiltersProps) => {
-  const { data: courses } = useGetAllCoursesQuery({
-    page: 1,
-    limit: 100,
-  });
+  const { data: courses } = useGetCourseForSelectQuery({});
 
   const handleClearFilters = () => {
     onFiltersChange({
@@ -83,7 +80,7 @@ export const PracticeFilters = ({ filters, onFiltersChange }: PracticeFiltersPro
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Courses</SelectItem>
-            {courses?.data?.data?.map((course:ICourse) => (
+            {courses?.data?.map((course:ICourse) => (
               <SelectItem key={course._id} value={course._id}>
                 {course.title}
               </SelectItem>

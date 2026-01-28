@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import {  useNavigate } from 'react-router';
 
 import { PracticeForm } from '@/components/modules/practice';
-import type { PracticeFormData } from '@/components/modules/practice';
 import toast from 'react-hot-toast';
 import { handleApiError } from '@/utils/errorHandler';
 import { useCreatePracticeMutation } from '@/redux/features/practice/practice.api';
@@ -11,7 +10,7 @@ const CreatePracticePage = () => {
   const navigate = useNavigate();
   const [ createPractice, {isLoading } ]= useCreatePracticeMutation();
 
-  const handleSubmit = async (data: PracticeFormData) => {
+  const handleSubmit = async (data: FormData) => {
     try {
       await createPractice(data);
       toast.success('Practice created successfully!');

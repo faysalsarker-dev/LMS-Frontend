@@ -1,42 +1,64 @@
+
+
 import { motion } from 'framer-motion';
 import { Link, useParams } from 'react-router';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-
-import { Edit, Layers, Music, TrendingUp, Play, Pause, ImageIcon } from 'lucide-react';
-import { useGetPracticeByIdQuery } from '@/hooks/usePracticeApi';
+import { 
+  Layers, Music, TrendingUp, Play, Pause, 
+ Plus, Settings, Volume2 
+} from 'lucide-react';
 import { format } from 'date-fns';
 import { useState, useRef } from 'react';
+import { useGetSinglePracticeQuery } from '@/redux/features/practice/practice.api';
+
+// Components
+
+import { PracticeItemDialog } from '@/components/modules/practice/PracticeItemDialog';
+import { UpdatePracticeDialog } from '@/components/modules/practice/UpdatePracticeDialog';
+import type { PracticeItem } from '@/components/modules/practice';
 
 const ViewPracticePage = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: practice, isLoading } = useGetPracticeByIdQuery(id || '');
-  const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+  const { data: practiceResponse, isLoading, refetch } = useGetSinglePracticeQuery(id, {
+    skip: !id,
+  });
+  
+  const practice = practiceResponse?.data;
+  
+  // States for Dialogs
+  const [isItemDialogOpen, setIsItemDialogOpen] = useState(false);
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+  
+  // Audio State
+  const [playingId, setPlayingId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const handlePlayAudio = (audioUrl: string, index: number) => {
-    if (playingIndex === index) {
+  const handlePlayAudio = (audioUrl: string, itemId: string) => {
+    if (playingId === itemId) {
       audioRef.current?.pause();
-      setPlayingIndex(null);
+      setPlayingId(null);
     } else {
       if (audioRef.current) {
         audioRef.current.pause();
       }
       audioRef.current = new Audio(audioUrl);
-      audioRef.current.onended = () => setPlayingIndex(null);
+      audioRef.current.onended = () => setPlayingId(null);
       audioRef.current.play();
-      setPlayingIndex(index);
+      setPlayingId(itemId);
     }
   };
 
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-6 space-y-6">
-        <Skeleton className="h-6 w-64" />
-        <Skeleton className="h-10 w-96" />
-        <Skeleton className="h-64 w-full" />
+        <Skeleton className="h-10 w-64" />
+        <div className="grid gap-6 md:grid-cols-3">
+          {[1, 2, 3].map((i) => <Skeleton key={i} className="h-24 w-full" />)}
+        </div>
+        <Skeleton className="h-96 w-full" />
       </div>
     );
   }
@@ -45,114 +67,142 @@ const ViewPracticePage = () => {
     return (
       <div className="container mx-auto px-4 py-20 text-center">
         <h2 className="text-2xl font-bold">Practice not found</h2>
+        <Button asChild className="mt-4"><Link to="/admin/practices">Back to List</Link></Button>
       </div>
     );
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-background">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-background pb-10">
       <div className="container mx-auto px-4 py-6 space-y-6">
-
-        <div className="flex justify-between items-start">
+        
+        {/* Header Actions */}
+        <div className="flex flex-col md:flex-row justify-between items-start gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">{practice.title}</h1>
-            <p className="text-muted-foreground mt-1">{practice.description}</p>
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl font-bold text-foreground">{practice.title}</h1>
+              <Badge variant={practice.isActive ? 'default' : 'destructive'}>
+                {practice.isActive ? 'Active' : 'Inactive'}
+              </Badge>
+            </div>
+            <p className="text-muted-foreground mt-2 max-w-2xl">{practice.description}</p>
           </div>
-          <Button asChild><Link to={`/admin/practices/${practice._id}/edit`}><Edit className="mr-2 h-4 w-4" /> Edit</Link></Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setIsUpdateDialogOpen(true)}>
+              <Settings className="mr-2 h-4 w-4" /> Settings
+            </Button>
+            <Button onClick={() => setIsItemDialogOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" /> Add Item
+            </Button>
+          </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          <Card>
-            <CardContent className="pt-6 flex items-center gap-4">
-              <Layers className="h-8 w-8 text-primary" />
-              <div>
-                <p className="text-sm text-muted-foreground">Total Items</p>
-                <p className="text-2xl font-bold">{practice.totalItems}</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6 flex items-center gap-4">
-              <TrendingUp className="h-8 w-8 text-accent" />
-              <div>
-                <p className="text-sm text-muted-foreground">Usage Count</p>
-                <p className="text-2xl font-bold">{practice.usageCount}</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="pt-6 flex items-center gap-4">
-              <Music className="h-8 w-8 text-warning" />
-              <div>
-                <p className="text-sm text-muted-foreground">Course</p>
-                <p className="text-lg font-semibold truncate">{practice.course?.title || 'N/A'}</p>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Stats Grid */}
+        <div className="grid gap-4 md:grid-cols-3">
+          <StatCard icon={<Layers className="text-primary" />} label="Total Items" value={practice.items?.length || 0} />
+          <StatCard icon={<TrendingUp className="text-blue-500" />} label="Usage Count" value={practice.usageCount} />
+          <StatCard icon={<Music className="text-orange-500" />} label="Course" value={practice.course?.title || 'N/A'} isSmall />
         </div>
 
-        <Card>
-          <CardHeader><CardTitle>Practice Items</CardTitle></CardHeader>
-          <CardContent className="space-y-3">
-            {practice.items.map((item, i) => (
-              <motion.div
-                key={item._id || i}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="p-4 rounded-lg border bg-muted/30 flex items-center gap-4"
-              >
-                <div className="flex items-center gap-3 flex-1">
-                  <span className="text-sm font-medium text-muted-foreground w-8">#{item.order}</span>
-                  <div className="flex-1">
-                    <p className="font-medium text-lg">{item.content}</p>
-                    {item.pronunciation && (
-                      <p className="text-sm text-muted-foreground">/{item.pronunciation}/</p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {item.imageUrl && (
-                    <div className="relative group">
-                      <img src={item.imageUrl} alt={item.content} className="h-10 w-10 rounded object-cover" />
-                      <ImageIcon className="h-3 w-3 absolute -top-1 -right-1 text-accent" />
+        {/* Practice Items List */}
+        <Card className="border-none shadow-sm bg-card/50 backdrop-blur">
+          <CardHeader className="flex flex-row items-center justify-between border-b pb-4">
+            <CardTitle className="text-xl">Practice Content</CardTitle>
+            <span className="text-xs text-muted-foreground italic">Click content to play pronunciation</span>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="divide-y">
+              {practice.items?.map((item: PracticeItem, i: number) => (
+                <motion.div
+                  key={item._id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.03 }}
+                  onClick={() => item.audioUrl && handlePlayAudio(item.audioUrl, item._id)}
+                  className="p-4 flex items-center gap-4 hover:bg-muted/50 cursor-pointer transition-colors group"
+                >
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+                      {i + 1}
                     </div>
-                  )}
-                  {item.audioUrl && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePlayAudio(item.audioUrl, i)}
-                    >
-                      {playingIndex === i ? (
-                        <><Pause className="h-4 w-4 mr-1" /> Playing</>
-                      ) : (
-                        <><Play className="h-4 w-4 mr-1" /> Test Audio</>
+                    
+                    {item.imageUrl && (
+                      <img src={item.imageUrl} alt="" className="h-12 w-12 rounded-md object-cover border bg-white" />
+                    )}
+
+                    <div className="flex-1">
+                      <p className="font-semibold text-lg group-hover:text-primary transition-colors flex items-center gap-2">
+                        {item.content}
+                        {item.audioUrl && <Volume2 className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />}
+                      </p>
+                      {item.pronunciation && (
+                        <p className="text-sm font-mono text-muted-foreground">[{item.pronunciation}]</p>
                       )}
-                    </Button>
-                  )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                     {playingId === item._id ? (
+                        <div className="flex items-center gap-1 text-primary text-sm font-medium">
+                          <Pause className="h-4 w-4 fill-current" />
+                          <span>Playing</span>
+                        </div>
+                     ) : (
+                       item.audioUrl && <Play className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
+                     )}
+                  </div>
+                </motion.div>
+              ))}
+              
+              {(!practice.items || practice.items.length === 0) && (
+                <div className="py-20 text-center space-y-3">
+                   <div className="bg-muted w-12 h-12 rounded-full flex items-center justify-center mx-auto">
+                     <Plus className="text-muted-foreground" />
+                   </div>
+                   <p className="text-muted-foreground">This practice is empty. Start by adding items.</p>
                 </div>
-              </motion.div>
-            ))}
-            {practice.items.length === 0 && (
-              <p className="text-center text-muted-foreground py-8">No items in this practice</p>
-            )}
+              )}
+            </div>
           </CardContent>
         </Card>
 
-        <div className="flex gap-2 flex-wrap">
-          <Badge variant="secondary">{practice.course?.title}</Badge>
-          <Badge variant={practice.isActive ? 'default' : 'destructive'}>
-            {practice.isActive ? 'Active' : 'Inactive'}
-          </Badge>
+        <div className="text-xs text-muted-foreground">
+          Last updated: {format(new Date(practice?.updatedAt), 'PPP p')}
         </div>
-
-        <p className="text-sm text-muted-foreground">
-          Created: {format(new Date(practice.createdAt), 'PPP')}
-        </p>
       </div>
+
+      {/* Dialogs */}
+      <PracticeItemDialog
+        open={isItemDialogOpen} 
+        onOpenChange={setIsItemDialogOpen} 
+        defaultPracticeId={practice._id}
+        onSuccess={() => refetch()} 
+      />
+      
+      <UpdatePracticeDialog
+        open={isUpdateDialogOpen}
+        onOpenChange={setIsUpdateDialogOpen}
+        practice={practice}
+        onSuccess={() => refetch()}
+      />
     </motion.div>
   );
 };
+
+// Helper Sub-component
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const StatCard = ({ icon, label, value, isSmall = false }: any) => (
+  <Card>
+    <CardContent className="pt-6 flex items-center gap-4">
+      <div className="p-3 rounded-xl bg-muted">{icon}</div>
+      <div>
+        <p className="text-sm text-muted-foreground">{label}</p>
+        <p className={isSmall ? "text-lg font-semibold truncate max-w-[150px]" : "text-2xl font-bold"}>
+          {value}
+        </p>
+      </div>
+    </CardContent>
+  </Card>
+);
 
 export default ViewPracticePage;

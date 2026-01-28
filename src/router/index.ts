@@ -7,7 +7,7 @@ import { invisibleRoutes} from "./allRoutes";
 import { AdminLayout } from "@/layout/admin/AdminLayout";
 import NotFoundPage from "@/pages/ErrorPages/NotFoundPage";
 import { publicRoutes } from "./routes/public";
-import { adminRoutes } from "./routes/admin";
+import { adminInvicibleRoutes, adminRoutes } from "./routes/admin";
 import { studentRoutes } from "./routes/student";
 
 export const router = createBrowserRouter([
@@ -40,7 +40,8 @@ export const router = createBrowserRouter([
     Component:AdminLayout,
     path:'/dashboard',
     children:[
-      ...generateRoutes(adminRoutes)
+      ...generateRoutes(adminRoutes),
+      ...generateRoutes(adminInvicibleRoutes)
     ]
   },
 

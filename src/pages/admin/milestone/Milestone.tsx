@@ -51,7 +51,7 @@ import {
   useGetAllMilestonesQuery,
   useDeleteMilestoneMutation,
 } from "@/redux/features/milestone/milestone.api";
-import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
+import {  useGetCourseForSelectQuery } from "@/redux/features/course/course.api";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { IMilestone } from "@/interface/milestone.types";
 import { handleApiError } from "@/utils/errorHandler";
@@ -80,7 +80,7 @@ export default function MilestoneDashboardPage() {
     },
     { refetchOnMountOrArgChange: true }
   );
-  const { data: courses } = useGetAllCoursesQuery({ page: 1, limit: 100000 });
+  const { data: courses } = useGetCourseForSelectQuery({});
 
   const [deleteMilestone] = useDeleteMilestoneMutation();
   const [open, setOpen] = useState(false);
@@ -175,7 +175,7 @@ handleApiError(error)
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Courses</SelectItem>
-                {courses?.data?.data?.map((course: ICourse) => (
+                {courses?.data?.map((course: ICourse) => (
                   <SelectItem key={course._id} value={course._id}>
                     {course.title}
                   </SelectItem>

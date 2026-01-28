@@ -22,7 +22,7 @@ import { AssignmentModule } from './AssignmentModule';
 import { AudioModule } from './AudioModule';
 import { STATUS_CONFIG, type IQuestion, type ITranscript, type LessonStatus, type LessonType } from '@/interface/lesson.type';
 import { useCreateLessonMutation } from '@/redux/features/lesson/lesson.api';
-import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
+import {useGetCourseForSelectQuery } from '@/redux/features/course/course.api';
 import { useGetAllMilestonesQuery } from '@/redux/features/milestone/milestone.api';
 import type { ICourse } from '@/interface/course.types';
 import type { IMilestone } from '@/interface/milestone.types';
@@ -44,7 +44,7 @@ type LessonFormData = z.infer<typeof lessonSchema>;
 export default function LessonFormMain() {
   const { t } = useTranslation();
   const [createLesson, { isLoading: isSubmitting }] = useCreateLessonMutation();
-  const { data: coursesData, isLoading: isCoursesLoading } = useGetAllCoursesQuery({ page: 1, limit: 100 });
+  const { data: coursesData, isLoading: isCoursesLoading } = useGetCourseForSelectQuery({});
   const navigate =useNavigate()
   const [lessonType, setLessonType] = useState<LessonType>('video');
   const [status, setStatus] = useState<LessonStatus>('draft');
@@ -312,7 +312,7 @@ if (audioQuestion?.audioFile) {
     }
   };
 
-  const courses = coursesData?.data.data || [];
+  const courses = coursesData?.data || [];
   const milestones = milestonesData?.data || [];
 
 

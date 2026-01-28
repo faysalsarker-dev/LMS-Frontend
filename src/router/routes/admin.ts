@@ -16,6 +16,8 @@ import withAuth from "../withAuth";
 import { UserRoles } from "@/interface/user.type";
 import CreatePracticePage from "@/pages/admin/practice/CreatePracticePage";
 import PracticesPage from "@/pages/admin/practice/PracticesPage";
+import ViewPracticePage from "@/pages/admin/practice/ViewPracticePage";
+import EditLessonPage from "@/pages/admin/lesson/EditLessonPage";
 
 
 // 🔹 Lazy-loaded admin pages
@@ -143,3 +145,22 @@ export const adminRoutes = [
   },
 
 ];
+
+
+
+export const adminInvicibleRoutes = [
+
+  {
+    Component: withAuth(ViewPracticePage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
+    path: "/dashboard/practice/view/:id",
+    name: "View Practice",
+    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
+  },
+    {
+    Component: withAuth(EditLessonPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
+    path: "/dashboard/lesson/:id/edit",
+    name: "Course Details",
+  },
+
+
+]

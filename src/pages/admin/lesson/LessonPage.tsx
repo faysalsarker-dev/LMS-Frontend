@@ -10,7 +10,7 @@ import { LessonFilters } from '@/components/modules/lessonPage/LessonFilters';
 import { LessonTable } from '@/components/modules/lessonPage/LessonTable';
 import { LessonPagination } from '@/components/modules/lessonPage/LessonPagination';
 import { useLessonFilters } from '@/components/modules/lessonPage/hook/useLessonFilters';
-import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
+import { useGetCourseForSelectQuery } from '@/redux/features/course/course.api';
 
 
 export default function LessonPage() {
@@ -44,7 +44,7 @@ export default function LessonPage() {
   } = useGetAllLessonsQuery(queryParams);
 
   // Fetch courses and milestones for filters
-  const { data: courses = [], isLoading: isLoadingCourses } = useGetAllCoursesQuery({});
+  const { data: courses = [], isLoading: isLoadingCourses } = useGetCourseForSelectQuery({});
   const { data: milestones = [], isLoading: isLoadingMilestones } = useGetAllMilestonesQuery(
      { page: 1, limit: 100, course: course },
     { skip: !course }
@@ -112,7 +112,7 @@ export default function LessonPage() {
             onMilestoneChange={setMilestone}
             onReset={resetFilters}
             hasActiveFilters={hasActiveFilters}
-            courses={courses?.data?.data}
+            courses={courses?.data}
             milestones={milestones?.data}
             isLoadingCourses={isLoadingCourses}
             isLoadingMilestones={isLoadingMilestones}

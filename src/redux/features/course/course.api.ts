@@ -35,6 +35,15 @@ export const courseApi = baseApi.injectEndpoints({
       keepUnusedDataFor: 60 * 60 * 2,
       providesTags: ["COURSE"],
     }),
+
+    getCourseForSelect: builder.query({
+      query: () => ({
+        url: `/course/select`,
+        method: "GET",
+      }),
+      keepUnusedDataFor: 60 * 60 * 5,
+      providesTags: ["COURSE"],
+    }),
     getMyEnrolledCourses: builder.query({
       query: () => ({
         url: `/course/my-enrolled-courses`,
@@ -110,4 +119,5 @@ export const {
   useGetLessonContentQuery,
   useGetMyEnrolledCoursesQuery,
   useGetMyWishlistCoursesQuery,
+  useGetCourseForSelectQuery
 } = courseApi;

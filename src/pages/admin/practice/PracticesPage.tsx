@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/pagination';
 import {  Plus } from 'lucide-react';
 import {
-  PracticeStats,
   PracticeFilters,
   PracticeList,
 } from '@/components/modules/practice';
@@ -59,8 +58,8 @@ const PracticesPage = () => {
           </Button>
         </div>
 
-        {/* Stats */}
-        <PracticeStats />
+
+
 
         {/* Filters */}
         <PracticeFilters filters={filters} onFiltersChange={setFilters} />
@@ -69,7 +68,7 @@ const PracticesPage = () => {
         <PracticeList data={data} isLoading={isLoading} onRefetch={refetch} />
 
         {/* Pagination */}
-        {data && data.meta.totalPages > 1 && (
+        {data && data?.meta?.totalPages > 1 && (
           <Pagination>
             <PaginationContent>
               <PaginationItem>

@@ -25,7 +25,7 @@ import { toast } from "react-hot-toast";
 
 
 import { handleApiError } from "@/utils/errorHandler";
-import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
+import { useGetCourseForSelectQuery } from "@/redux/features/course/course.api";
 import { useCreateMilestoneMutation, useUpdateMilestoneMutation } from "@/redux/features/milestone/milestone.api";
 import type { IMilestone } from "@/interface/milestone.types";
 import type { ICourse } from "@/interface/course.types";
@@ -50,7 +50,7 @@ export default function MilestoneForm({
   mode,
   initialData,
 }: MilestoneFormProps) {
-  const { data, isLoading } = useGetAllCoursesQuery({ page: 1, limit: 100000 });
+  const { data, isLoading } = useGetCourseForSelectQuery({});
   const [createMilestone ,{isLoading: isCreating}] = useCreateMilestoneMutation();
   const [updateMilestone ,{isLoading: isUpdating}] = useUpdateMilestoneMutation();
 
@@ -158,7 +158,7 @@ await updateMilestone({ id: initialData._id, ...values }).unwrap();
                 {isLoading ? (
                   <p className="text-sm p-2">Loading courses...</p>
                 ) : (
-                  data?.data?.data?.map((course: ICourse) => (
+                  data?.data?.map((course: ICourse) => (
                     <SelectItem key={course._id} value={course._id}>
                       {course.title}
                     </SelectItem>

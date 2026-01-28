@@ -1,6 +1,6 @@
 
 export interface PracticeItem {
-  _id?: string;
+  _id: string;
   content: string;
   pronunciation?: string;
   audioUrl: string; 

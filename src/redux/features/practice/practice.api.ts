@@ -54,9 +54,6 @@ export const practiceApi = baseApi.injectEndpoints({
       invalidatesTags: ["PRACTICE", "COURSE"],
     }),
 
-    /* =====================
-       DELETE (ADMIN)
-    ===================== */
     deletePractice: builder.mutation({
       query: (id) => ({
         url: `/practice/${id}`,
@@ -64,6 +61,48 @@ export const practiceApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["PRACTICE", "COURSE"],
     }),
+
+
+
+     addItemToPractice: builder.mutation({
+      query: (data) => ({
+        url: "/practice/items",
+        method: "POST",
+        data,
+      }),
+      invalidatesTags: ["PRACTICE"],
+    }),
+
+    updatePracticeItem: builder.mutation({
+      query: ({ practiceId, itemId, data }) => ({
+        url: `/practice/${practiceId}/items/${itemId}`,
+        method: "PATCH",
+        data,
+      }),
+      invalidatesTags: ["PRACTICE"],
+    }),
+
+    deletePracticeItem: builder.mutation({
+      query: ({ practiceId, itemId }) => ({
+        url: `/practice/${practiceId}/items/${itemId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["PRACTICE"],
+    }),
+
+    reorderPracticeItems: builder.mutation({
+      query: ({ practiceId, itemOrders }) => ({
+        url: `/practice/${practiceId}/items/reorder`,
+        method: "PATCH",
+        data: { itemOrders },
+      }),
+      invalidatesTags: ["PRACTICE"],
+    }),
+ 
+
+
+
+
   }),
 });
 
@@ -73,4 +112,11 @@ export const {
   useGetSinglePracticeQuery,
   useUpdatePracticeMutation,
   useDeletePracticeMutation,
+// New hooks
+  useAddItemToPracticeMutation,
+  useUpdatePracticeItemMutation,
+  useDeletePracticeItemMutation,
+  useReorderPracticeItemsMutation,
+
+
 } = practiceApi;
