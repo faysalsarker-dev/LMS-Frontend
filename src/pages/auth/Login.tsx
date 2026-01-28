@@ -63,21 +63,20 @@ const {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      await login({
+    const result =  await login({
         email: data.email,
         password: data.password,
         remember: data.remember,
       }).unwrap();
 
-
-
+if(result?.data?.isActive === false){
+  return navigate(`/access-denied`);
+}
       toast.success("Login successful!");
       navigate(from, { replace: true });
       window.location.reload();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.error("Login error:", err);
-
       const message = err?.data?.message || err?.error || "Something went wrong";
 
       if (message === "Account is not verified") {

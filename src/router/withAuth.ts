@@ -13,7 +13,10 @@ const withAuth = <P extends object>(
   const AuthWrapper: React.FC<P> = (props) => {
     const {id} = useParams()
 const navigate = useNavigate()
-    const { data, isLoading } = useUserInfoQuery({});
+const { data, isLoading } = useUserInfoQuery(undefined, {
+  refetchOnMountOrArgChange: false,
+});
+
 
     const user = data?.data;
 
@@ -27,12 +30,11 @@ if(!user && !isLoading){
 
 
 if (
-  !user?.email ||
   !user.isActive ||
   !user.isVerified ||
   (requiredRole?.length && !requiredRole.includes(user.role))
 ) {
-  return null;
+  navigate('/access-denied')
 }
 
 if(course && id){
