@@ -41,6 +41,22 @@ export const practiceApi = baseApi.injectEndpoints({
       keepUnusedDataFor: 60 * 5, // 5 min
       providesTags: ["PRACTICE"],
     }),
+    getSinglePracticeForUser: builder.query({
+      query: (id) => ({
+        url: `/practice/${id}/student`,
+        method: "GET",
+      }),
+      keepUnusedDataFor:60* 60 * 2, 
+      providesTags: ["PRACTICE"],
+    }),
+    getUserPractices: builder.query({
+      query: () => ({
+        url: `/practice/student`,
+        method: "GET",
+      }),
+      keepUnusedDataFor: 60 * 60 * 5, 
+      providesTags: ["PRACTICE"],
+    }),
 
     /* =====================
        UPDATE (ADMIN)
@@ -112,6 +128,8 @@ export const {
   useGetSinglePracticeQuery,
   useUpdatePracticeMutation,
   useDeletePracticeMutation,
+  useGetUserPracticesQuery,
+  useGetSinglePracticeForUserQuery,
 // New hooks
   useAddItemToPracticeMutation,
   useUpdatePracticeItemMutation,

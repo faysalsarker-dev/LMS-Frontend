@@ -32,7 +32,7 @@ import {
   X,
   Music,
 } from 'lucide-react';
-import { useAddItemToPracticeMutation } from '@/redux/features/practice/practice.api';
+import { useUpdatePracticeItemMutation } from '@/redux/features/practice/practice.api';
 import { toast } from 'sonner';
 import { handleApiError } from '@/utils/errorHandler';
 
@@ -46,7 +46,6 @@ type MediaMode = 'file' | 'url';
 
 // Schema
 const itemSchema = z.object({
-  practiceId: z.string().min(1, 'Please select a practice'),
   content: z.string().min(1, 'Content is required'),
   pronunciation: z.string().optional(),
   audioUrl: z.string().min(1, 'Audio is required'),
@@ -56,28 +55,39 @@ const itemSchema = z.object({
 
 type ItemFormData = z.infer<typeof itemSchema>;
 
-interface PracticeItemDialogProps {
+interface PracticeItem {
+  _id: string;
+  content: string;
+  pronunciation?: string;
+  audioUrl: string;
+  imageUrl?: string;
+  order: number;
+}
+
+interface PracticeItemUpdateDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  defaultPracticeId?: string;
+  practiceId: string;
+  item: PracticeItem | null;
   onSuccess?: () => void;
 }
 
-export const PracticeItemDialog = ({
+export const PracticeItemUpdateDialog = ({
   open,
   onOpenChange,
-  defaultPracticeId,
+  practiceId,
+  item,
   onSuccess,
-}: PracticeItemDialogProps) => {
+}: PracticeItemUpdateDialogProps) => {
   // API
-  const [addItemToPractice, { isLoading: isSubmitting }] = useAddItemToPracticeMutation();
+  const [updatePracticeItem, { isLoading: isSubmitting }] = useUpdatePracticeItemMutation();
 
   // Media State
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [audioMode, setAudioMode] = useState<MediaMode>('file');
-  const [imageMode, setImageMode] = useState<MediaMode>('file');
-  
+  const [audioMode, setAudioMode] = useState<MediaMode>('url');
+  const [imageMode, setImageMode] = useState<MediaMode>('url');
+
   // Audio Player State
   const [playingAudio, setPlayingAudio] = useState(false);
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
@@ -86,7 +96,6 @@ export const PracticeItemDialog = ({
   const form = useForm<ItemFormData>({
     resolver: zodResolver(itemSchema),
     defaultValues: {
-      practiceId: defaultPracticeId || '',
       content: '',
       pronunciation: '',
       audioUrl: '',
@@ -95,12 +104,23 @@ export const PracticeItemDialog = ({
     },
   });
 
-  // Effects
+  // Populate form when item changes
   useEffect(() => {
-    if (defaultPracticeId) {
-      form.setValue('practiceId', defaultPracticeId);
+    if (item && open) {
+      form.reset({
+        content: item.content,
+        pronunciation: item.pronunciation || '',
+        audioUrl: item.audioUrl,
+        imageUrl: item.imageUrl || '',
+        order: item.order,
+      });
+      // Reset to URL mode when opening with existing item
+      setAudioMode('url');
+      setImageMode('url');
+      setAudioFile(null);
+      setImageFile(null);
     }
-  }, [defaultPracticeId, form]);
+  }, [item, open, form]);
 
   // Cleanup audio element on unmount
   useEffect(() => {
@@ -178,10 +198,18 @@ export const PracticeItemDialog = ({
 
   const handleAudioModeChange = useCallback(
     (mode: string) => {
-      setAudioMode(mode as MediaMode);
-      handleAudioRemove();
+      const newMode = mode as MediaMode;
+      setAudioMode(newMode);
+      
+      if (newMode === 'url' && item) {
+        // Restore original audio URL when switching back to URL mode
+        form.setValue('audioUrl', item.audioUrl);
+        setAudioFile(null);
+      } else if (newMode === 'file') {
+        handleAudioRemove();
+      }
     },
-    [handleAudioRemove]
+    [handleAudioRemove, item, form]
   );
 
   // Image Handlers
@@ -209,14 +237,24 @@ export const PracticeItemDialog = ({
 
   const handleImageModeChange = useCallback(
     (mode: string) => {
-      setImageMode(mode as MediaMode);
-      handleImageRemove();
+      const newMode = mode as MediaMode;
+      setImageMode(newMode);
+      
+      if (newMode === 'url' && item) {
+        // Restore original image URL when switching back to URL mode
+        form.setValue('imageUrl', item.imageUrl || '');
+        setImageFile(null);
+      } else if (newMode === 'file') {
+        handleImageRemove();
+      }
     },
-    [handleImageRemove]
+    [handleImageRemove, item, form]
   );
 
   // Form Handlers
   const handleFormSubmit = async (data: ItemFormData) => {
+    if (!item) return;
+
     try {
       const formData = new FormData();
 
@@ -241,8 +279,13 @@ export const PracticeItemDialog = ({
         formData.append('imageUrl', data.imageUrl);
       }
 
-      await addItemToPractice(formData).unwrap();
-      toast.success('Item added successfully!');
+      await updatePracticeItem({
+        practiceId,
+        itemId: item._id,
+        data: formData,
+      }).unwrap();
+
+      toast.success('Item updated successfully!');
       handleClose();
       onSuccess?.();
     } catch (error) {
@@ -254,8 +297,8 @@ export const PracticeItemDialog = ({
     form.reset();
     setAudioFile(null);
     setImageFile(null);
-    setAudioMode('file');
-    setImageMode('file');
+    setAudioMode('url');
+    setImageMode('url');
     if (audioElement) {
       audioElement.pause();
       audioElement.src = '';
@@ -269,9 +312,9 @@ export const PracticeItemDialog = ({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[550px] max-h-[95vh] overflow-y-auto p-0">
         <DialogHeader className="p-6 pb-2">
-          <DialogTitle className="text-xl">Add Practice Item</DialogTitle>
+          <DialogTitle className="text-xl">Update Practice Item</DialogTitle>
           <DialogDescription>
-            Configure the content and media for this practice session.
+            Modify the content and media for this practice item.
           </DialogDescription>
         </DialogHeader>
 
@@ -343,7 +386,7 @@ export const PracticeItemDialog = ({
                   <div className="flex items-center space-x-1">
                     <RadioGroupItem value="file" id="a-f" />
                     <Label htmlFor="a-f" className="text-xs cursor-pointer">
-                      Upload
+                      Upload New
                     </Label>
                   </div>
                   <div className="flex items-center space-x-1">
@@ -357,7 +400,7 @@ export const PracticeItemDialog = ({
 
               {audioMode === 'file' ? (
                 <div className="flex gap-2">
-                  {form.watch('audioUrl') ? (
+                  {form.watch('audioUrl') && audioFile ? (
                     <div className="flex-1 flex items-center justify-between p-2 border rounded-md bg-secondary/20">
                       <div className="flex items-center gap-2">
                         <Button
@@ -436,7 +479,7 @@ export const PracticeItemDialog = ({
                   <div className="flex items-center space-x-1">
                     <RadioGroupItem value="file" id="i-f" />
                     <Label htmlFor="i-f" className="text-xs cursor-pointer">
-                      Upload
+                      Upload New
                     </Label>
                   </div>
                   <div className="flex items-center space-x-1">
@@ -450,7 +493,7 @@ export const PracticeItemDialog = ({
 
               {imageMode === 'file' ? (
                 <div className="flex gap-2">
-                  {form.watch('imageUrl') ? (
+                  {form.watch('imageUrl') && imageFile ? (
                     <div className="relative h-20 w-20 group">
                       <img
                         src={form.watch('imageUrl')}
@@ -480,11 +523,30 @@ export const PracticeItemDialog = ({
                   )}
                 </div>
               ) : (
-                <Input
-                  placeholder="Image URL..."
-                  value={form.watch('imageUrl')}
-                  onChange={(e) => form.setValue('imageUrl', e.target.value)}
-                />
+                <div className="space-y-2">
+                  <Input
+                    placeholder="Image URL..."
+                    value={form.watch('imageUrl')}
+                    onChange={(e) => form.setValue('imageUrl', e.target.value)}
+                  />
+                  {form.watch('imageUrl') && (
+                    <div className="relative h-20 w-20 group">
+                      <img
+                        src={form.watch('imageUrl')}
+                        alt="Current preview"
+                        className="h-full w-full object-cover rounded-md border"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleImageRemove}
+                        className="absolute -top-2 -right-2 bg-destructive text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        aria-label="Remove image"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
 
@@ -496,10 +558,10 @@ export const PracticeItemDialog = ({
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
+                    Updating...
                   </>
                 ) : (
-                  'Add to Practice'
+                  'Update Item'
                 )}
               </Button>
             </DialogFooter>

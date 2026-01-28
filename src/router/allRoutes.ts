@@ -3,6 +3,7 @@ import { lazy } from "react";
 
 import withAuth from "./withAuth";
 import CheckoutPage from "@/pages/Checkout/CheckoutPage";
+import PracticeDetail from "@/pages/practice/PracticeDetail";
 
 
 
@@ -35,6 +36,11 @@ export const invisibleRoutes = [
     Component: withAuth(CheckoutPage),
     path: "/checkout/:slug",
     name: "Course Details",
+  },
+  {
+    Component: withAuth(PracticeDetail),
+    path: "/practice/:slug",
+    name: "Practice Details",
   },
 
 

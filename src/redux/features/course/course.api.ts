@@ -22,6 +22,8 @@ export const courseApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+    keepUnusedDataFor: 60 * 60 * 1,
+
       providesTags: ["COURSE"],
     }),
 

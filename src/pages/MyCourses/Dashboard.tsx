@@ -7,10 +7,14 @@ import { motion } from 'framer-motion';
 import EnrolledCourseCard, { EnrolledCourseCardLg } from '@/components/shared/EnrolledCourseCard';
 import { useGetMyEnrolledCoursesQuery } from '@/redux/features/course/course.api';
 import { useTranslation } from 'react-i18next';
+import { useGetUserPracticesQuery } from '@/redux/features/practice/practice.api';
+import { PracticeCard } from '@/components/modules/practice/PracticeCard';
+import type { Practice } from '@/components/modules/practice';
 
 const Dashboard = () => {
   const { data } = useUserInfoQuery({});
   const { data: enrolledCoursesData } = useGetMyEnrolledCoursesQuery({});
+  const { data: userPracticesData } = useGetUserPracticesQuery({});
 const { t }=useTranslation()
 
 
@@ -227,11 +231,19 @@ const { t }=useTranslation()
                       transition={{ delay: 0.2 }}
                       className="text-center py-12"
                     >
-                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-accent/10 mb-4">
-                        <Trophy className="h-8 w-8 text-accent" />
-                      </div>
-                      <h3 className="text-lg font-semibold mb-2">Coming Soon</h3>
-                      <p className="text-muted-foreground">Practice sessions will be available here to test your knowledge!</p>
+                 {
+                  !userPracticesData?.data && userPracticesData?.data.length > 0 ? (
+                    <p className="text-muted-foreground">You have  practice sessions available. Keep practicing to enhance your skills!</p>
+                  ):( 
+                    <div className='grid md:grid-cols-3 lg:grid-cols-4 '>
+{
+  userPracticesData?.data.map((practice:Practice) => (
+    <PracticeCard key={practice._id} data={practice} />
+  ))
+}
+                    </div>
+                  )
+                 }
                     </motion.div>
                   </CardContent>
                 </Card>

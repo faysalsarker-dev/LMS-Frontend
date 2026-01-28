@@ -10,6 +10,7 @@ import { publicRoutes } from "./routes/public";
 import { adminInvicibleRoutes, adminRoutes } from "./routes/admin";
 import { studentRoutes } from "./routes/student";
 import AccessDenied from "@/pages/ErrorPages/AccessDenied";
+import Unauthorized from "@/pages/ErrorPages/Unauthorized";
 
 export const router = createBrowserRouter([
 
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([
 {
   Component:AccessDenied,
   path:'/access-denied'
+},
+{
+  Component:Unauthorized,
+  path:'/unauthorized'
 },
 {
   Component:NotFoundPage,
