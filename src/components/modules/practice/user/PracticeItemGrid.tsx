@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { PracticeItem } from "@/types/practice";
 import { PracticeItemCard } from "./PracticeItemCard";
+import type { PracticeItem } from "../practice.types";
 
 interface PracticeItemGridProps {
   items: PracticeItem[];
@@ -23,8 +23,8 @@ export const PracticeItemGrid = ({
         Tap to hear each letter
       </h2>
       
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
-        {items.map((item, index) => (
+      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 px-2">
+        {items?.map((item, index) => (
           <PracticeItemCard
             key={item._id}
             item={item}

@@ -4,6 +4,8 @@ import { lazy } from "react";
 import withAuth from "./withAuth";
 import CheckoutPage from "@/pages/Checkout/CheckoutPage";
 import PracticeDetail from "@/pages/practice/PracticeDetail";
+import TermsAndConditions from "@/pages/policy/TermsAndConditions";
+import PrivacyPolicyPage from "@/pages/policy/PrivacyPage";
 
 
 
@@ -33,13 +35,23 @@ export const invisibleRoutes = [
     name: "Course Details",
   },
   {
+    Component: TermsAndConditions,
+    path: "/terms-and-conditions",
+    name: "Terms and Conditions",
+  },
+  {
+    Component: PrivacyPolicyPage,
+    path: "/privacy-policy",
+    name: "Privacy & Policy",
+  },
+  {
     Component: withAuth(CheckoutPage),
     path: "/checkout/:slug",
     name: "Course Details",
   },
   {
     Component: withAuth(PracticeDetail),
-    path: "/practice/:slug",
+    path: "/practice/:id",
     name: "Practice Details",
   },
 

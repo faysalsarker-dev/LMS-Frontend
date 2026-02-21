@@ -15,12 +15,16 @@ import { toast } from 'react-hot-toast';
 import { loginSchema, type LoginFormValues } from "@/schema/auth";
 // import DemoAccess from "@/components/shared/DemoAccess";
 import { useTranslation } from "react-i18next";
+import { DeviceConflictDialog } from "@/components/modules/auth/DeviceConflictDialog";
 
 
 
 const Login = () => {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [conflictEmail, setConflictEmail] = useState<string | null>(null);
+
   const [focusedField, setFocusedField] = useState<string | null>(null);
   
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
@@ -63,6 +67,7 @@ const {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
+      setConflictEmail(data.email)
     const result =  await login({
         email: data.email,
         password: data.password,
@@ -70,14 +75,26 @@ const {
       }).unwrap();
 
 if(result?.data?.isActive === false){
+  setConflictEmail(null)
   return navigate(`/access-denied`);
 }
+  setConflictEmail(null)
+
       toast.success("Login successful!");
       navigate(from, { replace: true });
       window.location.reload();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const message = err?.data?.message || err?.error || "Something went wrong";
+   // handle specific login conflict error
+
+    if (err.status == 409) {
+      console.log(err.data)
+      setOpen(true); // show dialog
+      return; // don't show toast
+    }
+
+
 
       if (message === "Account is not verified") {
         return navigate(`/verify-account/${data.email}`);
@@ -111,6 +128,14 @@ if(result?.data?.isActive === false){
     <div className="relative min-h-screen flex bg-background overflow-hidden">
       <FloatingElements />
 {/* <DemoAccess /> */}
+
+<DeviceConflictDialog open={open} setOpen={setOpen}
+
+email={conflictEmail || ""}
+
+/>
+
+ 
       <div className="w-full flex items-center justify-center p-6 sm:p-12">
         <motion.div
           className="w-full max-w-md z-10"
@@ -335,11 +360,11 @@ if(result?.data?.isActive === false){
             >
               <p>
                 {t("auth.bySigningIn")}{" "}
-                <Link to="/terms" className="text-primary hover:underline">
+                <Link to="/terms-and-conditions" className="text-primary hover:underline">
                   {t("auth.termsOfService")}
                 </Link>{" "}
                 {t("auth.and")}{" "}
-                <Link to="/privacy" className="text-primary hover:underline">
+                <Link to="/privacy-policy" className="text-primary hover:underline">
                   {t("auth.privacyPolicy")}
                 </Link>
               </p>

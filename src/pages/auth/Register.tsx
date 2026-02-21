@@ -305,11 +305,11 @@ const Register = () => {
               />
               <Label htmlFor="agreeToTerms" className="text-sm leading-relaxed">
                 {t("auth.register.agreeToTerms")}{" "}
-                <Link to="/terms" className="text-primary hover:underline font-medium">
+                <Link to="/terms-and-conditions" className="text-primary hover:underline font-medium">
                   {t("auth.termsOfService")}
                 </Link>{" "}
                 {t("auth.and")}{" "}
-                <Link to="/privacy" className="text-primary hover:underline font-medium">
+                <Link to="/privacy-policy" className="text-primary hover:underline font-medium">
                   {t("auth.privacyPolicy")}
                 </Link>
               </Label>

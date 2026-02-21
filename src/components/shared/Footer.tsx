@@ -4,14 +4,30 @@ import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, MapPin, Phone } 
 import { useTranslation } from "react-i18next";
 import Logo from "./Logo";
 
+
+
+
+
 const Footer = () => {
   const { t } = useTranslation();
   const publicRoutes = [
     { path: "/", name: t("navbar.home") },
     { path: "/courses", name: t("navbar.courses") },
-    { path: "/about", name: t("navbar.about") },
+   
     { path: "/contact", name: t("navbar.contact") },
   ];
+
+
+const resources = [
+   { path: "/about-us", name: t("navbar.about") },
+  {name:t("footer.PrivacyPolicy"),path:'/privacy-policy'},
+  {name:t("footer.TermsandConditions"),path:'/terms-and-conditions'},
+  
+  
+]
+
+
+
 
 // Social media links
 const socialLinks = [
@@ -94,15 +110,15 @@ const itemVariants = {
           <motion.div variants={itemVariants} className="space-y-4">
             <h4 className="text-foreground font-semibold">{t("footer.resources")}</h4>
             <ul className="space-y-2">
-              {[t("footer.helpCenter"), t("footer.blog"), t("footer.tutorials"), t("footer.faqs")].map((item, index) => (
+              {resources.map((item, index) => (
                 <li key={index}>
-                  <a
-                    href="#"
+                  <Link
+                  to={item.path}
                     className="text-muted-foreground text-sm hover:text-primary transition-colors duration-200 inline-flex items-center gap-1 group"
                   >
                     <span className="w-0 h-px bg-primary transition-all duration-200 group-hover:w-3" />
-                    {item}
-                  </a>
+                    {item.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -118,14 +134,20 @@ const itemVariants = {
               </li>
               <li className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Mail className="w-4 h-4 text-primary flex-shrink-0" />
-                <a href="mailto:faysalsarker.dev@gmail.com" className="hover:text-primary transition-colors">
-                  faysalsarker.dev@gmail.com
+                <a href="mailto:Applevillage888@gmail.com" className="hover:text-primary transition-colors">
+                  Applevillage888@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-3 text-sm text-muted-foreground">
                 <Phone className="w-4 h-4 text-primary flex-shrink-0" />
-                <a href="tel:01884570877" className="hover:text-primary transition-colors">
-                  01884570877
+                <a href="tel:8801763643585" className="hover:text-primary transition-colors">
+                  +8801763643585
+                </a>
+              </li>
+              <li className="flex items-center gap-3 text-sm text-muted-foreground">
+                <Phone className="w-4 h-4 text-primary flex-shrink-0" />
+                <a href="tel:8616608933230" className="hover:text-primary transition-colors">
+                +8616608933230
                 </a>
               </li>
             </ul>

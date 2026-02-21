@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Volume2 } from "lucide-react";
-import { PracticeItem } from "@/types/practice";
 import { cn } from "@/lib/utils";
+import type { PracticeItem } from "../practice.types";
 
 interface PracticeItemCardProps {
   item: PracticeItem;

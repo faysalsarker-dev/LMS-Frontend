@@ -18,6 +18,14 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["USER"],
     }),
+    logoutFromOthers: builder.mutation({
+      query: (email) => ({
+        url: "/user/logout-all",
+        method: "POST",
+        data:email
+      }),
+      invalidatesTags: ["USER"],
+    }),
     register: builder.mutation({
       query: (userInfo) => ({
         url: "/user/register",
@@ -152,5 +160,6 @@ export const {
   useAddToWishlistMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
-  useUpdatePasswordMutation
+  useUpdatePasswordMutation,
+  useLogoutFromOthersMutation
 } = authApi;

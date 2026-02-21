@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { PlayCircle, Layers, ArrowRight } from "lucide-react";
+
+import { ArrowRight } from "lucide-react";
 import type { Practice } from "./practice.types";
+import { Link } from "react-router";
 
 interface PracticeCardProps {
   data: Practice;
@@ -34,11 +35,7 @@ export const PracticeCard = ({ data }: PracticeCardProps) => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
 
 
-          {/* Items badge */}
-          <Badge className="absolute top-3 right-3 bg-white/90 dark:bg-slate-950/90 text-primary border-none flex items-center gap-1">
-            <Layers className="h-3 w-3" />
-            {data.totalItems} Items
-          </Badge>
+       
         </div>
 
         {/* Content */}
@@ -55,32 +52,29 @@ export const PracticeCard = ({ data }: PracticeCardProps) => {
             {data.description ||
               "Start practicing your skills with this curated set of exercises."}
           </p>
-
-          <div className="flex items-center gap-2 text-xs font-medium text-slate-500 pt-1">
-            <PlayCircle className="h-3 w-3" />
-            {data.usageCount.toLocaleString()} plays
-          </div>
         </CardContent>
 
         {/* Footer */}
         <CardFooter className="p-5 pt-0">
-          <Button
-            size="lg"
-            className="relative w-full rounded-xl font-semibold overflow-hidden group"
-          >
-            <span className="relative z-10 flex items-center justify-center gap-2">
-              Continue Practice
-              <motion.span
-                animate={{ x: [0, 6, 0] }}
-                transition={{ repeat: Infinity, duration: 1.4 }}
-              >
-                <ArrowRight className="h-4 w-4" />
-              </motion.span>
-            </span>
-
-            {/* Button glow */}
-            <span className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-          </Button>
+       <Link  to={`/practice/${data.slug}`} className="w-full">
+            <Button
+              size="lg"
+              className="relative w-full rounded-xl font-semibold overflow-hidden group"
+            >
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Continue Practice
+                <motion.span
+                  animate={{ x: [0, 6, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.4 }}
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </motion.span>
+              </span>
+  
+              {/* Button glow */}
+              <span className="absolute inset-0 bg-gradient-to-r from-primary/80 to-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+            </Button>
+       </Link>
         </CardFooter>
       </Card>
     </motion.div>

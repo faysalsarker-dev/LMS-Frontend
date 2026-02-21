@@ -11,5 +11,5 @@ export const publicRoutes = [
   { Component: Courses, path: "/courses", name: "Courses" },
   { Component: CourseDetails, path: "/courses/:slug", name: "Course Details" },
   { Component: Contact, path: "/contact", name: "Contact" },
-  { Component: About, path: "/about", name: "About" },
+  { Component: About, path: "/About-us", name: "About" },
 ];

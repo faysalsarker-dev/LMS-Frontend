@@ -1,217 +1,228 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Users, Target, Award, Heart, GraduationCap, Globe, Zap } from 'lucide-react';
-import { Link } from 'react-router';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Mail, 
+  Phone, 
+  Globe, 
+  MapPin, 
+  ShieldCheck, 
+  CheckCircle2, 
+  Users2, 
+  Building2 
+} from "lucide-react";
 
-const About = () => {
-  const stats = [
-    { icon: <Users className="h-8 w-8 text-primary" />, number: "2M+", label: "Active Learners" },
-    { icon: <GraduationCap className="h-8 w-8 text-secondary" />, number: "50K+", label: "Courses" },
-    { icon: <Globe className="h-8 w-8 text-info" />, number: "190+", label: "Countries" },
-    { icon: <Award className="h-8 w-8 text-success" />, number: "1M+", label: "Certificates Issued" }
-  ];
+// Animation Variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 }
+  }
+};
 
-  const values = [
-    {
-      icon: <Target className="h-12 w-12 text-primary" />,
-      title: "Excellence",
-      description: "We strive for the highest quality in everything we do, from course content to user experience."
-    },
-    {
-      icon: <Heart className="h-12 w-12 text-secondary" />,
-      title: "Accessibility",
-      description: "Education should be available to everyone, everywhere. We break down barriers to learning."
-    },
-    {
-      icon: <Zap className="h-12 w-12 text-warning" />,
-      title: "Innovation",
-      description: "We constantly evolve our platform with cutting-edge technology and learning methodologies."
-    }
-  ];
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
 
-  const team = [
-    {
-      name: "Sarah Johnson",
-      role: "CEO & Co-Founder",
-      bio: "Former VP of Education at Google with 15+ years in EdTech innovation.",
-      initial: "S"
-    },
-    {
-      name: "Michael Chen",
-      role: "CTO & Co-Founder", 
-      bio: "Ex-Netflix engineer passionate about scalable learning platforms.",
-      initial: "M"
-    },
-    {
-      name: "Emily Rodriguez",
-      role: "Head of Content",
-      bio: "Former curriculum designer at MIT with expertise in online pedagogy.",
-      initial: "E"
-    },
-    {
-      name: "David Kim",
-      role: "VP of Engineering",
-      bio: "Full-stack developer with experience at top Silicon Valley companies.",
-      initial: "D"
-    }
-  ];
+const AboutPage: React.FC = () => {
+  const { t } = useTranslation();
+
+  // Extracting arrays from i18n
+  const offerItems = t('aboutPage.offers.items', { returnObjects: true }) as Array<{ label: string, text: string }>;
+  const teamItems = t('aboutPage.whoWeAre.teams', { returnObjects: true }) as Array<{ name: string, role: string }>;
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-gradient-hero text-primary-foreground py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl lg:text-6xl font-bold mb-6">About EduPlatform</h1>
-          <p className="text-xl lg:text-2xl text-primary-foreground/90 max-w-3xl mx-auto">
-            We're democratizing education by making world-class learning accessible to everyone, anywhere.
+    <div className="min-h-screen bg-background">
+      <main className="max-w-6xl mx-auto px-4 py-16 md:py-24 space-y-24">
+        
+        {/* HERO / GOAL SECTION */}
+        <motion.section 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={itemVariants}
+          className="text-center space-y-6"
+        >
+          <Badge variant="secondary" className="px-4 py-1 text-sm rounded-full">
+            {t('navbar.about')}
+          </Badge>
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
+            {t('aboutPage.goal.title')}
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            {t('aboutPage.goal.content')}
           </p>
-        </div>
-      </section>
+        </motion.section>
 
-      {/* Stats Section */}
-      <section className="py-16 -mt-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {stats.map((stat, index) => (
-              <Card key={index} className="text-center p-6 shadow-medium hover-lift animate-fade-in" style={{animationDelay: `${index * 0.1}s`}}>
-                <CardContent className="p-0">
-                  <div className="flex justify-center mb-4">
-                    {stat.icon}
-                  </div>
-                  <div className="text-3xl font-bold mb-2">{stat.number}</div>
-                  <div className="text-muted-foreground">{stat.label}</div>
-                </CardContent>
-              </Card>
+        {/* OFFERS SECTION */}
+        <section className="space-y-12">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold flex items-center justify-center gap-3">
+              <CheckCircle2 className="text-primary w-8 h-8" />
+              {t('aboutPage.offers.title')}
+            </h2>
+            <p className="text-muted-foreground">{t('aboutPage.offers.description')}</p>
+          </div>
+          
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {offerItems.map((item, idx) => (
+              <motion.div key={idx} variants={itemVariants}>
+                <Card className="h-full border-muted hover:border-primary/50 transition-all duration-300 shadow-sm">
+                  <CardHeader>
+                    <CardTitle className="text-lg font-bold text-primary italic">
+                      · {item.label}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      {item.text}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </section>
+
+        {/* WHO WE ARE SECTION */}
+        <section className="rounded-3xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-8 md:p-12 space-y-10">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold flex items-center justify-center gap-3">
+              <Users2 className="text-primary w-8 h-8" />
+              {t('aboutPage.whoWeAre.title')}
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              {t('aboutPage.whoWeAre.description')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {teamItems.map((team, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="flex items-start gap-4 p-4 rounded-xl bg-background border shadow-sm"
+              >
+                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <span className="text-primary font-bold">{idx + 1}</span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg">{team.name}</h3>
+                  <p className="text-sm text-muted-foreground">{team.role}</p>
+                </div>
+              </motion.div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Mission Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="animate-fade-in">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-6">Our Mission</h2>
-              <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
-                At EduPlatform, we believe that education is the most powerful tool for personal and professional 
-                transformation. Our mission is to make high-quality education accessible to everyone, regardless 
-                of their background, location, or financial situation.
-              </p>
-              <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-                We partner with world-class instructors and industry experts to create courses that are not only 
-                educational but also practical and immediately applicable in the real world.
-              </p>
-              <Link to="/courses">
-                <Button size="lg" className="bg-gradient-primary">
-                  Explore Our Courses
-                </Button>
-              </Link>
-            </div>
-            
-            <div className="animate-slide-up">
-              <div className="bg-gradient-card rounded-2xl p-8 shadow-medium">
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-primary mb-2">2018</div>
-                    <div className="text-muted-foreground">Founded</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-secondary mb-2">98%</div>
-                    <div className="text-muted-foreground">Success Rate</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-info mb-2">24/7</div>
-                    <div className="text-muted-foreground">Support</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-success mb-2">100+</div>
-                    <div className="text-muted-foreground">Languages</div>
+        {/* LEGAL SECTION */}
+        <section className="space-y-12">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold flex items-center justify-center gap-3">
+              <ShieldCheck className="text-primary w-8 h-8" />
+              {t('aboutPage.legal.title')}
+            </h2>
+            <p className="text-muted-foreground">{t('aboutPage.legal.intro')}</p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Bangladesh Office */}
+            <Card className="overflow-hidden border-2">
+              <CardHeader className="bg-muted/50 border-b">
+                <CardTitle className="flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-primary" />
+                  {t('aboutPage.legal.bangladesh.title')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-4">
+                <h4 className="font-bold text-primary">{t('aboutPage.legal.bangladesh.name')}</h4>
+                <div className="space-y-2 text-sm">
+                  <p className="flex items-start gap-2">
+                    <MapPin className="w-4 h-4 mt-0.5 text-muted-foreground shrink-0" />
+                    {t('aboutPage.legal.bangladesh.address')}
+                  </p>
+                  <div className="grid grid-cols-1 gap-1 border-t pt-4 mt-4 font-mono text-[13px]">
+                    <p>Trade License: {t('aboutPage.legal.bangladesh.tradeLicense')}</p>
+                    <p>e-TIN: {t('aboutPage.legal.bangladesh.eTIN')}</p>
+                    <p>BIN: {t('aboutPage.legal.bangladesh.bin')}</p>
+                    <p className="mt-2 text-muted-foreground italic font-sans">
+                      {t('aboutPage.legal.bangladesh.vat')}
+                    </p>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* China Office */}
+            <Card className="overflow-hidden border-2">
+              <CardHeader className="bg-muted/50 border-b">
+                <CardTitle className="flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-primary" />
+                  {t('aboutPage.legal.china.title')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-4">
+                <h4 className="font-bold text-primary">{t('aboutPage.legal.china.name')}</h4>
+                <div className="space-y-2 text-sm">
+                  <p className="flex items-start gap-2">
+                    <MapPin className="w-4 h-4 mt-0.5 text-muted-foreground shrink-0" />
+                    {t('aboutPage.legal.china.address')}
+                  </p>
+                  <div className="grid grid-cols-1 gap-1 border-t pt-4 mt-4 font-mono text-[13px]">
+                    <p>Tax ID: {t('aboutPage.legal.china.taxId')}</p>
+                    <p>Legal Rep: {t('aboutPage.legal.china.legalRep')}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* CONTACT FOOTER */}
+        <motion.footer 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="border-t pt-16"
+        >
+          <div className="bg-primary text-primary-foreground rounded-3xl p-8 md:p-12 text-center space-y-8 shadow-xl">
+            <h2 className="text-3xl font-bold">{t('aboutPage.contact.title')}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-center justify-center">
+              <a href={`mailto:${t('aboutPage.contact.email')}`} className="flex flex-col items-center gap-2 hover:opacity-80 transition-opacity">
+                <Mail className="w-6 h-6" />
+                <span className="text-sm">{t('aboutPage.contact.email')}</span>
+              </a>
+              <div className="flex flex-col items-center gap-2">
+                <Phone className="w-6 h-6" />
+                <span className="text-sm">BD: {t('aboutPage.contact.phoneBD')}</span>
               </div>
+              <div className="flex flex-col items-center gap-2">
+                <Phone className="w-6 h-6" />
+                <span className="text-sm">CN: {t('aboutPage.contact.phoneCN')}</span>
+              </div>
+              <a href={t('aboutPage.contact.website')} target="_blank" rel="noreferrer" className="flex flex-col items-center gap-2 hover:opacity-80 transition-opacity">
+                <Globe className="w-6 h-6" />
+                <span className="text-sm">Official Website</span>
+              </a>
             </div>
           </div>
-        </div>
-      </section>
+        </motion.footer>
 
-      {/* Values Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">Our Values</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              These core principles guide everything we do and shape the way we serve our learning community.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {values.map((value, index) => (
-              <Card key={index} className={`text-center p-8 hover-lift animate-fade-in`} style={{animationDelay: `${index * 0.2}s`}}>
-                <CardContent className="p-0">
-                  <div className="flex justify-center mb-6">
-                    {value.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold mb-4">{value.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{value.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">Meet Our Team</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              We're a passionate group of educators, technologists, and innovators committed to transforming learning.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, index) => (
-              <Card key={index} className={`text-center p-6 hover-lift animate-fade-in`} style={{animationDelay: `${index * 0.1}s`}}>
-                <CardContent className="p-0">
-                  <div className="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-primary-foreground text-2xl font-bold">{member.initial}</span>
-                  </div>
-                  <h3 className="font-semibold text-lg mb-1">{member.name}</h3>
-                  <Badge variant="secondary" className="mb-4">{member.role}</Badge>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{member.bio}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4">Join Our Learning Revolution</h2>
-          <p className="text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
-            Start your learning journey today and unlock your full potential with our world-class courses.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/register">
-              <Button size="lg" variant="secondary">
-                Get Started Free
-              </Button>
-            </Link>
-            <Link to="/contact">
-              <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
-                Contact Us
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      </main>
     </div>
   );
 };
 
-export default About;
+export default AboutPage;

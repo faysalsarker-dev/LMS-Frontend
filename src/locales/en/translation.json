@@ -55,8 +55,8 @@
     "quickLinks": "Quick Links",
     "resources": "Resources",
     "contactUs": "Contact Us",
-    "helpCenter": "Help Center",
-    "blog": "Blog",
+    "PrivacyPolicy": "Privacy & Policy",
+    "TermsandConditions": "Terms and Conditions",
     "tutorials": "Tutorials",
     "faqs": "FAQs",
     "description": "Empowering learners worldwide with cutting-edge online education designed for success.",
@@ -333,5 +333,252 @@
     "titleRequired": "Title is required",
     "courseRequired": "Course is required",
     "milestoneRequired": "Milestone is required"
+  },
+  
+  "aboutPage": {
+    "goal": {
+      "title": "Our Goal",
+      "content": "We help learners in Bangladesh and all over the world learn new languages. We use science-based methods to build your language skills. Our goal is to open more doors to better education and job opportunities, including the chance to study abroad. We provide every learner with a learning experience that fits their needs."
+    },
+    "offers": {
+      "title": "What We Offer",
+      "description": "Every course is designed to give you a complete learning experience. Depending on the course you choose, you will get access to:",
+      "items": [
+        { "label": "Video Lessons", "text": "Clear and easy-to-follow classes." },
+        { "label": "Mock Tests", "text": "Practice exams to help you prepare and track your progress." },
+        { "label": "Quizzes", "text": "Fun and quick checks to see what you have learned." },
+        { "label": "Word Practice", "text": "Exercises to help you remember new words." },
+        { "label": "Homework", "text": "Assignments for each lesson to practice at home and stay on track." },
+        { "label": "Books & Study Materials", "text": "Extra resources to support your learning." },
+        { "label": "Live Classes (for some courses)", "text": "Real-time classes with teachers for guidance and support." }
+      ]
+    },
+    "whoWeAre": {
+      "title": "Who We Are",
+      "description": "We are an online platform that teaches languages. Our team handles everything through different teams:",
+      "teams": [
+        { "name": "Course Team", "role": "Creates lessons, plans the syllabus, and checks teaching quality." },
+        { "name": "Teacher & Student Team", "role": "Finds and trains teachers, tracks student progress, and keeps good relationships with customers." },
+        { "name": "Tech & Operations Team", "role": "Keeps the website running well, adds new features, and fixes problems." },
+        { "name": "Office Team", "role": "Manages daily work, money, and staff to make sure everything runs smoothly." }
+      ]
+    },
+    "legal": {
+      "title": "Our Legal Information",
+      "intro": "We have two offices to serve you better:",
+      "bangladesh": {
+        "title": "Bangladesh Office (Owner)",
+        "name": "HUMANISTIC LANGUAGE CENTER (Proprietorship)",
+        "address": "Durgapur; Narail Sadar PS; Narail-7500; Bangladesh",
+        "tradeLicense": "04-007-0894-00",
+        "eTIN": "184885532684",
+        "bin": "008986153-0907",
+        "vat": "Registered under the Value Added Tax and Supplementary Duty Act, 2012."
+      },
+      "china": {
+        "title": "China Office (Group Company)",
+        "name": "Haikou Baleka International Trade Co., Ltd.",
+        "address": "5F-A779, Caisheng Building, No.15 Longhua Road, Datong Sub-district, Longhua District, Haikou City, Hainan Province",
+        "taxId": "91460000MAG0KJGRX1",
+        "legalRep": "ISLAM MD RABIUL"
+      }
+    },
+    "contact": {
+      "title": "Contact Us",
+      "email": "Applevillage888@gmail.com",
+      "phoneBD": "+8801763643585",
+      "phoneCN": "+8616608933230",
+      "website": "http://humanisticlanguagecenter.com/"
+    }
+  
+
+
+
+
+
+},
+
+
+
+  "policyPage": {
+    "title": "Terms and Conditions",
+    "intro": "These rules apply when you use our website or buy our services. By using our site, you agree to them.",
+    "sections": {
+      "account": {
+        "title": "1. Account Rules & Safety",
+        "rules": [
+          {
+            "label": "Don't Share Login Info",
+            "text": "Your username and password are for you only. If you share them with others, we may suspend or ban your account."
+          },
+          {
+            "label": "One Device Only",
+            "text": "You can only use your account on one device at a time. To use a new device, please log out from the old one first."
+          },
+          {
+            "label": "Keep Your Account Safe",
+            "text": "You are responsible for keeping your password secret. Tell us right away if someone else uses your account without permission."
+          }
+        ]
+      },
+      "expiry": {
+        "title": "2. Course Access & Expiry",
+        "items": [
+          {
+            "label": "Main Course Access (2 Years)",
+            "text": "When you buy a course, you will have access to the main study materials—such as video lessons, vocabulary exercises, books, and other content—for 2 years from the purchase date. After 2 years, access to these materials will automatically stop."
+          },
+          {
+            "label": "Live Class Access (Fixed Time)",
+            "text": "Some courses include live classes with teachers for study guidance and quality support. These live classes are only available for a fixed period (for example, 3 months or 6 months). Once that period ends, you cannot join the live classes anymore."
+          }
+        ],
+        "summary": "What This Means: After your live classes finish, you can still use all other course content (like videos, books, and practice words) until the 2-year main access period ends."
+      },
+      "payments": {
+        "title": "3. Payments, Delivery, and Refunds",
+        "paymentMethods": {
+          "label": "How to Pay",
+          "text": "We accept many payment types, such as bKash, Nagad, Rocket, Visa, Debit/Credit Card, American Express, Alipay, and WeChat Pay etc."
+        },
+        "delivery": {
+          "label": "Delivery (Instant Access)",
+          "text": "Our products are digital. You will get access to your course right after your payment is successful.",
+          "note": "Note: If your order includes a free gift or a physical book, we will ship it separately. It should arrive within 7 working days."
+        },
+        "refunds": {
+          "label": "Refund Rules",
+          "conditions": [
+            {
+              "key": "When we refund",
+              "value": "We only give refunds if there is a technical problem from our side that stops you from using the service. You must report this within 3 working days of buying."
+            },
+            {
+              "key": "Time to get refund",
+              "value": "If your refund is approved, we start the process within 3 working days. It may take 7–10 working days for the money to go back to your account."
+            },
+            {
+              "key": "No refunds",
+              "value": "Because these are digital goods, we do not refund if you change your mind, if the course does not work with your device, or if you do not follow the login steps within 24 hours of buying."
+            }
+          ]
+        }
+      },
+      "contentRules": {
+        "title": "4. Rules for Using Our Content",
+        "points": [
+          {
+            "label": "No Piracy",
+            "text": "All our course materials are protected by copyright law. Please do not share, record, or distribute our content illegally. If you do, we may take legal action against you under the Copyright Law of All Countries."
+          },
+          {
+            "label": "How You Can Use It",
+            "text": "We give you permission to use the content for yourself only. You cannot copy, change, sell, or show our content publicly without our written permission."
+          },
+          {
+            "label": "Good Behavior",
+            "text": "Do not use our site for any illegal or false activities. Do not upload viruses or harmful code."
+          }
+        ]
+      },
+      "responsibility": {
+        "title": "5. Our Limit of Responsibility",
+        "label": "No Guarantee of Results",
+        "text": "We work hard to provide good quality lessons. However, we cannot guarantee that you will pass a specific exam or get a certain job. Our methods help you learn, but your own results depend on many things. We are not responsible for your final scores or career outcomes."
+      }
+    }
+  },
+
+
+  "privacyPage": {
+    "title": "Privacy & Policy",
+    "sections": {
+      "collection": {
+        "title": "1. Information We Collect",
+        "intro": "We collect some information from you to make our services better:",
+        "items": [
+          {
+            "label": "Info you give us",
+            "text": "When you sign up or buy something, we may ask for your name, email, phone number, education details, and payment information."
+          },
+          {
+            "label": "Info we get automatically",
+            "text": "When you visit our site, we collect your IP address, browser type, and operating system. This helps us understand our users better."
+          },
+          {
+            "label": "Cookies & Logs",
+            "text": "We use small data files (cookies) to remember your choices. We also keep logs to see how people use our site, so we can improve it."
+          }
+        ]
+      },
+      "usage": {
+        "title": "2. How We Use Your Information",
+        "intro": "We use your information to:",
+        "points": [
+          "Complete your purchase and give you instant access to courses.",
+          "Send you updates, offers (you can choose to stop these), and support messages.",
+          "Suggest courses that fit your learning needs.",
+          "Make our website better and stop fraud.",
+          "Follow the law."
+        ]
+      },
+      "sharing": {
+        "title": "3. Do We Share Your Information?",
+        "intro": "We respect your trust and do not sell your personal information. We only share it in these cases:",
+        "cases": [
+          {
+            "label": "With service providers",
+            "text": "We share necessary info with trusted partners like payment companies (bKash, Alipay, etc.) to process your payments. They must keep your info safe."
+          },
+          {
+            "label": "For legal reasons",
+            "text": "If a court or government agency (like the tax office in Bangladesh or China) asks for information by law, we may have to share it."
+          },
+          {
+            "label": "If we sell the business",
+            "text": "If our company is bought by or merged with another company, your information will be transferred to the new owner. They must follow the same privacy rules."
+          },
+          {
+            "label": "With your permission",
+            "text": "In any other case, we will ask you first."
+          }
+        ]
+      },
+      "rights": {
+        "title": "4. Your Rights and Choices",
+        "options": [
+          {
+            "label": "See or delete your data",
+            "text": "You can log into your account to see, change, or delete your information. You can also email us for help."
+          },
+          {
+            "label": "Delete account",
+            "text": "If you delete your account, we will remove your data from our main systems. If you signed up using Facebook and remove the app, Facebook will automatically tell us to delete your data."
+          },
+          {
+            "label": "Stop emails",
+            "text": "If you do not want promotional emails, you can click 'unsubscribe' at the bottom of any email we send."
+          }
+        ]
+      },
+      "security": {
+        "title": "5. How We Keep Data Safe",
+        "text": "We use strong security tools like SSL/TLS encryption to protect your data when it is sent over the internet. We also use secure servers. However, no online system is 100% safe, so we cannot guarantee absolute security."
+      },
+      "changes": {
+        "title": "6. Changes to This Policy",
+        "text": "We may change this Privacy Policy sometimes. Please check this page once in a while. If you keep using our site after we make changes, it means you accept the new rules."
+      },
+      "contact": {
+        "title": "7. Contact for Complaints or Questions",
+        "text": "If you have any questions or complaints about your privacy, please contact us:",
+        "email": "Applevillage888@gmail.com",
+        "phoneBD": "+8801763643585",
+        "phoneCN": "+8616608933230"
+      }
+    }
   }
+
+
+
 }

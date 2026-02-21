@@ -77,7 +77,7 @@ const [open,setOpen]=useState<boolean>(false)
   const navigation = [
     { name: t('navbar.home'), href: '/' },
     { name: t('navbar.courses'), href: '/courses' },
-    { name: t('navbar.about'), href: '/about' },
+    { name: t('navbar.about'), href: '/About-us' },
     { name: t('navbar.contact'), href: '/contact' },
   ];
 
