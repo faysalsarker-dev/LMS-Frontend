@@ -6,6 +6,9 @@ import CheckoutPage from "@/pages/Checkout/CheckoutPage";
 import PracticeDetail from "@/pages/practice/PracticeDetail";
 import TermsAndConditions from "@/pages/policy/TermsAndConditions";
 import PrivacyPolicyPage from "@/pages/policy/PrivacyPage";
+import PaymentSuccess from "@/pages/Payments/PaymentSuccessPage";
+import PaymentFailed from "@/pages/Payments/PaymentFailed";
+import PaymentCancelled from "@/pages/Payments/PaymentCancelled";
 
 
 
@@ -53,6 +56,21 @@ export const invisibleRoutes = [
     Component: withAuth(PracticeDetail),
     path: "/practice/:id",
     name: "Practice Details",
+  },
+  {
+    Component: withAuth(PaymentSuccess),
+    path: "/payment/success",
+    name: "Payment Success",
+  },
+  {
+    Component: withAuth(PaymentFailed),
+    path: "/payment/fail",
+    name: "Payment fail",
+  },
+  {
+    Component: withAuth(PaymentCancelled),
+    path: "/payment/cancel",
+    name: "Payment cancel",
   },
 
 

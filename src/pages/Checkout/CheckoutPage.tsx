@@ -142,13 +142,10 @@ export default function CheckoutPage() {
 
       const result = await processCheckout(payload).unwrap();
 
-      if (result.success) {
-        setStep('success');
-        toast.success('Enrollment completed successfully!');
-      } else {
-        setStep('failed');
-        toast.error('Payment failed. Please try again.');
-      }
+      console.log('Checkout result:', result.data);
+ window.location.href = result.data;
+
+  
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setStep('failed');
