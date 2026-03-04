@@ -9,34 +9,25 @@ export interface EnrolmentCourse {
   title: string;
 }
 
-export type EnrolmentStatus = 'active' | 'completed' | 'cancelled';
-export type PaymentMethod = 'alipay' | 'wechat' | 'stripe' | 'paypal';
-export type PaymentStatus = 'pending' | 'completed' | 'failed' | 'refunded';
+export type PaymentStatus = "pending" | "completed" | "failed" | "cancelled" | "refunded";
 
 export interface IEnrolment {
   _id: string;
   user: EnrolmentUser;
   course: EnrolmentCourse;
-  status: EnrolmentStatus;
-  enrolledAt: string;
-  completedAt: string | null;
-  originalPrice: number;
-  discountAmount: number;
-  finalAmount: number;
   currency: string;
-  promoCodeUsed: string | null;
-  paymentMethod: PaymentMethod;
+  amount: number;
   paymentStatus: PaymentStatus;
-  transactionId: string | null;
-  paymentDate: string | null;
+  promoCode: string | null;
+  transactionId: string;
+  status: boolean;
   refundDate: string | null;
-  refundReason: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface EnrolmentFiltersState {
-  status: EnrolmentStatus | 'all';
   paymentStatus: PaymentStatus | 'all';
-  paymentMethod: PaymentMethod | 'all';
   course: string;
   search: string;
   page: number;
@@ -55,7 +46,5 @@ export interface EnrolmentsResponse {
 }
 
 export interface UpdateEnrolmentData {
-  status?: EnrolmentStatus;
   paymentStatus?: PaymentStatus;
-  refundReason?: string;
 }

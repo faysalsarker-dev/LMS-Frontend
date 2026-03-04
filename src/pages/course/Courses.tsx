@@ -53,7 +53,7 @@ const itemVariants: Variants = {
 
 const Courses = () => {
   const [searchParams] = useSearchParams();
-  
+
   // ------------------------------
   // 🔹 State Management
   // ------------------------------
@@ -63,7 +63,7 @@ const Courses = () => {
     level: "all",
     page: 1,
     limit: 9,
-    status:'published'
+    status: 'published'
   });
 
   useEffect(() => {
@@ -80,9 +80,7 @@ const Courses = () => {
   // 🔹 Data Fetching
   // ------------------------------
   const { data: categoryData, isLoading: isCategoryLoading } = useGetAllCategorysQuery({});
-  const { data, isLoading } = useGetAllCoursesQuery(filters, {
-    refetchOnMountOrArgChange: true,
-  });
+  const { data, isLoading } = useGetAllCoursesQuery(filters);
 
   const courses = data?.data?.data || [];
   const meta = data?.data?.meta || { total: 0, totalPages: 1 };
@@ -112,7 +110,7 @@ const Courses = () => {
       level: "all",
       page: 1,
       limit: 9,
-    status:'published'
+      status: 'published'
 
     });
   };
@@ -332,11 +330,10 @@ const Courses = () => {
                         <PaginationLink
                           isActive={filters.page === page}
                           onClick={() => handlePagination(page)}
-                          className={`rounded-lg ${
-                            filters.page === page
+                          className={`rounded-lg ${filters.page === page
                               ? "bg-primary text-primary-foreground hover:bg-primary/90"
                               : "hover:bg-muted"
-                          }`}
+                            }`}
                         >
                           {page}
                         </PaginationLink>

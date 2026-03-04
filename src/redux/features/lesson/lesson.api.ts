@@ -1,3 +1,4 @@
+import type { ILesson } from "@/interface";
 import { baseApi } from "@/redux/baseApi";
 
 export const lessonApi = baseApi.injectEndpoints({
@@ -9,7 +10,7 @@ export const lessonApi = baseApi.injectEndpoints({
         method: "POST",       
         data: data,          
       }),
-      invalidatesTags: ["LESSON"],
+      invalidatesTags: [{ type: "LESSON", id: "LIST" }],
     }),
 
     // Get all Lessons
@@ -22,7 +23,13 @@ export const lessonApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["LESSON"],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map((l:ILesson) => ({ type: "LESSON", id: l._id })),
+              { type: "LESSON", id: "LIST" },
+            ]
+          : [{ type: "LESSON", id: "LIST" }],
     }),
 
 
@@ -33,7 +40,7 @@ export const lessonApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       keepUnusedDataFor: 60 * 60 * 2,
-      providesTags: ["LESSON"],
+      providesTags: (_result, _error, id) => [{ type: "LESSON", id }],
     }),
 
     // Update Lesson
@@ -43,7 +50,10 @@ export const lessonApi = baseApi.injectEndpoints({
         method: "PUT",
         data: formData,    
       }),
-      invalidatesTags: ["LESSON"],
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "LESSON", id },
+        { type: "LESSON", id: "LIST" },
+      ],
     }),
 
     // Delete Lesson
@@ -52,7 +62,10 @@ export const lessonApi = baseApi.injectEndpoints({
         url: `/lesson/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["LESSON"],
+      invalidatesTags: (_result, _error, id) => [
+        { type: "LESSON", id },
+        { type: "LESSON", id: "LIST" },
+      ],
     }),
   }),
 });

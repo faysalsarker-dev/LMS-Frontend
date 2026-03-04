@@ -29,9 +29,7 @@ const itemVariants = {
 
 const EnrolmentsPage = () => {
   const [filters, setFilters] = useState<EnrolmentFiltersState>({
-    status: 'all',
     paymentStatus: 'all',
-    paymentMethod: 'all',
     course: '',
     search: '',
     page: 1,
@@ -80,12 +78,12 @@ const EnrolmentsPage = () => {
   const handleSubmit = useCallback(
     async (id: string, data: UpdateEnrolmentData) => {
       try {
-        await updateEnrolment({ id, data });
+        await updateEnrolment({ enrolmentId: id, formData: data });
         toast.success('Enrolment updated successfully');
         refetch();
         setDialogOpen(false);
         setSelectedEnrolment(null);
-      } catch (error) {
+      } catch {
         toast.error('Failed to update enrolment');
       }
     },

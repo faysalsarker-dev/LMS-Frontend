@@ -30,9 +30,9 @@ const cardHover = {
 
 export default function UserPromoUsagePage() {
 
-const {data}= useGetMyPromosQuery(undefined)
-const promo = data?.data as IPromo
-
+  const { data } = useGetMyPromosQuery(undefined)
+  const promo = data?.data as IPromo
+console.log(data,'promo')
 
   const copyToClipboard = async () => {
     try {
@@ -85,11 +85,11 @@ const promo = data?.data as IPromo
             <Card className="border-2 border-primary/20 bg-gradient-to-br from-card to-primary/5 shadow-lg">
               <CardHeader className="text-center pb-4">
                 <div className="flex justify-center mb-3">
-                                {getStatusBadge(promo?.isActive, promo?.expirationDate)}
-              
+                  {getStatusBadge(promo?.isActive, promo?.expirationDate)}
+
                 </div>
                 <CardTitle className="text-2xl">Your Exclusive Code</CardTitle>
-                <CardDescription className="text-base">{promo?.description}</CardDescription>
+                <CardDescription className="text-base text-primary/70 font-medium">Keep sharing to earn more commissions!</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Promo Code Display */}
@@ -114,7 +114,7 @@ const promo = data?.data as IPromo
                     <p className="text-2xl font-bold text-foreground">
                       {promo?.discountType === "percentage" ? `${promo?.discountValue}%` : `$${promo?.discountValue}`}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1 capitalize">{promo?.discountType} discount</p>
+                    <p className="text-xs text-muted-foreground mt-1 capitalize">{promo?.discountType?.replace("_", " ")} discount</p>
                   </div>
 
                   <div className="bg-card/50 rounded-lg p-4 border border-border">
@@ -139,19 +139,34 @@ const promo = data?.data as IPromo
                       {promo?.currentUsageCount} <span className="text-sm text-muted-foreground">/ {promo?.maxUsageCount}</span>
                     </p>
                     <div className="w-full bg-muted rounded-full h-2 mt-2">
-                   {renderUsage(promo)}
+                      {renderUsage(promo)}
                     </div>
                   </div>
 
                   <div className="bg-card/50 rounded-lg p-4 border border-border">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingUp className="h-4 w-4 text-primary" />
-                      <p className="text-sm font-medium text-muted-foreground">Per User Limit</p>
+                      <p className="text-sm font-medium text-muted-foreground">Commission Rate</p>
                     </div>
-                    <p className="text-2xl font-bold text-foreground">{promo?.maxUsagePerUser}</p>
+                    <p className="text-2xl font-bold text-foreground">{promo?.commission}%</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Maximum uses per customer
+                      Your share per enrollment
                     </p>
+                  </div>
+
+                  <div className="bg-primary/5 rounded-lg p-4 border border-primary/20 col-span-full">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <TrendingUp className="h-5 w-5 text-green-500" />
+                          <p className="text-sm font-medium text-muted-foreground">Total Earnings</p>
+                        </div>
+                        <p className="text-3xl font-bold text-foreground">${promo?.totalEarn?.toFixed(2)}</p>
+                      </div>
+                      <Button variant="outline" size="sm" className="hidden sm:flex">
+                        View Details
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -159,9 +174,9 @@ const promo = data?.data as IPromo
           </motion.div>
         </motion.div>
 
- 
 
-  
+
+
 
         {/* Info Card */}
         <motion.div variants={item}>
@@ -174,7 +189,7 @@ const promo = data?.data as IPromo
                 <div className="flex-1">
                   <h3 className="font-semibold text-foreground mb-1">Share Your Code</h3>
                   <p className="text-sm text-muted-foreground">
-                    Share this code with your friends and followers. Each time someone uses it, 
+                    Share this code with your friends and followers. Each time someone uses it,
                     you'll see the usage count increase in your analytics above.
                   </p>
                 </div>

@@ -2,9 +2,10 @@ export interface PromoCode {
   id: string;
   code: string;
   creator: string;
-  type: "percentage" | "fixed";
+  type: "percentage" | "fixed_amount";
   discountValue: number;
-  description: string;
+  commission: number;
+  totalEarn: number;
   usageCount: number;
   maxUsageCount: number;
   maxUsagePerUser: number;
@@ -25,7 +26,8 @@ export const mockPromoCodes: PromoCode[] = [
     creator: "John Doe",
     type: "percentage",
     discountValue: 20,
-    description: "Summer sale discount",
+    commission: 5,
+    totalEarn: 50,
     usageCount: 145,
     maxUsageCount: 500,
     maxUsagePerUser: 1,
@@ -37,9 +39,10 @@ export const mockPromoCodes: PromoCode[] = [
     id: "2",
     code: "WELCOME10",
     creator: "Jane Smith",
-    type: "fixed",
+    type: "fixed_amount",
     discountValue: 10,
-    description: "Welcome bonus for new users",
+    commission: 10,
+    totalEarn: 100,
     usageCount: 892,
     maxUsageCount: 1000,
     maxUsagePerUser: 1,
@@ -53,7 +56,8 @@ export const mockPromoCodes: PromoCode[] = [
     creator: "Mike Johnson",
     type: "percentage",
     discountValue: 50,
-    description: "Flash sale - limited time",
+    commission: 20,
+    totalEarn: 200,
     usageCount: 234,
     maxUsageCount: 200,
     maxUsagePerUser: 1,
@@ -67,7 +71,8 @@ export const mockPromoCodes: PromoCode[] = [
     creator: "Sarah Williams",
     type: "percentage",
     discountValue: 15,
-    description: "Loyalty program discount",
+    commission: 15,
+    totalEarn: 150,
     usageCount: 567,
     maxUsageCount: 1500,
     maxUsagePerUser: 5,
@@ -79,9 +84,10 @@ export const mockPromoCodes: PromoCode[] = [
     id: "5",
     code: "SAVE25",
     creator: "David Brown",
-    type: "fixed",
+    type: "fixed_amount",
     discountValue: 25,
-    description: "Save $25 on your purchase",
+    commission: 10,
+    totalEarn: 0,
     usageCount: 78,
     maxUsageCount: 300,
     maxUsagePerUser: 1,
@@ -95,7 +101,8 @@ export const mockPromoCodes: PromoCode[] = [
     creator: "Admin",
     type: "percentage",
     discountValue: 10,
-    description: "Expired promotional code",
+    commission: 0,
+    totalEarn: 0,
     usageCount: 456,
     maxUsageCount: 500,
     maxUsagePerUser: 1,
@@ -120,9 +127,10 @@ export const mockUserPromoCode: PromoCode = {
   id: "user-1",
   code: "MYPROMO2024",
   creator: "Current User",
-  type: "percentage",
+  type: "fixed_amount",
   discountValue: 25,
-  description: "Your exclusive discount code",
+  commission: 10,
+  totalEarn: 250,
   usageCount: 12,
   maxUsageCount: 50,
   maxUsagePerUser: 1,

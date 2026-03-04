@@ -118,21 +118,20 @@ export const PopularCoursesTable = ({ courses, isLoading }: PopularCoursesTableP
                         </div>
                       </TableCell>
                       <TableCell>
-                        {/* <div className="flex flex-col">
+                        <div className="flex flex-col">
                           <span className="font-semibold text-sm">
-                            {formatCurrency(
-                              course.isDiscounted && course.discountPrice
+                            {`${course.isDiscounted && course.discountPrice
                                 ? course.discountPrice
-                                : course.price,
-                              course.currency
-                            )}
+                                : course.price
+                              } ${course.currency}`}
                           </span>
                           {course.isDiscounted && course.discountPrice && (
                             <span className="text-xs text-muted-foreground line-through">
-                              {formatCurrency(course.price, course.currency)}
+                              {`${course.price} ${course.currency}`}
                             </span>
                           )}
-                        </div> */}
+
+                        </div>
                       </TableCell>
                     </motion.tr>
                   ))

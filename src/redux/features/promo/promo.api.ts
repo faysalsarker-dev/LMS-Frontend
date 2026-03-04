@@ -1,3 +1,4 @@
+import type { IPromo } from "@/interface/promo.interfaces";
 import { baseApi } from "@/redux/baseApi";
 
 export const promoApi = baseApi.injectEndpoints({
@@ -10,7 +11,7 @@ export const promoApi = baseApi.injectEndpoints({
         method: "POST",
         data: data,
       }),
-      invalidatesTags: ["PROMO"],
+      invalidatesTags: [{ type: "PROMO", id: "LIST" }],
     }),
     redeemPromo: builder.mutation({
       query: (data) => ({
@@ -18,7 +19,7 @@ export const promoApi = baseApi.injectEndpoints({
         method: "POST",
         data: data,
       }),
-      invalidatesTags: ["PROMO"],
+      invalidatesTags: (_result, _error, data) => [{ type: "PROMO", id: data.promoId }],
     }),
 
     // Get all Promos
@@ -27,7 +28,16 @@ export const promoApi = baseApi.injectEndpoints({
         url: "/promo/my-promo",
         method: "GET",
       }),
-      providesTags: ["PROMO"],
+      providesTags: (result) => {
+        const data = result?.data?.data || result?.data;
+        if (Array.isArray(data)) {
+          return data.map((p: IPromo) => ({ type: "PROMO" as const, id: p._id }));
+        }
+        if (data?._id) {
+          return [{ type: "PROMO" as const, id: data._id }];
+        }
+        return [];
+      },
     }),
 getAllPromos: builder.query({
   query: (params) => {
@@ -47,7 +57,16 @@ getAllPromos: builder.query({
       method: "GET",
     };
   },
-  providesTags: ["PROMO"],
+  providesTags: (result) => {
+    const data = result?.data?.data || result?.data;
+    if (Array.isArray(data)) {
+      return [
+        ...data.map((p: IPromo) => ({ type: "PROMO" as const, id: p._id })),
+        { type: "PROMO" as const, id: "LIST" },
+      ];
+    }
+    return [{ type: "PROMO" as const, id: "LIST" }];
+  },
 }),
 
     // Get single promo
@@ -56,7 +75,7 @@ getAllPromos: builder.query({
         url: `/promo/${id}`,
         method: "GET",
       }),
-      providesTags: ["PROMO"],
+      providesTags: (_result, _error, id) => [{ type: "PROMO", id }],
     }),
 
     getAnalytics: builder.query({
@@ -77,7 +96,7 @@ getAllPromos: builder.query({
       method: "GET",
     };
   },
-  providesTags: ["PROMO"],
+  providesTags: [{ type: "PROMO", id: "ANALYTICS" }],
     }),
 
     // Update promo
@@ -87,7 +106,10 @@ getAllPromos: builder.query({
         method: "PUT",
         data: data,
       }),
-      invalidatesTags: ["PROMO"],
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "PROMO", id },
+        { type: "PROMO", id: "LIST" },
+      ],
     }),
 
     // Delete promo
@@ -96,7 +118,10 @@ getAllPromos: builder.query({
         url: `/promo/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["PROMO"],
+      invalidatesTags: (_result, _error, id) => [
+        { type: "PROMO", id },
+        { type: "PROMO", id: "LIST" },
+      ],
     }),
   }),
 });

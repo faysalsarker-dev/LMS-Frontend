@@ -36,18 +36,17 @@ export const EditPromoModal = ({ promo, open, onClose }: EditPromoModalProps) =>
     if (promo) {
       reset({
         code: promo.code,
-        description: promo.description,
         discountValue: promo.discountValue,
-        discountType: promo.discountType as "percentage" | "fixed",
+        discountType: promo.discountType,
+        commission: promo.commission,
         maxUsageCount: promo.maxUsageCount ?? null,
         maxUsagePerUser: promo.maxUsagePerUser,
-        minOrderAmount: promo.minOrderAmount,
         isActive: promo.isActive,
         validFrom: promo.validFrom,
         expirationDate: promo.expirationDate,
       });
     }
-  }, [promo,reset]);
+  }, [promo, reset]);
 
   const discountType = watch("discountType");
   const validFrom = watch("validFrom");
@@ -93,26 +92,20 @@ export const EditPromoModal = ({ promo, open, onClose }: EditPromoModalProps) =>
             <Input {...register("code", { required: true })} />
           </div>
 
-          {/* Description */}
-          <div className="space-y-2">
-            <Label>Description</Label>
-            <Input {...register("description", { required: true })} />
-          </div>
-
           {/* Discount */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Discount Type</Label>
               <Select
                 value={discountType}
-                onValueChange={(v: "percentage" | "fixed") => setValue("discountType", v)}
+                onValueChange={(v: "percentage" | "fixed_amount") => setValue("discountType", v)}
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="percentage">Percentage</SelectItem>
-                  <SelectItem value="fixed">Fixed</SelectItem>
+                  <SelectItem value="fixed_amount">Fixed Amount</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -121,21 +114,37 @@ export const EditPromoModal = ({ promo, open, onClose }: EditPromoModalProps) =>
               <Label>Discount Value</Label>
               <Input
                 type="number"
-                placeholder={discountType === "percentage" ? "10%" : "$20"}
-                {...register("discountValue")}
+                placeholder={discountType === "percentage" ? "10%" : "20"}
+                {...register("discountValue", { valueAsNumber: true })}
               />
             </div>
+          </div>
+
+          {/* Commission */}
+          <div className="space-y-2">
+            <Label>Commission (%)</Label>
+            <Input
+              type="number"
+              placeholder="e.g., 10"
+              {...register("commission", { min: 0, valueAsNumber: true })}
+            />
           </div>
 
           {/* Usage */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Max Total Uses</Label>
-              <Input type="number" {...register("maxUsageCount")} />
+              <Input
+                type="number"
+                {...register("maxUsageCount", { valueAsNumber: true })}
+              />
             </div>
             <div>
               <Label>Max Per User</Label>
-              <Input type="number" {...register("maxUsagePerUser")} />
+              <Input
+                type="number"
+                {...register("maxUsagePerUser", { valueAsNumber: true })}
+              />
             </div>
           </div>
 
@@ -187,27 +196,21 @@ export const EditPromoModal = ({ promo, open, onClose }: EditPromoModalProps) =>
           </div>
 
           {/* Min order + status */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Minimum Order Amount</Label>
-              <Input type="number" {...register("minOrderAmount")} />
-            </div>
-
-            <div>
-              <Label>Status</Label>
-              <Select
-                value={isActive ? "active" : "inactive"}
-                onValueChange={(v) => setValue("isActive", v === "active")}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          {/* Status */}
+          <div className="space-y-2">
+            <Label>Status</Label>
+            <Select
+              value={isActive ? "active" : "inactive"}
+              onValueChange={(v) => setValue("isActive", v === "active")}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="inactive">Inactive</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Buttons */}

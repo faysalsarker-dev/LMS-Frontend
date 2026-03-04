@@ -1,3 +1,4 @@
+import type { ICourse } from "@/interface/course.types";
 import { baseApi } from "@/redux/baseApi";
 
 export const courseApi = baseApi.injectEndpoints({
@@ -15,18 +16,28 @@ export const courseApi = baseApi.injectEndpoints({
     // Get all courses
     getAllCourses: builder.query({
       query: (params) => {
+        const filteredParams = Object.fromEntries(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          Object.entries(params as any || {}).filter(([_, v]) => v !== undefined && v !== null && v !== "")
+        );
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const queryParams = new URLSearchParams(params as any).toString();
+        const queryParams = new URLSearchParams(filteredParams as any).toString();
         return {
-          url: `/course?${queryParams}`,
+          url: queryParams ? `/course?${queryParams}` : "/course",
           method: "GET",
         };
       },
-    keepUnusedDataFor: 60 * 60 * 1,
-
-      providesTags: ["COURSE"],
+      keepUnusedDataFor: 60 * 60, 
+      providesTags: (result) => {
+        if (result?.data?.data) {
+          return [
+            ...result.data.data.map((c: ICourse) => ({ type: "COURSE" as const, id: c._id })),
+            { type: "COURSE" as const, id: "LIST" },
+          ];
+        }
+        return [{ type: "COURSE" as const, id: "LIST" }];
+      },
     }),
-
 
     // Get single course
     getCourseBySlug: builder.query({
@@ -35,7 +46,10 @@ export const courseApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       keepUnusedDataFor: 60 * 60 * 2,
-      providesTags: ["COURSE"],
+      providesTags: (_result, _error, slug) => [
+        { type: "COURSE", id: slug },
+        { type: "COURSE", id: "LIST" },
+      ],
     }),
 
     getCourseForSelect: builder.query({
@@ -44,7 +58,7 @@ export const courseApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       keepUnusedDataFor: 60 * 60 * 5,
-      providesTags: ["COURSE"],
+      providesTags: [{ type: "COURSE", id: "SELECT" }],
     }),
     getMyEnrolledCourses: builder.query({
       query: () => ({
@@ -52,16 +66,21 @@ export const courseApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       keepUnusedDataFor: 60 * 60 * 1,
-      providesTags: ["COURSE","PROGRESS"],
+      providesTags: (result) =>
+        result
+          ? result.data.map((c: ICourse) => ({ type: "COURSE" as const, id: c._id }))
+          : [],
     }),
     getMyWishlistCourses: builder.query({
       query: () => ({
         url: `/course/my-wishlist-courses`,
         method: "GET",
       }),
-     keepUnusedDataFor: 60 * 60 * 1,
-
-      providesTags: ["COURSE","PROGRESS","USER"],
+      keepUnusedDataFor: 60 * 60 * 1,
+      providesTags: (result) =>
+        result
+          ? result.data.map((c: ICourse) => ({ type: "COURSE" as const, id: c._id }))
+          : [],
     }),
     getCourseById: builder.query({
       query: (id) => ({
@@ -69,7 +88,9 @@ export const courseApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       keepUnusedDataFor: 60 * 60 * 5,
-      providesTags: ["COURSE","PROGRESS"],
+      providesTags: (_result, _error, id) => [
+        { type: "COURSE", id },
+      ],
     }),
 
     // Update course
@@ -79,7 +100,10 @@ updateCourse: builder.mutation({
     method: "PUT",
     data: formData,
   }),
-  invalidatesTags: ["COURSE"],
+  invalidatesTags: (_result, _error, { courseId }) => [
+    { type: "COURSE", id: courseId },
+    { type: "COURSE", id: "LIST" },
+  ],
 }),
 
 getCourseCurriculum: builder.query({
@@ -88,7 +112,10 @@ getCourseCurriculum: builder.query({
         method: "GET",
       }),
       keepUnusedDataFor: 60 * 60 * 5,
-      providesTags: ["COURSE", "PROGRESS"],
+      providesTags: (_result, _error, courseId) => [
+        { type: "COURSE", id: courseId },
+        { type: "PROGRESS", id: courseId },
+      ],
     }),
 
     // Get specific heavy lesson content on-demand
@@ -98,6 +125,9 @@ getCourseCurriculum: builder.query({
         method: "GET",
       }),
       keepUnusedDataFor: 60 * 60 * 5,
+      providesTags: (_result, _error, lessonId) => [
+        { type: "LESSON", id: lessonId },
+      ],
     }),
     // Delete course
     deleteCourse: builder.mutation({
@@ -105,7 +135,9 @@ getCourseCurriculum: builder.query({
         url: `/course/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["COURSE"],
+      invalidatesTags: [
+        { type: "COURSE", id: "LIST" },
+      ],
     }),
   }),
 });

@@ -1,29 +1,35 @@
 import { motion } from 'framer-motion';
 import {
-  BookOpen,
   Users,
   DollarSign,
-  GraduationCap,
+  BookOpen,
   RefreshCw,
   AlertCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 import { useGetDashboardQuery } from '@/redux/features/overview/overview.api';
 import { StatCard } from '@/components/modules/adminDashboard/StatCard';
-import { UserStatsSection } from '@/components/modules/adminDashboard/UserStatsSection';
+
 import { MonthlyChart } from '@/components/modules/adminDashboard/MonthlyChart';
 import { RecentEnrollmentsTable } from '@/components/modules/adminDashboard/RecentEnrollmentsTable';
 import { PopularCoursesTable } from '@/components/modules/adminDashboard/PopularCoursesTable';
+import type { CurrencyEarnings } from '@/interface/dashboard.types';
 
 
 const formatCurrency = (amount: number, currency: string) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
+  try {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  } catch {
+    return `${currency} ${amount.toLocaleString()}`;
+  }
 };
 
 const containerVariants = {
@@ -40,7 +46,8 @@ const AdminDashboardPage = () => {
   const { data, isLoading, isError, refetch } = useGetDashboardQuery({});
 
   const dashboardData = data?.data;
-  const currency = dashboardData?.summary.currency || 'USD';
+  const earningsByCurrency = dashboardData?.totalEarningsByCurrency || [];
+  const currency = earningsByCurrency[0]?.currency || 'USD';
 
   // Error state
   if (isError) {
@@ -102,41 +109,56 @@ const AdminDashboardPage = () => {
           {/* Summary Stats */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
-              label="Total Courses"
-              value={dashboardData?.summary?.totalCourses?.toLocaleString() || '—'}
-              icon={BookOpen}
+              label="Total Users"
+              value={dashboardData?.totalUsers?.toLocaleString() || '—'}
+              icon={Users}
               variant="primary"
               index={0}
             />
             <StatCard
-              label="Total Transactions"
-              value={dashboardData?.summary?.totalTransactions?.toLocaleString() || '—'}
-              icon={GraduationCap}
+              label="Total Courses"
+              value={dashboardData?.totalCourses?.toLocaleString() || '—'}
+              icon={BookOpen}
               variant="accent"
               index={1}
             />
-            <StatCard
-              label="Total Earnings"
-              value={
-                dashboardData
-                  ? formatCurrency(dashboardData?.summary?.totalEarnings, currency)
-                  : '—'
-              }
-              icon={DollarSign}
-              variant="success"
-              index={2}
-            />
-            <StatCard
-              label="Total Students"
-              value={dashboardData?.summary?.totalStudents?.toLocaleString() || '—'}
-              icon={Users}
-              variant="warning"
-              index={3}
-            />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              className="h-full sm:col-span-2 lg:col-span-2"
+            >
+              <Card className="h-full transition-shadow duration-300 hover:shadow-success-glow">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-3 flex-1">
+                      <p className="text-sm font-medium text-muted-foreground">Total Earnings</p>
+                      {earningsByCurrency.length > 0 ? (
+                        <div className="space-y-2">
+                          {earningsByCurrency.map((item: CurrencyEarnings) => (
+                            <div key={item.currency} className="flex items-center justify-between gap-4">
+                              <span className="text-2xl font-bold tracking-tight">
+                                {formatCurrency(item.total, item.currency)}
+                              </span>
+                              <Badge variant="outline" className="text-xs font-medium shrink-0">
+                                {item.currency}
+                              </Badge>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-2xl font-bold tracking-tight text-muted-foreground">—</p>
+                      )}
+                    </div>
+                    <div className="rounded-xl p-3 bg-success/10 ml-4">
+                      <DollarSign className="h-6 w-6 text-success" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           </div>
-
-          {/* User Stats Section */}
-          <UserStatsSection userStats={dashboardData?.userStats} isLoading={isLoading} />
 
           {/* Monthly Chart */}
           <MonthlyChart

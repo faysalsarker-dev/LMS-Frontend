@@ -2,44 +2,41 @@ import { baseApi } from "@/redux/baseApi";
 
 export const practiceApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-
-    /* =====================
-       CREATE (ADMIN)
-    ===================== */
     createPractice: builder.mutation({
       query: (data) => ({
         url: "/practice",
         method: "POST",
         data,
       }),
-      invalidatesTags: ["PRACTICE", "COURSE"],
+      invalidatesTags: (_result, _error, data) => [
+        { type: "PRACTICE", id: "LIST" },
+        data?.courseId && { type: "COURSE", id: data.courseId },
+      ].filter(Boolean),
     }),
-
-    /* =====================
-       GET ALL (ADMIN)
-       - filter
-       - sort
-    ===================== */
     getAllPractices: builder.query({
       query: (params) => ({
         url: "/practice",
         method: "GET",
-        params, // courseId, isActive, sortBy, sortOrder
+        params, 
       }),
-      keepUnusedDataFor: 60 * 10, // 10 min
-      providesTags: ["PRACTICE"],
+      keepUnusedDataFor: 60 * 10, 
+      providesTags: (result) =>
+        result
+          ? [
+             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              ...result.data.map((p:any) => ({ type: "PRACTICE", id: p._id })),
+              { type: "PRACTICE", id: "LIST" },
+            ]
+          : [{ type: "PRACTICE", id: "LIST" }],
     }),
 
-    /* =====================
-       GET SINGLE (USER + ADMIN)
-    ===================== */
     getSinglePractice: builder.query({
       query: (id) => ({
         url: `/practice/${id}`,
         method: "GET",
       }),
       keepUnusedDataFor: 60 * 5, // 5 min
-      providesTags: ["PRACTICE"],
+      providesTags: (_result, _error, id) => [{ type: "PRACTICE", id }],
     }),
     getSinglePracticeForUser: builder.query({
       query: (id) => ({
@@ -47,7 +44,7 @@ export const practiceApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       keepUnusedDataFor:60* 60 * 2, 
-      providesTags: ["PRACTICE"],
+      providesTags: (_result, _error, id) => [{ type: "PRACTICE", id }],
     }),
     getUserPractices: builder.query({
       query: () => ({
@@ -55,7 +52,11 @@ export const practiceApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       keepUnusedDataFor: 60 * 60 * 5, 
-      providesTags: ["PRACTICE"],
+      providesTags: (result) =>
+        result
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ? result.data.map((p:any) => ({ type: "PRACTICE", id: p._id }))
+          : [],
     }),
 
     /* =====================
@@ -67,7 +68,11 @@ export const practiceApi = baseApi.injectEndpoints({
         method: "PATCH",
         data,
       }),
-      invalidatesTags: ["PRACTICE", "COURSE"],
+      invalidatesTags: (_result, _error, { id, data }) => [
+        { type: "PRACTICE", id },
+        { type: "PRACTICE", id: "LIST" },
+        data?.courseId && { type: "COURSE", id: data.courseId },
+      ].filter(Boolean),
     }),
 
     deletePractice: builder.mutation({
@@ -75,7 +80,10 @@ export const practiceApi = baseApi.injectEndpoints({
         url: `/practice/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["PRACTICE", "COURSE"],
+      invalidatesTags: (_result, _error, id) => [
+        { type: "PRACTICE", id },
+        { type: "PRACTICE", id: "LIST" },
+      ],
     }),
 
 
@@ -86,7 +94,9 @@ export const practiceApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: ["PRACTICE"],
+      invalidatesTags: (_result, _error, { practiceId }) => [
+        { type: "PRACTICE", id: practiceId },
+      ],
     }),
 
     updatePracticeItem: builder.mutation({
@@ -95,7 +105,9 @@ export const practiceApi = baseApi.injectEndpoints({
         method: "PATCH",
         data,
       }),
-      invalidatesTags: ["PRACTICE"],
+      invalidatesTags: (_result, _error, { practiceId }) => [
+        { type: "PRACTICE", id: practiceId },
+      ],
     }),
 
     deletePracticeItem: builder.mutation({
@@ -103,7 +115,9 @@ export const practiceApi = baseApi.injectEndpoints({
         url: `/practice/${practiceId}/items/${itemId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["PRACTICE"],
+      invalidatesTags: (_result, _error, { practiceId }) => [
+        { type: "PRACTICE", id: practiceId },
+      ],
     }),
 
     reorderPracticeItems: builder.mutation({
@@ -112,7 +126,9 @@ export const practiceApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: { itemOrders },
       }),
-      invalidatesTags: ["PRACTICE"],
+      invalidatesTags: (_result, _error, { practiceId }) => [
+        { type: "PRACTICE", id: practiceId },
+      ],
     }),
  
 

@@ -1,3 +1,4 @@
+import type { IUser } from "@/interface/user.types";
 import { baseApi } from "@/redux/baseApi";
 
 export const authApi = baseApi.injectEndpoints({
@@ -8,15 +9,14 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         data: userInfo,
       }),
-    invalidatesTags: ["USER"],
-
+      invalidatesTags: [{ type: "USER", id: "CURRENT" }],
     }),
     logout: builder.mutation({
       query: () => ({
         url: "/user/logout",
         method: "POST",
       }),
-      invalidatesTags: ["USER"],
+      invalidatesTags: [{ type: "USER", id: "CURRENT" }],
     }),
     logoutFromOthers: builder.mutation({
       query: (email) => ({
@@ -24,7 +24,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         data:email
       }),
-      invalidatesTags: ["USER"],
+      invalidatesTags: [{ type: "USER", id: "CURRENT" }],
     }),
     register: builder.mutation({
       query: (userInfo) => ({
@@ -39,8 +39,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
-     invalidatesTags: ["USER"],
-
+      invalidatesTags: [{ type: "USER", id: "CURRENT" }],
     }),
     updateUser: builder.mutation({
       query: ({id,payload}) => ({
@@ -48,8 +47,10 @@ export const authApi = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
-     invalidatesTags: ["USER"],
-
+     invalidatesTags: (_result, _error, { id }) => [
+        { type: "USER", id },
+        { type: "USER", id: "LIST" },
+      ],
     }),
     updatePassword: builder.mutation({
       query: (payload) => ({
@@ -57,8 +58,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
-     invalidatesTags: ["USER"],
-
+     invalidatesTags: [{ type: "USER", id: "CURRENT" }],
     }),
     sendOtp: builder.mutation({
       query: (email) => ({
@@ -66,8 +66,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         data: email,
       }),
-     invalidatesTags: ["USER"],
-
+     invalidatesTags: [{ type: "USER", id: "CURRENT" }],
     }),
     verifyOtp: builder.mutation({
       query: (payload) => ({
@@ -75,8 +74,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
-     invalidatesTags: ["USER"],
-
+     invalidatesTags: [{ type: "USER", id: "CURRENT" }],
     }),
     addToWishlist: builder.mutation({
       query: (payload) => ({
@@ -84,8 +82,10 @@ export const authApi = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
-     invalidatesTags: ["USER","COURSE"],
-
+     invalidatesTags: [
+        { type: "USER", id: "CURRENT" },
+        { type: "COURSE", id: "LIST" },
+      ],
     }),
     forgetPassword: builder.mutation({
       query: (payload) => ({
@@ -93,8 +93,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         data: payload,
       }),
-     invalidatesTags: ["USER"],
-
+     invalidatesTags: [{ type: "USER", id: "CURRENT" }],
     }),
     resetPassword: builder.mutation({
       query: (payload) => ({
@@ -102,16 +101,16 @@ export const authApi = baseApi.injectEndpoints({
         method: "PUT",
         data: payload,
       }),
-     invalidatesTags: ["USER"],
-
+     invalidatesTags: [{ type: "USER", id: "CURRENT" }],
     }),
     userInfo: builder.query({
       query: () => ({
         url: `/user/me`,
         method: "GET",
       }),
-      providesTags: ["USER"],
-      keepUnusedDataFor: 60 * 60 * 3
+      providesTags: (result) =>
+        result ? [{ type: "USER", id: result?.data?.data?._id }] : [],
+      keepUnusedDataFor: 60 * 60 * 3,
     }),
 
     getAll: builder.query({
@@ -131,7 +130,16 @@ export const authApi = baseApi.injectEndpoints({
       method: "GET",
     };
   },
-  providesTags: ["USER"],
+  providesTags: (result) => {
+    const data = result?.data?.data || result?.data;
+    if (Array.isArray(data)) {
+      return [
+        ...data.map((u: IUser) => ({ type: "USER" as const, id: u._id })),
+        { type: "USER" as const, id: "LIST" },
+      ];
+    }
+    return [{ type: "USER" as const, id: "LIST" }];
+  },
 }),
 
     deleteUser: builder.mutation({
@@ -139,7 +147,10 @@ export const authApi = baseApi.injectEndpoints({
         url: `/user/delete/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["USER"],
+      invalidatesTags: (_result, _error, id) => [
+        { type: "USER", id },
+        { type: "USER", id: "LIST" },
+      ],
     }),
 
 

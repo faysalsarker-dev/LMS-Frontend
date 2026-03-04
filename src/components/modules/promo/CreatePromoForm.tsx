@@ -39,12 +39,11 @@ import { handleApiError } from "@/utils/errorHandler";
 
 interface CreatePromoFormData {
   code: string;
-  description: string;
   discountValue: number;
-  discountType: "percentage" | "fixed";
+  discountType: "percentage" | "fixed_amount";
+  commission: number;
   maxUsageCount: number | null;
   maxUsagePerUser: number;
-  minOrderAmount: number;
   isActive: boolean;
   validFrom: string;
   expirationDate: string;
@@ -67,16 +66,18 @@ const CreatePromoModal = ({
 
   const foundUser = rowDataOfUser?.data?.data[0];
 
+
+  console.log(rowDataOfUser, 'user')
   const [createPromo, { isLoading }] = useCreatePromoMutation();
 
   const { register, handleSubmit, setValue, watch, reset } =
     useForm<CreatePromoFormData>({
       defaultValues: {
         discountType: "percentage",
+        commission: 0,
         isActive: true,
         maxUsageCount: null,
         maxUsagePerUser: 1,
-        minOrderAmount: 0,
         validFrom: new Date().toISOString().split("T")[0],
         expirationDate: new Date().toISOString().split("T")[0],
       },
@@ -103,13 +104,15 @@ const CreatePromoModal = ({
     if (!foundUser?._id) return toast.error("Please find a user first!");
 
     try {
-      await createPromo({ ...data, createdBy: foundUser._id }).unwrap();
+      await createPromo({ ...data, owner: foundUser._id }).unwrap();
       toast.success("Promo created successfully!");
       reset();
+      setSearchInput("");
+      setSearch(null);
       setOpen(false);
     } catch (err) {
 
-handleApiError(err)
+      handleApiError(err)
     }
   };
 
@@ -160,16 +163,13 @@ handleApiError(err)
               <Label>Promo Code</Label>
               <Input
                 placeholder="E.g., SAVE20"
-                {...register("code", { required: "Code is required" })}
-              />
-            </div>
-
-            {/* Description */}
-            <div className="space-y-2">
-              <Label>Description</Label>
-              <Input
-                placeholder="Short description"
-                {...register("description", { required: true })}
+                className="uppercase"
+                {...register("code", {
+                  required: "Code is required",
+                  onChange: (e) => {
+                    setValue("code", e.target.value.toUpperCase());
+                  },
+                })}
               />
             </div>
 
@@ -180,7 +180,7 @@ handleApiError(err)
                 <Select
                   value={discountType}
                   onValueChange={(v) =>
-                    setValue("discountType", v as "percentage" | "fixed")
+                    setValue("discountType", v as "percentage" | "fixed_amount")
                   }
                 >
                   <SelectTrigger>
@@ -188,7 +188,7 @@ handleApiError(err)
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="percentage">Percentage</SelectItem>
-                    <SelectItem value="fixed">Fixed</SelectItem>
+                    <SelectItem value="fixed_amount">Fixed Amount</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -198,26 +198,38 @@ handleApiError(err)
                 <Input
                   type="number"
                   placeholder={
-                    discountType === "percentage" ? "e.g., 10%" : "e.g., $20"
+                    discountType === "percentage" ? "e.g., 10%" : "e.g., 20"
                   }
-                  {...register("discountValue", { min: 1 })}
+                  {...register("discountValue", { min: 1, valueAsNumber: true })}
                 />
               </div>
             </div>
 
-            {/* Usage limits */}
+            {/* Commission */}
+            <div className="space-y-2">
+              <Label>Commission (%)</Label>
+              <Input
+                type="number"
+                placeholder="E.g., 10"
+                {...register("commission", { min: 0, valueAsNumber: true })}
+              />
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Max Total Uses</Label>
                 <Input
                   type="number"
-                  placeholder="Unlimited if empty"
-                  {...register("maxUsageCount")}
+                  placeholder="Unlimited"
+                  {...register("maxUsageCount", { valueAsNumber: true })}
                 />
               </div>
               <div>
                 <Label>Max Per User</Label>
-                <Input type="number" {...register("maxUsagePerUser")} />
+                <Input
+                  type="number"
+                  {...register("maxUsagePerUser", { valueAsNumber: true })}
+                />
               </div>
             </div>
 
@@ -284,30 +296,21 @@ handleApiError(err)
               </div>
             </div>
 
-            {/* Order + Status */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Minimum Order Amount</Label>
-                <Input type="number" {...register("minOrderAmount")} />
-              </div>
-
-              <div>
-                <Label>Status</Label>
-                <Select
-                  value={isActive ? "active" : "inactive"}
-                  onValueChange={(v) =>
-                    setValue("isActive", v === "active")
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            {/* Status */}
+            <div className="space-y-2">
+              <Label>Status</Label>
+              <Select
+                value={isActive ? "active" : "inactive"}
+                onValueChange={(v) => setValue("isActive", v === "active")}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Buttons */}

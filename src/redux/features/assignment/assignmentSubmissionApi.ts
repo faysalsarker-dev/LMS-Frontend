@@ -2,87 +2,75 @@ import { baseApi } from "@/redux/baseApi";
 
 export const assignmentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // ---------------------------
-    // Create Assignment Submission
-    // POST /assignment
-    // ---------------------------
     createAssignment: builder.mutation({
       query: (formData) => ({
         url: "/assignment",
         method: "POST",
         data: formData,
       }),
-      invalidatesTags: ["ASSIGNMENT"],
+      invalidatesTags: [{ type: "ASSIGNMENT", id: "LIST" }],
     }),
-
-    // ---------------------------
-    // Get All Assignment Submissions (with params)
-    // GET /assignment
-    // ---------------------------
     getAllAssignments: builder.query({
       query: (params) => ({
         url: "/assignment",
         method: "GET",
-        params, // page, limit, status, course, lesson, search
+        params, 
       }),
-      providesTags: ["ASSIGNMENT"],
+      providesTags: (result) =>
+        result
+          ? [
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              ...result.data.map((a:any) => ({ type: "ASSIGNMENT", id: a._id })),
+              { type: "ASSIGNMENT", id: "LIST" },
+            ]
+          : [{ type: "ASSIGNMENT", id: "LIST" }],
     }),
-
-    // ---------------------------
-    // Get Single Assignment Submission
-    // GET /assignment/:id
-    // ---------------------------
     getAssignmentById: builder.query({
       query: (id) => ({
         url: `/assignment/${id}`,
         method: "GET",
       }),
-      providesTags: ["ASSIGNMENT"],
+      providesTags: (_result, _error, id) => [{ type: "ASSIGNMENT", id }],
     }),
     getAssignmentByLessonId: builder.query({
       query: (id) => ({
         url: `/assignment/lesson-assignment/${id}`,
         method: "GET",
       }),
-      providesTags: ["ASSIGNMENT"],
+      providesTags: (_result, _error, id) => [{ type: "ASSIGNMENT", id }],
     }),
 
-    // ---------------------------
-    // Update Assignment Submission
-    // PATCH /assignment/:id
-    // ---------------------------
     updateAssignment: builder.mutation({
       query: ({ id, formData }) => ({
         url: `/assignment/${id}`,
         method: "PATCH",
         data: formData,
       }),
-      invalidatesTags: ["ASSIGNMENT"],
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "ASSIGNMENT", id },
+        { type: "ASSIGNMENT", id: "LIST" },
+      ],
     }),
 
-    // ---------------------------
-    // Admin Review Assignment
-    // PATCH /assignment/review/:id
-    // ---------------------------
     reviewAssignment: builder.mutation({
       query: ({ id, data }) => ({
         url: `/assignment/review/${id}`,
         method: "PATCH",
         data, // score, feedback, status
       }),
-      invalidatesTags: ["ASSIGNMENT"],
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "ASSIGNMENT", id },
+      ],
     }),
-
-    // ---------------------------
-    // Delete Assignment Submission
-    // DELETE /assignment/:id
-    // ---------------------------
     deleteAssignment: builder.mutation({
       query: (id) => ({
         url: `/assignment/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["ASSIGNMENT"],
+      invalidatesTags: (_result, _error, id) => [
+        { type: "ASSIGNMENT", id },
+        { type: "ASSIGNMENT", id: "LIST" },
+      ],
     }),
   }),
 });

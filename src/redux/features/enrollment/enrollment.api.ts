@@ -1,3 +1,4 @@
+import type { IEnrolment } from "@/interface/enrolment.types";
 import { baseApi } from "@/redux/baseApi";
 
 export const enrolmentApi = baseApi.injectEndpoints({
@@ -8,7 +9,16 @@ export const enrolmentApi = baseApi.injectEndpoints({
         method: "POST",
         data: data,
       }),
-      invalidatesTags: ["ENROLMENT", "COURSE","USER","PROMO","PROGRESS"],
+      invalidatesTags: (_result, _error, { courseId, userId, promoId }) => {
+        const tags: Array<{ type: "ENROLMENT" | "COURSE" | "USER" | "PROMO" | "PROGRESS"; id: string }> = [
+          { type: "ENROLMENT", id: "LIST" },
+        ];
+        if (courseId) tags.push({ type: "COURSE", id: courseId });
+        if (userId) tags.push({ type: "USER", id: userId });
+        if (promoId) tags.push({ type: "PROMO", id: promoId });
+        if (courseId) tags.push({ type: "PROGRESS", id: courseId });
+        return tags;
+      },
     }),
 
     getAllEnrolments: builder.query({
@@ -19,7 +29,13 @@ export const enrolmentApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["ENROLMENT"],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map((e:IEnrolment) => ({ type: "ENROLMENT", id: e._id })),
+              { type: "ENROLMENT", id: "LIST" },
+            ]
+          : [{ type: "ENROLMENT", id: "LIST" }],
     }),
 
     getEnrolmentById: builder.query({
@@ -27,7 +43,7 @@ export const enrolmentApi = baseApi.injectEndpoints({
         url: `/enrolment/${id}`,
         method: "GET",
       }),
-      providesTags: ["ENROLMENT"],
+      providesTags: (_result, _error, id) => [{ type: "ENROLMENT", id }],
     }),
 
     updateEnrolment: builder.mutation({
@@ -36,7 +52,10 @@ export const enrolmentApi = baseApi.injectEndpoints({
         method: "PUT",
         data: formData,
       }),
-      invalidatesTags: ["ENROLMENT"],
+      invalidatesTags: (_result, _error, { enrolmentId }) => [
+        { type: "ENROLMENT", id: enrolmentId },
+        { type: "ENROLMENT", id: "LIST" },
+      ],
     }),
 
     deleteEnrolment: builder.mutation({
@@ -44,7 +63,10 @@ export const enrolmentApi = baseApi.injectEndpoints({
         url: `/enrolment/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["ENROLMENT"],
+      invalidatesTags: (_result, _error, id) => [
+        { type: "ENROLMENT", id },
+        { type: "ENROLMENT", id: "LIST" },
+      ],
     }),
   }),
 });

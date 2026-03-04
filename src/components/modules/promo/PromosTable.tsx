@@ -51,7 +51,7 @@ type PromoTableProps = {
   };
   isLoading: boolean;
 
-  onPageChange: (page: number) => void; 
+  onPageChange: (page: number) => void;
 };
 
 const PromosTable = ({
@@ -68,11 +68,11 @@ const PromosTable = ({
 
   // INTERNAL DELETE HANDLER (requested)
   const onDelete = async (id: string) => {
-   try {
+    try {
       await deletePromo(id).unwrap();
 
       toast.success("Promo Delete successfully!");
-    
+
     } catch (err) {
       handleApiError(err);
     }
@@ -97,6 +97,8 @@ const PromosTable = ({
           <TableRow className="bg-muted/30 border-b border-border/50 hover:bg-muted/30">
             <TableHead>Code</TableHead>
             <TableHead>Owner</TableHead>
+            <TableHead>Commission</TableHead>
+            <TableHead>Total Earn</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Discount</TableHead>
             <TableHead>Usage</TableHead>
@@ -109,7 +111,7 @@ const PromosTable = ({
           {isLoading &&
             Array.from({ length: 6 }).map((_, i) => (
               <TableRow key={i}>
-                {Array.from({ length: 7 }).map((_, j) => (
+                {Array.from({ length: 9 }).map((_, j) => (
                   <TableCell key={j}>
                     <Skeleton className="h-14" />
                   </TableCell>
@@ -128,7 +130,15 @@ const PromosTable = ({
                 </TableCell>
 
                 <TableCell className="text-muted-foreground">
-                  {promo.createdBy?.email}
+                  {promo.owner?.email || "N/A"}
+                </TableCell>
+
+                <TableCell className="text-muted-foreground">
+                  {promo.commission}%
+                </TableCell>
+
+                <TableCell className="font-semibold text-green-600">
+                  ${promo.totalEarn.toFixed(2)}
                 </TableCell>
 
                 <TableCell>
@@ -136,7 +146,7 @@ const PromosTable = ({
                     variant="outline"
                     className="capitalize border-primary/20 bg-primary/5 text-primary"
                   >
-                    {promo.discountType}
+                    {promo.discountType.replace("_", " ")}
                   </Badge>
                 </TableCell>
 
@@ -205,18 +215,18 @@ const PromosTable = ({
       </Table>
 
       {/* EDIT MODAL */}
-{
-  selectedPromo && (
-       <EditPromoModal
-        promo={selectedPromo}
-        open={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-      />
-  )
-}
+      {
+        selectedPromo && (
+          <EditPromoModal
+            promo={selectedPromo}
+            open={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+          />
+        )
+      }
 
 
-   
+
 
       {/* PAGINATION */}
       <div className="mt-4">

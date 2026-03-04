@@ -1,3 +1,4 @@
+import type { ICategory } from "@/interface/category.types";
 import { baseApi } from "@/redux/baseApi";
 
 export const categoryApi = baseApi.injectEndpoints({
@@ -9,7 +10,7 @@ export const categoryApi = baseApi.injectEndpoints({
         method: "POST",       
         data: data,          
       }),
-      invalidatesTags: ["CATEGORY"],
+      invalidatesTags: [{ type: "CATEGORY", id: "LIST" }],
     }),
 
     // Get all Categorys
@@ -22,7 +23,13 @@ export const categoryApi = baseApi.injectEndpoints({
         };
       },
       keepUnusedDataFor: 60 * 60 * 5,
-      providesTags: ["CATEGORY"],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map((c:ICategory) => ({ type: "CATEGORY", id: c._id })),
+              { type: "CATEGORY", id: "LIST" },
+            ]
+          : [{ type: "CATEGORY", id: "LIST" }],
     }),
 
 
@@ -33,7 +40,10 @@ export const categoryApi = baseApi.injectEndpoints({
         method: "GET",
       }),
         keepUnusedDataFor: 60 * 60 * 1,
-      providesTags: ["CATEGORY"],
+      providesTags: (_result, _error, slug) => [
+        { type: "CATEGORY", id: slug },
+        { type: "CATEGORY", id: "LIST" },
+      ],
     }),
 
     // Update Category
@@ -43,7 +53,10 @@ updateCategory: builder.mutation({
     method: "PUT",
     data: formData,
   }),
-  invalidatesTags: ["CATEGORY"],
+  invalidatesTags: (_result, _error, { CategoryId }) => [
+    { type: "CATEGORY", id: CategoryId },
+    { type: "CATEGORY", id: "LIST" },
+  ],
 }),
 
 
@@ -53,7 +66,10 @@ updateCategory: builder.mutation({
         url: `/category/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["CATEGORY"],
+      invalidatesTags: (_result, _error, id) => [
+        { type: "CATEGORY", id },
+        { type: "CATEGORY", id: "LIST" },
+      ],
     }),
   }),
 });

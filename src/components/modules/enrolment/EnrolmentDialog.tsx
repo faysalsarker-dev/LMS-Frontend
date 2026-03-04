@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
-import { User, BookOpen, CreditCard,  Tag, RefreshCcw, Loader2 } from 'lucide-react';
+import { User, BookOpen, CreditCard, Tag, Calendar, Loader2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import {
   Select,
@@ -19,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { IEnrolment, EnrolmentStatus, PaymentStatus, UpdateEnrolmentData } from '@/interface/enrolment.types';
+import type { IEnrolment, PaymentStatus, UpdateEnrolmentData } from '@/interface/enrolment.types';
 
 interface EnrolmentDialogProps {
   enrolment: IEnrolment | null;
@@ -30,10 +29,11 @@ interface EnrolmentDialogProps {
 }
 
 const formatCurrency = (amount: number, currency: string) => {
-  return new Intl.NumberFormat('en-US', {
+  const formatted = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency,
   }).format(amount);
+  return `${formatted} ${currency.toUpperCase()}`;
 };
 
 export const EnrolmentDialog = ({
@@ -43,15 +43,11 @@ export const EnrolmentDialog = ({
   onSubmit,
   isSubmitting,
 }: EnrolmentDialogProps) => {
-  const [status, setStatus] = useState<EnrolmentStatus>('active');
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('pending');
-  const [refundReason, setRefundReason] = useState('');
 
   useEffect(() => {
     if (enrolment) {
-      setStatus(enrolment.status);
       setPaymentStatus(enrolment.paymentStatus);
-      setRefundReason(enrolment.refundReason || '');
     }
   }, [enrolment]);
 
@@ -59,16 +55,12 @@ export const EnrolmentDialog = ({
 
   const handleSubmit = async () => {
     await onSubmit(enrolment._id, {
-      status,
       paymentStatus,
-      refundReason: refundReason || undefined,
     });
   };
 
-  const hasChanges =
-    status !== enrolment.status ||
-    paymentStatus !== enrolment.paymentStatus ||
-    refundReason !== (enrolment.refundReason || '');
+  const isLocked = enrolment.paymentStatus === 'refunded' || enrolment.status === true;
+  const hasChanges = paymentStatus !== enrolment.paymentStatus;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -92,8 +84,8 @@ export const EnrolmentDialog = ({
                     <User className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-medium">{enrolment.user.name}</p>
-                    <p className="text-sm text-muted-foreground">{enrolment.user.email}</p>
+                    <p className="font-medium">{enrolment.user?.name ?? '—'}</p>
+                    <p className="text-sm text-muted-foreground">{enrolment.user?.email ?? '—'}</p>
                   </div>
                 </div>
 
@@ -103,151 +95,107 @@ export const EnrolmentDialog = ({
                     <BookOpen className="h-5 w-5 text-secondary-foreground" />
                   </div>
                   <div>
-                    <p className="font-medium">{enrolment.course.title}</p>
+                    <p className="font-medium">{enrolment.course?.title ?? '—'}</p>
                     <p className="text-sm text-muted-foreground">
-                      Enrolled {format(new Date(enrolment.enrolledAt), 'MMMM d, yyyy')}
+                      Enrolled {enrolment.createdAt ? format(new Date(enrolment.createdAt), 'MMMM d, yyyy') : '—'}
                     </p>
-                    {enrolment.completedAt && (
-                      <p className="text-sm text-muted-foreground">
-                        Completed {format(new Date(enrolment.completedAt), 'MMMM d, yyyy')}
-                      </p>
-                    )}
                   </div>
                 </div>
 
                 <Separator />
 
-                {/* Pricing Breakdown */}
+                {/* Amount */}
                 <div>
                   <h4 className="font-medium mb-3 flex items-center gap-2">
                     <Tag className="h-4 w-4" />
-                    Pricing
+                    Payment Information
                   </h4>
-                  <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>Original Price</span>
-                      <span>{formatCurrency(enrolment.originalPrice, enrolment.currency)}</span>
+                  <div className="bg-muted/50 rounded-lg p-4 space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Total Amount</span>
+                      <span className="font-bold text-lg">{formatCurrency(enrolment.amount, enrolment.currency)}</span>
                     </div>
-                    {enrolment.discountAmount > 0 && (
+                    {enrolment.promoCode && (
                       <div className="flex justify-between text-sm text-green-600">
-                        <span>Discount {enrolment.promoCodeUsed && `(${enrolment.promoCodeUsed})`}</span>
-                        <span>-{formatCurrency(enrolment.discountAmount, enrolment.currency)}</span>
-                      </div>
-                    )}
-                    <Separator />
-                    <div className="flex justify-between font-medium">
-                      <span>Final Amount</span>
-                      <span>{formatCurrency(enrolment.finalAmount, enrolment.currency)}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Payment Details */}
-                <div>
-                  <h4 className="font-medium mb-3 flex items-center gap-2">
-                    <CreditCard className="h-4 w-4" />
-                    Payment Details
-                  </h4>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="text-muted-foreground">Method</p>
-                      <p className="font-medium capitalize">{enrolment.paymentMethod}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Transaction ID</p>
-                      <p className="font-medium font-mono text-xs">{enrolment.transactionId || '-'}</p>
-                    </div>
-                    {enrolment.paymentDate && (
-                      <div>
-                        <p className="text-muted-foreground">Payment Date</p>
-                        <p className="font-medium">
-                          {format(new Date(enrolment.paymentDate), 'MMM d, yyyy HH:mm')}
-                        </p>
+                        <span>Promo Code</span>
+                        <span>{enrolment.promoCode}</span>
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* Refund Info */}
-                {(enrolment.refundDate || paymentStatus === 'refunded') && (
+                {/* Details Grid */}
+                <div className="grid grid-cols-2 gap-6">
                   <div>
                     <h4 className="font-medium mb-3 flex items-center gap-2">
-                      <RefreshCcw className="h-4 w-4" />
-                      Refund Information
+                      <CreditCard className="h-4 w-4" />
+                      Transaction
                     </h4>
-                    <div className="bg-destructive/10 rounded-lg p-4 space-y-2">
+                    <div className="space-y-1">
+                      <p className="text-xs text-muted-foreground">Transaction ID</p>
+                      <p className="font-mono text-sm break-all bg-muted p-2 rounded">{enrolment.transactionId}</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium mb-3 flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      Important Dates
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      <div>
+                        <p className="text-xs text-muted-foreground">Created At</p>
+                        <p className="font-medium">{enrolment.createdAt ? format(new Date(enrolment.createdAt), 'MMM d, yyyy HH:mm') : '—'}</p>
+                      </div>
                       {enrolment.refundDate && (
-                        <div className="flex justify-between text-sm">
-                          <span>Refund Date</span>
-                          <span>{format(new Date(enrolment.refundDate), 'MMM d, yyyy')}</span>
-                        </div>
-                      )}
-                      {enrolment.refundReason && (
                         <div>
-                          <p className="text-sm text-muted-foreground">Reason</p>
-                          <p className="text-sm">{enrolment.refundReason}</p>
+                          <p className="text-xs text-destructive">Refund Date</p>
+                          <p className="font-medium text-destructive">{format(new Date(enrolment.refundDate), 'MMM d, yyyy')}</p>
                         </div>
                       )}
                     </div>
                   </div>
-                )}
+                </div>
 
                 <Separator />
 
                 {/* Editable Fields */}
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Enrolment Status</Label>
-                      <Select value={status} onValueChange={(v) => setStatus(v as EnrolmentStatus)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="completed">Completed</SelectItem>
-                          <SelectItem value="cancelled">Cancelled</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label>Payment Status</Label>
-                      <Select value={paymentStatus} onValueChange={(v) => setPaymentStatus(v as PaymentStatus)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="pending">Pending</SelectItem>
-                          <SelectItem value="completed">Completed</SelectItem>
-                          <SelectItem value="failed">Failed</SelectItem>
+                  <div className="max-w-xs space-y-2">
+                    <Label>Payment Status</Label>
+                    <Select
+                      value={paymentStatus}
+                      onValueChange={(v) => setPaymentStatus(v as PaymentStatus)}
+                      disabled={isLocked}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={enrolment.paymentStatus}>
+                          {enrolment.paymentStatus.charAt(0).toUpperCase() + enrolment.paymentStatus.slice(1)}
+                        </SelectItem>
+                        {enrolment.paymentStatus !== 'refunded' && (
                           <SelectItem value="refunded">Refunded</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                        )}
+                      </SelectContent>
+                    </Select>
+                    {isLocked && (
+                      <p className="text-xs text-muted-foreground italic">
+                        This enrolment is locked and cannot be updated.
+                      </p>
+                    )}
                   </div>
-
-                  {(paymentStatus === 'refunded' || status === 'cancelled') && (
-                    <div className="space-y-2">
-                      <Label>Refund Reason</Label>
-                      <Textarea
-                        placeholder="Enter reason for refund..."
-                        value={refundReason}
-                        onChange={(e) => setRefundReason(e.target.value)}
-                        rows={3}
-                      />
-                    </div>
-                  )}
                 </div>
 
                 {/* Actions */}
                 <div className="flex justify-end gap-2 pt-4">
                   <Button variant="outline" onClick={() => onOpenChange(false)}>
-                    Cancel
+                    Close
                   </Button>
-                  <Button onClick={handleSubmit} disabled={isSubmitting || !hasChanges}>
+                  <Button onClick={handleSubmit} disabled={isSubmitting || !hasChanges || isLocked}>
                     {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                    Save Changes
+                    Update Status
                   </Button>
                 </div>
               </div>

@@ -1,32 +1,27 @@
 import type { IUser } from "./user.types";
 
 export interface IPromoUsage {
-  user: IUser ;
+  user: IUser;
+  course: string; // Course ObjectId
   usedAt: Date;
 }
 
-
 export type IPromo = {
-  _id: string
-  code: string
-  description: string
-  discountValue: number
-  discountType: string
-  createdBy: {
-    _id: string
-    name: string
-    email: string
-  }
-  isActive: boolean
-  isDeleted: boolean
-  validFrom: string
-  expirationDate: string
-  maxUsageCount: number | null 
-  currentUsageCount: number
-  maxUsagePerUser: number
-  minOrderAmount: number
-  usedBy: IPromoUsage[]
-  createdAt: string
-  updatedAt: string
-  __v: number
-}
+  _id: string;
+  code: string;
+  discountValue: number;
+  discountType: "percentage" | "fixed_amount";
+  owner: IUser;
+  commission: number;
+  totalEarn: number;
+  isActive: boolean;
+  validFrom: string;
+  expirationDate: string;
+  maxUsageCount: number | null;
+  currentUsageCount: number;
+  maxUsagePerUser: number;
+  usedBy: IPromoUsage[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};

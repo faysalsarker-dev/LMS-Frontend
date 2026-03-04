@@ -10,42 +10,19 @@ export interface DashboardUser {
 export interface DashboardCourse {
   _id: string;
   title: string;
+  slug: string;
   thumbnail?: string;
 }
 
-export type EnrolmentStatus = 'active' | 'completed' | 'cancelled';
-export type PaymentStatus = 'pending' | 'completed' | 'failed' | 'refunded';
+export type EnrolmentStatus = "active" | "completed" | "cancelled";
+export type PaymentStatus = "pending" | "completed" | "failed" | "cancelled" | "refunded";
 
-// Summary Stats
-export interface DashboardSummary {
-  totalCourses: number;
-  totalEnrolments: number;
-  totalEarnings: number;
-  totalStudents: number;
+export interface CurrencyEarnings {
   currency: string;
+  total: number;
 }
 
-// User Stats
-export interface UserRoleStats {
-  admin: number;
-  instructor: number;
-  student: number;
-  super_admin: number;
-}
 
-export interface UserStatusStats {
-  active: number;
-  inactive: number;
-  verified: number;
-  unverified: number;
-  banned: number;
-}
-
-export interface DashboardUserStats {
-  totalUsers: number;
-  roles: UserRoleStats;
-  status: UserStatusStats;
-}
 
 // Monthly Chart Data
 export interface MonthlyChartData {
@@ -61,8 +38,9 @@ export interface RecentEnrollment {
   course: DashboardCourse;
   status: EnrolmentStatus;
   paymentStatus: PaymentStatus;
-  finalAmount: number;
+  amount: number;
   currency: string;
+  transactionId: string;
   enrolledAt: string;
 }
 
@@ -81,11 +59,12 @@ export interface PopularCourse {
 
 // Full Dashboard Response
 export interface DashboardData {
-  summary: DashboardSummary;
-  userStats: DashboardUserStats;
+  totalUsers: number;
+  totalCourses: number;
   monthlyChart: MonthlyChartData[];
   recentEnrollments: RecentEnrollment[];
   popularCourses: PopularCourse[];
+  totalEarningsByCurrency: CurrencyEarnings[];
 }
 
 export interface DashboardResponse {

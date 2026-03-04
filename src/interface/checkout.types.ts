@@ -25,7 +25,7 @@ export interface CheckoutCourse {
 export interface PromoCode {
   _id: string;
   code: string;
-  discountType: 'percentage' | 'fixed';
+  discountType: 'percentage' | 'fixed_amount';
   discountValue: number;
   minOrderAmount?: number;
   maxDiscountAmount?: number;

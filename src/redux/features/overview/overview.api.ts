@@ -7,7 +7,7 @@ export const overviewApi = baseApi.injectEndpoints({
         url: "/overview/dashboard",
         method: "GET",
       }),
-      providesTags: ["OVERVIEW"],
+      providesTags: [{ type: "OVERVIEW", id: "DASHBOARD" }],
     }),
 
     getUserStats: builder.query({
@@ -15,7 +15,7 @@ export const overviewApi = baseApi.injectEndpoints({
         url: "/overview/users",
         method: "GET",
       }),
-      providesTags: ["OVERVIEW"],
+      providesTags: [{ type: "OVERVIEW", id: "USER_STATS" }],
     }),
 
     getCourseStats: builder.query({
@@ -23,7 +23,7 @@ export const overviewApi = baseApi.injectEndpoints({
         url: "/overview/courses",
         method: "GET",
       }),
-      providesTags: ["OVERVIEW"],
+      providesTags: [{ type: "OVERVIEW", id: "COURSE_STATS" }],
     }),
 
     getEnrollmentStats: builder.query({
@@ -31,7 +31,7 @@ export const overviewApi = baseApi.injectEndpoints({
         url: "/overview/enrollments",
         method: "GET",
       }),
-      providesTags: ["OVERVIEW"],
+      providesTags: [{ type: "OVERVIEW", id: "ENROLLMENT_STATS" }],
     }),
 
     getRevenueStats: builder.query({
@@ -39,7 +39,7 @@ export const overviewApi = baseApi.injectEndpoints({
         url: "/overview/revenue",
         method: "GET",
       }),
-      providesTags: ["OVERVIEW"],
+      providesTags: [{ type: "OVERVIEW", id: "REVENUE_STATS" }],
     }),
 
     getPopularCourses: builder.query({
@@ -47,7 +47,7 @@ export const overviewApi = baseApi.injectEndpoints({
         url: "/overview/popular-courses",
         method: "GET",
       }),
-      providesTags: ["OVERVIEW"],
+      providesTags: [{ type: "OVERVIEW", id: "POPULAR" }],
     }),
 
     getRecentEnrollments: builder.query({
@@ -55,7 +55,7 @@ export const overviewApi = baseApi.injectEndpoints({
         url: "/overview/recent-enrollments",
         method: "GET",
       }),
-      providesTags: ["OVERVIEW"],
+      providesTags: [{ type: "OVERVIEW", id: "RECENT_ENROLLMENTS" }],
     }),
 
     getContentStats: builder.query({
@@ -63,7 +63,7 @@ export const overviewApi = baseApi.injectEndpoints({
         url: "/overview/content",
         method: "GET",
       }),
-      providesTags: ["OVERVIEW"],
+      providesTags: [{ type: "OVERVIEW", id: "CONTENT_STATS" }],
     }),
 
     getGrowthAnalytics: builder.query({
@@ -71,7 +71,7 @@ export const overviewApi = baseApi.injectEndpoints({
         url: "/overview/growth",
         method: "GET",
       }),
-      providesTags: ["OVERVIEW"],
+      providesTags: [{ type: "OVERVIEW", id: "GROWTH" }],
     }),
   }),
 });

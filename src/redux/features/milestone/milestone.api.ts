@@ -1,3 +1,4 @@
+import type { IMilestone } from "@/interface/milestone.types";
 import { baseApi } from "@/redux/baseApi";
 
 export const milestoneApi = baseApi.injectEndpoints({
@@ -9,7 +10,7 @@ export const milestoneApi = baseApi.injectEndpoints({
         method: "POST",       
         data: data,          
       }),
-      invalidatesTags: ["MILESTONE"],
+      invalidatesTags: [{ type: "MILESTONE", id: "LIST" }],
     }),
 
     // Get all Milestones
@@ -22,7 +23,13 @@ export const milestoneApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["MILESTONE"],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map((m:IMilestone) => ({ type: "MILESTONE", id: m._id })),
+              { type: "MILESTONE", id: "LIST" },
+            ]
+          : [{ type: "MILESTONE", id: "LIST" }],
     }),
 
 
@@ -33,7 +40,7 @@ export const milestoneApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       keepUnusedDataFor: 60 * 60 * 2,
-      providesTags: ["MILESTONE"],
+      providesTags: (_result, _error, id) => [{ type: "MILESTONE", id }],
     }),
 
     // Update Milestone
@@ -43,7 +50,10 @@ updateMilestone: builder.mutation({
     method: "PUT",
     data: values,
   }),
-  invalidatesTags: ["MILESTONE"],
+  invalidatesTags: (_result, _error, { id }) => [
+    { type: "MILESTONE", id },
+    { type: "MILESTONE", id: "LIST" },
+  ],
 }),
 
 
@@ -53,7 +63,10 @@ updateMilestone: builder.mutation({
         url: `/milestone/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["MILESTONE"],
+      invalidatesTags: (_result, _error, id) => [
+        { type: "MILESTONE", id },
+        { type: "MILESTONE", id: "LIST" },
+      ],
     }),
   }),
 });
