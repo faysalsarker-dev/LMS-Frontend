@@ -10,6 +10,7 @@ import {
   ClipboardCheck,
   Folder,
   Percent,
+  ClipboardList,
 } from "lucide-react";
 
 import withAuth from "../withAuth";
@@ -18,6 +19,9 @@ import CreatePracticePage from "@/pages/admin/practice/CreatePracticePage";
 import PracticesPage from "@/pages/admin/practice/PracticesPage";
 import ViewPracticePage from "@/pages/admin/practice/ViewPracticePage";
 import EditLessonPage from "@/pages/admin/lesson/EditLessonPage";
+import MockTestsPage from "@/pages/admin/mockTest/MockTestsPage";
+import CreateMockTestPage from "@/pages/admin/mockTest/CreateMockTestPage";
+import MockTestDetailPage from "@/pages/admin/mockTest/MockTestDetailPage";
 
 
 // 🔹 Lazy-loaded admin pages
@@ -143,7 +147,20 @@ export const adminRoutes = [
     icon: Award,
     roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
   },
-
+  {
+    Component: withAuth(MockTestsPage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
+    path: "/dashboard/mock-tests",
+    name: "Mock Tests",
+    icon: ClipboardList,
+    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
+  },
+  {
+    Component: withAuth(CreateMockTestPage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
+    path: "/dashboard/mock-tests/create",
+    name: "Create Mock Test",
+    icon: ClipboardList,
+    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
+  },
 ];
 
 
@@ -156,11 +173,16 @@ export const adminInvicibleRoutes = [
     name: "View Practice",
     roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
   },
-    {
+  {
     Component: withAuth(EditLessonPage,[UserRoles.SUPER_ADMIN,UserRoles.ADMIN,UserRoles.INSTRUCTOR]),
     path: "/dashboard/lesson/:id/edit",
     name: "Course Details",
   },
-
+  {
+    Component: withAuth(MockTestDetailPage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
+    path: "/dashboard/mock-tests/:id",
+    name: "Mock Test Detail",
+    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
+  },
 
 ]

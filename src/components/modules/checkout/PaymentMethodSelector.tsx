@@ -4,6 +4,24 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { PaymentMethod } from '@/interface/enrolment.types';
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; available: boolean }[] = [
   { id: 'alipay', label: 'Alipay', icon: 'alipay', available: true },

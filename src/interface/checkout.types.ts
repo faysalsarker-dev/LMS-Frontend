@@ -55,7 +55,7 @@ export interface CheckoutPayload {
   finalAmount: number;
   currency: string;
   paymentMethod: PaymentMethod;
-  promoCodeUsed?: string;
+  promoCode?: string;
 }
 
 export interface CheckoutResult {

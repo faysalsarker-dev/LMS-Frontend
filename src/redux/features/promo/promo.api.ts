@@ -15,7 +15,7 @@ export const promoApi = baseApi.injectEndpoints({
     }),
     redeemPromo: builder.mutation({
       query: (data) => ({
-        url: "/promo/redeem",
+        url: "/promo/validate",
         method: "POST",
         data: data,
       }),

@@ -48,3 +48,6 @@ export interface EnrolmentsResponse {
 export interface UpdateEnrolmentData {
   paymentStatus?: PaymentStatus;
 }
+
+
+export type PaymentMethod = 'alipay' | 'wechat' | 'stripe' | 'paypal';

@@ -69,6 +69,9 @@ const formatCurrency = (amount: number, currency: string) => {
 };
 
 export const RecentEnrollmentsTable = ({ enrollments, isLoading }: RecentEnrollmentsTableProps) => {
+
+console.log(enrollments)
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -105,7 +108,7 @@ export const RecentEnrollmentsTable = ({ enrollments, isLoading }: RecentEnrollm
                     </TableCell>
                   </TableRow>
                 ) : (
-                  enrollments.map((enrollment, index) => {
+                  enrollments?.map((enrollment, index) => {
                     const paymentStatus = paymentStatusVariants[enrollment.paymentStatus] || { variant: 'outline', label: enrollment.paymentStatus };
 
                     return (
@@ -137,7 +140,7 @@ export const RecentEnrollmentsTable = ({ enrollments, isLoading }: RecentEnrollm
                         </TableCell>
                         <TableCell>
                           <Badge variant={paymentStatus.variant} className="capitalize px-2 py-0 text-[10px] font-medium">
-                            {paymentStatus.label}
+                            {paymentStatus?.label}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -148,12 +151,12 @@ export const RecentEnrollmentsTable = ({ enrollments, isLoading }: RecentEnrollm
                         <TableCell>
                           <div className="flex items-center gap-1.5 text-muted-foreground">
                             <CreditCard className="h-3 w-3" />
-                            <span className="font-mono text-[10px]">{enrollment.transactionId}</span>
+                            <span className="font-mono text-[10px]">{enrollment?.transactionId}</span>
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
                           <span className="text-xs text-muted-foreground whitespace-nowrap">
-                            {format(new Date(enrollment.enrolledAt), 'MMM d, yyyy')}
+                            {/* {format(new Date(enrollment?.enrolledAt), 'MMM d, yyyy')} */}
                           </span>
                         </TableCell>
                       </motion.tr>

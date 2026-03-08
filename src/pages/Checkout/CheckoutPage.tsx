@@ -137,7 +137,7 @@ export default function CheckoutPage() {
         finalAmount: pricing.finalAmount,
         currency: pricing.currency,
         paymentMethod: selectedPaymentMethod,
-        promoCodeUsed: appliedPromo?.code,
+        promoCode: appliedPromo?.code,
       };
 
       const result = await processCheckout(payload).unwrap();
