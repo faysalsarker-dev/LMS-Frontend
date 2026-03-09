@@ -117,7 +117,7 @@ export interface IMockQuestion {
 // ─── Section ────────────────────────────────────────────────────────────────
 export interface IMockTestSection {
   _id: string;
-  mockTest: string;
+  mockTest: string | { _id: string; title: string };
   name: SectionName;
   timeLimit: number;
   questions: IMockQuestion[];

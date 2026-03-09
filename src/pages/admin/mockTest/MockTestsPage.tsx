@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router";
 import { Plus, ClipboardList } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
     Pagination,
     PaginationContent,
@@ -99,24 +100,63 @@ const MockTestsPage = () => {
                     <MockTestFiltersBar filters={filters} onFiltersChange={setFilters} />
                 </motion.div>
 
-                {/* Table */}
+                {/* Table / Grouped View */}
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.15 }}
+                    className="space-y-8"
                 >
-                    <MockTestTable
-                        data={mockTests}
-                        isLoading={isLoading}
-                        onEdit={(item) => {
-                            setEditItem(item);
-                            setEditOpen(true);
-                        }}
-                        onDelete={(item) => {
-                            setDeleteItem(item);
-                            setDeleteOpen(true);
-                        }}
-                    />
+                    {isLoading ? (
+                        <MockTestTable
+                            data={[]}
+                            isLoading={true}
+                            onEdit={() => { }}
+                            onDelete={() => { }}
+                        />
+                    ) : (
+                        Object.entries(
+                            mockTests.reduce((acc, test) => {
+                                const courseTitle = test.course?.title || "Uncategorized";
+                                if (!acc[courseTitle]) acc[courseTitle] = [];
+                                acc[courseTitle].push(test);
+                                return acc;
+                            }, {} as Record<string, IMockTest[]>)
+                        ).map(([courseTitle, tests]) => (
+                            <div key={courseTitle} className="space-y-4">
+                                <div className="flex items-center gap-3 px-2">
+                                    <div className="h-8 w-1 bg-primary rounded-full" />
+                                    <h2 className="text-xl font-bold tracking-tight text-slate-800">
+                                        {courseTitle}
+                                        <Badge variant="secondary" className="ml-3 font-mono text-[10px]">
+                                            {tests.length} {tests.length === 1 ? 'Test' : 'Tests'}
+                                        </Badge>
+                                    </h2>
+                                </div>
+                                <MockTestTable
+                                    data={tests}
+                                    isLoading={false}
+                                    onEdit={(item) => {
+                                        setEditItem(item);
+                                        setEditOpen(true);
+                                    }}
+                                    onDelete={(item) => {
+                                        setDeleteItem(item);
+                                        setDeleteOpen(true);
+                                    }}
+                                />
+                            </div>
+                        ))
+                    )}
+
+                    {!isLoading && mockTests.length === 0 && (
+                        <MockTestTable
+                            data={[]}
+                            isLoading={false}
+                            onEdit={() => { }}
+                            onDelete={() => { }}
+                        />
+                    )}
                 </motion.div>
 
                 {/* Pagination */}

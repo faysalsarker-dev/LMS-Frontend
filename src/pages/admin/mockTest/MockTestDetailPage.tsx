@@ -10,19 +10,23 @@ import {
     Pencil,
     Trash2,
     Clock,
+    Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
-import { SectionManager } from "@/components/modules/mockTest/SectionManager";
+import { SectionCard } from "@/components/modules/mockTest/SectionCard";
 import { UpdateMockTestDialog } from "@/components/modules/mockTest/UpdateMockTestDialog";
 import { DeleteMockTestDialog } from "@/components/modules/mockTest/DeleteMockTestDialog";
 import {
     useGetMockTestByIdQuery,
     useDeleteMockTestMutation,
 } from "@/redux/features/mockTest/mockTest.api";
-import { useGetSectionByIdQuery } from "@/redux/features/mockTest/mockTestSection.api";
+import {
+    useGetSectionByIdQuery,
+    useCreateSectionMutation,
+} from "@/redux/features/mockTest/mockTestSection.api";
 import type { IMockTest, IMockTestSection } from "@/interface/mockTest.types";
 import { toast } from "sonner";
 
@@ -63,9 +67,9 @@ const SectionBlock = ({
         onRefetch();
     };
 
-    if (isLoading) return <Skeleton className="h-16 w-full rounded-2xl" />;
+    if (isLoading) return <Skeleton className="h-48 w-full rounded-3xl" />;
     if (!section) return null;
-    return <SectionManager section={section} onRefetch={handleRefetch} />;
+    return <SectionCard section={section} onRefetch={handleRefetch} />;
 };
 
 // ─── Main Page ───────────────────────────────────────────────────────────────
@@ -77,6 +81,7 @@ const MockTestDetailPage = () => {
 
     const { data, isLoading, refetch } = useGetMockTestByIdQuery(id!, { skip: !id });
     const [deleteMockTest, { isLoading: isDeleting }] = useDeleteMockTestMutation();
+    const [createSection] = useCreateSectionMutation();
 
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
@@ -214,18 +219,44 @@ const MockTestDetailPage = () => {
 
                 {/* ── Sections ── */}
                 <div className="space-y-4">
-                    <div className="flex items-center gap-2">
-                        <Clock className="h-5 w-5 text-muted-foreground" />
-                        <h2 className="text-lg font-semibold">Sections & Questions</h2>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <Clock className="h-5 w-5 text-muted-foreground" />
+                            <h2 className="text-lg font-semibold">Sections & Questions</h2>
+                        </div>
+
+                        {SECTION_KEYS.some(k => !getSectionId(k)) && (
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                className="rounded-xl gap-2 text-xs h-8"
+                                onClick={async () => {
+                                    const missing = SECTION_KEYS.filter(k => !getSectionId(k));
+                                    await toast.promise(
+                                        Promise.all(missing.map(name => createSection({ mockTest: mockTest._id, name }).unwrap())),
+                                        {
+                                            loading: "Initializing missing sections...",
+                                            success: "All sections initialized!",
+                                            error: "Failed to initialize sections"
+                                        }
+                                    );
+                                    refetch();
+                                }}
+                            >
+                                <Plus className="h-3 w-3" /> Initialize Missing Sections
+                            </Button>
+                        )}
                     </div>
 
-                    {SECTION_KEYS.map((key) => {
-                        const sectionId = getSectionId(key);
-                        if (!sectionId) return null;
-                        return (
-                            <SectionBlock key={key} sectionId={sectionId} onRefetch={refetch} />
-                        );
-                    })}
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                        {SECTION_KEYS.map((key) => {
+                            const sectionId = getSectionId(key);
+                            if (!sectionId) return null;
+                            return (
+                                <SectionBlock key={key} sectionId={sectionId} onRefetch={refetch} />
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
 

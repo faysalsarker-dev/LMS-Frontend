@@ -25,6 +25,7 @@ import {
     type IMockQuestion,
     type IMockOption,
     type IMockSegment,
+    type SectionName,
     QUESTION_TYPE_LABELS,
 } from "@/interface/mockTest.types";
 
@@ -78,6 +79,7 @@ interface QuestionFormDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     sectionId: string;
+    sectionName: SectionName;
     existingQuestions: IMockQuestion[];
     editQuestion?: IMockQuestion | null; // if editing
     onSuccess?: () => void;
@@ -87,12 +89,17 @@ export const QuestionFormDialog = ({
     open,
     onOpenChange,
     sectionId,
+    sectionName,
     existingQuestions,
     editQuestion,
     onSuccess,
 }: QuestionFormDialogProps) => {
+    const typePrefix = sectionName.charAt(0).toUpperCase();
+    const filteredTypes = ALL_TYPES.filter(t => t.startsWith(typePrefix));
+    const defaultType = filteredTypes[0] || "L_AUDIO_MCQ";
+
     const [q, setQ] = useState<IMockQuestion>(
-        editQuestion ?? blankQuestion("L_AUDIO_MCQ")
+        editQuestion ?? blankQuestion(defaultType)
     );
 
     const [updateSection, { isLoading }] = useUpdateSectionMutation();
@@ -161,7 +168,7 @@ export const QuestionFormDialog = ({
 
             await updateSection({ id: sectionId, data: { questions } }).unwrap();
             toast.success(editQuestion ? "Question updated!" : "Question added!");
-            setQ(blankQuestion("L_AUDIO_MCQ"));
+            setQ(blankQuestion(defaultType));
             onOpenChange(false);
             onSuccess?.();
         } catch {
@@ -201,7 +208,7 @@ export const QuestionFormDialog = ({
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="rounded-xl max-h-72">
-                                {ALL_TYPES.map((t) => (
+                                {filteredTypes.map((t) => (
                                     <SelectItem key={t} value={t}>
                                         <div className="flex items-center gap-2">
                                             <Badge

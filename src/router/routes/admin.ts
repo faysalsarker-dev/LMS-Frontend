@@ -22,6 +22,8 @@ import EditLessonPage from "@/pages/admin/lesson/EditLessonPage";
 import MockTestsPage from "@/pages/admin/mockTest/MockTestsPage";
 import CreateMockTestPage from "@/pages/admin/mockTest/CreateMockTestPage";
 import MockTestDetailPage from "@/pages/admin/mockTest/MockTestDetailPage";
+import MockTestSectionPage from "@/pages/admin/mockTest/MockTestSectionPage";
+import MockTestSectionsPage from "@/pages/admin/mockTest/MockTestSectionsPage";
 
 
 // 🔹 Lazy-loaded admin pages
@@ -155,6 +157,13 @@ export const adminRoutes = [
     roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
   },
   {
+    Component: withAuth(MockTestSectionsPage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
+    path: "/dashboard/mock-sections",
+    name: "Mock Sections",
+    icon: ClipboardList,
+    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
+  },
+  {
     Component: withAuth(CreateMockTestPage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
     path: "/dashboard/mock-tests/create",
     name: "Create Mock Test",
@@ -182,6 +191,12 @@ export const adminInvicibleRoutes = [
     Component: withAuth(MockTestDetailPage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
     path: "/dashboard/mock-tests/:id",
     name: "Mock Test Detail",
+    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
+  },
+  {
+    Component: withAuth(MockTestSectionPage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
+    path: "/dashboard/mock-test-sections/:id",
+    name: "Mock Test Section Management",
     roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
   },
 

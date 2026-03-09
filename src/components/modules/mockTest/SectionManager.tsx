@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate, Link } from "react-router";
 import {
     ChevronDown,
     Plus,
@@ -12,6 +13,8 @@ import {
     BookOpen,
     PenLine,
     Headphones,
+    Settings,
+    ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +36,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import type { IMockTestSection, IMockQuestion } from "@/interface/mockTest.types";
 import { QUESTION_TYPE_LABELS } from "@/interface/mockTest.types";
-import { QuestionFormDialog } from "./QuestionFormDialog";
+import { QuestionFormDialog, UpdateSectionDialog } from "./";
 import { useUpdateSectionMutation } from "@/redux/features/mockTest/mockTestSection.api";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -74,8 +77,10 @@ interface SectionManagerProps {
 }
 
 export const SectionManager = ({ section, onRefetch }: SectionManagerProps) => {
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
+    const [settingsOpen, setSettingsOpen] = useState(false);
     const [editQ, setEditQ] = useState<IMockQuestion | null>(null);
     const [editOpen, setEditOpen] = useState(false);
     const [deleteQ, setDeleteQ] = useState<IMockQuestion | null>(null);
@@ -101,18 +106,16 @@ export const SectionManager = ({ section, onRefetch }: SectionManagerProps) => {
     };
 
     return (
-        <div className={`rounded-2xl border-2 ${meta.border} overflow-hidden`}>
+        <div className={`rounded-2xl border-2 ${meta.border} overflow-hidden shadow-sm`}>
             {/* Section header — clickable accordion toggle */}
-            <button
-                type="button"
-                onClick={() => setIsOpen((v) => !v)}
-                className={`w-full flex items-center justify-between p-4 ${meta.color} transition-colors hover:opacity-90`}
+            <div
+                className={`w-full flex items-center justify-between p-4 ${meta.color} transition-colors border-b-2 ${meta.border}`}
             >
-                <div className="flex items-center gap-3">
-                    <span className="p-2 bg-white/60 rounded-xl">{meta.icon}</span>
+                <div className="flex items-center gap-3 cursor-pointer" onClick={() => setIsOpen((v) => !v)}>
+                    <span className="p-2 bg-white/60 rounded-xl shadow-sm">{meta.icon}</span>
                     <div className="text-left">
-                        <p className="font-bold text-base">{meta.label}</p>
-                        <p className="text-xs opacity-70 flex items-center gap-1 mt-0.5">
+                        <p className="font-bold text-base leading-none">{meta.label}</p>
+                        <p className="text-[11px] opacity-70 flex items-center gap-1 mt-1.5">
                             <FileQuestion className="h-3 w-3" />
                             {questions.length} question{questions.length !== 1 ? "s" : ""}
                             <span className="mx-1">·</span>
@@ -121,24 +124,48 @@ export const SectionManager = ({ section, onRefetch }: SectionManagerProps) => {
                         </p>
                     </div>
                 </div>
+
                 <div className="flex items-center gap-2">
                     <Button
                         type="button"
                         size="sm"
-                        variant="secondary"
-                        className="rounded-xl gap-1 bg-white/70 hover:bg-white"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setAddOpen(true);
-                        }}
+                        variant="ghost"
+                        className="rounded-xl h-8 w-8 p-0 hover:bg-white/40"
+                        onClick={() => setSettingsOpen(true)}
+                        title="Section Settings"
                     >
-                        <Plus className="h-3 w-3" /> Add Question
+                        <Settings className="h-4 w-4" />
                     </Button>
-                    <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                        <ChevronDown className="h-5 w-5 opacity-60" />
-                    </motion.div>
+
+                    <Button
+                        type="button"
+                        size="sm"
+                        variant="secondary"
+                        className="rounded-xl gap-1 bg-white/70 hover:bg-white shadow-sm h-8"
+                        onClick={() => navigate(`/dashboard/mock-test-sections/${section._id}`)}
+                    >
+                        <ExternalLink className="h-3.5 w-3.5" /> Manage
+                    </Button>
+
+                    <Button
+                        type="button"
+                        size="sm"
+                        className="rounded-xl gap-1 shadow-sm h-8"
+                        onClick={() => setAddOpen(true)}
+                    >
+                        <Plus className="h-3.5 w-3.5" /> Add
+                    </Button>
+
+                    <button
+                        onClick={() => setIsOpen((v) => !v)}
+                        className="p-1 hover:bg-white/40 rounded-full transition-colors ml-1"
+                    >
+                        <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                            <ChevronDown className="h-5 w-5 opacity-60" />
+                        </motion.div>
+                    </button>
                 </div>
-            </button>
+            </div>
 
             {/* Question list */}
             <AnimatePresence initial={false}>
@@ -148,45 +175,37 @@ export const SectionManager = ({ section, onRefetch }: SectionManagerProps) => {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.25 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
                         style={{ overflow: "hidden" }}
                     >
-                        <div className="p-4 space-y-3 bg-white/50">
+                        <div className="p-4 space-y-2 bg-slate-50/50">
                             {questions.length === 0 && (
-                                <div className="py-10 text-center text-muted-foreground text-sm">
-                                    No questions yet. Click <strong>Add Question</strong> to get started.
+                                <div className="py-8 text-center text-muted-foreground text-xs bg-white/50 rounded-xl border border-dashed">
+                                    No questions yet.
                                 </div>
                             )}
-                            {questions.map((q, i) => (
+                            {questions.slice(0, 10).map((q, i) => (
                                 <motion.div
                                     key={q._id ?? i}
-                                    initial={{ opacity: 0, y: 4 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.03 }}
-                                    className="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-100 shadow-sm group"
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: i * 0.02 }}
+                                    className="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-100 shadow-sm group"
                                 >
-                                    <span className="text-xs font-bold text-muted-foreground w-6 text-center">
+                                    <span className="text-[10px] font-bold text-muted-foreground/60 w-5 text-center">
                                         {i + 1}
                                     </span>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium truncate">
+                                        <p className="text-xs font-semibold truncate text-slate-700">
                                             {q.instruction || q.questionText || q.topic || q.type}
                                         </p>
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <Badge variant="secondary" className="text-[10px] h-4 px-1.5">
+                                        <div className="flex items-center gap-1.5 mt-1.5">
+                                            <Badge variant="secondary" className="text-[9px] h-3.5 px-1 bg-slate-100 font-bold uppercase">
                                                 {QUESTION_TYPE_LABELS[q.type]}
                                             </Badge>
-                                            <span className="text-[10px] text-muted-foreground">
-                                                {q.marks} mark{q.marks !== 1 ? "s" : ""}
+                                            <span className="text-[9px] text-muted-foreground font-medium">
+                                                {q.marks} pts
                                             </span>
-                                            {q.isAutoMarked !== undefined && (
-                                                <Badge
-                                                    variant={q.isAutoMarked ? "default" : "outline"}
-                                                    className="text-[10px] h-4 px-1.5"
-                                                >
-                                                    {q.isAutoMarked ? "Auto" : "Manual"}
-                                                </Badge>
-                                            )}
                                         </div>
                                     </div>
 
@@ -207,24 +226,33 @@ export const SectionManager = ({ section, onRefetch }: SectionManagerProps) => {
                                                     setEditQ(q);
                                                     setEditOpen(true);
                                                 }}
-                                                className="gap-2"
+                                                className="gap-2 text-xs"
                                             >
-                                                <Pencil className="h-4 w-4" /> Edit
+                                                <Pencil className="h-3.5 w-3.5" /> Edit
                                             </DropdownMenuItem>
                                             <DropdownMenuSeparator />
                                             <DropdownMenuItem
-                                                className="gap-2 text-destructive focus:text-destructive"
+                                                className="gap-2 text-xs text-destructive focus:text-destructive"
                                                 onClick={() => {
                                                     setDeleteQ(q);
                                                     setDeleteOpen(true);
                                                 }}
                                             >
-                                                <Trash2 className="h-4 w-4" /> Delete
+                                                <Trash2 className="h-3.5 w-3.5" /> Delete
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </motion.div>
                             ))}
+
+                            {questions.length > 10 && (
+                                <Link
+                                    to={`/dashboard/mock-test-sections/${section._id}`}
+                                    className="block py-2 text-center text-[11px] font-bold text-primary hover:underline"
+                                >
+                                    View all {questions.length} questions in detail →
+                                </Link>
+                            )}
                         </div>
                     </motion.div>
                 )}
@@ -256,25 +284,33 @@ export const SectionManager = ({ section, onRefetch }: SectionManagerProps) => {
                 }}
             />
 
+            {/* Settings dialog */}
+            <UpdateSectionDialog
+                open={settingsOpen}
+                onOpenChange={setSettingsOpen}
+                section={section}
+                onSuccess={onRefetch}
+            />
+
             {/* Delete question confirm */}
             <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
                 <AlertDialogContent className="rounded-2xl max-w-sm">
                     <AlertDialogHeader>
                         <AlertDialogTitle>Delete Question?</AlertDialogTitle>
-                        <AlertDialogDescription>
+                        <AlertDialogDescription className="text-xs">
                             This will permanently remove question #{" "}
                             {(questions.findIndex((q) => q._id === deleteQ?._id) ?? 0) + 1} from this section.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel asChild>
-                            <Button variant="outline" className="rounded-xl">Cancel</Button>
+                            <Button variant="outline" className="rounded-xl h-9 text-xs">Cancel</Button>
                         </AlertDialogCancel>
                         <Button
                             variant="destructive"
                             onClick={handleDeleteQuestion}
                             disabled={isDeleting}
-                            className="rounded-xl"
+                            className="rounded-xl h-9 text-xs"
                         >
                             {isDeleting ? (
                                 <Loader2 className="h-4 w-4 animate-spin mr-2" />

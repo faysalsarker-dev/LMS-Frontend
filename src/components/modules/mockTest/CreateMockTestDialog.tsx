@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
+import toast from "react-hot-toast";
 import {
     Dialog,
     DialogContent,
@@ -35,21 +36,42 @@ interface CreateMockTestDialogProps {
     onSuccess?: () => void;
 }
 
+interface FormValues {
+    title: string;
+    courseId: string;
+    thumbnail: File | null;
+    preview: string | null;
+}
+
 export const CreateMockTestDialog = ({
     open,
     onOpenChange,
     onSuccess,
 }: CreateMockTestDialogProps) => {
-    const [title, setTitle] = useState("");
-    const [courseId, setCourseId] = useState("");
-    const [thumbnail, setThumbnail] = useState<File | null>(null);
-    const [preview, setPreview] = useState<string | null>(null);
+    const {
+        register,
+        handleSubmit,
+        control,
+        watch,
+        setValue,
+        reset,
+        formState: { errors },
+    } = useForm<FormValues>({
+        defaultValues: {
+            title: "",
+            courseId: "",
+            thumbnail: null,
+            preview: null,
+        },
+    });
+
+    const preview = watch("preview");
 
     const { data: coursesData } = useGetCourseForSelectQuery(undefined);
     const [createMockTest, { isLoading: isCreating }] = useCreateMockTestMutation();
     const [createSection] = useCreateSectionMutation();
 
-    // cleanup preview URL
+    // Cleanup blob URL on unmount / when preview changes
     useEffect(() => {
         return () => {
             if (preview) URL.revokeObjectURL(preview);
@@ -59,45 +81,41 @@ export const CreateMockTestDialog = ({
     const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        setThumbnail(file);
-        setPreview(URL.createObjectURL(file));
+        setValue("thumbnail", file, { shouldDirty: true });
+        setValue("preview", URL.createObjectURL(file));
     };
 
     const handleClose = () => {
-        setTitle("");
-        setCourseId("");
-        setThumbnail(null);
-        setPreview(null);
+        reset();
         onOpenChange(false);
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!title.trim()) return toast.error("Title is required");
-        if (!courseId) return toast.error("Please select a course");
+    const onSubmit = async (data: FormValues) => {
+        const formData = new FormData();
+        formData.append("title", data.title.trim());
+        formData.append("course", data.courseId);
+        if (data.thumbnail) formData.append("thumbnail", data.thumbnail);
 
-        try {
-            const formData = new FormData();
-            formData.append("title", title.trim());
-            formData.append("course", courseId);
-            if (thumbnail) formData.append("thumbnail", thumbnail);
+        await toast.promise(
+            (async () => {
+                const result = await createMockTest(formData).unwrap();
+                const mockTestId: string = result?.data?._id;
 
-            const result = await createMockTest(formData).unwrap();
-            const mockTestId: string = result?.data?._id;
+                await Promise.allSettled(
+                    SECTION_NAMES.map((name) =>
+                        createSection({ mockTest: mockTestId, name }).unwrap()
+                    )
+                );
 
-            // Auto-create all 4 sections
-            await Promise.allSettled(
-                SECTION_NAMES.map((name) =>
-                    createSection({ mockTestId, name }).unwrap()
-                )
-            );
-
-            toast.success("Mock test created with all 4 sections!");
-            handleClose();
-            onSuccess?.();
-        } catch {
-            toast.error("Failed to create mock test. Please try again.");
-        }
+                handleClose();
+                onSuccess?.();
+            })(),
+            {
+                loading: "Creating mock test…",
+                success: "Mock test created with all 4 sections!",
+                error: "Failed to create mock test. Please try again.",
+            }
+        );
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -105,7 +123,7 @@ export const CreateMockTestDialog = ({
 
     return (
         <Dialog open={open} onOpenChange={handleClose}>
-            <DialogContent className="max-w-lg rounded-2xl p-0 overflow-hidden">
+            <DialogContent className="max-w-lg rounded-2xl p-0 overflow-hidden max-h-[90vh] overflow-y-auto">
                 {/* Header */}
                 <div className="bg-gradient-to-br from-primary/10 to-primary/5 p-6 border-b">
                     <DialogHeader>
@@ -120,7 +138,7 @@ export const CreateMockTestDialog = ({
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="p-6 space-y-5">
+                <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5">
                     {/* Title */}
                     <div className="space-y-2">
                         <Label htmlFor="mt-title">
@@ -129,10 +147,12 @@ export const CreateMockTestDialog = ({
                         <Input
                             id="mt-title"
                             placeholder="e.g. HSK Level 3 Mock Test"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
                             className="rounded-xl"
+                            {...register("title", { required: "Title is required" })}
                         />
+                        {errors.title && (
+                            <p className="text-xs text-destructive">{errors.title.message}</p>
+                        )}
                     </div>
 
                     {/* Course */}
@@ -140,18 +160,28 @@ export const CreateMockTestDialog = ({
                         <Label htmlFor="mt-course">
                             Course <span className="text-destructive">*</span>
                         </Label>
-                        <Select value={courseId} onValueChange={setCourseId}>
-                            <SelectTrigger id="mt-course" className="rounded-xl">
-                                <SelectValue placeholder="Select a course…" />
-                            </SelectTrigger>
-                            <SelectContent className="rounded-xl">
-                                {courses.map((c) => (
-                                    <SelectItem key={c._id} value={c._id}>
-                                        {c.title}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <Controller
+                            name="courseId"
+                            control={control}
+                            rules={{ required: "Please select a course" }}
+                            render={({ field }) => (
+                                <Select value={field.value} onValueChange={field.onChange}>
+                                    <SelectTrigger id="mt-course" className="rounded-xl">
+                                        <SelectValue placeholder="Select a course…" />
+                                    </SelectTrigger>
+                                    <SelectContent className="rounded-xl">
+                                        {courses.map((c) => (
+                                            <SelectItem key={c._id} value={c._id}>
+                                                {c.title}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
+                        {errors.courseId && (
+                            <p className="text-xs text-destructive">{errors.courseId.message}</p>
+                        )}
                     </div>
 
                     {/* Thumbnail */}
@@ -172,8 +202,8 @@ export const CreateMockTestDialog = ({
                                         type="button"
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            setThumbnail(null);
-                                            setPreview(null);
+                                            setValue("thumbnail", null);
+                                            setValue("preview", null);
                                         }}
                                         className="absolute top-2 right-2 z-10 p-1 bg-black/50 rounded-full text-white"
                                     >

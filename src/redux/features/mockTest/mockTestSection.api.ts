@@ -15,18 +15,37 @@ export const mockTestSectionApi = baseApi.injectEndpoints({
       ],
     }),
 
+    // GET all sections with pagination/filtering
+    getSections: builder.query({
+      query: (params: Record<string, unknown>) => ({
+        url: "/mock-test-section",
+        method: "GET",
+        params,
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map(({ _id }: { _id: string }) => ({
+                type: "MOCK_TEST_SECTION" as const,
+                id: _id,
+              })),
+              { type: "MOCK_TEST_SECTION", id: "LIST" },
+            ]
+          : [{ type: "MOCK_TEST_SECTION", id: "LIST" }],
+    }),
+
     // ─── CREATE ────────────────────────────────────────────────────────────────
-    // Body: { mockTestId, name: "listening" | "reading" | "writing" | "speaking" }
+    // Body: { mockTest, name: "listening" | "reading" | "writing" | "speaking" }
     // The backend automatically links the new section back to the parent MockTest.
     createSection: builder.mutation({
-      query: (data: { mockTestId: string; name: string }) => ({
+      query: (data: { mockTest: string; name: string }) => ({
         url: "/mock-test-section",
         method: "POST",
         data,
       }),
       // Invalidate the parent MockTest so its sections[] reference stays fresh
-      invalidatesTags: (_result, _error, { mockTestId }) => [
-        { type: "MOCK_TEST", id: mockTestId },
+      invalidatesTags: (_result, _error, { mockTest }) => [
+        { type: "MOCK_TEST", id: mockTest },
         { type: "MOCK_TEST", id: "LIST" },
       ],
     }),
@@ -47,13 +66,13 @@ export const mockTestSectionApi = baseApi.injectEndpoints({
 
     // ─── DELETE ────────────────────────────────────────────────────────────────
     deleteSection: builder.mutation({
-      query: ({ id, mockTestId: _mockTestId }: { id: string; mockTestId: string }) => ({
+      query: ({ id, mockTest: _mockTest }: { id: string; mockTest: string }) => ({
         url: `/mock-test-section/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (_result, _error, { id, mockTestId }) => [
+      invalidatesTags: (_result, _error, { id, mockTest }) => [
         { type: "MOCK_TEST_SECTION", id },
-        { type: "MOCK_TEST", id: mockTestId },
+        { type: "MOCK_TEST", id: mockTest },
         { type: "MOCK_TEST", id: "LIST" },
       ],
     }),
@@ -62,6 +81,7 @@ export const mockTestSectionApi = baseApi.injectEndpoints({
 
 export const {
   useGetSectionByIdQuery,
+  useGetSectionsQuery,
   useCreateSectionMutation,
   useUpdateSectionMutation,
   useDeleteSectionMutation,
