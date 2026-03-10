@@ -6,14 +6,16 @@ interface IRoute {
 }
 
 
-export const generateRoutes = (routes:IRoute[]) => {
+export const generateRoutes = (routes:any[]): any[] => {
 
   return routes.map(route => {
-    const { Component, path } = route;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { Component, path, children, ...rest } = route as any;
     return {
       Component: Component,
       path: path,
-    
+      children: children ? generateRoutes(children) : undefined,
+      ...rest
     };
   });
 };

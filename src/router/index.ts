@@ -1,65 +1,64 @@
-import Login from "@/pages/auth/Login";
-import Register from "@/pages/auth/Register";
+import Login from "@/pages/PublicPages/auth/Login";
+import Register from "@/pages/PublicPages/auth/Register";
 import { createBrowserRouter } from "react-router";
-import Layout from './../layout/home/Home';
+import Home from "./../layout/home/Home";
 import { generateRoutes } from "./generateRoutes";
-import { invisibleRoutes} from "./allRoutes";
+import { invisibleRoutes } from "./allRoutes";
 import { AdminLayout } from "@/layout/admin/AdminLayout";
-import NotFoundPage from "@/pages/ErrorPages/NotFoundPage";
+import NotFoundPage from "@/pages/PublicPages/ErrorPages/NotFoundPage";
 import { publicRoutes } from "./routes/public";
 import { adminInvicibleRoutes, adminRoutes } from "./routes/admin";
-import { studentRoutes } from "./routes/student";
-import AccessDenied from "@/pages/ErrorPages/AccessDenied";
-import Unauthorized from "@/pages/ErrorPages/Unauthorized";
+import { studentInvicibleRoutes, studentRoutes } from "./routes/student";
+import AccessDenied from "@/pages/PublicPages/ErrorPages/AccessDenied";
+import Unauthorized from "@/pages/PublicPages/ErrorPages/Unauthorized";
+import StudentLayout from "@/layout/student/Student";
 
 export const router = createBrowserRouter([
-
   {
-      Component: Layout,
-            path: '/',
-            // errorElement: <NotFoundPage />,
-            children:[
-         ...generateRoutes(publicRoutes),
-         ...generateRoutes(invisibleRoutes),
-         ...generateRoutes(studentRoutes),
-
-
-
-           {
-      Component:Register,
-            path:'/register',
-  },
-  {
-      Component:Login,
-            path:'/login',
+    Component: Home,
+    path: "/",
+    children: [
+      ...generateRoutes(publicRoutes),
+      ...generateRoutes(invisibleRoutes),
+      {
+        Component: Register,
+        path: "/register",
+      },
+      {
+        Component: Login,
+        path: "/login",
+      },
+    ],
   },
 
-            ]
+  {
+    Component: StudentLayout,
+    path: "/my-dashboard",
+    children: [
+      ...generateRoutes(studentRoutes),
+      ...generateRoutes(studentInvicibleRoutes),
+    ],
   },
 
-
   {
-    Component:AdminLayout,
-    path:'/dashboard',
-    children:[
+    Component: AdminLayout,
+    path: "/dashboard",
+    children: [
       ...generateRoutes(adminRoutes),
-      ...generateRoutes(adminInvicibleRoutes)
-    ]
+      ...generateRoutes(adminInvicibleRoutes),
+    ],
   },
 
-{
-  Component:AccessDenied,
-  path:'/access-denied'
-},
-{
-  Component:Unauthorized,
-  path:'/unauthorized'
-},
-{
-  Component:NotFoundPage,
-  path:'*'
-}
-
-
-  
+  {
+    Component: AccessDenied,
+    path: "/access-denied",
+  },
+  {
+    Component: Unauthorized,
+    path: "/unauthorized",
+  },
+  {
+    Component: NotFoundPage,
+    path: "*",
+  },
 ]);

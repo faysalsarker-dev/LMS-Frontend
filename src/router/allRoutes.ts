@@ -1,34 +1,29 @@
 import { lazy } from "react";
 
-
 import withAuth from "./withAuth";
-import CheckoutPage from "@/pages/Checkout/CheckoutPage";
+import CheckoutPage from "@/pages/PublicPages/Checkout/CheckoutPage";
 import PracticeDetail from "@/pages/practice/PracticeDetail";
-import TermsAndConditions from "@/pages/policy/TermsAndConditions";
-import PrivacyPolicyPage from "@/pages/policy/PrivacyPage";
-import PaymentSuccess from "@/pages/Payments/PaymentSuccessPage";
-import PaymentFailed from "@/pages/Payments/PaymentFailed";
-import PaymentCancelled from "@/pages/Payments/PaymentCancelled";
+import TermsAndConditions from "@/pages/PublicPages/policy/TermsAndConditions";
+import PrivacyPolicyPage from "@/pages/PublicPages/policy/PrivacyPage";
+import PaymentSuccess from "@/pages/PublicPages/Payments/PaymentSuccessPage";
+import PaymentFailed from "@/pages/PublicPages/Payments/PaymentFailed";
+import PaymentCancelled from "@/pages/PublicPages/Payments/PaymentCancelled";
+import MockTestDetailPage from "@/pages/practice/mock-test/MockTestDetailPage";
+import MockTestSectionPage from "@/pages/practice/mock-test/MockTestSectionPage";
 
+const CourseDetails = lazy(
+  () => import("@/pages/PublicPages/course/CourseDetails"),
+);
 
-
-const CourseDetails = lazy(() => import("@/pages/course/CourseDetails"));
-
-
-
-const OtpVerify = lazy(() => import("@/pages/auth/OtpVerify"));
-const ForgotPassword = lazy(() => import("@/pages/auth/ForgotPassword"));
-const ResetPassword = lazy(() => import("@/pages/auth/ResetPassword"));
-
-
+const OtpVerify = lazy(() => import("@/pages/PublicPages/auth/OtpVerify"));
+const ForgotPassword = lazy(
+  () => import("@/pages/PublicPages/auth/ForgotPassword"),
+);
+const ResetPassword = lazy(
+  () => import("@/pages/PublicPages/auth/ResetPassword"),
+);
 
 // 🌍 Public routes
-
-
-
-
-
-
 
 // 🕶 Invisible routes
 export const invisibleRoutes = [
@@ -73,10 +68,29 @@ export const invisibleRoutes = [
     name: "Payment cancel",
   },
 
-
-  { Component: OtpVerify, path: "/verify-account/:email", name: "Verify Account" },
-  { Component: ForgotPassword, path: "/forget-password", name: "Forgot Password" },
+  {
+    Component: OtpVerify,
+    path: "/verify-account/:email",
+    name: "Verify Account",
+  },
+  {
+    Component: ForgotPassword,
+    path: "/forget-password",
+    name: "Forgot Password",
+  },
   { Component: ResetPassword, path: "/reset-password", name: "Reset Password" },
+
+  // 🧪 Mock Test Routes (Isolated)
+  {
+    Component: withAuth(MockTestDetailPage),
+    path: "/practice/mock-test/:slug",
+    name: "Mock Test Detail",
+  },
+  {
+    Component: withAuth(MockTestSectionPage),
+    path: "/practice/mock-test/section/:sectionId",
+    name: "Mock Test Section",
+  },
 ];
 
 // 🎓 Student routes

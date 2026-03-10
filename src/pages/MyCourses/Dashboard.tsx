@@ -1,27 +1,12 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUserInfoQuery } from '@/redux/features/auth/auth.api';
 import type { ICourse } from '@/interface/course.types';
-import { PlayCircle, BookOpen, Trophy } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BookOpen } from 'lucide-react';
+
 import { motion } from 'framer-motion';
 import EnrolledCourseCard, { EnrolledCourseCardLg } from '@/components/shared/EnrolledCourseCard';
 import { useGetMyEnrolledCoursesQuery } from '@/redux/features/course/course.api';
 import { useTranslation } from 'react-i18next';
-import { useGetUserPracticesQuery } from '@/redux/features/practice/practice.api';
-import { PracticeCard } from '@/components/modules/practice/PracticeCard';
-import type { Practice } from '@/components/modules/practice';
-
-const Dashboard = () => {
-  const { data } = useUserInfoQuery({});
-  const { data: enrolledCoursesData } = useGetMyEnrolledCoursesQuery({});
-  const { data: userPracticesData } = useGetUserPracticesQuery({});
-const { t }=useTranslation()
-
-
-  const user = data?.data;
-
-  // Animation variants
-  const containerVariants = {
+ const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -45,24 +30,26 @@ const { t }=useTranslation()
     }
   };
 
-  const cardVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        type: "spring" as const,
-        stiffness: 100,
-        damping: 15
-      }
-    }
-  };
+
+
+
+const Dashboard = () => {
+  const { data } = useUserInfoQuery({});
+  const { data: enrolledCoursesData } = useGetMyEnrolledCoursesQuery({});
+  const { t } = useTranslation()
+
+
+  const user = data?.data;
+
+  // Animation variants
+ 
+
 
   return (
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-6 lg:py-12">
         {/* Hero Section with Illustration */}
-        
+
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -85,9 +72,9 @@ const { t }=useTranslation()
                 transition={{ delay: 0.4, duration: 0.6 }}
                 className="text-lg text-white/90"
               >
-               {t('profile.studentsWolcomeDiscription')}
+                {t('profile.studentsWolcomeDiscription')}
               </motion.p>
-              
+
               {/* Quick Stats */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -99,59 +86,17 @@ const { t }=useTranslation()
                   <BookOpen className="h-5 w-5 text-white" />
                   <span className="text-white font-semibold">{user?.courses?.length || 0} Courses</span>
                 </div>
-          
+
               </motion.div>
             </div>
-            
-    
+
+
           </div>
         </motion.div>
-
-        {/* Tabs Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-        >
-          <Tabs defaultValue="courses" >
-            <TabsList className="w-full bg-background lg:w-auto backdrop-blur-sm border shadow-sm p-1 h-14">
-              <TabsTrigger 
-                value="courses" 
-                className="p-3  data-[state=active]:bg-primary/30 data-[state=active]:text-primary transition-all duration-300"
-              >
-                <BookOpen className="h-4 w-4 mr-2" />
-                {t('profile.MyCourses')}
-              </TabsTrigger>
-              <TabsTrigger 
-                value="practices"
-                className="p-3 data-[state=active]:bg-primary/30 data-[state=active]:text-primary transition-all duration-300"
-              >
-                <Trophy className="h-4 w-4 mr-2" />
-               {t('profile.MyPractices')}
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="courses" className="space-y-6">
-              <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <motion.div variants={cardVariants}>
-                  <Card className="border-0 shadow-lg card-elevated bg-card/80 backdrop-blur-sm">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <div className="p-2 rounded-lg bg-gradient-primary">
-                          <PlayCircle className="h-5 w-5 text-white" />
-                        </div>
-                        Continue Learning
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {enrolledCoursesData?.data && enrolledCoursesData?.data?.length > 0 ? (
+   {enrolledCoursesData?.data && enrolledCoursesData?.data?.length > 0 ? (
                         <>
-                      
-                          <motion.div 
+
+                          <motion.div
                             className=" space-y-4 md:hidden"
                             variants={containerVariants}
                             initial="hidden"
@@ -171,7 +116,7 @@ const { t }=useTranslation()
                           </motion.div>
 
 
-                          <motion.div 
+                          <motion.div
                             className=" space-y-6 md:block hidden "
                             variants={containerVariants}
                             initial="hidden"
@@ -203,54 +148,7 @@ const { t }=useTranslation()
                           <p className="text-muted-foreground">No courses enrolled yet. Start your learning journey today!</p>
                         </motion.div>
                       )}
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </motion.div>
-            </TabsContent>
-
-            <TabsContent value="practices">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4 }}
-              >
-                <Card className="border-0 shadow-lg card-elevated bg-card/80 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <div className="p-2 rounded-lg bg-gradient-accent">
-                        <Trophy className="h-5 w-5 text-white" />
-                      </div>
-                      Practice Sessions
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.2 }}
-                      className="text-center py-12"
-                    >
-                 {
-                  !userPracticesData?.data && userPracticesData?.data.length > 0 ? (
-                    <p className="text-muted-foreground">You have  practice sessions available. Keep practicing to enhance your skills!</p>
-                  ):( 
-                    <div className='grid md:grid-cols-3 lg:grid-cols-4 '>
-{
-  userPracticesData?.data.map((practice:Practice) => (
-    <PracticeCard key={practice._id} data={practice} />
-  ))
-}
-                    </div>
-                  )
-                 }
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </TabsContent>
-          </Tabs>
-        </motion.div>
+       
       </div>
     </div>
   );
