@@ -42,7 +42,7 @@ const containerVariants = {
   },
 };
 
-const AdminDashboardPage = () => {
+const OverViewPage = () => {
   const { data, isLoading, isError, refetch } = useGetDashboardQuery({});
 
   const dashboardData = data?.data;
@@ -184,4 +184,4 @@ const AdminDashboardPage = () => {
   );
 };
 
-export default AdminDashboardPage;
+export default OverViewPage;

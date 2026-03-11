@@ -41,7 +41,7 @@ const Dashboard = () => {
 
   const user = data?.data;
 
-  // Animation variants
+  
  
 
 

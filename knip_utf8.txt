@@ -1,0 +1,181 @@
+﻿[93m[4mUnused files[24m[39m (32)
+src/App.css                                                        
+src/App.tsx                                                        
+src/data/mockPromoData.ts                                          
+src/hooks/use-file-upload.ts                                       
+src/hooks/use-mobile.tsx                                           
+src/hooks/useConfirmOnLeave.tsx                                    
+src/hooks/useUploadFile.ts                                         
+src/types/course.ts                                                
+src/types/dashboard.ts                                             
+src/types/swiper.d.ts                                              
+src/utils/convertFromBackendFormat.tsx                             
+src/utils/timezone.ts                                              
+src/components/custom/SingleFileUpload.tsx                         
+src/components/shared/DemoAccess.tsx                               
+src/components/shared/LanguageToggle.tsx                           
+src/components/shared/LogoIcon.tsx                                 
+src/components/ui/accordion.tsx                                    
+src/components/ui/collapsible.tsx                                  
+src/components/ui/command.tsx                                      
+src/components/ui/toggle-group.tsx                                 
+src/components/ui/toggle.tsx                                       
+src/components/modules/adminDashboard/index .ts                    
+src/components/modules/home/InstructorSpotlight.tsx                
+src/components/modules/lesson-editor/index.ts                      
+src/components/modules/mockTest/SectionManager.tsx                 
+src/components/modules/User/EditUserDialog.tsx                     
+src/components/modules/User/UserStats.tsx                          
+src/components/modules/lesson-editor/assignment/index.ts           
+src/components/modules/lesson-editor/quiz/index.ts                 
+src/components/modules/lesson-editor/quiz/QuizUi/ActiveState.tsx   
+src/components/modules/lesson-editor/quiz/QuizUi/CountdownState.tsx
+src/components/modules/lesson-editor/quiz/QuizUi/IdleState.tsx     
+[93m[4mUnused dependencies[24m[39m (12)
+@radix-ui/react-accordion     package.json:14:6
+@radix-ui/react-collapsible   package.json:18:6
+@radix-ui/react-icons         package.json:21:6
+@radix-ui/react-separator     package.json:29:6
+@radix-ui/react-toggle        package.json:34:6
+@radix-ui/react-toggle-group  package.json:35:6
+@radix-ui/react-tooltip       package.json:36:6
+cmdk                          package.json:45:6
+date-fns-tz                   package.json:47:6
+react-colorful                package.json:57:6
+react-error-boundary          package.json:61:6
+react-lottie                  package.json:66:6
+[93m[4mUnused devDependencies[24m[39m (2)
+@types/cookie-signature  package.json:80:6
+@types/react-lottie      package.json:85:6
+[93m[4mUnused exports[24m[39m (99)
+default                                    src/i18n.ts:24:16                                            
+changeLanguage                   function  src/utils/language.ts:48:17                                  
+useKeyboardShortcuts             function  src/hooks/useFullscreen.ts:118:17                            
+useVideoControls                 function  src/hooks/useFullscreen.ts:247:17                            
+AssignmentSchema                           src/interface/student.types.ts:4:14                          
+LessonProgressSchema                       src/interface/student.types.ts:15:14                         
+CourseProgressSchema                       src/interface/student.types.ts:22:14                         
+useAppSelector                             src/redux/hooks.ts:5:14                                      
+testimonialApi                             src/redux/features/testimonial/testimonial.api.ts:4:14       
+CardAction                                 src/components/ui/card.tsx:89:3                              
+DropdownMenuPortal                         src/components/ui/dropdown-menu.tsx:241:3                    
+DropdownMenuGroup                          src/components/ui/dropdown-menu.tsx:244:3                    
+DropdownMenuCheckboxItem                   src/components/ui/dropdown-menu.tsx:247:3                    
+DropdownMenuRadioGroup                     src/components/ui/dropdown-menu.tsx:248:3                    
+DropdownMenuRadioItem                      src/components/ui/dropdown-menu.tsx:249:3                    
+DropdownMenuShortcut                       src/components/ui/dropdown-menu.tsx:251:3                    
+DropdownMenuSub                            src/components/ui/dropdown-menu.tsx:252:3                    
+DropdownMenuSubTrigger                     src/components/ui/dropdown-menu.tsx:253:3                    
+DropdownMenuSubContent                     src/components/ui/dropdown-menu.tsx:254:3                    
+SidebarGroupAction                         src/components/ui/sidebar.tsx:706:3                          
+SidebarGroupLabel                          src/components/ui/sidebar.tsx:708:3                          
+SidebarInput                               src/components/ui/sidebar.tsx:710:3                          
+SidebarInset                               src/components/ui/sidebar.tsx:711:3                          
+SidebarMenuAction                          src/components/ui/sidebar.tsx:713:3                          
+SidebarMenuBadge                           src/components/ui/sidebar.tsx:714:3                          
+SidebarMenuSkeleton                        src/components/ui/sidebar.tsx:717:3                          
+SidebarMenuSub                             src/components/ui/sidebar.tsx:718:3                          
+SidebarMenuSubButton                       src/components/ui/sidebar.tsx:719:3                          
+SidebarMenuSubItem                         src/components/ui/sidebar.tsx:720:3                          
+SidebarRail                                src/components/ui/sidebar.tsx:722:3                          
+SidebarSeparator                           src/components/ui/sidebar.tsx:723:3                          
+badgeVariants                              src/components/ui/badge.tsx:46:17                            
+ScrollBar                                  src/components/ui/scroll-area.tsx:56:22                      
+NavigationMenuContent                      src/components/ui/navigation-menu.tsx:162:3                  
+NavigationMenuTrigger                      src/components/ui/navigation-menu.tsx:163:3                  
+NavigationMenuIndicator                    src/components/ui/navigation-menu.tsx:165:3                  
+NavigationMenuViewport                     src/components/ui/navigation-menu.tsx:166:3                  
+navigationMenuTriggerStyle                 src/components/ui/navigation-menu.tsx:167:3                  
+SheetClose                                 src/components/ui/sheet.tsx:137:3                            
+AlertDialogPortal                          src/components/ui/alert-dialog.tsx:145:3                     
+AlertDialogOverlay                         src/components/ui/alert-dialog.tsx:146:3                     
+CalendarDayButton                          src/components/ui/calendar.tsx:214:20                        
+ChartLegend                                src/components/ui/chart.tsx:352:3                            
+ChartLegendContent                         src/components/ui/chart.tsx:353:3                            
+ChartStyle                                 src/components/ui/chart.tsx:354:3                            
+DialogClose                                src/components/ui/dialog.tsx:132:3                           
+DialogOverlay                              src/components/ui/dialog.tsx:137:3                           
+DialogPortal                               src/components/ui/dialog.tsx:138:3                           
+DialogTrigger                              src/components/ui/dialog.tsx:140:3                           
+useFormField                               src/components/ui/form.tsx:159:3                             
+InputOTPSeparator                          src/components/ui/input-otp.tsx:75:49                        
+PopoverAnchor                              src/components/ui/popover.tsx:48:51                          
+SelectGroup                                src/components/ui/select.tsx:175:3                           
+SelectLabel                                src/components/ui/select.tsx:177:3                           
+SelectScrollDownButton                     src/components/ui/select.tsx:178:3                           
+SelectScrollUpButton                       src/components/ui/select.tsx:179:3                           
+SelectSeparator                            src/components/ui/select.tsx:180:3                           
+TableFooter                                src/components/ui/table.tsx:109:3                            
+TableCaption                               src/components/ui/table.tsx:113:3                            
+PracticeItemCard                           src/components/modules/practice/user/index.ts:3:10           
+practiceApi                                src/redux/features/practice/practice.api.ts:3:14             
+useReorderPracticeItemsMutation            src/redux/features/practice/practice.api.ts:153:3            
+PracticeTable                              src/components/modules/practice/index.ts:3:10                
+DeletePracticeDialog                       src/components/modules/practice/index.ts:5:10                
+categoryApi                                src/redux/features/category/category.api.ts:4:14             
+useGetCategoryBySlugQuery                  src/redux/features/category/category.api.ts:80:3             
+courseApi                                  src/redux/features/course/course.api.ts:4:14                 
+useGetCourseByIdQuery                      src/redux/features/course/course.api.ts:151:3                
+lessonApi                                  src/redux/features/lesson/lesson.api.ts:4:14                 
+milestoneApi                               src/redux/features/milestone/milestone.api.ts:4:14           
+useGetMilestoneByIdQuery                   src/redux/features/milestone/milestone.api.ts:77:3           
+mockTestApi                                src/redux/features/mockTest/mockTest.api.ts:3:14             
+mockTestSectionApi                         src/redux/features/mockTest/mockTestSection.api.ts:3:14      
+SectionCard                                src/components/modules/mockTest/index.ts:7:10                
+ProfileHeaderSkeleton                      src/components/modules/profile/ProfileSkeleton.tsx:4:14      
+ProfileStatsSkeleton                       src/components/modules/profile/ProfileSkeleton.tsx:28:14     
+CourseCardSkeleton                         src/components/modules/profile/ProfileSkeleton.tsx:44:14     
+ProfileHeaderSkeleton                      src/components/modules/profile/index.ts:10:3                 
+ProfileStatsSkeleton                       src/components/modules/profile/index.ts:11:3                 
+CoursesTabSkeleton                         src/components/modules/profile/index.ts:12:3                 
+promoApi                                   src/redux/features/promo/promo.api.ts:4:14                   
+useGetPromoByIdQuery                       src/redux/features/promo/promo.api.ts:132:3                  
+assignmentApi                              src/redux/features/assignment/assignmentSubmissionApi.ts:3:14
+useGetAssignmentByIdQuery                  src/redux/features/assignment/assignmentSubmissionApi.ts:81:3
+useUpdateAssignmentMutation                src/redux/features/assignment/assignmentSubmissionApi.ts:82:3
+useDeleteAssignmentMutation                src/redux/features/assignment/assignmentSubmissionApi.ts:84:3
+enrolmentApi                               src/redux/features/enrollment/enrollment.api.ts:4:14         
+useGetEnrolmentByIdQuery                   src/redux/features/enrollment/enrollment.api.ts:77:3         
+useDeleteEnrolmentMutation                 src/redux/features/enrollment/enrollment.api.ts:79:3         
+overviewApi                                src/redux/features/overview/overview.api.ts:3:14             
+useGetUserStatsQuery                       src/redux/features/overview/overview.api.ts:81:3             
+useGetCourseStatsQuery                     src/redux/features/overview/overview.api.ts:82:3             
+useGetEnrollmentStatsQuery                 src/redux/features/overview/overview.api.ts:83:3             
+useGetRevenueStatsQuery                    src/redux/features/overview/overview.api.ts:84:3             
+useGetPopularCoursesQuery                  src/redux/features/overview/overview.api.ts:85:3             
+useGetRecentEnrollmentsQuery               src/redux/features/overview/overview.api.ts:86:3             
+useGetContentStatsQuery                    src/redux/features/overview/overview.api.ts:87:3             
+useGetGrowthAnalyticsQuery                 src/redux/features/overview/overview.api.ts:88:3             
+progressApi                                src/redux/features/progress/progress.api.ts:3:14             
+[93m[4mUnused exported types[24m[39m (30)
+SupportedLanguage           type       src/utils/language.ts:3:13                             
+UseFullscreenReturn         interface  src/hooks/useFullscreen.ts:5:18                        
+KeyboardShortcutHandlers    interface  src/hooks/useFullscreen.ts:107:18                      
+UseVideoControlsReturn      interface  src/hooks/useFullscreen.ts:226:18                      
+KeyboardShortcutHandlers    interface  src/hooks/useKeyboardShortcuts.ts:3:18                 
+UseVideoControlsReturn      interface  src/hooks/useVideoControls.ts:3:18                     
+IAssignmentListResponse     interface  src/interface/assignment.types.ts:59:18                
+IReviewSubmissionData       interface  src/interface/assignment.types.ts:65:18                
+EnrolmentsResponse          interface  src/interface/enrolment.types.ts:37:18                 
+PromoRedeemResponse         interface  src/interface/checkout.types.ts:35:18                  
+CheckoutResult              interface  src/interface/checkout.types.ts:61:18                  
+CheckoutState               interface  src/interface/checkout.types.ts:71:18                  
+DashboardData               interface  src/interface/dashboard.types.ts:61:18                 
+DashboardResponse           interface  src/interface/dashboard.types.ts:70:18                 
+Assignment                  type       src/interface/student.types.ts:50:13                   
+LessonProgress              type       src/interface/student.types.ts:51:13                   
+CourseProgress              type       src/interface/student.types.ts:52:13                   
+GetEnrolledCoursesResponse  interface  src/interface/student.types.ts:56:18                   
+GetProgressResponse         interface  src/interface/student.types.ts:61:18                   
+AssignmentStatus            type       src/interface/student.types.ts:81:13                   
+IAssignmentSubmission       interface  src/interface/student.types.ts:83:18                   
+ISubmissionResponse         interface  src/interface/studentAssignment.types.ts:37:18         
+IAssignmentResponse         interface  src/interface/studentAssignment.types.ts:43:18         
+ISubmissionListResponse     interface  src/interface/studentAssignment.types.ts:48:18         
+ChartConfig                 type       src/components/ui/chart.tsx:9:13                       
+MockTestRow                 type       src/components/modules/mockTest/mockTest.types.ts:13:13
+MockTestRow                 type       src/components/modules/mockTest/index.ts:10:32         
+PracticeFormData            interface  src/components/modules/practice/practice.types.ts:32:18
+PracticeStats               interface  src/components/modules/practice/practice.types.ts:51:18
+PracticeResponse            interface  src/components/modules/practice/practice.types.ts:68:18
+[33m[4mConfiguration hints[24m (1)[39m

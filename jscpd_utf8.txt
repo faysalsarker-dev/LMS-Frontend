@@ -1,0 +1,553 @@
+﻿Clone found (tsx):
+ - [1m[32msrc\components\modules\lesson-editor\quiz\QuizUi\CountdownState.tsx[39m[22m [3:2 - 24:7] (21 lines, 184 tokens)
+   [1m[32msrc\components\modules\lesson-editor\quiz\QuizUi\IdleState.tsx[39m[22m [3:2 - 20:6]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\lesson-editor\quiz\QuizUi\ActiveState.tsx[39m[22m [5:2 - 36:10] (31 lines, 254 tokens)
+   [1m[32msrc\components\modules\lesson-editor\quiz\QuizUi\IdleState.tsx[39m[22m [3:2 - 25:8]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\lesson-editor\quiz\QuizUi\ActiveState.tsx[39m[22m [265:76 - 282:12] (17 lines, 114 tokens)
+   [1m[32msrc\components\modules\lesson-editor\quiz\QuizUi\ActiveState.tsx[39m[22m [233:59 - 250:17]
+
+Clone found (typescript):
+ - [1m[32msrc\redux\features\promo\promo.api.ts[39m[22m [81:13 - 95:35] (14 lines, 170 tokens)
+   [1m[32msrc\redux\features\promo\promo.api.ts[39m[22m [42:13 - 56:35]
+
+Clone found (typescript):
+ - [1m[32msrc\redux\features\course\course.api.ts[39m[22m [76:30 - 85:14] (9 lines, 106 tokens)
+   [1m[32msrc\redux\features\course\course.api.ts[39m[22m [65:30 - 74:21]
+
+Clone found (typescript):
+ - [1m[32msrc\redux\features\auth\auth.api.ts[39m[22m [129:2 - 137:2] (8 lines, 86 tokens)
+   [1m[32msrc\redux\features\promo\promo.api.ts[39m[22m [56:9 - 64:2]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\StudentsPages\MyCourses\Dashboard.tsx[39m[22m [113:7 - 140:2] (27 lines, 204 tokens)
+   [1m[32msrc\pages\StudentsPages\MyCourses\Dashboard.tsx[39m[22m [82:2 - 121:18]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\StudentsPages\MyCourses\Dashboard.tsx[39m[22m [120:28 - 133:21] (13 lines, 119 tokens)
+   [1m[32msrc\pages\StudentsPages\MyCourses\Dashboard.tsx[39m[22m [100:21 - 113:19]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\Student\course\QuizLesson.tsx[39m[22m [375:6 - 447:7] (72 lines, 525 tokens)
+   [1m[32msrc\components\modules\lesson-editor\quiz\QuizUi\ActiveState.tsx[39m[22m [143:9 - 231:2]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\Student\course\QuizLesson.tsx[39m[22m [476:2 - 507:4] (31 lines, 238 tokens)
+   [1m[32msrc\pages\Student\course\QuizLesson.tsx[39m[22m [448:12 - 475:6]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\Student\course\QuizLesson.tsx[39m[22m [82:1 - 102:80] (20 lines, 224 tokens)
+   [1m[32msrc\components\modules\lesson-editor\quiz\QuizUi\IdleState.tsx[39m[22m [5:1 - 25:7]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\Student\course\QuizLesson.tsx[39m[22m [478:274 - 497:26] (19 lines, 125 tokens)
+   [1m[32msrc\pages\Student\course\QuizLesson.tsx[39m[22m [449:257 - 468:32]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\Payments\PaymentFailed.tsx[39m[22m [21:8 - 32:2] (11 lines, 157 tokens)
+   [1m[32msrc\pages\PublicPages\Payments\PaymentSuccessPage.tsx[39m[22m [22:8 - 35:2]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\Payments\PaymentFailed.tsx[39m[22m [32:4 - 47:2] (15 lines, 155 tokens)
+   [1m[32msrc\pages\PublicPages\Payments\PaymentSuccessPage.tsx[39m[22m [35:10 - 52:2]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\Payments\PaymentFailed.tsx[39m[22m [54:5 - 150:2] (96 lines, 892 tokens)
+   [1m[32msrc\pages\PublicPages\Payments\PaymentSuccessPage.tsx[39m[22m [64:4 - 163:2]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\Payments\PaymentFailed.tsx[39m[22m [8:2 - 16:206] (8 lines, 105 tokens)
+   [1m[32msrc\pages\PublicPages\Payments\PaymentSuccessPage.tsx[39m[22m [8:2 - 16:204]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\Payments\PaymentFailed.tsx[39m[22m [87:13 - 108:3] (21 lines, 211 tokens)
+   [1m[32msrc\pages\PublicPages\Payments\PaymentSuccessPage.tsx[39m[22m [99:13 - 120:5]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\Payments\PaymentFailed.tsx[39m[22m [108:7 - 115:72] (7 lines, 74 tokens)
+   [1m[32msrc\pages\PublicPages\Payments\PaymentSuccessPage.tsx[39m[22m [120:5 - 127:68]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\Payments\PaymentCancelled.tsx[39m[22m [21:8 - 150:2] (129 lines, 1261 tokens)
+   [1m[32msrc\pages\PublicPages\Payments\PaymentSuccessPage.tsx[39m[22m [22:8 - 163:2]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\Payments\PaymentCancelled.tsx[39m[22m [8:2 - 16:215] (8 lines, 105 tokens)
+   [1m[32msrc\pages\PublicPages\Payments\PaymentSuccessPage.tsx[39m[22m [8:2 - 16:204]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\Payments\PaymentCancelled.tsx[39m[22m [18:171 - 33:104] (15 lines, 176 tokens)
+   [1m[32msrc\pages\PublicPages\Payments\PaymentFailed.tsx[39m[22m [18:171 - 33:106]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\Payments\PaymentCancelled.tsx[39m[22m [82:8 - 115:90] (33 lines, 309 tokens)
+   [1m[32msrc\pages\PublicPages\Payments\PaymentFailed.tsx[39m[22m [82:7 - 127:68]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\Payments\PaymentCancelled.tsx[39m[22m [118:19 - 131:13] (13 lines, 114 tokens)
+   [1m[32msrc\pages\PublicPages\Payments\PaymentFailed.tsx[39m[22m [118:19 - 131:80]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\Payments\PaymentCancelled.tsx[39m[22m [135:17 - 153:4] (18 lines, 152 tokens)
+   [1m[32msrc\pages\PublicPages\Payments\PaymentFailed.tsx[39m[22m [135:17 - 153:3]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\ErrorPages\NotFoundPage.tsx[39m[22m [113:2 - 123:2] (10 lines, 107 tokens)
+   [1m[32msrc\pages\PublicPages\ErrorPages\NotFoundPage.tsx[39m[22m [97:4 - 113:2]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\ErrorPages\NotFoundPage.tsx[39m[22m [13:4 - 30:29] (17 lines, 117 tokens)
+   [1m[32msrc\pages\PublicPages\ErrorPages\Unauthorized.tsx[39m[22m [12:5 - 29:25]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\ErrorPages\AccessDenied.tsx[39m[22m [44:7 - 56:14] (12 lines, 69 tokens)
+   [1m[32msrc\pages\PublicPages\ErrorPages\AccessDenied.tsx[39m[22m [31:2 - 44:7]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\ErrorPages\AccessDenied.tsx[39m[22m [56:4 - 69:4] (13 lines, 74 tokens)
+   [1m[32msrc\pages\PublicPages\ErrorPages\AccessDenied.tsx[39m[22m [43:12 - 56:4]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\ErrorPages\AccessDenied.tsx[39m[22m [2:15 - 28:24] (26 lines, 183 tokens)
+   [1m[32msrc\pages\PublicPages\ErrorPages\NotFoundPage.tsx[39m[22m [5:25 - 29:25]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\auth\ResetPassword.tsx[39m[22m [66:8 - 102:10] (36 lines, 316 tokens)
+   [1m[32msrc\pages\PublicPages\course\CourseDetails.tsx[39m[22m [35:8 - 55:7]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\auth\Register.tsx[39m[22m [326:13 - 354:10] (28 lines, 187 tokens)
+   [1m[32msrc\pages\PublicPages\auth\ResetPassword.tsx[39m[22m [204:10 - 230:7]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\auth\OtpVerify.tsx[39m[22m [128:8 - 203:2] (75 lines, 717 tokens)
+   [1m[32msrc\pages\PublicPages\course\CourseDetails.tsx[39m[22m [35:8 - 140:5]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\auth\OtpVerify.tsx[39m[22m [118:6 - 128:11] (10 lines, 78 tokens)
+   [1m[32msrc\pages\PublicPages\auth\ResetPassword.tsx[39m[22m [56:6 - 66:11]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\auth\OtpVerify.tsx[39m[22m [141:13 - 160:11] (19 lines, 138 tokens)
+   [1m[32msrc\pages\PublicPages\auth\ResetPassword.tsx[39m[22m [81:13 - 100:11]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\auth\Login.tsx[39m[22m [240:5 - 263:2] (23 lines, 184 tokens)
+   [1m[32msrc\pages\PublicPages\auth\Login.tsx[39m[22m [179:4 - 209:2]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\auth\ForgotPassword.tsx[39m[22m [48:8 - 112:2] (64 lines, 545 tokens)
+   [1m[32msrc\pages\PublicPages\auth\ResetPassword.tsx[39m[22m [100:8 - 161:2]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\PublicPages\auth\ForgotPassword.tsx[39m[22m [93:2 - 165:2] (72 lines, 500 tokens)
+   [1m[32msrc\pages\PublicPages\auth\ResetPassword.tsx[39m[22m [188:6 - 251:2]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\auth\ForgotPassword.tsx[39m[22m [36:3 - 46:25] (10 lines, 86 tokens)
+   [1m[32msrc\pages\PublicPages\auth\ResetPassword.tsx[39m[22m [88:3 - 98:16]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\auth\ForgotPassword.tsx[39m[22m [46:25 - 58:34] (12 lines, 104 tokens)
+   [1m[32msrc\pages\PublicPages\auth\ResetPassword.tsx[39m[22m [98:16 - 110:33]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\auth\ForgotPassword.tsx[39m[22m [58:34 - 80:42] (22 lines, 193 tokens)
+   [1m[32msrc\pages\PublicPages\auth\ResetPassword.tsx[39m[22m [110:33 - 132:40]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\auth\ForgotPassword.tsx[39m[22m [107:19 - 128:30] (21 lines, 153 tokens)
+   [1m[32msrc\pages\PublicPages\auth\ResetPassword.tsx[39m[22m [193:19 - 214:31]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\PublicPages\auth\ForgotPassword.tsx[39m[22m [148:39 - 168:34] (20 lines, 120 tokens)
+   [1m[32msrc\pages\PublicPages\auth\ResetPassword.tsx[39m[22m [234:38 - 254:33]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\AdminPages\mockTest\MockTestsPage.tsx[39m[22m [173:37 - 190:41] (17 lines, 158 tokens)
+   [1m[32msrc\pages\AdminPages\practice\PracticesPage.tsx[39m[22m [79:17 - 96:21]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\AdminPages\mockTest\MockTestDetailPage.tsx[39m[22m [39:2 - 45:2] (6 lines, 74 tokens)
+   [1m[32msrc\pages\AdminPages\practice\ViewPracticePage.tsx[39m[22m [308:2 - 315:11]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\AdminPages\mockTest\MockTestDetailPage.tsx[39m[22m [92:5 - 99:12] (7 lines, 105 tokens)
+   [1m[32msrc\pages\AdminPages\mockTest\MockTestSectionPage.tsx[39m[22m [115:5 - 122:24]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\AdminPages\milestone\Milestone.tsx[39m[22m [245:4 - 263:13] (18 lines, 203 tokens)
+   [1m[32msrc\pages\AdminPages\milestone\Milestone.tsx[39m[22m [218:2 - 245:10]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\AdminPages\lesson\LessonPage.tsx[39m[22m [72:8 - 92:27] (20 lines, 171 tokens)
+   [1m[32msrc\pages\Student\course\CourseHeader.tsx[39m[22m [22:8 - 33:2]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\AdminPages\course\AllCourses.tsx[39m[22m [104:76 - 114:3] (10 lines, 114 tokens)
+   [1m[32msrc\pages\PublicPages\course\Courses.tsx[39m[22m [198:67 - 209:2]
+
+Clone found (tsx):
+ - [1m[32msrc\pages\AdminPages\assignment\AssignmentPage.tsx[39m[22m [86:5 - 91:2] (5 lines, 93 tokens)
+   [1m[32msrc\pages\AdminPages\Enrolment\EnrolmentPage.tsx[39m[22m [60:2 - 65:2]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\promo\StateAndChart.tsx[39m[22m [226:7 - 238:2] (12 lines, 106 tokens)
+   [1m[32msrc\pages\AdminPages\promo\AdminPromoPage.tsx[39m[22m [256:14 - 268:2]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\promo\CreatePromoForm.tsx[39m[22m [187:2 - 201:12] (14 lines, 120 tokens)
+   [1m[32msrc\components\modules\promo\EditPromoModal.tsx[39m[22m [104:12 - 117:6]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\promo\CreatePromoForm.tsx[39m[22m [224:19 - 244:23] (20 lines, 165 tokens)
+   [1m[32msrc\components\modules\promo\EditPromoModal.tsx[39m[22m [139:17 - 158:2]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\promo\CreatePromoForm.tsx[39m[22m [280:15 - 297:3] (17 lines, 125 tokens)
+   [1m[32msrc\components\modules\promo\CreatePromoForm.tsx[39m[22m [251:10 - 267:2]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\promo\CreatePromoForm.tsx[39m[22m [305:15 - 317:52] (12 lines, 93 tokens)
+   [1m[32msrc\components\modules\promo\EditPromoModal.tsx[39m[22m [205:13 - 217:32]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\profile\CoursesTab.tsx[39m[22m [2:14 - 9:7] (7 lines, 100 tokens)
+   [1m[32msrc\components\modules\profile\WishlistTab.tsx[39m[22m [2:13 - 10:10]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\profile\CoursesTab.tsx[39m[22m [13:8 - 35:11] (22 lines, 135 tokens)
+   [1m[32msrc\components\modules\profile\WishlistTab.tsx[39m[22m [13:5 - 35:12]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\profile\CoursesTab.tsx[39m[22m [63:2 - 78:9] (15 lines, 98 tokens)
+   [1m[32msrc\components\modules\profile\WishlistTab.tsx[39m[22m [63:2 - 78:6]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\profile\CoursesTab.tsx[39m[22m [87:15 - 99:8] (12 lines, 68 tokens)
+   [1m[32msrc\components\modules\profile\WishlistTab.tsx[39m[22m [87:15 - 99:9]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [536:16 - 548:2] (12 lines, 69 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [500:8 - 512:2]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [283:8 - 492:12] (209 lines, 1669 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [326:8 - 535:5]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [1:1 - 35:29] (34 lines, 273 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [1:1 - 35:30]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [35:2 - 49:11] (14 lines, 122 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [35:2 - 49:8]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [50:3 - 59:24] (9 lines, 119 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [49:3 - 58:13]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [73:29 - 78:7] (5 lines, 85 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [83:30 - 88:6]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [79:7 - 89:11] (10 lines, 105 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [89:6 - 99:8]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [103:18 - 181:13] (78 lines, 733 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [123:5 - 201:6]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [184:18 - 212:13] (28 lines, 252 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [212:5 - 240:6]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [220:5 - 244:18] (24 lines, 240 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [258:5 - 282:19]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [245:27 - 257:7] (12 lines, 96 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [288:29 - 300:6]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [258:7 - 272:4] (14 lines, 133 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [301:6 - 315:7]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [274:8 - 347:3] (73 lines, 514 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [317:5 - 389:4]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [347:21 - 360:2] (13 lines, 124 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [390:21 - 403:3]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [360:2 - 440:3] (80 lines, 681 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [403:2 - 482:4]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [440:21 - 453:2] (13 lines, 124 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [483:21 - 496:3]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [453:2 - 483:6] (30 lines, 212 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [496:2 - 526:4]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeItemDialog.tsx[39m[22m [488:15 - 499:7] (11 lines, 104 tokens)
+   [1m[32msrc\components\modules\practice\PracticeItemUpdateDialog.tsx[39m[22m [550:15 - 561:9]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\practice\PracticeFilters.tsx[39m[22m [78:14 - 91:2] (13 lines, 111 tokens)
+   [1m[32msrc\pages\AdminPages\milestone\Milestone.tsx[39m[22m [173:2 - 185:3]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\mockTest\SectionManager.tsx[39m[22m [95:8 - 102:10] (7 lines, 105 tokens)
+   [1m[32msrc\pages\AdminPages\mockTest\MockTestSectionPage.tsx[39m[22m [102:8 - 109:8]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\mockTest\QuestionFormDialog.tsx[39m[22m [459:25 - 469:2] (10 lines, 111 tokens)
+   [1m[32msrc\components\modules\mockTest\QuestionFormDialog.tsx[39m[22m [346:29 - 356:2]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\mockTest\QuestionFormDialog.tsx[39m[22m [659:17 - 679:8] (20 lines, 143 tokens)
+   [1m[32msrc\components\modules\mockTest\QuestionFormDialog.tsx[39m[22m [597:17 - 617:7]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\mockTest\QuestionFormDialog.tsx[39m[22m [715:41 - 730:5] (15 lines, 112 tokens)
+   [1m[32msrc\components\modules\mockTest\QuestionFormDialog.tsx[39m[22m [602:46 - 617:7]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\mockTest\DeleteMockTestDialog.tsx[39m[22m [31:5 - 39:10] (8 lines, 117 tokens)
+   [1m[32msrc\components\modules\practice\DeletePracticeDialog.tsx[39m[22m [33:5 - 41:10]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\mockTest\CreateMockTestDialog.tsx[39m[22m [192:204 - 215:8] (23 lines, 153 tokens)
+   [1m[32msrc\components\modules\mockTest\UpdateMockTestDialog.tsx[39m[22m [101:204 - 124:8]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\mockTest\CreateMockTestDialog.tsx[39m[22m [220:13 - 235:11] (15 lines, 122 tokens)
+   [1m[32msrc\components\modules\mockTest\UpdateMockTestDialog.tsx[39m[22m [129:14 - 144:10]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\lesson-editor\AudioModule.tsx[39m[22m [100:8 - 128:9] (28 lines, 219 tokens)
+   [1m[32msrc\components\modules\lesson-editor\VideoModule.tsx[39m[22m [67:8 - 95:9]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\lesson-editor\AudioModule.tsx[39m[22m [44:17 - 75:14] (31 lines, 269 tokens)
+   [1m[32msrc\components\modules\lesson-editor\VideoModule.tsx[39m[22m [27:17 - 58:11]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\lesson-editor\AudioModule.tsx[39m[22m [92:15 - 123:9] (31 lines, 230 tokens)
+   [1m[32msrc\components\modules\lesson-editor\VideoModule.tsx[39m[22m [59:11 - 90:9]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\lesson-editor\AudioModule.tsx[39m[22m [147:10 - 166:6] (19 lines, 144 tokens)
+   [1m[32msrc\components\modules\lesson-editor\VideoModule.tsx[39m[22m [117:10 - 136:6]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\lesson-editor\AssignmentModule.tsx[39m[22m [54:8 - 119:3] (65 lines, 184 tokens)
+   [1m[32msrc\components\modules\lesson-editor\DocModule.tsx[39m[22m [31:11 - 90:2]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\home\NewsletterCTA.tsx[39m[22m [113:2 - 130:7] (17 lines, 144 tokens)
+   [1m[32msrc\components\modules\home\WhyChooseSection.tsx[39m[22m [145:2 - 171:9]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\home\LearningPaths.tsx[39m[22m [59:5 - 70:4] (11 lines, 105 tokens)
+   [1m[32msrc\components\modules\home\LearningPaths.tsx[39m[22m [37:5 - 59:5]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\home\HeroSection.tsx[39m[22m [81:3 - 102:2] (21 lines, 170 tokens)
+   [1m[32msrc\components\modules\User\UserDialog.tsx[39m[22m [233:3 - 301:2]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\home\FaqSection.tsx[39m[22m [91:2 - 103:2] (12 lines, 104 tokens)
+   [1m[32msrc\components\modules\mockTest\SectionManager.tsx[39m[22m [171:6 - 178:2]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\home\FaqSection.tsx[39m[22m [142:5 - 172:6] (30 lines, 243 tokens)
+   [1m[32msrc\components\modules\home\NewsletterCTA.tsx[39m[22m [82:4 - 99:2]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\home\FaqSection.tsx[39m[22m [183:2 - 193:2] (10 lines, 96 tokens)
+   [1m[32msrc\components\modules\home\InstructorSpotlight.tsx[39m[22m [14:2 - 51:2]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\Course\UpdateCourse.tsx[39m[22m [260:2 - 274:6] (14 lines, 107 tokens)
+   [1m[32msrc\components\modules\Course\UpdateCourse.tsx[39m[22m [231:3 - 255:9]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\Course\UpdateCourse.tsx[39m[22m [286:17 - 318:11] (32 lines, 551 tokens)
+   [1m[32msrc\pages\AdminPages\course\CreateCourse.tsx[39m[22m [359:5 - 464:6]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\Course\UpdateCourse.tsx[39m[22m [337:17 - 357:6] (20 lines, 236 tokens)
+   [1m[32msrc\components\modules\Course\UpdateCourse.tsx[39m[22m [278:21 - 293:4]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\Course\UpdateCourse.tsx[39m[22m [104:3 - 112:10] (8 lines, 138 tokens)
+   [1m[32msrc\pages\AdminPages\course\CreateCourse.tsx[39m[22m [107:3 - 115:6]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\Course\Reviews.tsx[39m[22m [76:6 - 96:7] (20 lines, 214 tokens)
+   [1m[32msrc\pages\PublicPages\course\CourseDetails.tsx[39m[22m [36:2 - 66:2]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\Course\CourseReviewForm.tsx[39m[22m [56:8 - 67:5] (11 lines, 107 tokens)
+   [1m[32msrc\pages\PublicPages\course\Courses.tsx[39m[22m [139:8 - 145:4]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\checkout\PromoCodeInput.tsx[39m[22m [107:11 - 133:2] (26 lines, 178 tokens)
+   [1m[32msrc\pages\PublicPages\auth\Login.tsx[39m[22m [179:2 - 209:2]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\checkout\CheckoutStatus.tsx[39m[22m [79:2 - 107:4] (28 lines, 230 tokens)
+   [1m[32msrc\components\modules\home\HeroSection.tsx[39m[22m [71:2 - 291:4]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\checkout\CheckoutStatus.tsx[39m[22m [110:13 - 140:2] (30 lines, 215 tokens)
+   [1m[32msrc\components\modules\checkout\CheckoutStatus.tsx[39m[22m [53:2 - 79:2]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\auth\AnimatedLines.tsx[39m[22m [36:4 - 45:2] (9 lines, 91 tokens)
+   [1m[32msrc\components\modules\auth\AnimatedLines.tsx[39m[22m [27:2 - 36:2]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\assignment\AssignmentTable.tsx[39m[22m [100:53 - 114:2] (14 lines, 103 tokens)
+   [1m[32msrc\components\modules\assignment\AssignmentTable.tsx[39m[22m [45:37 - 59:2]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\assignment\AssignmentPagination.tsx[39m[22m [46:2 - 64:2] (18 lines, 194 tokens)
+   [1m[32msrc\components\modules\lessonPage\LessonPagination.tsx[39m[22m [49:11 - 72:15]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\assignment\AssignmentFilters.tsx[39m[22m [50:8 - 62:2] (12 lines, 122 tokens)
+   [1m[32msrc\components\modules\practice\PracticeFilters.tsx[39m[22m [43:8 - 61:15]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\assignment\AssignmentFilters.tsx[39m[22m [72:14 - 86:11] (14 lines, 95 tokens)
+   [1m[32msrc\components\modules\lessonPage\LessonFilters.tsx[39m[22m [96:2 - 109:2]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\adminDashboard\RecentEnrollmentsTable.tsx[39m[22m [19:8 - 31:12] (12 lines, 154 tokens)
+   [1m[32msrc\components\modules\enrolment\EnrolmentTable.tsx[39m[22m [20:5 - 31:14]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\adminDashboard\PopularCoursesTable.tsx[39m[22m [83:7 - 93:7] (10 lines, 100 tokens)
+   [1m[32msrc\components\modules\adminDashboard\RecentEnrollmentsTable.tsx[39m[22m [115:11 - 124:11]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\adminDashboard\PopularCoursesTable.tsx[39m[22m [2:2 - 14:5] (12 lines, 92 tokens)
+   [1m[32msrc\components\modules\adminDashboard\RecentEnrollmentsTable.tsx[39m[22m [2:2 - 14:2]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\adminDashboard\PopularCoursesTable.tsx[39m[22m [28:1 - 34:18] (6 lines, 74 tokens)
+   [1m[32msrc\components\modules\adminDashboard\RecentEnrollmentsTable.tsx[39m[22m [40:1 - 46:23]
+
+Clone found (javascript):
+ - [1m[32msrc\components\modules\adminDashboard\MonthlyChart.tsx[39m[22m [150:4 - 213:5] (63 lines, 564 tokens)
+   [1m[32msrc\pages\PublicPages\auth\OtpVerify.tsx[39m[22m [185:4 - 209:11]
+
+Clone found (tsx):
+ - [1m[32msrc\components\modules\adminDashboard\MonthlyChart.tsx[39m[22m [222:17 - 227:3] (5 lines, 117 tokens)
+   [1m[32msrc\components\modules\adminDashboard\MonthlyChart.tsx[39m[22m [217:20 - 222:2]
+
+Clone found (javascript):
+ - [1m[32msrc\pages\Student\MockTestsPage.tsx[39m[22m [9:8 - 25:2] (16 lines, 168 tokens)
+   [1m[32msrc\pages\Student\PracticeTasksPage.tsx[39m[22m [13:8 - 35:2]
+
+Clone found (javascript):
+ - [1m[32msrc\components\shared\LogoutDialog.tsx[39m[22m [81:5 - 124:13] (43 lines, 318 tokens)
+   [1m[32msrc\components\modules\auth\DeviceConflictDialog.tsx[39m[22m [74:5 - 114:2]
+
+Clone found (tsx):
+ - [1m[32msrc\components\shared\LogoutDialog.tsx[39m[22m [34:6 - 54:6] (20 lines, 182 tokens)
+   [1m[32msrc\components\modules\auth\DeviceConflictDialog.tsx[39m[22m [31:2 - 51:7]
+
+Clone found (tsx):
+ - [1m[32msrc\components\shared\Header.tsx[39m[22m [46:2 - 68:6] (22 lines, 194 tokens)
+   [1m[32msrc\components\modules\profile\SettingsTab.tsx[39m[22m [74:6 - 108:10]
+
+Clone found (javascript):
+ - [1m[32msrc\components\shared\EnrolledCourseCard.tsx[39m[22m [75:3 - 115:2] (40 lines, 377 tokens)
+   [1m[32msrc\components\shared\EnrolledCourseCard.tsx[39m[22m [15:3 - 55:2]
+
+Clone found (tsx):
+ - [1m[32msrc\components\shared\EnrolledCourseCard.tsx[39m[22m [89:21 - 110:13] (21 lines, 181 tokens)
+   [1m[32msrc\components\shared\EnrolledCourseCard.tsx[39m[22m [29:14 - 50:11]
+
+Clone found (tsx):
+ - [1m[32msrc\utils\generateQuestionPDF.tsx[39m[22m [403:2 - 414:21] (11 lines, 61 tokens)
+   [1m[32msrc\utils\generateQuestionPDF.tsx[39m[22m [387:2 - 398:15]
+
+Clone found (tsx):
+ - [1m[32msrc\utils\generateQuestionPDF.tsx[39m[22m [419:2 - 430:128] (11 lines, 61 tokens)
+   [1m[32msrc\utils\generateQuestionPDF.tsx[39m[22m [387:2 - 398:15]
+
+Clone found (typescript):
+ - [1m[32msrc\utils\animations.ts[39m[22m [40:2 - 49:2] (9 lines, 129 tokens)
+   [1m[32msrc\utils\animations.ts[39m[22m [27:2 - 37:2]
+
+Clone found (typescript):
+ - [1m[32msrc\hooks\useFullscreen.ts[39m[22m [107:1 - 124:3] (17 lines, 206 tokens)
+   [1m[32msrc\hooks\useKeyboardShortcuts.ts[39m[22m [3:1 - 18:2]
+
+Clone found (typescript):
+ - [1m[32msrc\hooks\useFullscreen.ts[39m[22m [236:3 - 244:9] (8 lines, 120 tokens)
+   [1m[32msrc\hooks\useVideoControls.ts[39m[22m [16:3 - 25:8]
+
+Clone found (typescript):
+ - [1m[32msrc\hooks\useFullscreen.ts[39m[22m [244:3 - 263:2] (19 lines, 280 tokens)
+   [1m[32msrc\hooks\useVideoControls.ts[39m[22m [26:3 - 45:2]
+
+Clone found (typescript):
+ - [1m[32msrc\hooks\useFullscreen.ts[39m[22m [265:2 - 275:2] (10 lines, 94 tokens)
+   [1m[32msrc\hooks\useVideoControls.ts[39m[22m [45:2 - 55:2]
+
+Clone found (typescript):
+ - [1m[32msrc\hooks\useFullscreen.ts[39m[22m [277:2 - 299:3] (22 lines, 247 tokens)
+   [1m[32msrc\hooks\useVideoControls.ts[39m[22m [55:2 - 77:11]
+
+Clone found (typescript):
+ - [1m[32msrc\hooks\useFullscreen.ts[39m[22m [311:12 - 331:2] (20 lines, 249 tokens)
+   [1m[32msrc\hooks\useVideoControls.ts[39m[22m [84:2 - 104:12]
+
+Clone found (typescript):
+ - [1m[32msrc\hooks\useFullscreen.ts[39m[22m [337:9 - 347:14] (10 lines, 118 tokens)
+   [1m[32msrc\hooks\useVideoControls.ts[39m[22m [106:2 - 116:12]
+
+Clone found (typescript):
+ - [1m[32msrc\hooks\useFullscreen.ts[39m[22m [357:2 - 364:10] (7 lines, 75 tokens)
+   [1m[32msrc\hooks\useVideoControls.ts[39m[22m [117:2 - 124:8]
+
+Clone found (typescript):
+ - [1m[32msrc\hooks\useFullscreen.ts[39m[22m [365:12 - 375:10] (10 lines, 113 tokens)
+   [1m[32msrc\hooks\useVideoControls.ts[39m[22m [123:14 - 133:8]
+
+Clone found (typescript):
+ - [1m[32msrc\hooks\useFullscreen.ts[39m[22m [383:3 - 409:2] (26 lines, 153 tokens)
+   [1m[32msrc\hooks\useVideoControls.ts[39m[22m [139:3 - 165:2]
+
+[90mΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ[39m
+[90mΓöé[39m[31m Format     [39m[90mΓöé[39m[31m Files analyzed [39m[90mΓöé[39m[31m Total lines [39m[90mΓöé[39m[31m Total tokens [39m[90mΓöé[39m[31m Clones found [39m[90mΓöé[39m[31m Duplicated lines [39m[90mΓöé[39m[31m Duplicated tokens [39m[90mΓöé[39m
+[90mΓö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöñ[39m
+[90mΓöé[39m javascript [90mΓöé[39m 235            [90mΓöé[39m 21955       [90mΓöé[39m 181810       [90mΓöé[39m 43           [90mΓöé[39m 1489 (6.78%)     [90mΓöé[39m 13108 (7.21%)     [90mΓöé[39m
+[90mΓö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöñ[39m
+[90mΓöé[39m tsx        [90mΓöé[39m 248            [90mΓöé[39m 39517       [90mΓöé[39m 334518       [90mΓöé[39m 77           [90mΓöé[39m 1443 (3.65%)     [90mΓöé[39m 12150 (3.63%)     [90mΓöé[39m
+[90mΓö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöñ[39m
+[90mΓöé[39m typescript [90mΓöé[39m 80             [90mΓöé[39m 5215        [90mΓöé[39m 48025        [90mΓöé[39m 14           [90mΓöé[39m 189 (3.62%)      [90mΓöé[39m 2146 (4.47%)      [90mΓöé[39m
+[90mΓö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöñ[39m
+[90mΓöé[39m css        [90mΓöé[39m 2              [90mΓöé[39m 257         [90mΓöé[39m 2293         [90mΓöé[39m 0            [90mΓöé[39m 0 (0%)           [90mΓöé[39m 0 (0%)            [90mΓöé[39m
+[90mΓö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöñ[39m
+[90mΓöé[39m markdown   [90mΓöé[39m 1              [90mΓöé[39m 145         [90mΓöé[39m 3021         [90mΓöé[39m 0            [90mΓöé[39m 0 (0%)           [90mΓöé[39m 0 (0%)            [90mΓöé[39m
+[90mΓö£ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö╝ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöñ[39m
+[90mΓöé[39m [1mTotal:[22m     [90mΓöé[39m 566            [90mΓöé[39m 67089       [90mΓöé[39m 569667       [90mΓöé[39m 134          [90mΓöé[39m 3121 (4.65%)     [90mΓöé[39m 27404 (4.81%)     [90mΓöé[39m
+[90mΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39m[90mΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ[39m
+[90mFound 134 clones.[39m
+[3m[90mDetection time:[39m[23m: 6.738s

@@ -15,36 +15,36 @@ import {
 
 import withAuth from "../withAuth";
 import { UserRoles } from "@/interface/user.type";
-import CreatePracticePage from "@/pages/admin/practice/CreatePracticePage";
-import PracticesPage from "@/pages/admin/practice/PracticesPage";
-import ViewPracticePage from "@/pages/admin/practice/ViewPracticePage";
-import EditLessonPage from "@/pages/admin/lesson/EditLessonPage";
-import MockTestsPage from "@/pages/admin/mockTest/MockTestsPage";
-import CreateMockTestPage from "@/pages/admin/mockTest/CreateMockTestPage";
-import MockTestDetailPage from "@/pages/admin/mockTest/MockTestDetailPage";
-import MockTestSectionPage from "@/pages/admin/mockTest/MockTestSectionPage";
-import MockTestSectionsPage from "@/pages/admin/mockTest/MockTestSectionsPage";
+import CreatePracticePage from "@/pages/AdminPages/practice/CreatePracticePage";
+import PracticesPage from "@/pages/AdminPages/practice/PracticesPage";
+import ViewPracticePage from "@/pages/AdminPages/practice/ViewPracticePage";
+import EditLessonPage from "@/pages/AdminPages/lesson/EditLessonPage";
+import MockTestsPage from "@/pages/AdminPages/mockTest/MockTestsPage";
+import CreateMockTestPage from "@/pages/AdminPages/mockTest/CreateMockTestPage";
+import MockTestDetailPage from "@/pages/AdminPages/mockTest/MockTestDetailPage";
+import MockTestSectionPage from "@/pages/AdminPages/mockTest/MockTestSectionPage";
+import MockTestSectionsPage from "@/pages/AdminPages/mockTest/MockTestSectionsPage";
+import OverViewPage from "@/pages/AdminPages/overView/AdminDashboardOverview";
 
 
 // 🔹 Lazy-loaded admin pages
-const AdminDashboard = lazy(() => import("@/pages/admin/Dashboard"));
-const Users = lazy(() => import("@/pages/admin/Users"));
-const CreateCourse = lazy(() => import("@/pages/admin/course/CreateCourse"));
-const AllCourses = lazy(() => import("@/pages/admin/course/AllCourses"));
-const MilestoneDashboardPage = lazy(() => import("@/pages/admin/milestone/Milestone"));
-const EnrolmentPage = lazy(() => import("@/pages/admin/Enrolment/EnrolmentPage"));
-const CategoryPage = lazy(() => import("@/pages/admin/category/CategoryPage"));
-const AdminTestimonialsPage = lazy(() => import("@/pages/admin/testimonial/TestimonialPage"));
-const AdminPromoPage = lazy(() => import("@/pages/admin/promo/AdminPromoPage"));
-const UserPromoUsagePage = lazy(() => import("@/pages/admin/promo/UserPromoUsagePage"));
-const AssignmentPage = lazy(() => import("@/pages/admin/assignment/AssignmentPage"));
+const Users = lazy(() => import("@/pages/AdminPages/users/Users"));
+const CreateCourse = lazy(() => import("@/pages/AdminPages/course/CreateCourse"));
+const AllCourses = lazy(() => import("@/pages/AdminPages/course/AllCourses"));
+const MilestoneDashboardPage = lazy(() => import("@/pages/AdminPages/milestone/Milestone"));
+const EnrolmentPage = lazy(() => import("@/pages/AdminPages/Enrolment/EnrolmentPage"));
+const CategoryPage = lazy(() => import("@/pages/AdminPages/category/CategoryPage"));
+const AdminTestimonialsPage = lazy(() => import("@/pages/AdminPages/testimonial/TestimonialPage"));
+const AdminPromoPage = lazy(() => import("@/pages/AdminPages/promo/AdminPromoPage"));
+const UserPromoUsagePage = lazy(() => import("@/pages/AdminPages/promo/UserPromoUsagePage"));
+const AssignmentPage = lazy(() => import("@/pages/AdminPages/assignment/AssignmentPage"));
 const LessonFormMain = lazy(() => import("@/components/modules/lesson-editor/LessonFormMain"));
-const LessonPage = lazy(() => import("@/pages/admin/lesson/LessonPage"));
+const LessonPage = lazy(() => import("@/pages/AdminPages/lesson/LessonPage"));
 
 
 export const adminRoutes = [
   {
-    Component: withAuth(AdminDashboard, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
+    Component: withAuth(OverViewPage, [UserRoles.SUPER_ADMIN, UserRoles.ADMIN]),
     path: "/dashboard",
     name: "Dashboard",
     icon: LayoutDashboard,

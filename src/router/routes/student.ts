@@ -10,11 +10,11 @@ import {
 import withAuth from "../withAuth";
 import { UserRoles } from "@/interface/user.type";
 
-const Dashboard = lazy(() => import("@/pages/MyCourses/Dashboard")); 
-const StudentDashboard = lazy(() => import("@/pages/Student/dashboard/StudentDashboard"));
+const Dashboard = lazy(() => import("@/pages/StudentsPages/MyCourses/Dashboard")); 
+const StudentDashboard = lazy(() => import("@/pages/StudentsPages/dashboard/StudentDashboard"));
 const MockTestsPage = lazy(() => import("@/pages/Student/MockTestsPage"));
 const PracticeTasksPage = lazy(() => import("@/pages/Student/PracticeTasksPage"));
-const Profile = lazy(() => import("@/pages/profile/Profile"));
+const Profile = lazy(() => import("@/pages/StudentsPages/profile/Profile"));
 const CoursePlayer = lazy(() =>
   import("@/pages/Student/course/CoursePlayer").then((m) => ({
     default: m.CoursePlayer,
