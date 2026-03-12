@@ -13,9 +13,7 @@ const withAuth = <P extends object>(
   const AuthWrapper: React.FC<P> = (props) => {
     const {id} = useParams()
 const navigate = useNavigate()
-const { data, isLoading } = useUserInfoQuery(undefined, {
-  refetchOnMountOrArgChange: false,
-});
+const { data, isLoading } = useUserInfoQuery(undefined);
 
 
     const user = data?.data;

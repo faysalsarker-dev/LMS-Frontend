@@ -4,7 +4,7 @@ import axiosBaseQuery from "./axiosBaseQuery";
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: axiosBaseQuery(),
-  tagTypes: ["USER","COURSE","MILESTONE","LESSON","SETTING","CATEGORY","ENROLMENT","PROGRESS","OVERVIEW","TESTIMONIAL","PROMO","ASSIGNMENT","PRACTICE","MOCK_TEST","MOCK_TEST_SECTION"],
+  tagTypes: ["USER","COURSE","MILESTONE","LESSON","SETTING","CATEGORY","ENROLMENT","PROGRESS","OVERVIEW","TESTIMONIAL","PROMO","ASSIGNMENT","PRACTICE","MOCK_TEST","MOCK_TEST_SECTION", "MOCK_TEST_SUBMISSION"],
   /*
     Global defaults help avoid forgetting cache settings on individual
     endpoints. 1 hour is a reasonable starting point; individual queries

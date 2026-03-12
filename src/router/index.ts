@@ -12,6 +12,10 @@ import { studentInvicibleRoutes, studentRoutes } from "./routes/student";
 import AccessDenied from "@/pages/PublicPages/ErrorPages/AccessDenied";
 import Unauthorized from "@/pages/PublicPages/ErrorPages/Unauthorized";
 import StudentLayout from "@/layout/student/Student";
+import withAuth from "./withAuth";
+import MockTestDetailPage from "@/pages/StudentsPages/Mock-test/MockTestDetailPage";
+import MockTestExamPage from "@/pages/StudentsPages/Mock-test/MockTestExamPage";
+
 
 export const router = createBrowserRouter([
   {
@@ -39,6 +43,17 @@ export const router = createBrowserRouter([
       ...generateRoutes(studentInvicibleRoutes),
     ],
   },
+    {
+    Component: withAuth(MockTestDetailPage),
+    path: "/mock-test/:slug",
+  },
+ {
+    Component: withAuth(MockTestExamPage),
+    path: "/mock-test/:slug/:sectionId",
+ 
+  },
+
+
 
   {
     Component: AdminLayout,

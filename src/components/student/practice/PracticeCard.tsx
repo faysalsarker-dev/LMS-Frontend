@@ -17,29 +17,28 @@ export const PracticeCard = ({ data }: PracticeCardProps) => {
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -6, scale: 1.015 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="w-full max-w-sm"
+      className="w-full"
     >
-      <Card className="group relative overflow-hidden rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl shadow-lg hover:shadow-2xl transition-all">
+      <Card className="group relative overflow-hidden rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl shadow-lg hover:shadow-2xl transition-all pt-0">
         
         {/* Thumbnail */}
-        <div className="relative aspect-video overflow-hidden">
+        <div className="relative aspect-video overflow-hidden p-2">
           <motion.img
             src={data.thumbnail || "/api/placeholder/400/225"}
             alt={data.title}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover rounded-lg"
             whileHover={{ scale: 1.08 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           />
 
-          {/* Dark overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
+     
 
 
        
         </div>
 
         {/* Content */}
-        <CardContent className="p-5 space-y-2">
+        <CardContent className="p-5 space-y-2 -mt-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-primary text-left">
             {data.course.title}
           </p>
@@ -56,7 +55,7 @@ export const PracticeCard = ({ data }: PracticeCardProps) => {
 
         {/* Footer */}
         <CardFooter className="p-5 pt-0">
-       <Link  to={`/practice/${data.slug}`} className="w-full">
+       <Link  to={`/my-dashboard/practice/${data.slug}`} className="w-full">
             <Button
               size="lg"
               className="relative w-full rounded-xl font-semibold overflow-hidden group"

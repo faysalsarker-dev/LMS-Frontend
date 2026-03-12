@@ -12,7 +12,16 @@ export const mockTestApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "MOCK_TEST", id: "LIST" }],
     }),
-
+   getStudentMockTest: builder.query({
+      query: () => ({
+        url: `/mock-test/for-user`,
+        method: "GET",
+      }),
+      keepUnusedDataFor: 60 * 30, 
+      providesTags: (_result, _error) => [
+        { type: "MOCK_TEST", id: "LIST" },
+      ],
+    }),
     // ─── READ ──────────────────────────────────────────────────────────────────
     getAllMockTests: builder.query({
       query: (params?) => ({
@@ -91,4 +100,5 @@ export const {
   useGetMockTestByIdQuery,
   useUpdateMockTestMutation,
   useDeleteMockTestMutation,
+  useGetStudentMockTestQuery,
 } = mockTestApi;

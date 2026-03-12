@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useGetSectionByIdQuery } from "@/redux/features/mockTest/mockTestSection.api";
-import { ExamTimer } from "@/components/student/mock-test/user/MockTestTimer";
-import { QuestionRenderer } from "@/components/student/mock-test/user/question/QuestionRenderer";
-import { QuestionNavigator } from "@/components/student/mock-test/user/QuestionNavigator";
+import { ExamTimer } from "@/components/student/mock-test/MockTestTimer";
+import { QuestionRenderer } from "@/components/student/mock-test/question/QuestionRenderer";
+import { QuestionNavigator } from "@/components/student/mock-test/QuestionNavigator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -76,6 +76,12 @@ const MockTestExamPage = () => {
       console.log("Submitting section:", payload);
       // TODO: call API – payload shape ready above
 
+      
+
+
+
+
+
       // Clean up localStorage timer
       localStorage.removeItem(`exam_deadline_${sectionId}`);
 
@@ -88,7 +94,7 @@ const MockTestExamPage = () => {
       );
 
       setTimeout(() => {
-        navigate(`/my-dashboard/mock-test/${slug}`, { replace: true });
+        navigate(`/mock-test/${slug}`, { replace: true });
       }, 1500);
     },
     [answers, sectionId, section, slug, submitted, navigate]
@@ -113,7 +119,7 @@ const MockTestExamPage = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center gap-6 p-8">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center gap-6 p-8 max-w-6xl ms-auto">
         <div className="h-24 w-24 rounded-full bg-green-500/10 flex items-center justify-center">
           <CheckCircle className="h-12 w-12 text-green-500" />
         </div>
@@ -133,10 +139,10 @@ const MockTestExamPage = () => {
   const questionIds = questions.map((q) => q._id ?? "");
 
   return (
-    <div className="flex flex-col min-h-[90vh]">
+    <div className="flex flex-col min-h-[90vh]  ">
       {/* ─── Sticky Header ─── */}
       <div className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b">
-        <div className="container max-w-6xl py-3 flex items-center justify-between gap-4">
+        <div className="container max-w-6xl mx-auto py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Badge
               variant="outline"
@@ -187,7 +193,7 @@ const MockTestExamPage = () => {
       </div>
 
       {/* ─── Main Content ─── */}
-      <div className="flex-1 container max-w-6xl py-10 flex gap-8">
+      <div className="flex-1 container  py-10 flex gap-8  max-w-6xl mx-auto">
         {/* Question area */}
         <div className="flex-1 min-w-0">
           {questions.length > 0 && currentQuestion ? (
@@ -220,7 +226,7 @@ const MockTestExamPage = () => {
 
       {/* ─── Sticky Footer Nav ─── */}
       <div className="sticky bottom-0 bg-background border-t py-3">
-        <div className="container max-w-6xl flex items-center justify-between">
+        <div className="container max-w-6xl mx-auto flex items-center justify-between">
           <Button
             variant="outline"
             onClick={() => setCurrentIndex((p) => Math.max(0, p - 1))}

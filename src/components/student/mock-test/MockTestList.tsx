@@ -1,15 +1,18 @@
-import { useGetAllMockTestsQuery } from "@/redux/features/mockTest/mockTest.api";
-import { useGetMyEnrolledCoursesQuery } from "@/redux/features/course/course.api";
+import {  useGetStudentMockTestQuery } from "@/redux/features/mockTest/mockTest.api";
+
 import { MockTestCard } from "./MockTestCard";
 import { Loader2, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import type { IMockTest } from "@/interface/mockTest.types";
 
 export const MockTestList = () => {
-    const { data: mockTestsData, isLoading: isMockLoading } = useGetAllMockTestsQuery({});
-    const { data: enrolledCoursesData, isLoading: isEnrollLoading } = useGetMyEnrolledCoursesQuery({});
+   
+    const { data: studentMockTestsData, isLoading } = useGetStudentMockTestQuery({});
 
-    const isLoading = isMockLoading || isEnrollLoading;
+ 
+
+
+
 
     if (isLoading) {
         return (
@@ -20,14 +23,8 @@ export const MockTestList = () => {
         );
     }
 
-    const enrolledCourseIds = enrolledCoursesData?.data?.map((c: any) => c._id) || [];
 
-    // Filter mock tests that belong to user's enrolled courses
-    const filteredMockTests = mockTestsData?.data?.data?.filter((test: IMockTest) =>
-        typeof test.course === 'object' && enrolledCourseIds.includes(test.course._id)
-    ) || [];
-
-    if (filteredMockTests.length === 0) {
+    if (studentMockTestsData?.data?.length === 0) {
         return (
             <div className="text-center py-16 bg-muted/30 rounded-3xl border-2 border-dashed border-muted">
                 <BookOpen className="h-16 w-16 mx-auto text-muted-foreground mb-4 opacity-50" />
@@ -41,7 +38,7 @@ export const MockTestList = () => {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredMockTests.map((test: IMockTest, index: number) => (
+            {studentMockTestsData?.data?.map((test: IMockTest, index: number) => (
                 <motion.div
                     key={test._id}
                     initial={{ opacity: 0, y: 20 }}

@@ -16,7 +16,6 @@ const PracticeDetail = () => {
   });
   const { playingId, playAudio } = useAudioPlayer();
 
-  console.log("Practice Detail ID:", id,data);
 
 
   if (isLoading) {
@@ -45,7 +44,7 @@ const PracticeDetail = () => {
   const { items } = data.data;
 
   return (
-    <div className="min-h-screen  flex justify-center items-center bg-card">
+    <div className="min-h-screen  flex justify-center items-center px-3">
       <div className="container max-w-5xl py-6 sm:py-8">
         <PracticeHeader practice={data?.data} />
         

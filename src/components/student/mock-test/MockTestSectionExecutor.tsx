@@ -15,7 +15,8 @@ import {
 import { toast } from "sonner";
 import type { IMockQuestion } from "@/interface/mockTest.types";
 import { Badge } from "@/components/ui/badge";
-import { MockQuestionRenderer } from "./MockQuestionRenderer";
+import { MockQuestionRenderer  } from "./MockQuestionRenderer";
+import { ExamTimer  } from "./MockTestTimer";
 
 export const MockTestSectionExecutor = () => {
     const { sectionId } = useParams<{ sectionId: string }>();
@@ -191,7 +192,7 @@ export const MockTestSectionExecutor = () => {
                         </h2>
                     </div>
 
-                    <MockTestTimer durationMinutes={section.timeLimit} onTimeUp={handleSubmit} />
+                    <ExamTimer durationMinutes={section.timeLimit} onTimeUp={handleSubmit} />
 
                     <Button
                         variant="ghost"

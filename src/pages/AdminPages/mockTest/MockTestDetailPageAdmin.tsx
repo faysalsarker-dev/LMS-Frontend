@@ -76,9 +76,11 @@ const SectionBlock = ({
 // ─── Main Page ───────────────────────────────────────────────────────────────
 const SECTION_KEYS = ["listening", "reading", "writing", "speaking"] as const;
 
-const MockTestDetailPage = () => {
+const MockTestDetailPageAdmin = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+
 
   const { data, isLoading, refetch } = useGetMockTestByIdQuery(id!, {
     skip: !id,
@@ -298,4 +300,4 @@ const MockTestDetailPage = () => {
   );
 };
 
-export default MockTestDetailPage;
+export default MockTestDetailPageAdmin;

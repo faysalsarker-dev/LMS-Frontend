@@ -5,7 +5,7 @@ import { useGetSectionByIdQuery } from "@/redux/features/mockTest/mockTestSectio
 import {
   MockTestStepper,
   StartExamModal,
-} from "@/components/student/mock-test/user";
+} from "@/components/student/mock-test";
 import { Loader2, BookOpen, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -45,6 +45,14 @@ const MockTestDetailPage = () => {
   const { data, isLoading } = useGetMockTestBySlugQuery(slug as string, {
     skip: !slug,
   });
+const courseId = data?.data?.course?._id
+
+//   const {data:progressData  } = useGetProgressQuery(courseId as string, {
+//     skip: !courseId,
+//   });
+
+
+// console.log(progressData)
 
   const [sectionState, setSectionState] = useState<SectionState>(initialSectionState);
   const [pendingSection, setPendingSection] = useState<SectionName | null>(null);
@@ -74,7 +82,7 @@ const MockTestDetailPage = () => {
     localStorage.setItem(`exam_deadline_${sectionId}`, String(deadline));
     setPendingSection(null);
     setPendingSectionData(null);
-    navigate(`/my-dashboard/mock-test/${slug}/${sectionId}`);
+    navigate(`/mock-test/${slug}/${sectionId}`);
   };
 
   if (isLoading) {
@@ -111,7 +119,7 @@ const MockTestDetailPage = () => {
         className="rounded-xl gap-2 -ml-2"
       >
         <ArrowLeft className="h-4 w-4" />
-        All Mock Tests
+        GO Back
       </Button>
 
       {/* Header */}

@@ -11,13 +11,13 @@ interface MockTestCardProps {
 
 export const MockTestCard = ({ test }: MockTestCardProps) => {
     return (
-        <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 border-primary/10 bg-card/50 backdrop-blur-sm">
-            <div className="relative aspect-video overflow-hidden">
+        <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 border-primary/10 bg-card/50 backdrop-blur-sm pt-0">
+            <div className="relative aspect-video overflow-hidden p-2">
                 {test.thumbnail ? (
                     <img
                         src={test.thumbnail}
                         alt={test.title}
-                        className="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500"
+                        className="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-500 rounded-lg"
                     />
                 ) : (
                     <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
@@ -42,7 +42,7 @@ export const MockTestCard = ({ test }: MockTestCardProps) => {
 
             <CardFooter className="p-5 pt-0">
                 <Button asChild className="w-full rounded-xl group/btn" variant="outline">
-                    <Link to={`/my-dashboard/mock-test/${test.slug}`} className="flex items-center justify-center gap-2">
+                    <Link to={`/mock-test/${test.slug}`} className="flex items-center justify-center gap-2">
                         Start Mock Test
                         <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                     </Link>
