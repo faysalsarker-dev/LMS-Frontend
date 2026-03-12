@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { MockTestList } from "@/components/modules/mockTest/user";
+import { MockTestList } from "@/components/student/mock-test/user";
 import { ClipboardCheck } from "lucide-react";
 
 const MockTestsPage = () => {

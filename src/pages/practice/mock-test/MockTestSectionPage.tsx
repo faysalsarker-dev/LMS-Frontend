@@ -1,4 +1,4 @@
-import { MockTestSectionExecutor } from "@/components/modules/mockTest/user/MockTestSectionExecutor";
+import { MockTestSectionExecutor } from "@/components/student/mock-test/user/MockTestSectionExecutor";
 
 const MockTestSectionPage = () => {
     return (

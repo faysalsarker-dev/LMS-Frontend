@@ -1,9 +1,6 @@
 
 
-interface IRoute {
-  Component: React.ComponentType;
-  path: string;
-}
+
 
 
 export const generateRoutes = (routes:any[]): any[] => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
-import {LoadingSkeleton} from "@/components/modules/Course/LoadingSkeleton"
+import {LoadingSkeleton} from "@/components/admin/course/LoadingSkeleton"
 import { useNavigate, useParams } from "react-router";
 
 type TRole = "student" | "instructor" | "admin" | "super_admin";

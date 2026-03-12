@@ -2,7 +2,7 @@ import VideoPlayer from "@/components/VideoPlayer";
 import { DocLesson } from "./DocLesson";
 import  QuizLesson  from "./QuizLesson";
 import type { ILesson } from "@/interface";
-import AssignmentLesson from "@/components/modules/lesson-editor/assignment/AssignmentLesson";
+import AssignmentLesson from "@/components/admin/lesson-editor/assignment/AssignmentLesson";
 import AudioPlayer from "./AudioPlayer";
 
 type CoursePlayerContentProps = {

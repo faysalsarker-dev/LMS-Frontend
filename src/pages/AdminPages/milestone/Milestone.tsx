@@ -46,7 +46,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
-import MilestoneForm from "@/components/modules/milestone/MilestoneForm";
+import MilestoneForm from "@/components/admin/milestone/MilestoneForm";
 import {
   useGetAllMilestonesQuery,
   useDeleteMilestoneMutation,

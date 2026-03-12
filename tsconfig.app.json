@@ -31,5 +31,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src", "src/components/admin/mocktest/CreateMockTestDialog.tsx", "src/components/admin/mocktest/CreateSectionDialog.tsx", "src/components/admin/mocktest/DeleteMockTestDialog.tsx"]
 }

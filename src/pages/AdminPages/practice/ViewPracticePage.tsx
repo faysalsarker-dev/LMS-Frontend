@@ -31,11 +31,11 @@ import {
 
 import { useGetSinglePracticeQuery } from '@/redux/features/practice/practice.api'
 
-import { PracticeItemDialog } from '@/components/modules/practice/PracticeItemDialog'
-import { UpdatePracticeDialog } from '@/components/modules/practice/UpdatePracticeDialog'
-import { PracticeItemUpdateDialog } from '@/components/modules/practice/PracticeItemUpdateDialog'
-import { PracticeItemDeleteDialog } from '@/components/modules/practice/PracticeItemDeleteDialog'
-import type { PracticeItem } from '@/components/modules/practice'
+import { PracticeItemDialog } from '@/components/student/practice/PracticeItemDialog'
+import { UpdatePracticeDialog } from '@/components/student/practice/UpdatePracticeDialog'
+import { PracticeItemUpdateDialog } from '@/components/student/practice/PracticeItemUpdateDialog'
+import { PracticeItemDeleteDialog } from '@/components/student/practice/PracticeItemDeleteDialog'
+import type { PracticeItem } from '@/components/student/practice'
 
 const ViewPracticePage = () => {
   const { id } = useParams<{ id: string }>()

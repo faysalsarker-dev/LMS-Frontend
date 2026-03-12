@@ -14,7 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 
 import { useTheme } from "@/hooks/useTheme";
-import { ChangePasswordDialog } from "../User/ChangePasswordDialog";
+import { ChangePasswordDialog } from "../../admin/user/ChangePasswordDialog";
 import type { IUser } from "@/interface/user.types";
 import { useTranslation } from "react-i18next";
 import { getCurrentLanguage, toggleLanguage } from "@/utils/language";

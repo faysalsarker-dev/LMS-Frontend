@@ -15,8 +15,8 @@ import {  Plus } from 'lucide-react';
 import {
   PracticeFilters,
   PracticeList,
-} from '@/components/modules/practice';
-import type { PracticeFilters as PracticeFiltersType } from '@/components/modules/practice/practice.types';
+} from '@/components/student/practice';
+import type { PracticeFilters as PracticeFiltersType } from '@/components/student/practice/practice.types';
 import { useGetAllPracticesQuery } from '@/redux/features/practice/practice.api';
 
 

@@ -5,7 +5,7 @@ import {
   PracticeSkeleton,
   PracticeError,
   PracticeEmpty,
-} from "@/components/modules/practice/user";
+} from "@/components/student/practice/user";
 import { useGetSinglePracticeForUserQuery } from "@/redux/features/practice/practice.api";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 

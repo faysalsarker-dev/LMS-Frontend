@@ -38,7 +38,7 @@ const AdminTestimonialsPage = lazy(() => import("@/pages/AdminPages/testimonial/
 const AdminPromoPage = lazy(() => import("@/pages/AdminPages/promo/AdminPromoPage"));
 const UserPromoUsagePage = lazy(() => import("@/pages/AdminPages/promo/UserPromoUsagePage"));
 const AssignmentPage = lazy(() => import("@/pages/AdminPages/assignment/AssignmentPage"));
-const LessonFormMain = lazy(() => import("@/components/modules/lesson-editor/LessonFormMain"));
+const LessonFormMain = lazy(() => import("@/components/admin/lesson-editor/LessonFormMain"));
 const LessonPage = lazy(() => import("@/pages/AdminPages/lesson/LessonPage"));
 
 

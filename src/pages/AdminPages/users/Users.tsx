@@ -6,10 +6,10 @@ import { Plus, Users as UsersIcon} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { IUser } from "@/interface/user.types";
-import UserDialog from "@/components/modules/User/UserDialog";
-import Filters from "@/components/modules/User/UserFilters";
+import UserDialog from "@/components/admin/user/UserDialog";
+import Filters from "@/components/admin/user/UserFilters";
 import { useDeleteUserMutation, useGetAllQuery, useUpdateUserMutation } from '@/redux/features/auth/auth.api';
-import { UserTable } from "@/components/modules/User/UserTable";
+import { UserTable } from "@/components/admin/user/UserTable";
 
 
 

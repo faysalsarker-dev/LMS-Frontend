@@ -42,7 +42,7 @@ export const MockTestCard = ({ test }: MockTestCardProps) => {
 
             <CardFooter className="p-5 pt-0">
                 <Button asChild className="w-full rounded-xl group/btn" variant="outline">
-                    <Link to={`/practice/mock-test/${test.slug}`} className="flex items-center justify-center gap-2">
+                    <Link to={`/my-dashboard/mock-test/${test.slug}`} className="flex items-center justify-center gap-2">
                         Start Mock Test
                         <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                     </Link>

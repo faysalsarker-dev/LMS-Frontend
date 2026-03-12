@@ -2,7 +2,7 @@ import { motion, type Variants } from "framer-motion";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import CourseCard, { CourseCardSkeleton } from "@/components/modules/Course/CourseCard";
+import CourseCard, { CourseCardSkeleton } from "@/components/admin/course/CourseCard";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
 import type { ICourse } from "@/interface/course.types";
 import { useTranslation } from "react-i18next";

@@ -6,10 +6,10 @@ import { useTranslation } from 'react-i18next';
 
 import { useGetAllLessonsQuery } from '@/redux/features/lesson/lesson.api';
 import { useGetAllMilestonesQuery } from '@/redux/features/milestone/milestone.api';
-import { LessonFilters } from '@/components/modules/lessonPage/LessonFilters';
-import { LessonTable } from '@/components/modules/lessonPage/LessonTable';
-import { LessonPagination } from '@/components/modules/lessonPage/LessonPagination';
-import { useLessonFilters } from '@/components/modules/lessonPage/hook/useLessonFilters';
+import { LessonFilters } from '@/components/student/lesson-page/LessonFilters';
+import { LessonTable } from '@/components/student/lesson-page/LessonTable';
+import { LessonPagination } from '@/components/student/lesson-page/LessonPagination';
+import { useLessonFilters } from '@/components/student/lesson-page/hook/useLessonFilters';
 import { useGetCourseForSelectQuery } from '@/redux/features/course/course.api';
 
 

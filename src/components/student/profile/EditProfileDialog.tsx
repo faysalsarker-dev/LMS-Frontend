@@ -19,9 +19,7 @@ import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUpdateMutation } from "@/redux/features/auth/auth.api";
 import { handleApiError } from "@/utils/errorHandler";
-import { differenceInDays, parseISO } from "date-fns";
 
-const UPDATE_COOLDOWN_DAYS = 7; 
 
 
 interface EditProfileDialogProps {
@@ -113,13 +111,6 @@ handleApiError(error)
   };
 
 
-
-
-const lastUpdated = userInfo?.updatedAt ? parseISO(userInfo.updatedAt) : null;
-
-const daysSinceUpdate = lastUpdated ? differenceInDays(new Date(), lastUpdated) : Infinity;
-
-const canUpdate = daysSinceUpdate >= UPDATE_COOLDOWN_DAYS;
 
 
 
@@ -225,11 +216,7 @@ const canUpdate = daysSinceUpdate >= UPDATE_COOLDOWN_DAYS;
             {/* Actions */}
             <div className="flex justify-between gap-3 pt-4 sticky bottom-0 bg-background pb-2">
 
- {!canUpdate && (
-        <p className="text-red-500 text-sm">
-          You cannot update your profile within 7 days of the last update.
-        </p>
-      )}
+
 
 
 
@@ -244,10 +231,10 @@ const canUpdate = daysSinceUpdate >= UPDATE_COOLDOWN_DAYS;
                   Cancel
                 </Button>
 
- {canUpdate && (
+
       <Button
                   type="submit"
-                  disabled={isLoading || !canUpdate}
+                  disabled={isLoading}
                   className="rounded-xl gap-2 min-w-[120px]"
                 >
                   {isLoading ? (
@@ -258,7 +245,7 @@ const canUpdate = daysSinceUpdate >= UPDATE_COOLDOWN_DAYS;
                     'Save Changes'
                   )}
                 </Button>
-      )}
+  
 
 
                 

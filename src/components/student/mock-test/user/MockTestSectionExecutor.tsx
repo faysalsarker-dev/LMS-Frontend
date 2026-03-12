@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useGetSectionByIdQuery } from "@/redux/features/mockTest/mockTestSection.api";
-import { MockTestTimer } from "./MockTestTimer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {

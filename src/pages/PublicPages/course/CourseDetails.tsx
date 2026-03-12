@@ -22,10 +22,10 @@ import { Helmet } from "react-helmet";
 import { memo, useMemo, useTransition } from "react";
 import { useGetCourseBySlugQuery } from "@/redux/features/course/course.api";
 import { useAddToWishlistMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
-import { LoadingSkeleton } from "@/components/modules/Course/LoadingSkeleton";
+import { LoadingSkeleton } from "@/components/admin/course/LoadingSkeleton";
 import { format } from "date-fns";
 import type { IMilestone } from "@/interface/milestone.types";
-import Reviews from "@/components/modules/Course/Reviews";
+import Reviews from "@/components/admin/course/Reviews";
 import { ANIMATION_VARIANTS, BOOKMARK_VARIANTS } from "@/utils/animations";
 
 

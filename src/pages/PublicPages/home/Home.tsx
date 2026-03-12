@@ -1,12 +1,12 @@
-import HeroSection from "@/components/modules/home/HeroSection";
-import TrustBar from "@/components/modules/home/TrustBar";
-import WhyChooseSection from "@/components/modules/home/WhyChooseSection";
-import LearningPaths from "@/components/modules/home/LearningPaths";
-import FeaturedCourse from "@/components/modules/home/FeaturedCourse";
-// import InstructorSpotlight from "@/components/modules/home/InstructorSpotlight";
+import HeroSection from "@/components/public/home/HeroSection";
+import TrustBar from "@/components/public/home/TrustBar";
+import WhyChooseSection from "@/components/public/home/WhyChooseSection";
+import LearningPaths from "@/components/public/home/LearningPaths";
+import FeaturedCourse from "@/components/public/home/FeaturedCourse";
+// import InstructorSpotlight from "@/components/public/home/InstructorSpotlight";
 import Testimonial from "@/components/custom/Testimonial";
-import FaqSection from "@/components/modules/home/FaqSection";
-import NewsletterCTA from "@/components/modules/home/NewsletterCTA";
+import FaqSection from "@/components/public/home/FaqSection";
+import NewsletterCTA from "@/components/public/home/NewsletterCTA";
 
 const Home = () => {
   return (

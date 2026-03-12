@@ -11,11 +11,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 import { useGetDashboardQuery } from '@/redux/features/overview/overview.api';
-import { StatCard } from '@/components/modules/adminDashboard/StatCard';
+import { StatCard } from '@/components/admin/dashboard/StatCard';
 
-import { MonthlyChart } from '@/components/modules/adminDashboard/MonthlyChart';
-import { RecentEnrollmentsTable } from '@/components/modules/adminDashboard/RecentEnrollmentsTable';
-import { PopularCoursesTable } from '@/components/modules/adminDashboard/PopularCoursesTable';
+import { MonthlyChart } from '@/components/admin/dashboard/MonthlyChart';
+import { RecentEnrollmentsTable } from '@/components/admin/dashboard/RecentEnrollmentsTable';
+import { PopularCoursesTable } from '@/components/admin/dashboard/PopularCoursesTable';
 import type { CurrencyEarnings } from '@/interface/dashboard.types';
 
 

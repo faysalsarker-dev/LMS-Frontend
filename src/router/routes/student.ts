@@ -15,6 +15,8 @@ const StudentDashboard = lazy(() => import("@/pages/StudentsPages/dashboard/Stud
 const MockTestsPage = lazy(() => import("@/pages/Student/MockTestsPage"));
 const PracticeTasksPage = lazy(() => import("@/pages/Student/PracticeTasksPage"));
 const Profile = lazy(() => import("@/pages/StudentsPages/profile/Profile"));
+const MockTestDetailPage = lazy(() => import("@/pages/StudentPages/MockTestDetailPage"));
+const MockTestExamPage = lazy(() => import("@/pages/StudentPages/MockTestExamPage"));
 const CoursePlayer = lazy(() =>
   import("@/pages/Student/course/CoursePlayer").then((m) => ({
     default: m.CoursePlayer,
@@ -67,5 +69,19 @@ export const  studentInvicibleRoutes = [
     name: "Course Player",
     icon: GraduationCap,
     hidden: true 
+  },
+  {
+    Component: withAuth(MockTestDetailPage),
+    path: "/my-dashboard/mock-test/:slug",
+    name: "Mock Test Detail",
+    icon: ClipboardCheck,
+    hidden: true,
+  },
+  {
+    Component: withAuth(MockTestExamPage),
+    path: "/my-dashboard/mock-test/:slug/:sectionId",
+    name: "Mock Test Exam",
+    icon: ClipboardCheck,
+    hidden: true,
   },
 ]

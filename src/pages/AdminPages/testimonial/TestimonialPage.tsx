@@ -13,7 +13,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useDeleteTestimonialMutation, useGetAllTestimonialsAdminQuery } from "@/redux/features/testimonial/testimonial.api";
-import TestimonialTable from "@/components/modules/Testimonial/TestimonialTable";
+import TestimonialTable from "@/components/admin/testimonial/TestimonialTable";
 import { UpdateTestimonialDialog } from "./UpdateTestimonialDialog";
 import { handleApiError } from "@/utils/errorHandler";
 import type { ITestimonial } from "@/interface/testimonial.types";

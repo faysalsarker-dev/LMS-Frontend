@@ -10,7 +10,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CourseTable } from "@/components/modules/Course/CourseTable";
+import { CourseTable } from "@/components/admin/course/CourseTable";
 import {motion} from "framer-motion"
 import { Activity, BookOpen, Layers, RotateCcw, SortAsc } from "lucide-react";
 const AllCourses = () => {

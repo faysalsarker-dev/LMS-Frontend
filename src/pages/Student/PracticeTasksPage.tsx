@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useGetUserPracticesQuery } from "@/redux/features/practice/practice.api";
-import { PracticeCard } from "@/components/modules/practice/PracticeCard";
-import type { Practice } from "@/components/modules/practice";
+import { PracticeCard } from "@/components/student/practice/PracticeCard";
+import type { Practice } from "@/components/student/practice";
 import { Trophy, Loader2, BookOpen } from "lucide-react";
 
 const PracticeTasksPage = () => {

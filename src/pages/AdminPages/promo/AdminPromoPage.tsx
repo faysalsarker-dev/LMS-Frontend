@@ -24,10 +24,10 @@ import {
   Sparkles,
   Activity,
 } from "lucide-react";
-import CreatePromoModal from "@/components/modules/promo/CreatePromoForm";
+import CreatePromoModal from "@/components/admin/promo/CreatePromoForm";
 import { useGetAllPromosQuery } from "@/redux/features/promo/promo.api";
-import PromosTable from "@/components/modules/promo/PromosTable";
-import StateAndChart from "@/components/modules/promo/StateAndChart";
+import PromosTable from "@/components/admin/promo/PromosTable";
+import StateAndChart from "@/components/admin/promo/StateAndChart";
 
 // Animation variants
 const container = {

@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router";
 import { useGetMockTestBySlugQuery } from "@/redux/features/mockTest/mockTest.api";
-import { MockTestStepper } from "@/components/modules/mockTest/user/MockTestStepper";
+import { MockTestStepper } from "@/components/student/mock-test/user/MockTestStepper";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronLeft, Info, BookOpen } from "lucide-react";

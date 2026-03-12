@@ -8,7 +8,7 @@ import {
   AssignmentsTable,
   ErrorState,
   EmptyState,
-} from '@/components/modules/student';
+} from '@/components/student/dashboard';
 import { useGetMyEnrolledCoursesQuery } from '@/redux/features/course/course.api';
 import { useGetProgressQuery } from '@/redux/features/progress/progress.api';
 

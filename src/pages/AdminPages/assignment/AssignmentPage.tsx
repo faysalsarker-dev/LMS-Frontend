@@ -6,10 +6,10 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 
-import { AssignmentFilters } from '@/components/modules/assignment/AssignmentFilters';
-import { AssignmentTable } from '@/components/modules/assignment/AssignmentTable';
-import { AssignmentPagination } from '@/components/modules/assignment/AssignmentPagination';
-import { AssignmentDialog } from '@/components/modules/assignment/AssignmentDialog';
+import { AssignmentFilters } from '@/components/admin/assignment/AssignmentFilters';
+import { AssignmentTable } from '@/components/admin/assignment/AssignmentTable';
+import { AssignmentPagination } from '@/components/admin/assignment/AssignmentPagination';
+import { AssignmentDialog } from '@/components/admin/assignment/AssignmentDialog';
 import { useGetAllAssignmentsQuery, useReviewAssignmentMutation } from '@/redux/features/assignment/assignmentSubmissionApi';
 import { useGetAllCoursesQuery } from '@/redux/features/course/course.api';
 import { useGetAllMilestonesQuery } from '@/redux/features/milestone/milestone.api';

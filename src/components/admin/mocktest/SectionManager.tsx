@@ -263,6 +263,7 @@ export const SectionManager = ({ section, onRefetch }: SectionManagerProps) => {
                 open={addOpen}
                 onOpenChange={setAddOpen}
                 sectionId={section._id}
+                sectionName={section.name as any}
                 existingQuestions={questions}
                 onSuccess={() => {
                     setAddOpen(false);
@@ -275,6 +276,7 @@ export const SectionManager = ({ section, onRefetch }: SectionManagerProps) => {
                 open={editOpen}
                 onOpenChange={setEditOpen}
                 sectionId={section._id}
+                sectionName={section.name as any}
                 existingQuestions={questions}
                 editQuestion={editQ}
                 onSuccess={() => {

@@ -9,7 +9,7 @@ import {
   EnrolmentTable,
   EnrolmentPagination,
   EnrolmentDialog,
-} from '@/components/modules/enrolment';
+} from '@/components/admin/enrolment';
 
 import type { IEnrolment, EnrolmentFiltersState, UpdateEnrolmentData } from '@/interface/enrolment.types';
 import { useGetAllEnrolmentsQuery, useUpdateEnrolmentMutation } from '@/redux/features/enrollment/enrollment.api';

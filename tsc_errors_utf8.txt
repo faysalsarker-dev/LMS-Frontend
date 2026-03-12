@@ -1,0 +1,3 @@
+﻿src/components/student/mock-test/SectionManager.tsx(262,14): error TS2741: Property 'sectionName' is missing in type '{ open: boolean; onOpenChange: Dispatch<SetStateAction<boolean>>; sectionId: string; existingQuestions: IMockQuestion[]; onSuccess: () => void; }' but required in type 'QuestionFormDialogProps'.
+src/components/student/mock-test/SectionManager.tsx(274,14): error TS2741: Property 'sectionName' is missing in type '{ open: boolean; onOpenChange: Dispatch<SetStateAction<boolean>>; sectionId: string; existingQuestions: IMockQuestion[]; editQuestion: IMockQuestion | null; onSuccess: () => void; }' but required in type 'QuestionFormDialogProps'.
+src/router/generateRoutes.ts(3,11): error TS6196: 'IRoute' is declared but never used.

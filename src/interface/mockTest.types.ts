@@ -97,7 +97,7 @@ export interface IMockQuestion {
   correctOptionId?: string;
 
   // Fill-in-gap
-  wordPool?: string[];
+  wordPool?: IMockOption[];
   correctGaps?: IMockGapEntry[];
 
   // Rearrange
@@ -117,13 +117,48 @@ export interface IMockQuestion {
 // ─── Section ────────────────────────────────────────────────────────────────
 export interface IMockTestSection {
   _id: string;
-  mockTest: string | { _id: string; title: string };
+  mockTest: string | { _id: string; title: string; slug?: string };
   name: SectionName;
   timeLimit: number;
+  instruction?: string | null;
   questions: IMockQuestion[];
   createdAt?: string;
   updatedAt?: string;
 }
+
+// ─── Section Status ──────────────────────────────────────────────────────────
+export type SectionStatus = "locked" | "not_started" | "in_progress" | "submitted";
+
+export interface SectionState {
+  listening: SectionStatus;
+  reading: SectionStatus;
+  writing: SectionStatus;
+  speaking: SectionStatus;
+}
+
+// ─── Answer State ─────────────────────────────────────────────────────────────
+export interface QuestionAnswer {
+  questionId: string;
+  questionType: QuestionType;
+  // Single option select
+  selectedOptionId?: string;
+  // Fill in the gap — key = gapId, value = optionId chosen
+  gapSelections?: Record<string, string>;
+  // Rearrange — array of segmentIds in student's current order
+  segmentOrder?: string[];
+  // Passage MCQ — key = subQuestionId, value = selectedOptionId
+  subQuestionSelections?: Record<string, string>;
+  // Free text
+  textAnswer?: string;
+  wordCount?: number;
+  // Word ordering
+  wordOrder?: string[];
+  // Audio recording
+  audioBlob?: Blob;
+  audioDurationSeconds?: number;
+}
+
+export type AnswerState = Record<string, QuestionAnswer>;
 
 // ─── Mock Test ──────────────────────────────────────────────────────────────
 export interface IMockTest {

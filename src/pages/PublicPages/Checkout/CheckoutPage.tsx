@@ -13,7 +13,7 @@ import {
   PaymentMethodSelector,
   CheckoutStatus,
   TrustBadges,
-} from '@/components/modules/checkout';
+} from '@/components/public/checkout';
 
 import type { 
   CheckoutStep, 

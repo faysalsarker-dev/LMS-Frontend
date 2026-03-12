@@ -21,7 +21,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import CourseCard, { CourseCardSkeleton } from "@/components/modules/Course/CourseCard";
+import CourseCard, { CourseCardSkeleton } from "@/components/admin/course/CourseCard";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
 import { useGetAllCategorysQuery } from "@/redux/features/category/category.api";
 import { useSearchParams } from "react-router";

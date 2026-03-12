@@ -23,7 +23,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CategoryDialog } from "@/components/modules/Category/CategoryDialog";
+import { CategoryDialog } from "@/components/admin/category/CategoryDialog";
 import {
   useDeleteCategoryMutation,
   useGetAllCategorysQuery,

@@ -9,13 +9,13 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, Lock, Eye, EyeOff, Loader2, ArrowRight, Sparkles } from "lucide-react";
-import FloatingElements from "@/components/modules/auth/FloatingElements";
+import FloatingElements from "@/components/public/auth/FloatingElements";
 import { useLoginMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { toast } from 'react-hot-toast';
 import { loginSchema, type LoginFormValues } from "@/schema/auth";
 // import DemoAccess from "@/components/shared/DemoAccess";
 import { useTranslation } from "react-i18next";
-import { DeviceConflictDialog } from "@/components/modules/auth/DeviceConflictDialog";
+import { DeviceConflictDialog } from "@/components/public/auth/DeviceConflictDialog";
 
 
 

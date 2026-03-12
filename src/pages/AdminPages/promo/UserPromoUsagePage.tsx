@@ -6,7 +6,7 @@ import { Copy, Percent, Calendar, TrendingUp, Users, CheckCircle2 } from "lucide
 import toast from "react-hot-toast";
 import { useGetMyPromosQuery } from "@/redux/features/promo/promo.api";
 import type { IPromo } from "@/interface/promo.interfaces";
-import { getStatusBadge, renderUsage } from "@/components/modules/promo/Progress";
+import { getStatusBadge, renderUsage } from "@/components/admin/promo/Progress";
 
 const container = {
   hidden: { opacity: 0 },

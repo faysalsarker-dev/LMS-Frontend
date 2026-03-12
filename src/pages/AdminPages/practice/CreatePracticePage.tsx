@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import {  useNavigate } from 'react-router';
 
-import { PracticeForm } from '@/components/modules/practice';
+import { PracticeForm } from '@/components/student/practice';
 import toast from 'react-hot-toast';
 import { handleApiError } from '@/utils/errorHandler';
 import { useCreatePracticeMutation } from '@/redux/features/practice/practice.api';

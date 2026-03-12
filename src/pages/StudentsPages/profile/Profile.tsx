@@ -9,8 +9,8 @@ import {
   useUserInfoQuery,
 } from "@/redux/features/auth/auth.api";
 import { useAppDispatch } from "@/redux/hooks";
-import { CoursesTab, LogoutDialog, PersonalInfoTab, ProfileHeader, ProfilePageSkeleton, ProfileStats, SettingsTab, WishlistTab } from "@/components/modules/profile";
-import EditProfileDialog from "@/components/modules/profile/EditProfileDialog";
+import { CoursesTab, LogoutDialog, PersonalInfoTab, ProfileHeader, ProfilePageSkeleton, ProfileStats, SettingsTab, WishlistTab } from "@/components/student/profile";
+import EditProfileDialog from "@/components/student/profile/EditProfileDialog";
 import { useGetMyEnrolledCoursesQuery, useGetMyWishlistCoursesQuery } from "@/redux/features/course/course.api";
 
 const containerVariants = {

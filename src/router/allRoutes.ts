@@ -8,8 +8,8 @@ import PrivacyPolicyPage from "@/pages/PublicPages/policy/PrivacyPage";
 import PaymentSuccess from "@/pages/PublicPages/Payments/PaymentSuccessPage";
 import PaymentFailed from "@/pages/PublicPages/Payments/PaymentFailed";
 import PaymentCancelled from "@/pages/PublicPages/Payments/PaymentCancelled";
-import MockTestDetailPage from "@/pages/practice/mock-test/MockTestDetailPage";
-import MockTestSectionPage from "@/pages/practice/mock-test/MockTestSectionPage";
+import MockTestDetailPage from "@/pages/StudentPages/MockTestDetailPage";
+import MockTestExamPage from "@/pages/StudentPages/MockTestExamPage";
 
 const CourseDetails = lazy(
   () => import("@/pages/PublicPages/course/CourseDetails"),
@@ -80,17 +80,17 @@ export const invisibleRoutes = [
   },
   { Component: ResetPassword, path: "/reset-password", name: "Reset Password" },
 
-  // 🧪 Mock Test Routes (Isolated)
-  {
-    Component: withAuth(MockTestDetailPage),
-    path: "/practice/mock-test/:slug",
-    name: "Mock Test Detail",
-  },
-  {
-    Component: withAuth(MockTestSectionPage),
-    path: "/practice/mock-test/section/:sectionId",
-    name: "Mock Test Section",
-  },
+  // 🧪 Mock Test Routes (Consolidated)
+  // {
+  //   Component: withAuth(MockTestDetailPage),
+  //   path: "/practice/mock-test/:slug",
+  //   name: "Mock Test Detail",
+  // },
+  // {
+  //   Component: withAuth(MockTestExamPage),
+  //   path: "/practice/mock-test/:slug/:sectionId",
+  //   name: "Mock Test Exam",
+  // },
 ];
 
 // 🎓 Student routes
