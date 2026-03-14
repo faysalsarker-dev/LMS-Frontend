@@ -7,7 +7,6 @@ import { QuestionNavigator } from "@/components/student/mock-test/QuestionNaviga
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  ChevronLeft,
   ChevronRight,
   CheckCircle,
   Loader2,
@@ -20,6 +19,9 @@ import type {
   IMockQuestion,
 } from "@/interface/mockTest.types";
 import { motion } from "framer-motion";
+import { useSubmitMockTestMutation } from "@/redux/features/mockTestSubmission/mockTestSubmission.api";
+import { handleListeningSubmission } from "@/utils/mock-test/listening.utils";
+import { handleReadingSubmission } from "@/utils/mock-test/reading.utils";
 
 const MockTestExamPage = () => {
   const { slug, sectionId } = useParams<{ slug: string; sectionId: string }>();
@@ -28,12 +30,28 @@ const MockTestExamPage = () => {
   const { data, isLoading } = useGetSectionByIdQuery(sectionId as string, {
     skip: !sectionId,
   });
+const [submitMockTest, { isLoading: isSubmitting }] = useSubmitMockTestMutation();
+
+
   const section = data?.data;
   const questions: IMockQuestion[] = section?.questions ?? [];
 
   const [answers, setAnswers] = useState<AnswerState>({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [results, setResults] = useState<{
+    correctCount: number;
+    earnedMarks: number;
+    totalPossibleMarks: number;
+    items: {
+      questionId: string;
+      isCorrect: boolean;
+      marks: number;
+      studentAnswer: string;
+      correctAnswer: string;
+      type: string;
+    }[];
+  } | null>(null);
 
   // Get or compute the deadline
   const [deadline, setDeadline] = useState<number>(() => {
@@ -63,24 +81,70 @@ const MockTestExamPage = () => {
   }, [answers, submitted]);
 
   const handleSubmit = useCallback(
-    ({ autoSubmitted = false }: { autoSubmitted?: boolean } = {}) => {
+    async ({ autoSubmitted = false }: { autoSubmitted?: boolean } = {}) => {
       if (submitted) return;
       setSubmitted(true);
 
-      const payload = {
-        sectionId,
-        sectionName:   section?.name,
-        autoSubmitted,
-        answers: Object.values(answers),
-      };
-      console.log("Submitting section:", payload);
-      // TODO: call API – payload shape ready above
+      // 1. Calculate Results & Submit based on section type
+      try {
+        switch (section?.name) {
+          case "listening":
+            await handleListeningSubmission({
+              questions,
+              answers,
+              sectionId: sectionId!,
+              section,
+              setResults,
+              submitMockTest,
+            });
+            break;
 
+          case "reading":
+            await handleReadingSubmission({
+              questions,
+              answers,
+              sectionId: sectionId!,
+              section,
+              setResults,
+              submitMockTest,
+            });
+            break;
+
+          default:
+            console.warn(`No handler for section: ${section?.name}. Using fallback.`);
+            const studentAnswers = Object.entries(answers).reduce((acc, [id, ans]) => {
+              acc[id] = ans.selectedOptionId || 
+                       ans.gapSelections || 
+                       ans.segmentOrder || 
+                       ans.subQuestionSelections || 
+                       ans.textAnswer || 
+                       ans.wordOrder;
+              return acc;
+            }, {} as Record<string, any>);
+
+            const payload = {
+              course: (section?.mockTest as any)?.course?._id || (section?.mockTest as any)?.course,
+              mockTest: (section?.mockTest as any)?._id || section?.mockTest,
+              sections: [
+                {
+                  sectionId: sectionId as string,
+                  score: 0,
+                  isAutoGraded: section?.questions?.[0]?.isAutoMarked || false,
+                  studentAnswers,
+                },
+              ],
+            };
+            console.log("Submitting section (fallback):", payload);
+            // await submitMockTest(payload).unwrap();
+            break;
+        }
+      } catch (error) {
+        console.error("Submission failed:", error);
+        toast.error("Failed to submit test. Please try again.");
+        setSubmitted(false); // Allow retry if submission fails
+        return;
+      }
       
-
-
-
-
 
       // Clean up localStorage timer
       localStorage.removeItem(`exam_deadline_${sectionId}`);
@@ -95,7 +159,7 @@ const MockTestExamPage = () => {
 
       setTimeout(() => {
         navigate(`/mock-test/${slug}`, { replace: true });
-      }, 1500);
+      }, 3000);
     },
     [answers, sectionId, section, slug, submitted, navigate]
   );
@@ -117,20 +181,79 @@ const MockTestExamPage = () => {
     return <div className="p-8 text-center">Section not found.</div>;
   }
 
-  if (submitted) {
+  if (submitted && results) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center gap-6 p-8 max-w-6xl ms-auto">
-        <div className="h-24 w-24 rounded-full bg-green-500/10 flex items-center justify-center">
-          <CheckCircle className="h-12 w-12 text-green-500" />
+      <div className="min-h-[80vh] container max-w-4xl mx-auto py-12 space-y-8">
+        <div className="text-center space-y-4">
+          <div className="h-20 w-20 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
+            <CheckCircle className="h-10 w-10 text-green-500" />
+          </div>
+          <h1 className="text-4xl font-black">Section Complete!</h1>
+          <p className="text-muted-foreground">Your performance in the {section.name} section.</p>
         </div>
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-black">Section Submitted!</h1>
-          <p className="text-xl text-muted-foreground capitalize">
-            {section.name} section recorded.
-          </p>
+
+        {/* Summary Card */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-card border rounded-3xl p-6 text-center space-y-2">
+            <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Score</p>
+            <p className="text-4xl font-black text-primary">{results.earnedMarks} / {results.totalPossibleMarks}</p>
+          </div>
+          <div className="bg-card border rounded-3xl p-6 text-center space-y-2">
+            <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Correct</p>
+            <p className="text-4xl font-black text-green-600">{results.correctCount} / {questions.length}</p>
+          </div>
+          <div className="bg-card border rounded-3xl p-6 text-center space-y-2">
+            <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Accuracy</p>
+            <p className="text-4xl font-black text-blue-600">
+              {Math.round((results.correctCount / questions.length) * 100)}%
+            </p>
+          </div>
         </div>
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-        <p className="text-sm text-muted-foreground">Returning to overview...</p>
+
+        {/* Detailed Results */}
+        <div className="space-y-4">
+          <h3 className="text-xl font-bold flex items-center gap-2">
+            Detailed Review
+            <Badge variant="outline">{results.items.length} Questions</Badge>
+          </h3>
+          <div className="space-y-4">
+            {results.items.map((item, idx) => (
+              <div key={item.questionId} className={`p-6 rounded-2xl border-2 ${item.isCorrect ? 'bg-green-500/5 border-green-500/20' : 'bg-red-500/5 border-red-500/20'}`}>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-4 flex-1">
+                    <div className="flex items-center gap-2">
+                      <Badge className={item.isCorrect ? 'bg-green-500' : 'bg-red-500'}>
+                        Q{idx+1} {item.isCorrect ? 'Correct' : 'Incorrect'}
+                      </Badge>
+                      <span className="text-xs font-bold text-muted-foreground uppercase">{item.type.replace(/_/g, ' ')}</span>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                      <div className="space-y-1">
+                        <p className="font-bold text-muted-foreground">Your Answer:</p>
+                        <p className={item.isCorrect ? 'text-green-700 font-semibold' : 'text-red-700 font-semibold'}>{item.studentAnswer}</p>
+                      </div>
+                      {!item.isCorrect && (
+                        <div className="space-y-1">
+                          <p className="font-bold text-muted-foreground">Correct Answer:</p>
+                          <p className="text-green-700 font-semibold">{item.correctAnswer}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <Badge variant="outline" className="font-bold">{item.marks} pts</Badge>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex justify-center pt-8">
+           <Button onClick={() => navigate(`/mock-test/${slug}`, { replace: true })} className="rounded-2xl px-8 py-6 text-lg font-bold gap-2">
+             <LogOut className="h-5 w-5" />
+             Return to Overview
+           </Button>
+        </div>
       </div>
     );
   }
@@ -227,29 +350,22 @@ const MockTestExamPage = () => {
       {/* ─── Sticky Footer Nav ─── */}
       <div className="sticky bottom-0 bg-background border-t py-3">
         <div className="container max-w-6xl mx-auto flex items-center justify-between">
-          <Button
-            variant="outline"
-            onClick={() => setCurrentIndex((p) => Math.max(0, p - 1))}
-            disabled={currentIndex === 0}
-            className="rounded-xl px-6 gap-2"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Previous
-          </Button>
+          <div />
 
           {/* Mobile navigator */}
           <div className="lg:hidden flex items-center gap-2">
             {questions.slice(0, 10).map((_, i) => (
               <button
                 key={i}
-                onClick={() => setCurrentIndex(i)}
+                onClick={() => i >= currentIndex && setCurrentIndex(i)}
+                disabled={i < currentIndex}
                 className={`h-7 w-7 rounded-lg text-xs font-bold transition-all ${
                   i === currentIndex
                     ? "bg-primary text-white"
                     : answers[questionIds[i]]
                     ? "bg-green-500/20 text-green-700"
                     : "bg-muted text-muted-foreground"
-                }`}
+                } ${i < currentIndex && "opacity-50 cursor-not-allowed"}`}
               >
                 {i + 1}
               </button>

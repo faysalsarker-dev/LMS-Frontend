@@ -42,14 +42,16 @@ export const QuestionNavigator = ({
           return (
             <button
               key={i}
-              onClick={() => onChange(i)}
+              onClick={() => i >= current && onChange(i)}
+              disabled={i < current}
               className={cn(
                 "h-9 w-9 rounded-xl text-sm font-bold transition-all duration-150 border-2",
                 isCurrent
                   ? "bg-primary text-white border-primary shadow-md shadow-primary/30 scale-110"
                   : answered
                   ? "bg-green-500/10 text-green-700 border-green-500/30 hover:border-green-500"
-                  : "bg-muted/50 text-muted-foreground border-muted hover:border-primary/40"
+                  : "bg-muted/50 text-muted-foreground border-muted hover:border-primary/40",
+                i < current && "opacity-50 cursor-not-allowed"
               )}
             >
               {i + 1}

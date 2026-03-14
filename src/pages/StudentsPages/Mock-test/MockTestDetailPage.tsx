@@ -15,6 +15,10 @@ import type {
   SectionName,
   IMockTestSection,
 } from "@/interface/mockTest.types";
+import { 
+  useGetMockTestProgressQuery 
+} from "@/redux/features/mockTestSubmission/mockTestSubmission.api";
+import { useEffect } from "react";
 
 const SECTION_ORDER: SectionName[] = ["listening", "reading", "writing", "speaking"];
 
@@ -45,20 +49,45 @@ const MockTestDetailPage = () => {
   const { data, isLoading } = useGetMockTestBySlugQuery(slug as string, {
     skip: !slug,
   });
-const courseId = data?.data?.course?._id
+const mockTest = data?.data;
 
-//   const {data:progressData  } = useGetProgressQuery(courseId as string, {
-//     skip: !courseId,
-//   });
+  const { data: progressData } = useGetMockTestProgressQuery(mockTest?._id as string, {
+    skip: !mockTest?._id,
+  });
 
 
-// console.log(progressData)
 
+  console.log(progressData)
   const [sectionState, setSectionState] = useState<SectionState>(initialSectionState);
+
+  useEffect(() => {
+    if (!progressData?.data) return;
+
+    const apiProgress = progressData.data;
+    const newState: SectionState = { ...initialSectionState };
+
+    let foundFirstIncomplete = false;
+    SECTION_ORDER.forEach((name) => {
+      // If API says submitted, it's submitted
+      if (apiProgress[name] === "submitted") {
+        newState[name] = "submitted";
+      }
+      // If it's not submitted and we haven't found the first incomplete one yet, this is the one to start
+      else if (!foundFirstIncomplete) {
+        newState[name] = "not_started";
+        foundFirstIncomplete = true;
+      }
+      // Everything else is locked
+      else {
+        newState[name] = "locked";
+      }
+    });
+
+    setSectionState(newState);
+  }, [progressData]);
   const [pendingSection, setPendingSection] = useState<SectionName | null>(null);
   const [pendingSectionData, setPendingSectionData] = useState<IMockTestSection | null>(null);
 
-  const mockTest = data?.data;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSectionSubmit = (completedSection: SectionName) => {

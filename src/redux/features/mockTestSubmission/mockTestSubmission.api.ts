@@ -27,6 +27,13 @@ export const mockTestSubmissionApi = baseApi.injectEndpoints({
             ]
           : [{ type: "MOCK_TEST_SUBMISSION", id: "LIST" }],
     }),
+    getMockTestProgress: builder.query<any, string>({
+      query: (mockTestId: string) => ({
+        url: `/mock-test-submission/my-mocktest-progress/${mockTestId}`,
+        method: "GET",
+      }),
+     
+    }),
 
     // 3. Get Pending Submissions (Admin)
     getPendingSubmissions: builder.query<any, void>({
@@ -63,4 +70,5 @@ export const {
   useGetMySubmissionsQuery,
   useGetPendingSubmissionsQuery,
   useGradeSubmissionMutation,
+  useGetMockTestProgressQuery
 } = mockTestSubmissionApi;
