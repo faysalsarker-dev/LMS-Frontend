@@ -11,7 +11,8 @@ interface Props {
 
 export const PictureToWordQuestion = ({ question, answer, onChange }: Props) => {
   const selected = answer?.selectedOptionId;
-  const imageUrl = question.images?.[0]?.url;
+  const imageUrl = (question.images?.[0] as any) || "";
+
 
   return (
     <div className="space-y-8">
@@ -47,7 +48,7 @@ export const PictureToWordQuestion = ({ question, answer, onChange }: Props) => 
             )}
           >
             <RadioGroupItem value={opt.optionId} id={`pic-${opt.optionId}`} />
-            <span className="font-bold text-primary mr-1">{opt.optionId})</span>
+          
             <span>{opt.text}</span>
           </Label>
         ))}

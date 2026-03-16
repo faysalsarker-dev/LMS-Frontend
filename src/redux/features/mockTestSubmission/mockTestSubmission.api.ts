@@ -32,7 +32,7 @@ export const mockTestSubmissionApi = baseApi.injectEndpoints({
         url: `/mock-test-submission/my-mocktest-progress/${mockTestId}`,
         method: "GET",
       }),
-     
+      providesTags: (_result, _error, mockTestId) => [{ type: "MOCK_TEST_SUBMISSION", id: mockTestId }],
     }),
 
     // 3. Get Pending Submissions (Admin)
