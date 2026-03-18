@@ -95,16 +95,16 @@ export const constructListeningPayload = (
   earnedMarks: number,
   answers: AnswerState
 ) => {
-  const studentAnswers = Object.entries(answers).reduce((acc, [id, ans]) => {
-    acc[id] =
+  const studentAnswers = Object.entries(answers).map(([id, ans]) => ({
+    questionId: id,
+    answer:
       ans.selectedOptionId ||
       ans.gapSelections ||
       ans.segmentOrder ||
       ans.subQuestionSelections ||
       ans.textAnswer ||
-      ans.wordOrder;
-    return acc;
-  }, {} as Record<string, any>);
+      ans.wordOrder,
+  }));
 
   return {
     course: (section?.mockTest as any)?.course?._id || (section?.mockTest as any)?.course,

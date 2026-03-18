@@ -24,6 +24,8 @@ import MockTestDetailPage from "@/pages/AdminPages/mockTest/MockTestDetailPageAd
 import MockTestSectionPage from "@/pages/AdminPages/mockTest/MockTestSectionPage";
 import MockTestSectionsPage from "@/pages/AdminPages/mockTest/MockTestSectionsPage";
 import OverViewPage from "@/pages/AdminPages/overView/AdminDashboardOverview";
+import PendingSubmissionsPage from "@/pages/AdminPages/mockTest/PendingSubmissionsPage";
+import SubmissionDetailPage from "@/pages/AdminPages/mockTest/SubmissionDetailPage";
 
 // 🔹 Lazy-loaded admin pages
 const Users = lazy(() => import("@/pages/AdminPages/users/Users"));
@@ -221,6 +223,16 @@ export const adminRoutes = [
     icon: ClipboardList,
     roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
   },
+  {
+    Component: withAuth(PendingSubmissionsPage, [
+      UserRoles.SUPER_ADMIN,
+      UserRoles.ADMIN,
+    ]),
+    path: "/dashboard/mock-tests/pending-submissions",
+    name: "Pending Submissions",
+    icon: ClipboardList,
+    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
+  },
 ];
 
 export const adminInvicibleRoutes = [
@@ -258,6 +270,15 @@ export const adminInvicibleRoutes = [
     ]),
     path: "/dashboard/mock-test-sections/:id",
     name: "Mock Test Section Management",
+    roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
+  },
+  {
+    Component: withAuth(SubmissionDetailPage, [
+      UserRoles.SUPER_ADMIN,
+      UserRoles.ADMIN,
+    ]),
+    path: "/dashboard/mock-test-submissions/:id",
+    name: "Submission Detail",
     roles: [UserRoles.SUPER_ADMIN, UserRoles.ADMIN],
   },
 ];

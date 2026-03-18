@@ -86,13 +86,13 @@ export const constructWritingPayload = (
   earnedMarks: number,
   answers: AnswerState
 ) => {
-  const studentAnswers = Object.entries(answers).reduce((acc, [id, ans]) => {
-    acc[id] =
+  const studentAnswers = Object.entries(answers).map(([id, ans]) => ({
+    questionId: id,
+    answer:
       ans.selectedOptionId ||
       ans.textAnswer ||
-      ans.wordOrder;
-    return acc;
-  }, {} as Record<string, any>);
+      ans.wordOrder,
+  }));
 
   // Determine if the *entire* section is auto-graded
   // If even one question requires manual grading (isAutoMarked is false/undefined), the section isn't fully auto-graded.

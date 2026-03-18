@@ -4,7 +4,7 @@ export interface IMockTestSectionSubmission {
   sectionId: string;
   score: number;
   isAutoGraded: boolean;
-  studentAnswers: Record<string, any>;
+  studentAnswers: { questionId: string; answer: any }[];
   adminScore?: number;
   adminFeedback?: string;
 }
@@ -28,7 +28,7 @@ export interface ISubmitMockTestPayload {
     sectionId: string;
     score: number;
     isAutoGraded: boolean;
-    studentAnswers: Record<string, any>;
+    studentAnswers: { questionId: string; answer: any }[];
   }[];
 }
 
@@ -38,4 +38,15 @@ export interface IGradeSubmissionPayload {
     score: number;
     feedback?: string;
   }[];
+}
+
+export interface IPendingSubmissionsFilters {
+  search?: string;
+  course?: string;
+  mockTest?: string;
+  section?: string;
+  createdAt?: string;
+  page?: number;
+  limit?: number;
+  sortOrder?: "asc" | "desc";
 }
