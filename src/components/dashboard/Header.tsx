@@ -4,7 +4,6 @@ import {
   Sun, 
   Moon, 
   Monitor,
-  Bell,
   Settings,
   User,
   ChevronRight,
@@ -26,9 +25,9 @@ import { LogoutDialog } from '../shared/LogoutDialog';
 import { useState } from 'react';
 import { useLocation, Link } from 'react-router';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 
-export function Header() {
+
+export function Header({isStudent}: {isStudent?: boolean}) {
   const { setTheme } = useTheme();
   const { data: userInfo } = useUserInfoQuery(undefined);
   const [logoutOpen, setLogoutOpen] = useState<boolean>(false);
@@ -43,7 +42,7 @@ export function Header() {
         
         {/* Left Section: Sidebar & Breadcrumbs */}
         <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
-          <SidebarTrigger className="h-9 w-9 hover:bg-muted transition-colors" />
+     <SidebarTrigger className={`h-9 w-9 hover:bg-muted transition-colors ${isStudent && 'hidden md:inline-block'}`} />
           
           <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground whitespace-nowrap">
             <Link to="/my-dashboard" className="hover:text-primary transition-colors">Dashboard</Link>
@@ -112,42 +111,7 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Notifications */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative hover:bg-muted rounded-full animate-hover">
-                <Bell className="h-5 w-5" />
-                <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center bg-primary text-[10px] border-2 border-background">
-                  3
-                </Badge>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80 mt-2 p-0 bg-popover/95 backdrop-blur-xl border-border/50 overflow-hidden shadow-2xl rounded-2xl">
-              <div className="p-4 border-b border-border/50 bg-muted/30">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-semibold">Notifications</h4>
-                  <Badge variant="secondary" className="text-[10px]">3 New</Badge>
-                </div>
-              </div>
-              <div className="max-h-80 overflow-y-auto">
-                {[1, 2, 3].map((i) => (
-                  <DropdownMenuItem key={i} className="flex flex-col items-start gap-1 p-4 border-b border-border/30 last:border-0 focus:bg-primary/5 cursor-pointer transition-colors">
-                    <div className="flex w-full justify-between items-center gap-2">
-                       <span className="font-medium text-sm">New Course Content</span>
-                       <span className="text-[10px] text-muted-foreground">2h ago</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground line-clamp-2">A new lesson has been added to your React Mastery course. Check it out now!</p>
-                  </DropdownMenuItem>
-                ))}
-              </div>
-              <div className="p-2 bg-muted/30">
-                <Button variant="ghost" size="sm" className="w-full text-xs hover:bg-primary/10 hover:text-primary rounded-lg transition-colors">
-                  View All Notifications
-                </Button>
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
+        
           {/* User Profile Menu */}
           {userInfo && (
             <DropdownMenu>
@@ -200,4 +164,4 @@ export function Header() {
       <LogoutDialog open={logoutOpen} setOpen={setLogoutOpen} />
     </header>
   );
-}
+}

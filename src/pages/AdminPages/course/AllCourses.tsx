@@ -12,8 +12,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CourseTable } from "@/components/admin/course/CourseTable";
 import {motion} from "framer-motion"
-import { Activity, BookOpen, Layers, RotateCcw, SortAsc } from "lucide-react";
+import { Activity, BookOpen, Layers, Plus, RotateCcw, SortAsc } from "lucide-react";
+import { useNavigate } from "react-router";
 const AllCourses = () => {
+  const navigate = useNavigate()
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
 
@@ -66,6 +68,12 @@ const AllCourses = () => {
             Manage, filter, and organize your educational catalog.
           </p>
         </div>
+
+
+        <Button onClick={() => navigate("/dashboard/course/create")}>
+          <Plus className="w-4 h-4 mr-2" />
+          Add Course
+        </Button>
       </motion.div>
 
       {/* 🔹 Filters & Sorting Card */}

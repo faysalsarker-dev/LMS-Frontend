@@ -5,7 +5,6 @@ import {
   User,
   LogOut,
   LayoutDashboard,
-  BookOpenText,
   TrainTrack,
 } from 'lucide-react';
 
@@ -122,16 +121,16 @@ const [open,setOpen]=useState<boolean>(false)
       <NavigationMenuItem className="h-full">
              
                          <NavigationMenuLink
-                    active={isActive(`/my-courses`)}
+                    active={isActive(`/my-dashboard`)}
                   asChild
                     className="text-muted-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary data-[active]:text-primary h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent!"
                   >
      <Link
-                  to={`/my-courses`}
+                  to={`/my-dashboard`}
                   >
 
 
-                    {t('navbar.myCourses')} </Link>
+                    {t('navbar.myDashboard')} </Link>
                   </NavigationMenuLink>
                  
            
@@ -174,11 +173,7 @@ const [open,setOpen]=useState<boolean>(false)
           {
   userInfo?.data && (
     <>
-       <DropdownMenuItem asChild>
-      <Link to="/my-courses" className="flex items-center gap-2">
-        <BookOpenText  className="w-4 h-4" /> {t('navbar.myCourses')}
-      </Link>
-    </DropdownMenuItem>
+   
     <DropdownMenuItem asChild>
       <Link to="/my-dashboard" className="flex items-center gap-2">
         <TrainTrack  className="w-4 h-4" /> {t('navbar.myDashboard')}

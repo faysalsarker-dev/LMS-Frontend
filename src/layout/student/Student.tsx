@@ -10,7 +10,7 @@ const StudentLayout = () => {
             <div className="min-h-screen flex w-full bg-background transition-colors duration-300">
                 <StudentSidebar />
                 <div className="flex-1 flex flex-col overflow-hidden mb-16 md:mb-0">
-                    <Header />
+                    <Header isStudent={true} />
                     <main className="flex-1 overflow-auto bg-muted/5">
                         <Outlet />
                          <ScrollRestoration />

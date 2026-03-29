@@ -158,8 +158,18 @@ handleApiError(err)
                   <TableCell className="font-medium">{course?.title}</TableCell>
                   <TableCell>{course?.level}</TableCell>
                   <TableCell>{course?.status}</TableCell>
-                  <TableCell>
-                    {course?.price} {course?.currency}
+                  <TableCell className="flex flex-col gap-0.5 justify-center">
+                     <span className="font-semibold text-sm">
+                            {`${course.isDiscounted && course.discountPrice
+                                ? course.discountPrice
+                                : course.price
+                              } ${course.currency}`}
+                          </span>
+                          {course.isDiscounted && course.discountPrice && (
+                            <span className="text-xs text-muted-foreground line-through">
+                              {`${course.price} ${course.currency}`}
+                            </span>
+                          )}
                   </TableCell>
                   <TableCell>{course?.totalEnrolled}</TableCell>
                   <TableCell>{course?.averageRating?.toFixed(1)}</TableCell>
