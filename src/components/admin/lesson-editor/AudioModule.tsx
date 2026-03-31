@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import type { ITranscript } from '@/interface/lesson.type';
+import NoDataFound from '@/components/shared/NoDataFound';
 
 interface AudioModuleProps {
   audioUrl: string;
@@ -202,13 +203,12 @@ export function AudioModule({
         </div>
 
         {transcripts.length === 0 ? (
-          <Card className="border-dashed">
-            <CardContent className="flex flex-col items-center justify-center py-8">
-              <Languages className="w-8 h-8 text-muted-foreground mb-2" />
-              <p className="text-sm text-muted-foreground text-center">
-                No transcripts yet. Add transcripts to improve accessibility.
-              </p>
-            </CardContent>
+          <Card className="border-dashed bg-background">
+            <NoDataFound 
+              message="No transcripts yet. Add transcripts to improve accessibility." 
+              icon={<Languages className="w-8 h-8 text-muted-foreground" />}
+              className="min-h-[150px]"
+            />
           </Card>
         ) : (
           <div className="space-y-4">

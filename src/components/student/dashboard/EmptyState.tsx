@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { BookOpen, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import NoDataFound from '@/components/shared/NoDataFound';
 
 interface EmptyStateProps {
   type: 'courses' | 'assignments';
@@ -28,23 +29,29 @@ const EmptyState = ({ type }: EmptyStateProps) => {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="flex flex-col items-center justify-center py-16 px-4 text-center"
     >
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-        className="p-6 rounded-full bg-primary/5 mb-6"
+      <NoDataFound 
+        message={title}
+        icon={
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
+            className="p-6 rounded-full bg-primary/5 shadow-sm"
+          >
+            <Icon className="h-12 w-12 text-primary" />
+          </motion.div>
+        }
       >
-        <Icon className="h-12 w-12 text-primary" />
-      </motion.div>
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
-      <p className="text-muted-foreground max-w-md mb-6">{description}</p>
-      {actionLabel && (
-        <Button>
-          {actionLabel}
-        </Button>
-      )}
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-muted-foreground max-w-md">{description}</p>
+          {actionLabel && (
+            <Button>
+              {actionLabel}
+            </Button>
+          )}
+        </div>
+      </NoDataFound>
     </motion.div>
   );
 };

@@ -40,6 +40,7 @@ import { QuestionFormDialog, UpdateSectionDialog } from "./";
 import { useUpdateSectionMutation } from "@/redux/features/mockTest/mockTestSection.api";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import NoDataFound from "@/components/shared/NoDataFound";
 
 const SECTION_META: Record<
     string,
@@ -180,8 +181,12 @@ export const SectionManager = ({ section, onRefetch }: SectionManagerProps) => {
                     >
                         <div className="p-4 space-y-2 bg-slate-50/50">
                             {questions.length === 0 && (
-                                <div className="py-8 text-center text-muted-foreground text-xs bg-white/50 rounded-xl border border-dashed">
-                                    No questions yet.
+                                <div className="bg-white/50 rounded-xl border border-dashed">
+                                    <NoDataFound 
+                                        message="No questions yet." 
+                                        icon={<FileQuestion className="h-8 w-8 text-muted-foreground" />} 
+                                        className="min-h-[150px] p-4"
+                                    />
                                 </div>
                             )}
                             {questions.slice(0, 10).map((q, i) => (

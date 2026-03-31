@@ -14,6 +14,7 @@ import {
   Mic,
 } from "lucide-react";
 import { toast } from "sonner";
+import NoDataFound from "@/components/shared/NoDataFound";
 import type {
   AnswerState,
   QuestionAnswer,
@@ -325,8 +326,8 @@ const MockTestExamPage = () => {
               total={questions.length}
             />
           ) : (
-            <div className="text-center py-20 text-muted-foreground">
-              No questions in this section.
+            <div className="w-full">
+              <NoDataFound message="No questions in this section." />
             </div>
           )}
         </div>

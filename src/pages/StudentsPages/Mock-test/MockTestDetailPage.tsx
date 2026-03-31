@@ -89,16 +89,15 @@ const mockTest = data?.data;
   const [pendingSectionData, setPendingSectionData] = useState<IMockTestSection | null>(null);
 
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const onSectionSubmit = (completedSection: SectionName) => {
-    const currentIndex = SECTION_ORDER.indexOf(completedSection);
-    const nextSection = SECTION_ORDER[currentIndex + 1];
-    setSectionState((prev) => ({
-      ...prev,
-      [completedSection]: "submitted",
-      ...(nextSection ? { [nextSection]: "not_started" } : {}),
-    }));
-  };
+  // const onSectionSubmit = (completedSection: SectionName) => {
+  //   const currentIndex = SECTION_ORDER.indexOf(completedSection);
+  //   const nextSection = SECTION_ORDER[currentIndex + 1];
+  //   setSectionState((prev) => ({
+  //     ...prev,
+  //     [completedSection]: "submitted",
+  //     ...(nextSection ? { [nextSection]: "not_started" } : {}),
+  //   }));
+  // };
 
   const handleStartClick = (name: SectionName) => {
     setPendingSection(name);

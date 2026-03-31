@@ -169,6 +169,7 @@ export const constructReadingPayload = (
         score: earnedMarks,
         isAutoGraded: section?.questions?.[0]?.isAutoMarked || false,
         studentAnswers,
+        name: section?.name || 'Reading',
       },
     ],
   };

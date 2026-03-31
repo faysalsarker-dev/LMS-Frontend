@@ -31,6 +31,7 @@ import {
 
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { currencies } from "@/utils/currency";
 
 // API hooks
 import { useCreatePromoMutation } from "@/redux/features/promo/promo.api";
@@ -41,6 +42,7 @@ interface CreatePromoFormData {
   code: string;
   discountValue: number;
   discountType: "percentage" | "fixed_amount";
+  currency: string;
   commission: number;
   maxUsageCount: number | null;
   maxUsagePerUser: number;
@@ -67,13 +69,13 @@ const CreatePromoModal = ({
   const foundUser = rowDataOfUser?.data?.data[0];
 
 
-  console.log(rowDataOfUser, 'user')
   const [createPromo, { isLoading }] = useCreatePromoMutation();
 
   const { register, handleSubmit, setValue, watch, reset } =
     useForm<CreatePromoFormData>({
       defaultValues: {
         discountType: "percentage",
+        currency: "USD",
         commission: 0,
         isActive: true,
         maxUsageCount: null,
@@ -84,6 +86,7 @@ const CreatePromoModal = ({
     });
 
   const discountType = watch("discountType");
+  const currency = watch("currency");
   const validFrom = watch("validFrom");
   const expirationDate = watch("expirationDate");
   const isActive = watch("isActive");
@@ -205,14 +208,36 @@ const CreatePromoModal = ({
               </div>
             </div>
 
-            {/* Commission */}
-            <div className="space-y-2">
-              <Label>Commission (%)</Label>
-              <Input
-                type="number"
-                placeholder="E.g., 10"
-                {...register("commission", { min: 0, valueAsNumber: true })}
-              />
+            <div className="grid grid-cols-2 gap-4">
+              {/* Currency */}
+              <div className="space-y-2">
+                <Label>Currency</Label>
+                <Select
+                  value={currency}
+                  onValueChange={(v) => setValue("currency", v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select currency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {currencies.map((c) => (
+                      <SelectItem key={c.code} value={c.code}>
+                        {c.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Commission */}
+              <div className="space-y-2">
+                <Label>Commission (%)</Label>
+                <Input
+                  type="number"
+                  placeholder="E.g., 10"
+                  {...register("commission", { min: 0, valueAsNumber: true })}
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">

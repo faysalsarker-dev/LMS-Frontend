@@ -50,4 +50,4 @@ export interface UpdateEnrolmentData {
 }
 
 
-export type PaymentMethod = 'alipay' | 'wechat' | 'stripe' | 'paypal';
+export type PaymentMethod = 'alipay' | 'wechat' | 'stripe' | 'paypal' | 'sslCommerz';

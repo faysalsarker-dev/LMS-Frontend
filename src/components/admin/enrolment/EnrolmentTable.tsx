@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { IEnrolment, PaymentStatus } from '@/interface/enrolment.types';
+import NoDataFound from '@/components/shared/NoDataFound';
 
 interface EnrolmentTableProps {
   enrolments: IEnrolment[];
@@ -46,11 +47,11 @@ const TableSkeleton = () => (
 
 const EmptyState = () => (
   <TableRow>
-    <TableCell colSpan={7} className="h-32 text-center">
-      <div className="flex flex-col items-center gap-2 text-muted-foreground">
-        <CreditCard className="h-8 w-8" />
-        <p>No enrolments found</p>
-      </div>
+    <TableCell colSpan={7}>
+      <NoDataFound 
+        message="No enrolments found" 
+        icon={<CreditCard className="h-8 w-8 text-muted-foreground/50" />} 
+      />
     </TableCell>
   </TableRow>
 );

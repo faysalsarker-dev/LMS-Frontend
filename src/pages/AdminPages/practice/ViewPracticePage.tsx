@@ -36,6 +36,7 @@ import { UpdatePracticeDialog } from '@/components/student/practice/UpdatePracti
 import { PracticeItemUpdateDialog } from '@/components/student/practice/PracticeItemUpdateDialog'
 import { PracticeItemDeleteDialog } from '@/components/student/practice/PracticeItemDeleteDialog'
 import type { PracticeItem } from '@/components/student/practice'
+import NoDataFound from '@/components/shared/NoDataFound'
 
 const ViewPracticePage = () => {
   const { id } = useParams<{ id: string }>()
@@ -247,11 +248,11 @@ const ViewPracticePage = () => {
               })}
 
               {!practice.items?.length && (
-                <div className="col-span-full py-20 text-center">
-                  <Plus className="mx-auto mb-3 text-muted-foreground" />
-                  <p className="text-muted-foreground">
-                    No items yet. Add your first one.
-                  </p>
+                <div className="col-span-full">
+                  <NoDataFound 
+                    message="No items yet. Add your first one." 
+                    icon={<Layers className="w-12 h-12 text-muted-foreground" />}
+                  />
                 </div>
               )}
             </div>

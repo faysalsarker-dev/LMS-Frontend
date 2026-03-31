@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { User, BookOpen, Heart, Settings } from "lucide-react";
+import { User, BookOpen, Heart, Settings, Gift } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
@@ -12,6 +12,8 @@ import { useAppDispatch } from "@/redux/hooks";
 import { CoursesTab, LogoutDialog, PersonalInfoTab, ProfileHeader, ProfilePageSkeleton, ProfileStats, SettingsTab, WishlistTab } from "@/components/student/profile";
 import EditProfileDialog from "@/components/student/profile/EditProfileDialog";
 import { useGetMyEnrolledCoursesQuery, useGetMyWishlistCoursesQuery } from "@/redux/features/course/course.api";
+import { useGetMyPromosQuery } from "@/redux/features/promo/promo.api";
+import UserPromoUsagePage from "@/components/student/profile/UserPromoUsagePage";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -51,6 +53,8 @@ const ProfilePage = () => {
 
   const { data: enrolledCourses,isLoading:isCourseLoading } = useGetMyEnrolledCoursesQuery(undefined);
   const {data:wishlistData,isLoading:isWishlistData}=useGetMyWishlistCoursesQuery(undefined)
+  const { data:promoData } = useGetMyPromosQuery(undefined)
+
 
   const userInfo = useMemo(() => data?.data, [data]);
   const courses = useMemo(() => enrolledCourses?.data || [], [enrolledCourses]);
@@ -123,6 +127,8 @@ const ProfilePage = () => {
         
         />
 
+
+
         {/* Tabs */}
         <motion.div variants={itemVariants}>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -140,6 +146,17 @@ const ProfilePage = () => {
                   </TabsTrigger>
                 );
               })}
+              {
+                promoData?.data && (
+                  <TabsTrigger
+                    value="affiliate"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+                  >
+                    <Gift className="w-4 h-4" />
+                    Affiliate
+                  </TabsTrigger>
+                )
+              }
             </TabsList>
 
             <TabsContent value="profile" className="mt-6">
@@ -157,6 +174,10 @@ const ProfilePage = () => {
             <TabsContent value="settings" className="mt-6">
               <SettingsTab user={userInfo} />
             </TabsContent>
+
+        {promoData?.data && <TabsContent value="affiliate" className="mt-6">
+          <UserPromoUsagePage promo={promoData?.data} />
+        </TabsContent>}
           </Tabs>
         </motion.div>
       </motion.div>

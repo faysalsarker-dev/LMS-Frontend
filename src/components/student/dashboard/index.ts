@@ -4,3 +4,4 @@ export { default as ProgressSection } from './ProgressSection';
 export { default as AssignmentsTable } from './AssignmentsTable';
 export { default as ErrorState } from './ErrorState';
 export { default as EmptyState } from './EmptyState';
+export { default as MockTestCards } from './MockTestCards';

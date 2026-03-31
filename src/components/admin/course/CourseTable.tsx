@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "react-hot-toast";
 import { handleApiError } from "@/utils/errorHandler";
+import NoDataFound from "@/components/shared/NoDataFound";
 
 interface Meta {
   page: number;
@@ -199,9 +200,8 @@ handleApiError(err)
               <TableRow>
                 <TableCell
                   colSpan={8}
-                  className="text-center py-6 text-muted-foreground"
                 >
-                  No courses found.
+                  <NoDataFound message="No courses found." />
                 </TableCell>
               </TableRow>
             )}

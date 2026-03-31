@@ -6,11 +6,13 @@ import {
   FileText,
   Image as ImageIcon,
   Headphones,
+  Mic,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { PenTool } from "lucide-react";
+import NoDataFound from "@/components/shared/NoDataFound";
 
 interface QuestionReviewCardProps {
   question: any;
@@ -351,9 +353,13 @@ const QuestionReviewCard: React.FC<QuestionReviewCardProps> = ({
                   Your browser does not support the audio element.
                 </audio>
               ) : (
-                <p className="text-sm text-muted-foreground italic">
-                  No recording found.
-                </p>
+                <div className="p-2 border border-dashed rounded-lg bg-background">
+                  <NoDataFound 
+                    message="No recording found." 
+                    icon={<Mic className="w-6 h-6 text-muted-foreground" />}
+                    className="min-h-[120px] p-2"
+                  />
+                </div>
               )}
             </div>
             {question.correctSentence && (

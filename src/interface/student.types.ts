@@ -93,9 +93,30 @@ export interface IAssignmentStats {
   submissions: IAssignmentSubmission[];
 }
 
+export interface IMockTestSection {
+  name: string;
+  autoGradedScore: number;
+  adminScore: number;
+  isAutoGraded: boolean;
+}
+
+export type MockTestStatus = 'graded' | 'pending' | 'submitted' | 'under_review';
+
+export interface IMockTestSubmission {
+  status: string;
+  totalScore: number;
+  submittedAt: string;
+  sections: IMockTestSection[];
+}
+
+export interface IMockTestStats {
+  submissions: IMockTestSubmission[];
+}
+
 export interface IUserProgressData {
   overview: IProgressOverview;
   quizStats: IQuizStats;
   assignmentStats: IAssignmentStats;
+  mockTestStats?: IMockTestStats;
   certificateUrl?: string | null;
 }

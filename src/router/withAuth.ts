@@ -46,7 +46,8 @@ if(requiredRole?.length && !requiredRole.includes(user.role)){
 if(course && id){
   const check = user?.courses.includes(id as string);
   if(!check){
-    return null;
+   navigate('/unauthorized')
+
   } 
 }
 

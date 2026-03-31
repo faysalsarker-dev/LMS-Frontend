@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { RecentEnrollment, PaymentStatus } from '@/interface/dashboard.types';
+import { format } from 'date-fns';
 
 interface RecentEnrollmentsTableProps {
   enrollments: RecentEnrollment[] | undefined;
@@ -69,7 +70,6 @@ const formatCurrency = (amount: number, currency: string) => {
 
 export const RecentEnrollmentsTable = ({ enrollments, isLoading }: RecentEnrollmentsTableProps) => {
 
-console.log(enrollments)
 
   return (
     <motion.div
@@ -155,7 +155,7 @@ console.log(enrollments)
                         </TableCell>
                         <TableCell className="text-right">
                           <span className="text-xs text-muted-foreground whitespace-nowrap">
-                            {/* {format(new Date(enrollment?.enrolledAt), 'MMM d, yyyy')} */}
+                            {format(new Date(enrollment?.createdAt), 'MMM d, yyyy')}
                           </span>
                         </TableCell>
                       </motion.tr>

@@ -36,7 +36,7 @@ console.log('StatsCards progress prop:', progress);
     },
     {
       label: 'Average Marks',
-      value: progress ? `${progress.assignmentStats?.avgMarks}%` : '—',
+      value: progress ? `${progress.assignmentStats?.avgMarks.toFixed(2)}%` : '—',
       icon: TrendingUp,
       color: 'text-warning',
       bgColor: 'bg-warning/10',

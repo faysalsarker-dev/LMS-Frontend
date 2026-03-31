@@ -9,10 +9,11 @@ import FaqSection from "@/components/public/home/FaqSection";
 import NewsletterCTA from "@/components/public/home/NewsletterCTA";
 
 const Home = () => {
+  
   return (
     <div className="min-h-screen overflow-hidden">
       {/* Hero: Introduction & Primary CTA */}
-      <HeroSection />
+      <HeroSection  />
 
       {/* Trust Bar: Build immediate brand credibility */}
       <TrustBar />
@@ -36,7 +37,7 @@ const Home = () => {
       <FaqSection />
 
       {/* Final CTA: Conversion point */}
-      <NewsletterCTA />
+      <NewsletterCTA  />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { ChevronDown, ChevronRight, CheckCircle2, Circle, PlayCircle, Lock, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import NoDataFound from "@/components/shared/NoDataFound";
 
 interface Lesson {
   _id: string;
@@ -132,11 +133,11 @@ export function CourseSidebar({
             </div>
           ) : !curriculum || curriculum.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
-              <p>No curriculum data available</p>
+              <NoDataFound message="No curriculum data available" />
             </div>
           ) : filteredMilestones.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
-              <p>No lessons found</p>
+              <NoDataFound message="No lessons found" />
             </div>
           ) : (
             filteredMilestones.map((milestone) => {

@@ -9,10 +9,10 @@ import {
 } from "lucide-react";
 import withAuth from "../withAuth";
 import { UserRoles } from "@/interface/user.type";
-import PracticeDetail from "@/pages/StudentsPages/Practice/PracticeDetail";
 
-const Dashboard = lazy(
-  () => import("@/pages/StudentsPages/MyCourses/Dashboard"),
+
+const MyCourses = lazy(
+  () => import("@/pages/StudentsPages/MyCourses/MyCourses"),
 );
 const StudentDashboard = lazy(
   () => import("@/pages/StudentsPages/dashboard/StudentDashboard"),
@@ -24,17 +24,16 @@ const PracticeTasksPage = lazy(
   () => import("@/pages/StudentsPages/Practice/PracticeTasksPage"),
 );
 const Profile = lazy(() => import("@/pages/StudentsPages/profile/Profile"));
-const MockTestDetailPage = lazy(
-  () => import("@/pages/StudentsPages/Mock-test/MockTestDetailPage"),
-);
-const MockTestExamPage = lazy(
-  () => import("@/pages/StudentsPages/Mock-test/MockTestExamPage"),
-);
+
 const CoursePlayer = lazy(() =>
   import("@/pages/Student/course/CoursePlayer").then((m) => ({
     default: m.CoursePlayer,
   })),
 );
+
+const PracticeDetail = lazy(() => import("@/pages/StudentsPages/Practice/PracticeDetail"));
+
+
 
 export const studentRoutes = [
   {
@@ -44,7 +43,7 @@ export const studentRoutes = [
     icon: LayoutDashboard,
   },
   {
-    Component: withAuth(Dashboard),
+    Component: withAuth(MyCourses),
     path: "/my-dashboard/my-courses",
     name: "My Courses",
     icon: BookOpen,

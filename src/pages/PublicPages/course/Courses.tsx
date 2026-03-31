@@ -23,6 +23,7 @@ import {
 
 import CourseCard, { CourseCardSkeleton } from "@/components/admin/course/CourseCard";
 import { useGetAllCoursesQuery } from "@/redux/features/course/course.api";
+import NoDataFound from "@/components/shared/NoDataFound";
 import { useGetAllCategorysQuery } from "@/redux/features/category/category.api";
 import { useSearchParams } from "react-router";
 import type { Variants } from "framer-motion";
@@ -282,21 +283,24 @@ const Courses = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center py-20 px-4"
+            className="flex flex-col items-center justify-center py-10 px-4 w-full"
           >
-            <div className="w-24 h-24 rounded-full bg-muted/50 flex items-center justify-center mb-6">
-              <BookOpen className="w-12 h-12 text-muted-foreground" />
-            </div>
-            <h3 className="text-2xl font-semibold text-foreground mb-2">No courses found</h3>
-            <p className="text-muted-foreground text-center max-w-md mb-6">
-              We couldn't find any courses matching your criteria. Try adjusting your filters or search terms.
-            </p>
-            <Button
-              onClick={handleClearFilters}
-              className="rounded-xl px-6 h-11"
+            <NoDataFound 
+              message="No courses found" 
+              icon={<BookOpen className="w-16 h-16 text-muted-foreground" />} 
             >
-              Clear All Filters
-            </Button>
+              <div className="flex flex-col items-center gap-6">
+                <p className="text-muted-foreground text-center max-w-md">
+                  We couldn't find any courses matching your criteria. Try adjusting your filters or search terms.
+                </p>
+                <Button
+                  onClick={handleClearFilters}
+                  className="rounded-xl px-6 h-11"
+                >
+                  Clear All Filters
+                </Button>
+              </div>
+            </NoDataFound>
           </motion.div>
         )}
 

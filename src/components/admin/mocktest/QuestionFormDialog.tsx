@@ -65,7 +65,7 @@ const blankQuestion = (type: QuestionType): IMockQuestion => ({
     images: [],
     options: [blankOption(), blankOption()],
     correctOptionId: "",
-    wordPool: [""],
+    wordPool: [blankOption()],
     correctGaps: [],
     segments: [blankSegment(), blankSegment()],
     wordTokens: [""],
@@ -134,10 +134,11 @@ export const QuestionFormDialog = ({
     // ─── Word pool helpers ────────────────────────────────────────
     const setWord = (idx: number, val: string) => {
         const pool = [...(q.wordPool ?? [])];
-        pool[idx] = val;
+        if (!pool[idx]) pool[idx] = blankOption();
+        pool[idx] = { ...pool[idx], text: val };
         patch({ wordPool: pool });
     };
-    const addWord = () => patch({ wordPool: [...(q.wordPool ?? []), ""] });
+    const addWord = () => patch({ wordPool: [...(q.wordPool ?? []), blankOption()] });
     const removeWord = (idx: number) =>
         patch({ wordPool: (q.wordPool ?? []).filter((_, i) => i !== idx) });
 
@@ -321,7 +322,7 @@ export const QuestionFormDialog = ({
                             </FieldRow>
                             <WordListEditor
                                 label="Word Pool"
-                                words={q.wordPool ?? []}
+                                words={(q.wordPool ?? []).map(opt => opt.text ?? "")}
                                 onSet={setWord}
                                 onAdd={addWord}
                                 onRemove={removeWord}

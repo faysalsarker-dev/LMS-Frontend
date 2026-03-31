@@ -4,6 +4,7 @@ import { Marquee } from "../magicui/marquee";
 import TestimonialCard from "./TestimonialCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "react-i18next";
+import NoDataFound from '@/components/shared/NoDataFound';
 
 const Testimonial = () => {
   const { t } = useTranslation();
@@ -76,9 +77,9 @@ const Testimonial = () => {
 
           {/* No Testimonials */}
           {!isLoading && !isError && testimonials.length === 0 && (
-            <p className="text-center text-muted-foreground py-10">
-              No testimonials found yet.
-            </p>
+            <div className="py-10">
+              <NoDataFound message="No testimonials found yet." />
+            </div>
           )}
 
           {/* Gradient overlay */}

@@ -24,10 +24,10 @@ import type { PaymentMethod } from '@/interface/enrolment.types';
 
 
  const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; available: boolean }[] = [
-  { id: 'alipay', label: 'Alipay', icon: 'alipay', available: true },
-  { id: 'wechat', label: 'WeChat Pay', icon: 'wechat', available: true },
-  { id: 'stripe', label: 'Credit Card', icon: 'credit-card', available: false },
-  { id: 'paypal', label: 'PayPal', icon: 'paypal', available: false },
+  { id: 'sslCommerz', label: 'SSL Commerz', icon: 'sslCommerz', available: true },
+  { id: 'alipay', label: 'Alipay', icon: 'alipay', available: false },
+  { id: 'wechat', label: 'WeChat Pay', icon: 'wechat', available: false },
+ 
 ];
 
 interface PaymentMethodSelectorProps {

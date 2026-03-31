@@ -43,6 +43,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
+import NoDataFound from '@/components/shared/NoDataFound';
 
 import { useGetLessonByIdQuery, useUpdateLessonMutation } from '@/redux/features/lesson/lesson.api';
 import { handleApiError } from '@/utils/errorHandler';
@@ -865,11 +866,11 @@ handleApiError(err);
                               ))}
 
                               {questions.length === 0 && (
-                                <div className="text-center py-12 border-2 border-dashed rounded-lg">
-                                  <FileQuestion className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-                                  <p className="text-sm text-muted-foreground">
-                                    No questions added yet. Click "Add Question" to start.
-                                  </p>
+                                <div className="border-2 border-dashed rounded-lg bg-background">
+                                  <NoDataFound 
+                                    message="No questions added yet. Click 'Add Question' to start." 
+                                    icon={<FileQuestion className="h-12 w-12 text-muted-foreground" />}
+                                  />
                                 </div>
                               )}
                             </div>

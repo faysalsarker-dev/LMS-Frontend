@@ -17,6 +17,7 @@ import type { IMockQuestion } from "@/interface/mockTest.types";
 import { Badge } from "@/components/ui/badge";
 import { MockQuestionRenderer  } from "./MockQuestionRenderer";
 import { ExamTimer  } from "./MockTestTimer";
+import NoDataFound from "@/components/shared/NoDataFound";
 
 export const MockTestSectionExecutor = () => {
     const { sectionId } = useParams<{ sectionId: string }>();
@@ -229,7 +230,9 @@ export const MockTestSectionExecutor = () => {
                         onChange={(val) => setAnswer(currentQuestion._id || '', val)}
                     />
                 ) : (
-                    <div className="text-center py-20">No questions found in this section.</div>
+                    <div className="text-center">
+                        <NoDataFound message="No questions found in this section." />
+                    </div>
                 )}
             </div>
 

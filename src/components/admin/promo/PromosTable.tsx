@@ -39,6 +39,7 @@ import { useDeletePromoMutation } from "@/redux/features/promo/promo.api";
 import toast from "react-hot-toast";
 import { handleApiError } from "@/utils/errorHandler";
 import { getStatusBadge, renderUsage } from "./Progress";
+import NoDataFound from '@/components/shared/NoDataFound';
 
 
 
@@ -119,6 +120,14 @@ const PromosTable = ({
               </TableRow>
             ))}
 
+          {!isLoading && promos?.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={9}>
+                <NoDataFound message="No promos found." />
+              </TableCell>
+            </TableRow>
+          )}
+
           {!isLoading &&
             promos?.map((promo) => (
               <TableRow
@@ -134,11 +143,11 @@ const PromosTable = ({
                 </TableCell>
 
                 <TableCell className="text-muted-foreground">
-                  {promo.commission}%
+                  {promo.commission.toFixed(2)}%
                 </TableCell>
 
                 <TableCell className="font-semibold text-green-600">
-                  ${promo.totalEarn.toFixed(2)}
+                  {promo.currency} {promo.totalEarn.toFixed(2)}
                 </TableCell>
 
                 <TableCell>

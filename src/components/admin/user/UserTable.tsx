@@ -27,6 +27,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { IUser } from '@/interface/user.types';
+import NoDataFound from '@/components/shared/NoDataFound';
 
 interface UserTableProps {
   data: IUser[];
@@ -70,7 +71,7 @@ const getStatusVariant = (isActive: boolean) =>
 const getVerifiedVariant = (isVerified: boolean) => 
   isVerified ? 'default' : 'secondary';
 
-const formatDate = (date: Date | null | undefined) => 
+const formatDate = (date: Date | string | null | undefined) => 
   date ? format(new Date(date), "dd MMM yyyy") : "—";
 
 
@@ -237,8 +238,7 @@ export function UserTable({
                 </div>
               </div>
             ) : data?.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground mb-4">No users found matching your criteria.</p>
+              <NoDataFound message="No users found matching your criteria.">
                 <Button variant="outline" onClick={() => onFiltersChange({
                   ...filters,
                   search: "",
@@ -248,7 +248,7 @@ export function UserTable({
                 })}>
                   Clear Filters
                 </Button>
-              </div>
+              </NoDataFound>
             ) : (
               <div className="rounded-md border">
                 <Table>

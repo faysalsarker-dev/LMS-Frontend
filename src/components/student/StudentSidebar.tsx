@@ -10,15 +10,12 @@ import {
   SidebarMenu, 
   SidebarMenuButton, 
   SidebarMenuItem,
-  SidebarFooter,
   useSidebar
 } from "@/components/ui/sidebar";
-import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 
 export function StudentSidebar() {
   const location = useLocation();
   const { open } = useSidebar();
-  const { data: userInfo } = useUserInfoQuery({});
   
 
   return (
@@ -58,19 +55,7 @@ export function StudentSidebar() {
         </ScrollArea>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t border-sidebar-border">
-          <div className={cn("flex items-center gap-3 transition-all", !open && "justify-center")}>
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-primary font-bold">{userInfo?.data?.name?.charAt(0)}</span>
-            </div>
-            {open && (
-              <div className="flex flex-col">
-                <span className="text-sm font-medium truncate max-w-[120px]">{userInfo?.data?.name}</span>
-                <span className="text-xs text-muted-foreground">Student</span>
-              </div>
-            )}
-          </div>
-      </SidebarFooter>
+
     </Sidebar>
   );
 }

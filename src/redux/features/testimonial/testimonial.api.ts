@@ -74,7 +74,7 @@ export const testimonialApi = baseApi.injectEndpoints({
       providesTags: (result) =>
         result
           ? [
-              ...result.data.map((t:ITestimonial) => ({ type: "TESTIMONIAL", id: t._id })),
+              ...result?.data?.data?.map((t:ITestimonial) => ({ type: "TESTIMONIAL", id: t._id })),
               { type: "TESTIMONIAL", id: "LIST" },
             ]
           : [{ type: "TESTIMONIAL", id: "LIST" }],

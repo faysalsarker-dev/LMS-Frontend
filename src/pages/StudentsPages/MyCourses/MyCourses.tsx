@@ -3,7 +3,8 @@ import type { ICourse } from '@/interface/course.types';
 import { BookOpen } from 'lucide-react';
 
 import { motion } from 'framer-motion';
-import EnrolledCourseCard, { EnrolledCourseCardLg } from '@/components/shared/EnrolledCourseCard';
+import EnrolledCourseCard from '@/components/shared/EnrolledCourseCard';
+import NoDataFound from '@/components/shared/NoDataFound';
 import { useGetMyEnrolledCoursesQuery } from '@/redux/features/course/course.api';
 import { useTranslation } from 'react-i18next';
  const containerVariants = {
@@ -33,7 +34,7 @@ import { useTranslation } from 'react-i18next';
 
 
 
-const Dashboard = () => {
+const MyCourses = () => {
   const { data } = useUserInfoQuery({});
   const { data: enrolledCoursesData } = useGetMyEnrolledCoursesQuery({});
   const { t } = useTranslation()
@@ -97,7 +98,7 @@ const Dashboard = () => {
                         <>
 
                           <motion.div
-                            className=" space-y-4 md:hidden"
+                            className=" space-y-4 "
                             variants={containerVariants}
                             initial="hidden"
                             animate="visible"
@@ -116,36 +117,19 @@ const Dashboard = () => {
                           </motion.div>
 
 
-                          <motion.div
-                            className=" space-y-6 md:block hidden "
-                            variants={containerVariants}
-                            initial="hidden"
-                            animate="visible"
-                          >
-                            {enrolledCoursesData?.data?.map((course: ICourse, index: number) => (
-                              <motion.div
-                                key={course._id}
-                                variants={itemVariants}
-                                custom={index}
-                                whileHover={{ scale: 1.02 }}
-                                transition={{ type: "spring" as const, stiffness: 300, damping: 20 }}
-                              >
-                                <EnrolledCourseCardLg course={course} />
-                              </motion.div>
-                            ))}
-                          </motion.div>
+                      
                         </>
                       ) : (
                         <motion.div
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.3 }}
-                          className="text-center py-12"
+                          className="py-12"
                         >
-                          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
-                            <BookOpen className="h-8 w-8 text-muted-foreground" />
-                          </div>
-                          <p className="text-muted-foreground">No courses enrolled yet. Start your learning journey today!</p>
+                          <NoDataFound 
+                            message="No courses enrolled yet. Start your learning journey today!" 
+                            icon={<BookOpen className="h-12 w-12 text-muted-foreground" />} 
+                          />
                         </motion.div>
                       )}
        
@@ -154,4 +138,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default MyCourses;

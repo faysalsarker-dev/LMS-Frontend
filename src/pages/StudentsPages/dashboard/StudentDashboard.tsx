@@ -6,6 +6,7 @@ import {
   CourseSelector,
   ProgressSection,
   AssignmentsTable,
+  MockTestCards,
   ErrorState,
   EmptyState,
 } from '@/components/student/dashboard';
@@ -116,6 +117,9 @@ const StudentDashboard = () => {
 
         {/* Stats Cards */}
         <StatsCards progress={progressData?.data} isLoading={isLoadingProgressState} />
+
+        {/* Mock Test Cards */}
+        <MockTestCards progress={progressData?.data} isLoading={isLoadingProgressState} />
 
         {/* Progress Section */}
         <ProgressSection progress={progressData?.data} isLoading={isLoadingProgressState} />

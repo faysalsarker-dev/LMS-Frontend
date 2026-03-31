@@ -26,6 +26,7 @@ import type { PaymentMethod } from '@/interface/enrolment.types';
 import { useGetCourseBySlugQuery } from '@/redux/features/course/course.api';
 import { useCreateEnrolmentMutation } from '@/redux/features/enrollment/enrollment.api';
 import { useRedeemPromoMutation } from '@/redux/features/promo/promo.api';
+import { useUserInfoQuery } from '@/redux/features/auth/auth.api';
 
 // Helper function for pricing calculation
 function calculatePricing(
@@ -60,7 +61,7 @@ export default function CheckoutPage() {
     useGetCourseBySlugQuery(slug);
   const [redeemPromo, { isLoading: promoLoading }] = useRedeemPromoMutation();
   const [processCheckout, { isLoading: checkoutLoading }] = useCreateEnrolmentMutation();
-
+const {data: user,isLoading: userLoading} = useUserInfoQuery(undefined);
   // Local state
   const [step, setStep] = useState<CheckoutStep>('review');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
@@ -68,8 +69,12 @@ export default function CheckoutPage() {
   const [promoDiscount, setPromoDiscount] = useState(0);
 
   const course = courseData?.data;
-  const isEnrolled = false; // This should come from actual enrollment check
+const isEnrolled = !userLoading && !!user?.data?.courses?.includes(course?._id);
   const isLoading = courseLoading;
+
+
+
+
 
   // Calculate pricing
   const pricing = useMemo(() => {
@@ -85,11 +90,14 @@ export default function CheckoutPage() {
     }
 
     try {
+
+
       const result = await redeemPromo({
         code,
         orderAmount: course.isDiscounted && course.discountPrice 
           ? course.discountPrice 
           : course.price,
+          currency: course.currency,
       }).unwrap();
 
       if (result.success && result.data?.promo) {

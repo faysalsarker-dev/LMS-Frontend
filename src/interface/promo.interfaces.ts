@@ -11,6 +11,7 @@ export type IPromo = {
   code: string;
   discountValue: number;
   discountType: "percentage" | "fixed_amount";
+  currency: string;
   owner: IUser;
   commission: number;
   totalEarn: number;

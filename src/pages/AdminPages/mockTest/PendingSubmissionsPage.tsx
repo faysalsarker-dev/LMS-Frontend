@@ -43,6 +43,7 @@ import {
 } from "@/components/ui/table";
 import { useGetPendingSubmissionsQuery } from "@/redux/features/mockTestSubmission/mockTestSubmission.api";
 import { useGetCourseForSelectQuery } from "@/redux/features/course/course.api";
+import NoDataFound from "@/components/shared/NoDataFound";
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -55,21 +56,6 @@ const formatDate = (iso: string) =>
     minute: "2-digit",
   });
 
-const SectionBadge = ({ name }: { name: string }) => {
-  const colors: Record<string, string> = {
-    listening: "bg-blue-100 text-blue-700 border-blue-200",
-    reading: "bg-green-100 text-green-700 border-green-200",
-    writing: "bg-amber-100 text-amber-700 border-amber-200",
-    speaking: "bg-purple-100 text-purple-700 border-purple-200",
-  };
-  return (
-    <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border capitalize ${colors[name] ?? "bg-muted text-muted-foreground"}`}
-    >
-      {name}
-    </span>
-  );
-};
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 
@@ -222,11 +208,11 @@ const PendingSubmissionsPage = () => {
                 </TableRow>
               ) : submissions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-24 text-center">
-                    <ClipboardCheck className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
-                    <p className="text-muted-foreground font-semibold">
-                      No pending submissions found.
-                    </p>
+                  <TableCell colSpan={7}>
+                    <NoDataFound 
+                      message="No pending submissions found." 
+                      icon={<ClipboardCheck className="h-12 w-12 text-muted-foreground/30" />}
+                    />
                   </TableCell>
                 </TableRow>
               ) : (

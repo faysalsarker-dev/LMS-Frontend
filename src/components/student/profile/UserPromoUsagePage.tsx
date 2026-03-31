@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 
 import { Copy, Percent, Calendar, TrendingUp, Users, CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { useGetMyPromosQuery } from "@/redux/features/promo/promo.api";
 import type { IPromo } from "@/interface/promo.interfaces";
 import { getStatusBadge, renderUsage } from "@/components/admin/promo/Progress";
 
@@ -28,11 +27,9 @@ const cardHover = {
 
 
 
-export default function UserPromoUsagePage() {
+export default function UserPromoUsagePage({promo}: {promo: IPromo}) {
 
-  const { data } = useGetMyPromosQuery(undefined)
-  const promo = data?.data as IPromo
-console.log(data,'promo')
+
 
   const copyToClipboard = async () => {
     try {
@@ -161,7 +158,7 @@ console.log(data,'promo')
                           <TrendingUp className="h-5 w-5 text-green-500" />
                           <p className="text-sm font-medium text-muted-foreground">Total Earnings</p>
                         </div>
-                        <p className="text-3xl font-bold text-foreground">${promo?.totalEarn?.toFixed(2)}</p>
+                        <p className="text-3xl font-bold text-foreground">{promo?.currency} {promo?.totalEarn?.toFixed(2)}</p>
                       </div>
                       <Button variant="outline" size="sm" className="hidden sm:flex">
                         View Details

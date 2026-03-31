@@ -24,6 +24,7 @@ import { FormSection } from "@/components/form/FormSection";
 import { FieldArray } from "@/components/form/FieldArray";
 import { BookOpen, Clock, DollarSign, FileText, Save, Tag, Award, CheckSquare, Users, Copy } from "lucide-react";
 import { toast } from "react-hot-toast";
+import NoDataFound from "@/components/shared/NoDataFound";
 import { useGetCourseBySlugQuery, useUpdateCourseMutation } from "@/redux/features/course/course.api";
 import { currencies } from "@/utils/currency";
 import { handleApiError } from "@/utils/errorHandler";
@@ -364,7 +365,12 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
                   ))}
                 </ul>
               ) : (
-                <p className="text-muted-foreground">No students enrolled yet.</p>
+                <div className="border border-dashed rounded-lg bg-background p-2">
+                  <NoDataFound 
+                    message="No students enrolled yet." 
+                    className="min-h-[100px] p-2"
+                  />
+                </div>
               )}
             </FormSection>
 

@@ -35,6 +35,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import NoDataFound from "@/components/shared/NoDataFound";
 
 const SECTION_ICONS: Record<string, React.ReactNode> = {
   listening: <Headphones className="h-4 w-4" />,
@@ -220,15 +221,14 @@ const MockTestSectionsPage = () => {
       )}
 
       {sections.length === 0 && !isLoading && (
-        <div className="py-24 text-center">
-          <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Search className="h-8 w-8 text-slate-300" />
-          </div>
-          <h2 className="text-xl font-bold">No sections found</h2>
+        <NoDataFound 
+          message="No sections found" 
+          icon={<Search className="h-12 w-12 text-slate-300" />}
+        >
           <p className="text-muted-foreground max-w-xs mx-auto mt-2">
             Try adjusting your search or add a manual section if one is missing.
           </p>
-        </div>
+        </NoDataFound>
       )}
 
       <CreateSectionDialog open={createOpen} onOpenChange={setCreateOpen} />

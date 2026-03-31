@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { LessonActions } from './LessonActions';
 import type {  LessonType } from '@/interface/lesson.type';
 import type { ILesson } from '@/interface';
+import NoDataFound from '@/components/shared/NoDataFound';
 
 interface LessonTableProps {
   lessons: ILesson[];
@@ -98,17 +99,15 @@ function EmptyState() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="flex flex-col items-center justify-center py-16"
         >
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted mb-4">
-            <BookOpen className="h-10 w-10 text-muted-foreground" />
-          </div>
-          <h3 className="text-lg font-semibold text-foreground mb-2">
-            No lessons found
-          </h3>
-          <p className="text-sm text-muted-foreground text-center max-w-sm">
-            No lessons match your current filters. Try adjusting your search or filters.
-          </p>
+          <NoDataFound 
+            message="No lessons found"
+            icon={<BookOpen className="h-12 w-12 text-muted-foreground" />}
+          >
+            <p className="text-sm text-muted-foreground text-center max-w-sm mt-2">
+              No lessons match your current filters. Try adjusting your search or filters.
+            </p>
+          </NoDataFound>
         </motion.div>
       </TableCell>
     </TableRow>

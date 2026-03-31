@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { IAssignmentSubmission, SubmissionStatus, SubmissionType } from '@/interface/assignment.types';
+import NoDataFound from '@/components/shared/NoDataFound';
 
 interface AssignmentTableProps {
   submissions: IAssignmentSubmission[];
@@ -83,15 +84,17 @@ export const AssignmentTable = ({ submissions, isLoading, onReview }: Assignment
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="flex flex-col items-center justify-center rounded-2xl border bg-card py-16 shadow-sm"
+        className="rounded-2xl border bg-card shadow-sm overflow-hidden"
       >
-        <div className="rounded-full bg-muted p-4">
-          <Inbox className="h-8 w-8 text-muted-foreground" />
-        </div>
-        <h3 className="mt-4 text-lg font-semibold">No pending assignments found</h3>
-        <p className="mt-1 text-sm text-muted-foreground">
-          All submissions have been reviewed or try adjusting your filters.
-        </p>
+        <NoDataFound 
+          message="No pending assignments found." 
+          icon={<Inbox className="w-12 h-12 text-muted-foreground" />}
+          className="py-16"
+        >
+          <p className="mt-1 text-sm text-muted-foreground">
+            All submissions have been reviewed or try adjusting your filters.
+          </p>
+        </NoDataFound>
       </motion.div>
     );
   }

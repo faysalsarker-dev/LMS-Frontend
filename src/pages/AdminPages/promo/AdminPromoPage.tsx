@@ -27,7 +27,7 @@ import {
 import CreatePromoModal from "@/components/admin/promo/CreatePromoForm";
 import { useGetAllPromosQuery } from "@/redux/features/promo/promo.api";
 import PromosTable from "@/components/admin/promo/PromosTable";
-import StateAndChart from "@/components/admin/promo/StateAndChart";
+
 
 // Animation variants
 const container = {
@@ -190,10 +190,7 @@ export default function AdminPromoPage() {
           </Button>
         </motion.div>
 
-        {/* Analytics Cards */}
-        <StateAndChart />
-
-        {/* Promo Codes Table */}
+       
         <motion.div variants={item}>
           <Card className="border-none shadow-xl bg-card backdrop-blur-sm">
             <CardHeader className="border-b border-border/50 bg-muted/20">

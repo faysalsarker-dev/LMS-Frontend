@@ -2,32 +2,51 @@ import { useState, useEffect } from "react";
 import { Timer, AlertCircle } from "lucide-react";
 
 interface ExamTimerProps {
-  deadline: number;        // epoch ms — stored in localStorage for refresh survival
-  onExpire: () => void;
+  deadline?: number; // epoch ms
+  onExpire?: () => void;
+  durationMinutes?: number;
+  onTimeUp?: () => void;
 }
 
-export const ExamTimer = ({ deadline, onExpire }: ExamTimerProps) => {
-  const getRemainingSeconds = () =>
-    Math.max(0, Math.floor((deadline - Date.now()) / 1000));
+export const ExamTimer = ({
+  deadline,
+  onExpire,
+  durationMinutes,
+  onTimeUp,
+}: ExamTimerProps) => {
+  const handler = onExpire || onTimeUp || (() => {});
+
+  const getRemainingSeconds = () => {
+    if (deadline) {
+      return Math.max(0, Math.floor((deadline - Date.now()) / 1000));
+    }
+    if (durationMinutes) {
+      return durationMinutes * 60;
+    }
+    return 0;
+  };
 
   const [timeLeft, setTimeLeft] = useState(getRemainingSeconds);
 
   useEffect(() => {
     if (timeLeft <= 0) {
-      onExpire();
+      handler();
       return;
     }
     const interval = setInterval(() => {
-      const remaining = getRemainingSeconds();
-      setTimeLeft(remaining);
-      if (remaining <= 0) {
-        clearInterval(interval);
-        onExpire();
-      }
+      setTimeLeft((prev) => {
+        const next = deadline ? getRemainingSeconds() : prev - 1;
+        if (next <= 0) {
+          clearInterval(interval);
+          handler();
+          return 0;
+        }
+        return next;
+      });
     }, 1000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deadline]);
+  }, [deadline, durationMinutes]);
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60).toString().padStart(2, "0");

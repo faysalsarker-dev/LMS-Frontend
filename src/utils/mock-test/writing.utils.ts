@@ -107,6 +107,7 @@ export const constructWritingPayload = (
         score: earnedMarks,
         isAutoGraded,
         studentAnswers,
+        name: section?.name || 'Writing',
       },
     ],
   };

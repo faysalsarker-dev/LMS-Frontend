@@ -3,11 +3,12 @@
 import type { Control, UseFormRegister } from 'react-hook-form';
 import { Plus, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
+import NoDataFound from '@/components/shared/NoDataFound';
 
 import { QuestionCard } from './quiz/QuestionCard';
 import type { ILessonFormData, IQuestion, QuestionType } from '@/interface/lesson.type';
+import { Label } from '@/components/ui/label';
 
 interface QuizModuleProps {
   control: Control<ILessonFormData>;
@@ -148,15 +149,12 @@ export function QuizModule({ questions, onQuestionsChange }: QuizModuleProps) {
       </div>
 
       {questions.length === 0 ? (
-        <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
-              <CheckCircle2 className="w-6 h-6 text-muted-foreground" />
-            </div>
-            <p className="text-muted-foreground text-center">
-              No questions yet. Click "Add Question" to create your first quiz question.
-            </p>
-          </CardContent>
+        <Card className="border-dashed bg-background">
+          <NoDataFound 
+            message="No questions yet. Click 'Add Question' to create your first quiz question." 
+            icon={<CheckCircle2 className="w-8 h-8 text-muted-foreground" />}
+            className="min-h-[200px]"
+          />
         </Card>
       ) : (
         <div className="space-y-4">

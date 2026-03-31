@@ -21,6 +21,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import type { IMockTest } from "@/interface/mockTest.types";
+import NoDataFound from "@/components/shared/NoDataFound";
 
 const SECTION_COLORS: Record<string, string> = {
     listening: "bg-blue-100 text-blue-700",
@@ -58,13 +59,16 @@ export const MockTestTable = ({
 
     if (!data.length) {
         return (
-            <div className="flex flex-col items-center justify-center py-24 text-muted-foreground gap-4">
-                <div className="p-6 rounded-full bg-muted">
-                    <BookOpen className="w-10 h-10 opacity-40" />
-                </div>
-                <p className="text-lg font-medium">No mock tests found</p>
-                <p className="text-sm">Create your first mock test to get started.</p>
-            </div>
+            <NoDataFound 
+                message="No mock tests found" 
+                icon={
+                    <div className="p-6 rounded-full bg-muted shadow-sm mb-2">
+                        <BookOpen className="w-10 h-10 opacity-40" />
+                    </div>
+                }
+            >
+                <p className="text-sm text-muted-foreground">Create your first mock test to get started.</p>
+            </NoDataFound>
         );
     }
 

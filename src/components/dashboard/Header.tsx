@@ -4,7 +4,6 @@ import {
   Sun, 
   Moon, 
   Monitor,
-  Settings,
   User,
   ChevronRight,
 } from 'lucide-react';
@@ -24,7 +23,6 @@ import { useUserInfoQuery } from '@/redux/features/auth/auth.api';
 import { LogoutDialog } from '../shared/LogoutDialog';
 import { useState } from 'react';
 import { useLocation, Link } from 'react-router';
-import { Input } from '@/components/ui/input';
 
 
 export function Header({isStudent}: {isStudent?: boolean}) {
@@ -65,21 +63,7 @@ export function Header({isStudent}: {isStudent?: boolean}) {
           </div>
         </div>
 
-        {/* Center Section: Enhanced Search */}
-        <div className="hidden lg:flex flex-1 max-w-md relative group">
-          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-          </div>
-          <Input 
-            placeholder="Search courses, tests, and more..." 
-            className="pl-10 h-10 w-full bg-muted/50 border-transparent focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all rounded-xl"
-          />
-          <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-             <kbd className="hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-              <span className="text-xs">⌘</span>K
-            </kbd>
-          </div>
-        </div>
+       
 
         {/* Right Section: Actions & User */}
         <div className="flex items-center gap-1 md:gap-3">
@@ -142,10 +126,6 @@ export function Header({isStudent}: {isStudent?: boolean}) {
                     <User className="h-4 w-4 text-primary" />
                     <span>My Profile</span>
                   </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors">
-                  <Settings className="h-4 w-4 text-primary" />
-                  <span>Account Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="my-2 bg-border/50" />
                 <DropdownMenuItem 

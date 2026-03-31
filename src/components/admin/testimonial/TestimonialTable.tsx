@@ -27,6 +27,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import _Rating from "react-rating";
+import NoDataFound from '@/components/shared/NoDataFound';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ReactRating = _Rating as unknown as React.FC<any>;
@@ -191,13 +192,9 @@ export default function TestimonialTable({
               <motion.tr
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="h-24"
               >
-                <TableCell
-                  colSpan={5}
-                  className="text-center text-muted-foreground"
-                >
-                  No testimonials found.
+                <TableCell colSpan={5}>
+                  <NoDataFound message="No testimonials found." />
                 </TableCell>
               </motion.tr>
             )}

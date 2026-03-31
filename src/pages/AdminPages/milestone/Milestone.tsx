@@ -56,6 +56,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { IMilestone } from "@/interface/milestone.types";
 import { handleApiError } from "@/utils/errorHandler";
 import type { ICourse } from "@/interface/course.types";
+import NoDataFound from '@/components/shared/NoDataFound';
 
 export default function MilestoneDashboardPage() {
   // Pagination & filters
@@ -316,11 +317,8 @@ handleApiError(error)
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell
-                          colSpan={5}
-                          className="text-center py-6 text-gray-500 dark:text-gray-400"
-                        >
-                          No milestones found
+                        <TableCell colSpan={5}>
+                          <NoDataFound message="No milestones found." />
                         </TableCell>
                       </TableRow>
                     )}

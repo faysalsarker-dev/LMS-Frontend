@@ -41,7 +41,7 @@ export interface RecentEnrollment {
   amount: number;
   currency: string;
   transactionId: string;
-  enrolledAt: string;
+  createdAt: string;
 }
 
 // Popular Course

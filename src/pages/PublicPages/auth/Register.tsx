@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
@@ -10,7 +10,7 @@ import { User, Mail, Lock, Eye, EyeOff, Phone, BookOpen, Sparkles, Headphones, G
 import AnimatedLines from "@/components/public/auth/AnimatedLines";
 import FloatingLetter from "@/components/public/auth/FloatingLetter";
 import FloatingIcon from "@/components/public/auth/FloatingIcon";
-import { useRegisterMutation } from "@/redux/features/auth/auth.api";
+import { useRegisterMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import toast from "react-hot-toast";
 import { handleApiError } from "@/utils/errorHandler";
 import { useTranslation } from "react-i18next";
@@ -37,6 +37,14 @@ const Register = () => {
     watch,
     formState: { isSubmitting },
   } = useForm<FormValues>();
+const {data,isLoading} = useUserInfoQuery(undefined);
+
+
+useEffect(() => {
+  if(data?.success && !isLoading){
+    navigate("/my-dashboard");
+  }
+}, [data]);
 
   const passwordValue = watch("password", "");
 

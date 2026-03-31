@@ -30,6 +30,7 @@ import {
 } from "@/redux/features/category/category.api";
 import type { ICategory } from "@/interface/category.types";
 import { handleApiError } from "@/utils/errorHandler";
+import NoDataFound from '@/components/shared/NoDataFound';
 
  const CategoryPage: React.FC = () => {
   const { data, isLoading, refetch } = useGetAllCategorysQuery({});
@@ -194,11 +195,8 @@ import { handleApiError } from "@/utils/errorHandler";
                 ))
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={5}
-                    className="text-center py-8 text-muted-foreground"
-                  >
-                    No categories found.
+                  <TableCell colSpan={5}>
+                    <NoDataFound message="No categories found." />
                   </TableCell>
                 </TableRow>
               )}
