@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
 import type { IMockQuestion, QuestionAnswer } from "@/interface/mockTest.types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { AudioPlayer } from "./AudioPlayer";
 
 interface Props {
   question: IMockQuestion;
@@ -10,25 +10,16 @@ interface Props {
 }
 
 export const AudioMCQQuestion = ({ question, answer, onChange }: Props) => {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    if (question.audioUrl) {
-      audioRef.current = new Audio(question.audioUrl);
-      audioRef.current.play().catch(() => {});
-    }
-    return () => { audioRef.current?.pause(); };
-  }, [question._id, question.audioUrl]);
-
   const selected = answer?.selectedOptionId;
 
   return (
     <div className="space-y-8">
       {question.audioUrl && (
-        <div className="flex flex-col items-center gap-3 p-6 bg-primary/5 rounded-3xl border-2 border-dashed border-primary/20">
-          <span className="text-sm font-semibold text-primary uppercase tracking-widest">🔊 Listen carefully</span>
-          <audio controls src={question.audioUrl} className="w-full max-w-sm" autoPlay />
-        </div>
+        <AudioPlayer
+          src={question.audioUrl}
+          label="🔊 Listen carefully"
+          autoPlay
+        />
       )}
 
       <p className="font-semibold text-muted-foreground">

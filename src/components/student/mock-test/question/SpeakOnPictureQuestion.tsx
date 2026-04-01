@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { IMockQuestion, QuestionAnswer } from "@/interface/mockTest.types";
 import { useAudioRecorder } from "@/hooks/useAudioRecorder";
 import { Button } from "@/components/ui/button";
@@ -11,22 +11,12 @@ interface Props {
 }
 
 export const SpeakOnPictureQuestion = ({ question, answer, onChange }: Props) => {
-  const timeLimitSec = question.allowedRecordingTime ?? 120;
   const [hasRecording, setHasRecording] = useState(!!answer?.audioBlob);
-  const [started, setStarted] = useState(false);
 
-  const { start, stop, isRecording, elapsed } = useAudioRecorder(timeLimitSec, (blob, duration) => {
+  const { start, stop, isRecording, elapsed } = useAudioRecorder(null, (blob, duration) => {
     setHasRecording(true);
     onChange({ questionId: question._id!, questionType: question.type, audioBlob: blob, audioDurationSeconds: duration });
   });
-
-  // Auto-start on mount
-  useEffect(() => {
-    if (!hasRecording && !started) {
-      setStarted(true);
-      start();
-    }
-  }, []);
 
   const formatTime = (s: number) =>
     `${Math.floor(s / 60).toString().padStart(2, "0")}:${(s % 60).toString().padStart(2, "0")}`;
@@ -54,7 +44,7 @@ export const SpeakOnPictureQuestion = ({ question, answer, onChange }: Props) =>
           <>
             <div className="flex items-center gap-3 text-destructive font-bold animate-pulse text-lg">
               <span className="h-3 w-3 rounded-full bg-destructive animate-ping" />
-              Recording... {formatTime(elapsed)} / {formatTime(timeLimitSec)}
+              Recording... {formatTime(elapsed)}
             </div>
             <Button
               variant="outline"
@@ -78,6 +68,13 @@ export const SpeakOnPictureQuestion = ({ question, answer, onChange }: Props) =>
               <PlayCircle className="h-4 w-4" /> Re-record
             </Button>
           </div>
+        )}
+
+        {!isRecording && !hasRecording && (
+          <Button onClick={start} size="lg" className="rounded-2xl gap-2 font-bold shadow-lg shadow-primary/20">
+            <Mic className="h-5 w-5" />
+            Start Recording
+          </Button>
         )}
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 
 export const useAudioRecorder = (
-  timeLimitSeconds: number,
+  timeLimitSeconds: number | null | undefined,
   onStop: (blob: Blob, duration: number) => void
 ) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -18,6 +18,9 @@ export const useAudioRecorder = (
   };
 
   const start = async () => {
+    // Automatically stop any playing audio on the page
+    window.dispatchEvent(new Event("stopAudio"));
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
@@ -42,7 +45,7 @@ export const useAudioRecorder = (
       intervalRef.current = setInterval(() => {
         elapsedRef.current += 1;
         setElapsed(elapsedRef.current);
-        if (elapsedRef.current >= timeLimitSeconds) {
+        if (timeLimitSeconds && elapsedRef.current >= timeLimitSeconds) {
           stop();
         }
       }, 1000);

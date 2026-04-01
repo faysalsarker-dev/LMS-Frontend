@@ -13,17 +13,20 @@ export const buildSpeakingFormData = ({
   audioBlob,
   audioDurationSeconds,
   section,
+  totalMarks,
 }: {
   sectionId: string;
   questionId: string;
   questionType: string;
   audioBlob: Blob;
   audioDurationSeconds?: number;
+  totalMarks: number;
   section: any;
 }): FormData => {
   const fd = new FormData();
 
   fd.append("sectionId", sectionId);
+  fd.append("totalMarks", String(totalMarks));
   fd.append("questionId", questionId);
   fd.append("questionType", questionType);
   fd.append("audioDurationSeconds", String(audioDurationSeconds ?? 0));
@@ -55,11 +58,14 @@ export const submitSpeakingQuestion = async ({
   sectionId,
   section,
   submitSpeakingMockTest,
+  totalMarks,
 }: {
   question: IMockQuestion;
   answers: AnswerState;
   sectionId: string;
+  totalMarks: number;
   section: any;
+
   submitSpeakingMockTest: (payload: FormData) => { unwrap: () => Promise<any> };
 }): Promise<void> => {
   const ans = answers[question._id!];
@@ -75,6 +81,7 @@ export const submitSpeakingQuestion = async ({
     audioBlob: ans.audioBlob,
     audioDurationSeconds: ans.audioDurationSeconds,
     section,
+    totalMarks,
   });
 
   // ── Debug: log all FormData fields so you can verify before enabling the API call

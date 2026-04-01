@@ -97,12 +97,15 @@ const MockTestExamPage = () => {
     // Submit audio if not yet submitted
     if (!alreadySubmitted && hasAudio) {
       setIsSubmittingQuestion(true);
+      const submitStart = Date.now();
       try {
         await submitSpeakingQuestion({
           question: currentQuestion,
           answers,
           sectionId: sectionId!,
           section,
+           totalMarks: section.totalMarks,
+
           submitSpeakingMockTest: submitSpeakingMockTest as any,
         });
         setSubmittedQuestionIndices((prev) => new Set(prev).add(currentIndex));
@@ -113,6 +116,13 @@ const MockTestExamPage = () => {
         setIsSubmittingQuestion(false);
         return;
       }
+      
+      const timeElapsed = Date.now() - submitStart;
+      setDeadline(prev => {
+        const newDeadline = prev + timeElapsed;
+        localStorage.setItem(`exam_deadline_${sectionId}`, String(newDeadline));
+        return newDeadline;
+      });
       setIsSubmittingQuestion(false);
     } else if (!hasAudio) {
       toast.warning("No recording found for this question. Moving on.");
@@ -169,18 +179,21 @@ const MockTestExamPage = () => {
             // Submit the last question's audio if not yet done
             const lastQuestion = questions[currentIndex];
             if (lastQuestion && !submittedQuestionIndices.has(currentIndex) && answers[lastQuestion._id!]?.audioBlob) {
+              setIsSubmittingQuestion(true);
               try {
                 await submitSpeakingQuestion({
                   question: lastQuestion,
                   answers,
                   sectionId: sectionId!,
                   section,
+                  totalMarks: section.totalMarks,
                   submitSpeakingMockTest: submitSpeakingMockTest as any,
                 });
                 setSubmittedQuestionIndices((prev) => new Set(prev).add(currentIndex));
               } catch (err) {
                 console.warn("Last question audio submission failed:", err);
               }
+              setIsSubmittingQuestion(false);
             }
             // Compute the speaking result (for display — all pending manual grading)
             const speakingResult = calculateSpeakingResult(questions, answers);
@@ -272,7 +285,11 @@ const MockTestExamPage = () => {
             )}
           </div>
 
-          <ExamTimer deadline={deadline} onExpire={() => handleSubmit({ autoSubmitted: true })} />
+          <ExamTimer
+            paused={isSubmittingQuestion || submitted}
+            deadline={deadline}
+            onExpire={() => handleSubmit({ autoSubmitted: true })}
+          />
 
           <div className="flex items-center gap-2">
             {/* For speaking, only show Submit Section on the last question */}

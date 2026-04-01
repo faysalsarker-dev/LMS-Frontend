@@ -2,8 +2,7 @@ import type { IMockQuestion } from "@/interface/mockTest.types";
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Volume2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AudioPlayer } from "./question/AudioPlayer";
 
 interface MockQuestionRendererProps {
     question: IMockQuestion;
@@ -23,18 +22,11 @@ export const MockQuestionRenderer = ({
     const renderListeningMCQ = () => (
         <div className="space-y-8">
             {question.audioUrl && (
-                <div className="flex justify-center p-8 bg-primary/5 rounded-3xl border-2 border-dashed border-primary/20">
-                    <Button
-                        size="lg"
-                        className="h-20 w-20 rounded-full shadow-xl shadow-primary/20 group"
-                        onClick={() => {
-                            const audio = new Audio(question.audioUrl);
-                            audio.play();
-                        }}
-                    >
-                        <Volume2 className="h-10 w-10 group-hover:scale-110 transition-transform" />
-                    </Button>
-                </div>
+                <AudioPlayer
+                    src={question.audioUrl}
+                    label="🔊 Listen carefully"
+                    autoPlay
+                />
             )}
 
             <RadioGroup value={value} onValueChange={onChange} className="grid grid-cols-1 md:grid-cols-2 gap-4">
