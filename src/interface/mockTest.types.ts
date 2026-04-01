@@ -122,6 +122,7 @@ export interface IMockTestSection {
   timeLimit: number;
   instruction?: string | null;
   questions: IMockQuestion[];
+  totalMarks: number;
   createdAt?: string;
   updatedAt?: string;
 }

@@ -108,6 +108,8 @@ export const constructWritingPayload = (
         isAutoGraded,
         studentAnswers,
         name: section?.name || 'Writing',
+        totalMarks: section?.totalMarks || 0,
+
       },
     ],
   };

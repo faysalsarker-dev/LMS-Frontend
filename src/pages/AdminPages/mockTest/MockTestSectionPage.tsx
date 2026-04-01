@@ -14,6 +14,7 @@ import {
   Clock,
   FileQuestion,
   Loader2,
+  MarsStroke,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -198,42 +199,66 @@ const MockTestSectionPage = () => {
         </div>
 
         {/* Info Cards */}
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card className="rounded-2xl group">
-            <CardContent className="pt-6 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-orange-50">
-                  <Clock className="w-6 h-6 text-orange-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Time Limit</p>
-                  <p className="text-xl font-bold">
-                    {section.timeLimit} Minutes
-                  </p>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSettingsOpen(true)}
-                className="rounded-lg h-8 px-2 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <Pencil className="h-4 w-4 mr-1" /> Edit
-              </Button>
-            </CardContent>
-          </Card>
-          <Card className="rounded-2xl">
-            <CardContent className="pt-6 flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-blue-50">
-                <FileQuestion className="w-6 h-6 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Questions</p>
-                <p className="text-xl font-bold">{questions.length}</p>
-              </div>
-            </CardContent>
-          </Card>
+     <div className="grid gap-4 md:grid-cols-3">
+  {/* Time Limit */}
+  <Card className="rounded-2xl border bg-card hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
+    <CardContent className="p-5 flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        <div className="p-3 rounded-xl bg-orange-100/70 group-hover:bg-orange-100 transition">
+          <Clock className="w-5 h-5 text-orange-600" />
         </div>
+        <div>
+          <p className="text-xs text-muted-foreground">Time Limit</p>
+          <p className="text-2xl font-semibold tracking-tight">
+            {section.timeLimit}
+            <span className="text-sm font-normal ml-1 text-muted-foreground">
+              min
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setSettingsOpen(true)}
+        className="rounded-lg opacity-0 group-hover:opacity-100 transition"
+      >
+        <Pencil className="h-4 w-4" />
+      </Button>
+    </CardContent>
+  </Card>
+
+  {/* Questions */}
+  <Card className="rounded-2xl border bg-card hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+    <CardContent className="p-5 flex items-center gap-4">
+      <div className="p-3 rounded-xl bg-blue-100/70">
+        <FileQuestion className="w-5 h-5 text-blue-600" />
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground">Questions</p>
+        <p className="text-2xl font-semibold tracking-tight">
+          {questions.length}
+        </p>
+      </div>
+    </CardContent>
+  </Card>
+
+  {/* Total Marks */}
+  <Card className="rounded-2xl border bg-card hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+    <CardContent className="p-5 flex items-center gap-4">
+      <div className="p-3 rounded-xl bg-green-100/70">
+        <MarsStroke className="w-5 h-5 text-green-600" />
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground">Total Marks</p>
+        <p className="text-2xl font-semibold tracking-tight">
+          {section.totalMarks}
+        </p>
+      </div>
+    </CardContent>
+  </Card>
+</div>
 
         {/* Questions List */}
         <div className="space-y-4">

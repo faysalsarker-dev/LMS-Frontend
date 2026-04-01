@@ -116,6 +116,7 @@ export const constructListeningPayload = (
         isAutoGraded: section?.questions?.[0]?.isAutoMarked || false,
         studentAnswers,
         name: section?.name || 'Listening',
+        totalMarks: section?.totalMarks || 0,
       },
     ],
   };

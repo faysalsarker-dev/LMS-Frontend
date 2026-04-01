@@ -97,6 +97,7 @@ export interface IMockTestSection {
   name: string;
   autoGradedScore: number;
   adminScore: number;
+  totalMarks: number;
   isAutoGraded: boolean;
 }
 
