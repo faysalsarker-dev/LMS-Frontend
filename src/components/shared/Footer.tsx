@@ -166,10 +166,12 @@ const itemVariants = {
             <p>
               © {currentYear} HLC. {t("footer.allRightsReserved")}
             </p>
-            <p className="flex items-center gap-1">
-              {t("footer.developedBy")}{" "}
-              <span className="font-medium text-foreground">Faysal Sarker</span>
-            </p>
+            <a href="https://faysalsarker.me" target="_blank" rel="noopener noreferrer">
+              <p className="flex items-center gap-1">
+                {t("footer.developedBy")}{" "}
+                <span className="font-medium text-foreground">Faysal Sarker</span>
+              </p>
+            </a>
           </div>
         </motion.div>
       </div>
