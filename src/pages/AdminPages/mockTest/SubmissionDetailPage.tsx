@@ -47,6 +47,7 @@ const SubmissionDetailPage = () => {
     maxMarks: number;
     type: "section" | "question";
     questionId?: string;
+    isQuestion?: boolean;
   } | null>(null);
   const [questionGrades, setQuestionGrades] = useState<Record<string, { score: number; feedback: string }>>({});
 
@@ -88,6 +89,7 @@ const SubmissionDetailPage = () => {
       maxMarks: question.marks || 0,
       type: "question",
       questionId: question._id,
+      isQuestion:true
     });
   };
 
@@ -125,7 +127,7 @@ const SubmissionDetailPage = () => {
             ...prev,
             [sectionId]: { 
               score: newSectionScore, 
-              feedback: prev[sectionId]?.feedback || `Grades updated for individual questions.` 
+              feedback: prev[sectionId]?.feedback || `` 
             }
           }));
         }
@@ -438,6 +440,7 @@ const SubmissionDetailPage = () => {
           isOpen={!!activeGradingSection}
           onClose={() => setActiveGradingSection(null)}
           onSave={handleSaveGrade}
+          isQuestion={activeGradingSection.isQuestion}
           title={activeGradingSection.name}
           maxMarks={activeGradingSection.maxMarks}
           currentScore={activeGradingSection.type === "question" 

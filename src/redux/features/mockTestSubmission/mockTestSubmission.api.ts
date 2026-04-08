@@ -89,6 +89,18 @@ export const mockTestSubmissionApi = baseApi.injectEndpoints({
         { type: "MOCK_TEST_SUBMISSION", id: "LIST" },
       ],
     }),
+
+    mockTestGradeSubmission: builder.mutation<any, { submissionId: string; sectionId: string; data: IGradeSubmissionPayload }>({
+      query: ({ submissionId, sectionId, data }) => ({
+        url: `/${submissionId}/section/${sectionId}/grade`,
+        method: "PATCH",
+        data,
+      }),
+      invalidatesTags: (_result, _error, { submissionId }) => [
+        { type: "MOCK_TEST_SUBMISSION", id: submissionId },
+        { type: "MOCK_TEST_SUBMISSION", id: "LIST" },
+      ],
+    }),
   }),
 });
 
@@ -99,5 +111,6 @@ export const {
   useGradeSubmissionMutation,
   useGetMockTestProgressQuery,
   useSubmitSpeakingMockTestMutation,
-  useGetMockTestSubmissionByIdQuery
+  useGetMockTestSubmissionByIdQuery,
+  useMockTestGradeSubmissionMutation
 } = mockTestSubmissionApi;
