@@ -20,6 +20,7 @@ interface ManualGradingDialogProps {
   maxMarks: number;
   currentScore?: number;
   currentFeedback?: string;
+  isQuestion?: boolean;
 }
 
 const ManualGradingDialog: React.FC<ManualGradingDialogProps> = ({
@@ -30,6 +31,7 @@ const ManualGradingDialog: React.FC<ManualGradingDialogProps> = ({
   maxMarks,
   currentScore = 0,
   currentFeedback = "",
+  isQuestion = false,
 }) => {
   const [score, setScore] = useState<number>(currentScore);
   const [feedback, setFeedback] = useState<string>(currentFeedback);
@@ -73,18 +75,23 @@ const ManualGradingDialog: React.FC<ManualGradingDialogProps> = ({
               className="col-span-3"
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="feedback" className="text-right font-semibold">
-              Feedback
-            </Label>
-            <Textarea
-              id="feedback"
-              placeholder="e.g., Great pronunciation but needs work on fluency."
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-              className="col-span-3 min-h-[120px]"
-            />
-          </div>
+          {
+            !isQuestion && (
+              <div className="space-y-2">
+                <Label htmlFor="feedback" className="text-right font-semibold">
+                  Feedback
+                </Label>
+                <Textarea
+                  id="feedback"
+                  placeholder="e.g., Great pronunciation but needs work on fluency."
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  className="col-span-3 min-h-[120px]"
+                />
+              </div>
+            )
+          }
+          
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
