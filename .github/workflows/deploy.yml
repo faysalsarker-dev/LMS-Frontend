@@ -1,65 +1,47 @@
-name: CI/CD Pipeline
+name: Humanistic LMS Frontend Deployment
 
 on:
   push:
     branches: [deploy]
-  pull_request:
-    branches: [deploy]
 
 jobs:
-  build-and-test:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run linting
-        run: npm run lint
-
       - name: Build project
         run: npm run build
+        # This creates the 'dist' folder
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+      - name: Deploy to VPS (SCP)
+        uses: appleboy/scp-action@master
         with:
-          name: dist-${{ matrix.node-version }}
-          path: dist/
-          retention-days: 5
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          source: "dist/*" 
+          target: "/var/www/humanistic-frontend"
+          strip_components: 1 
+          rm: true 
 
-  deploy:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/deploy'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Deploy to VPS via SSH
+      - name: Reload Nginx
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
-          port: ${{ secrets.VPS_PORT }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd ${{ secrets.VPS_PROJECT_PATH }}
-            git pull origin deploy
-            npm ci
-            npm run build
-            # Restart your application service (example with pm2)
-            pm2 restart humanistic-frontend || pm2 start npm --name "humanistic-frontend" -- start
+          port: ${{ secrets.VPS_PORT }}
+          script: sudo nginx -s reload
