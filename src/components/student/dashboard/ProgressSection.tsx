@@ -5,13 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { IUserProgressData } from '@/interface/student.types';
+import { useGetCertificateMutation } from '@/redux/features/progress/progress.api';
 
 interface ProgressSectionProps {
   progress: IUserProgressData | undefined;
   isLoading: boolean;
+  courseId?: string;
 }
 
-const ProgressSection = ({ progress, isLoading }: ProgressSectionProps) => {
+const ProgressSection = ({ progress, isLoading, courseId }: ProgressSectionProps) => {
+  console.log('ProgressSection rendered with progress:', progress, 'and isLoading:', isLoading);
+  const [getCertificate,{isLoading: isDownloading}] = useGetCertificateMutation();
   if (isLoading) {
     return (
       <Card className="stat-card">
@@ -29,9 +33,9 @@ const ProgressSection = ({ progress, isLoading }: ProgressSectionProps) => {
     return null;
   }
 
-  const handleDownloadCertificate = () => {
-    console.log('Downloading certificate:', progress.certificateUrl);
-    alert('Certificate download initiated! (Demo)');
+  const handleDownloadCertificate = async() => {
+  const result = await getCertificate(courseId).unwrap()
+console.log('Certificate download result:', result);
   };
 
   return (
@@ -90,6 +94,7 @@ const ProgressSection = ({ progress, isLoading }: ProgressSectionProps) => {
             >
               <Button 
                 onClick={handleDownloadCertificate}
+                disabled={isDownloading}
                 className="w-full sm:w-auto animate-pulse-subtle bg-success hover:bg-success/90 text-success-foreground"
               >
                 <Download className="h-4 w-4 mr-2" />

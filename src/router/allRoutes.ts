@@ -26,51 +26,51 @@ export const invisibleRoutes = [
   {
     Component: CourseDetails,
     path: "/courses/:slug",
-    name: "Course Details",
+    name: "routes.public.courseDetails",
   },
   {
     Component: TermsAndConditions,
     path: "/terms-and-conditions",
-    name: "Terms and Conditions",
+    name: "routes.public.termsAndConditions",
   },
   {
     Component: PrivacyPolicyPage,
     path: "/privacy-policy",
-    name: "Privacy & Policy",
+    name: "routes.public.privacyPolicy",
   },
   {
     Component: withAuth(CheckoutPage),
     path: "/checkout/:slug",
-    name: "Course Details",
+    name: "routes.public.courseDetails",
   },
 
   {
     Component: withAuth(PaymentSuccess),
     path: "/payment/success",
-    name: "Payment Success",
+    name: "routes.public.paymentSuccess",
   },
   {
     Component: withAuth(PaymentFailed),
     path: "/payment/fail",
-    name: "Payment fail",
+    name: "routes.public.paymentFail",
   },
   {
     Component: withAuth(PaymentCancelled),
     path: "/payment/cancel",
-    name: "Payment cancel",
+    name: "routes.public.paymentCancel",
   },
 
   {
     Component: OtpVerify,
     path: "/verify-account/:email",
-    name: "Verify Account",
+    name: "routes.public.verifyAccount",
   },
   {
     Component: ForgotPassword,
     path: "/forget-password",
-    name: "Forgot Password",
+    name: "routes.public.forgotPassword",
   },
-  { Component: ResetPassword, path: "/reset-password", name: "Reset Password" },
+  { Component: ResetPassword, path: "/reset-password", name: "routes.public.resetPassword" },
 
 ];
 

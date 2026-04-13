@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -61,7 +62,8 @@ type FormValues = {
   certificateAvailable: boolean;
   duration: string;
   totalLectures: number;
-  isFeatured: boolean; 
+  isFeatured: boolean;
+  isInternational: boolean;
   category:string;
 };
 
@@ -78,6 +80,7 @@ const navigate = useNavigate()
     handleSubmit,
     control,
     reset,
+    setValue,
     watch,
   } = useForm<FormValues>({
 defaultValues: {
@@ -98,6 +101,7 @@ defaultValues: {
   duration: "",
   totalLectures: 0,
   isFeatured: false,
+  isInternational: true,
   category:""
 },
 
@@ -135,6 +139,7 @@ console.log(data.category);
     formData.append("isDiscounted", data.isDiscounted.toString());
     formData.append("discountPrice", data.discountPrice.toString());
     formData.append("isFeatured", data.isFeatured.toString());
+    formData.append("isInternational", data.isInternational.toString());
     formData.append("duration", data.duration);
     formData.append("totalLectures", data.totalLectures.toString());
     formData.append("certificateAvailable", data.certificateAvailable.toString());
@@ -218,6 +223,19 @@ console.log(data.category);
                 </div>
               </div>
             </div>
+
+          <div className="flex items-center justify-between gap-3 rounded-lg border border-border/20 bg-muted p-4">
+            <div>
+              <Label className="text-sm font-medium">International Storage</Label>
+              <p className="text-xs text-muted-foreground">
+                Upload course media to the international provider by default.
+              </p>
+            </div>
+            <Switch
+              checked={watch("isInternational")}
+              onCheckedChange={(value) => setValue("isInternational", value)}
+            />
+          </div>
           </FormSection>
 
           {/* Course Configuration */}

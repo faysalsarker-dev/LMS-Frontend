@@ -19,12 +19,12 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import FileUpload from "@/components/ui/FileUpload";
 import { FormSection } from "@/components/form/FormSection";
 import { FieldArray } from "@/components/form/FieldArray";
-import { BookOpen, Clock, DollarSign, FileText, Save, Tag, Award, CheckSquare, Users, Copy } from "lucide-react";
+import { BookOpen, Clock, DollarSign, FileText, Save, Tag, Award, CheckSquare, Copy } from "lucide-react";
 import { toast } from "react-hot-toast";
-import NoDataFound from "@/components/shared/NoDataFound";
 import { useGetCourseBySlugQuery, useUpdateCourseMutation } from "@/redux/features/course/course.api";
 import { currencies } from "@/utils/currency";
 import { handleApiError } from "@/utils/errorHandler";
@@ -56,6 +56,7 @@ type FormValues = {
   duration: string;
   totalLectures: number;
   isFeatured: boolean;
+  isInternational: boolean;
 };
 
 const defaultValues: FormValues = {
@@ -76,6 +77,7 @@ const defaultValues: FormValues = {
   duration: "",
   totalLectures: 0,
   isFeatured: false,
+  isInternational: true,
 };
 
 // Helper function to convert string array to FieldObject array
@@ -100,7 +102,7 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
   const [updateCourse, { isLoading: isUpdating }] = useUpdateCourseMutation();
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const { register, handleSubmit, control, reset, watch } = useForm<FormValues>({ defaultValues });
-
+console.log("Course data for update:", course);
   // Field arrays
   const tagFieldArray = useFieldArray({ control, name: "tags" });
   const skillFieldArray = useFieldArray({ control, name: "skills" });
@@ -132,6 +134,7 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
           duration: course.duration || "",
           totalLectures: course.totalLectures || 0,
           isFeatured: course.isFeatured || false,
+          isInternational: course.isInternational ?? true,
         });
         // Reset thumbnail file when course changes
         setThumbnailFile(null);
@@ -168,6 +171,7 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
       formData.append("isDiscounted", data.isDiscounted.toString());
       formData.append("discountPrice", data.discountPrice.toString());
       formData.append("isFeatured", data.isFeatured.toString());
+      formData.append("isInternational", data.isInternational.toString());
       formData.append("duration", data.duration.trim());
       formData.append("totalLectures", data.totalLectures.toString());
       formData.append("certificateAvailable", data.certificateAvailable.toString());
@@ -287,6 +291,22 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
                 )}/>
                 <Label>Feature this course</Label>
               </div>
+
+              <div className="flex items-center justify-between gap-3 rounded-lg border border-border/20 bg-muted p-4 mt-4">
+                <div>
+                  <Label className="text-sm font-medium">International Storage</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Use the international storage path for course uploads.
+                  </p>
+                </div>
+                <Controller
+                  name="isInternational"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  )}
+                />
+              </div>
             </FormSection>
 
             {/* Tags & Skills */}
@@ -354,25 +374,7 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
               </div>
             </FormSection>
 
-            {/* Enrolled Students */}
-            <FormSection title="Enrolled Students" description="List of enrolled students" icon={<Users className="h-6 w-6" />}>
-              {course?.enrolledStudents?.length ? (
-                <ul className="list-disc pl-6 space-y-1">
-                  {course.enrolledStudents.map((s: any) => (
-                    <li key={s._id}>
-                      {s.name} <span className="text-muted-foreground">({s.email})</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="border border-dashed rounded-lg bg-background p-2">
-                  <NoDataFound 
-                    message="No students enrolled yet." 
-                    className="min-h-[100px] p-2"
-                  />
-                </div>
-              )}
-            </FormSection>
+         
 
             <Button type="submit" disabled={isUpdating} className="w-full h-12">
               {isUpdating ? "Updating..." : <><Save className="mr-2 h-4 w-4" /> Update Course</>}

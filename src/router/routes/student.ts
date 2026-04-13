@@ -39,31 +39,31 @@ export const studentRoutes = [
   {
     Component: withAuth(StudentDashboard),
     path: "/my-dashboard",
-    name: "Overview",
+    name: "routes.student.overview",
     icon: LayoutDashboard,
   },
   {
     Component: withAuth(MyCourses),
     path: "/my-dashboard/my-courses",
-    name: "My Courses",
+    name: "routes.student.myCourses",
     icon: BookOpen,
   },
   {
     Component: withAuth(PracticeTasksPage),
     path: "/my-dashboard/my-practice",
-    name: "Practice Tasks",
+    name: "routes.student.practiceTasks",
     icon: Trophy,
   },
   {
     Component: withAuth(MockTestsPage),
     path: "/my-dashboard/my-mock-tests",
-    name: "Mock Tests",
+    name: "routes.student.mockTests",
     icon: ClipboardCheck,
   },
   {
     Component: withAuth(Profile),
     path: "/my-dashboard/profile",
-    name: "Profile",
+    name: "routes.student.profile",
     icon: User,
   },
 ];
@@ -81,14 +81,14 @@ export const studentInvicibleRoutes = [
       true,
     ),
     path: "/my-dashboard/course/video/:id",
-    name: "Course Player",
+    name: "routes.student.coursePlayer",
     icon: GraduationCap,
     hidden: true,
   },
   {
     Component: withAuth(PracticeDetail),
     path: "/my-dashboard/practice/:id",
-    name: "Practice Details",
+    name: "routes.student.practiceDetails",
   },
  
 ];

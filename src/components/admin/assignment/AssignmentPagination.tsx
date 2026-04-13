@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import type { IAssignmentMeta } from '@/interface/assignment.types';
@@ -10,6 +11,7 @@ interface AssignmentPaginationProps {
 }
 
 export const AssignmentPagination = ({ meta, onPageChange }: AssignmentPaginationProps) => {
+  const { t } = useTranslation();
   const { page, totalPages, total, limit, hasNextPage, hasPrevPage } = meta;
 
   if (totalPages <= 1) return null;
@@ -25,9 +27,11 @@ export const AssignmentPagination = ({ meta, onPageChange }: AssignmentPaginatio
       className="flex flex-col items-center justify-between gap-4 sm:flex-row"
     >
       <p className="text-sm text-muted-foreground">
-        Showing <span className="font-medium">{startItem}</span> to{' '}
-        <span className="font-medium">{endItem}</span> of{' '}
-        <span className="font-medium">{total}</span> results
+        {t('assignment.pagination.showing', {
+          start: startItem,
+          end: endItem,
+          total,
+        })}
       </p>
 
       <div className="flex items-center gap-2">
@@ -39,7 +43,7 @@ export const AssignmentPagination = ({ meta, onPageChange }: AssignmentPaginatio
           className="gap-1"
         >
           <ChevronLeft className="h-4 w-4" />
-          Previous
+          {t('common.previous')}
         </Button>
 
         <div className="flex items-center gap-1">
@@ -76,7 +80,7 @@ export const AssignmentPagination = ({ meta, onPageChange }: AssignmentPaginatio
           disabled={!hasNextPage}
           className="gap-1"
         >
-          Next
+          {t('common.next')}
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>

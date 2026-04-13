@@ -63,6 +63,56 @@
     "allRightsReserved": "保留所有权利。",
     "developedBy": "开发人员"
   },
+  "routes": {
+    "student": {
+      "overview": "概览",
+      "myCourses": "我的课程",
+      "practiceTasks": "练习任务",
+      "mockTests": "模拟测试",
+      "profile": "个人资料",
+      "coursePlayer": "课程播放器",
+      "practiceDetails": "练习详情"
+    },
+    "public": {
+      "home": "首页",
+      "courses": "课程",
+      "courseDetails": "课程详情",
+      "about": "关于",
+      "termsAndConditions": "条款和条件",
+      "privacyPolicy": "隐私政策",
+      "paymentSuccess": "支付成功",
+      "paymentFail": "支付失败",
+      "paymentCancel": "支付取消",
+      "verifyAccount": "验证账户",
+      "forgotPassword": "忘记密码",
+      "resetPassword": "重置密码"
+    },
+    "admin": {
+      "dashboard": "仪表板",
+      "userManagement": "用户管理",
+      "enrollmentManagement": "报名管理",
+      "category": "类别",
+      "allCourses": "所有课程",
+      "milestones": "里程碑",
+      "allLessons": "所有课程",
+      "practices": "练习",
+      "assignments": "作业",
+      "mockTests": "模拟测试",
+      "mockSections": "模拟部分",
+      "pendingSubmissions": "待处理提交",
+      "promos": "促销",
+      "testimonials": "推荐",
+      "createCourse": "创建课程",
+      "createLesson": "创建课程",
+      "editLesson": "编辑课程",
+      "createPractices": "创建练习",
+      "viewPractice": "查看练习",
+      "createMockTest": "创建模拟测试",
+      "mockTestDetail": "模拟测试详情",
+      "mockTestSectionManagement": "模拟测试部分管理",
+      "submissionDetail": "提交详情"
+    }
+  },
   "home": {
     "hero": {
       "trustedBy": "50,000+ 学生信赖",
@@ -227,8 +277,21 @@
       "requestNewLink": "请求新链接",
       "protectedBy": "受行业标准加密保护"
     }
-  },
-  "logout": {
+  },  "assignment": {
+    "filters": {
+      "searchPlaceholder": "搜索作业、学生或提交",
+      "status": "状态",
+      "type": "提交类型",
+      "course": "课程",
+      "lesson": "课时",
+      "allCourses": "所有课程",
+      "allLessons": "所有课时",
+      "reset": "重置筛选"
+    },
+    "pagination": {
+      "showing": "显示 {{start}}–{{end}} 项，共 {{total}} 项"
+    }
+  },  "logout": {
     "leavingSoSoon": "这么快就要离开？",
     "signOutMessage": "您将被登出并重定向到首页。您的学习进度已安全保存。",
     "stayAndLearn": "留下来学习",

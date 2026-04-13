@@ -22,6 +22,7 @@ export interface Practice {
   course: Course;
   items: PracticeItem[];
   thumbnail?: string;
+  isInternational: boolean;
   isActive: boolean;
   usageCount: number;
   totalItems: number;
@@ -35,6 +36,7 @@ export interface PracticeFormData {
   course: string; // Course ID
   items: PracticeItem[];
   thumbnail?: string;
+  isInternational: boolean;
   isActive: boolean;
 }
 

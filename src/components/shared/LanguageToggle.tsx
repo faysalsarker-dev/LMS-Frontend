@@ -8,10 +8,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { changeLanguage } from "@/utils/language";
 
 // --- Configuration ---
-// It's best practice to move this to a separate file, e.g., `src/config/languages.ts`
-
 type Language = {
   readonly code: string;
   readonly name: string;
@@ -21,7 +20,6 @@ type Language = {
 const SUPPORTED_LANGUAGES: readonly Language[] = [
   { code: "en", name: "English", flag: "🇬🇧" },
   { code: "zh", name: "中文", flag: "🇨🇳" },
-  { code: "bn", name: "বাংলা", flag: "🇧🇩" },
 ] as const;
 
 const DEFAULT_LANGUAGE = SUPPORTED_LANGUAGES[0];
@@ -44,8 +42,8 @@ export default function LanguageToggle() {
    * @param languageCode - The language code (e.g., "en", "bn").
    */
   const handleLanguageChange = (languageCode: string) => {
-    i18n.changeLanguage(languageCode);
-    localStorage.setItem("language", languageCode);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    changeLanguage(i18n, languageCode as any);
   };
 
   // Find the full language object for the current language, or fall back to default

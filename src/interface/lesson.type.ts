@@ -59,8 +59,9 @@ export interface ILessonFormData {
   type: LessonType;
   order: number;
   status: LessonStatus;
- courseId: string;     
+  courseId: string;
   milestoneId: string;
+  isInternational: boolean;
 
 
   // Video fields

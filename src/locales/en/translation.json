@@ -63,6 +63,54 @@
     "allRightsReserved": "All rights reserved.",
     "developedBy": "Developed by"
   },
+  "routes": {
+    "student": {
+      "overview": "Overview",
+      "myCourses": "My Courses",
+      "practiceTasks": "Practice Tasks",
+      "mockTests": "Mock Tests",
+      "profile": "Profile",
+      "coursePlayer": "Course Player",
+      "practiceDetails": "Practice Details"
+    },
+    "public": {
+      "home": "Home",
+      "courses": "Courses",
+      "courseDetails": "Course Details",
+      "about": "About",
+      "termsAndConditions": "Terms and Conditions",
+      "privacyPolicy": "Privacy & Policy",
+      "paymentSuccess": "Payment Success",
+      "paymentFail": "Payment Failed",
+      "paymentCancel": "Payment Cancel",
+      "verifyAccount": "Verify Account",
+      "forgotPassword": "Forgot Password",
+      "resetPassword": "Reset Password"    },
+    "admin": {
+      "dashboard": "Dashboard",
+      "userManagement": "User Management",
+      "enrollmentManagement": "Enrollment Management",
+      "category": "Category",
+      "allCourses": "All Courses",
+      "milestones": "Milestones",
+      "allLessons": "All Lessons",
+      "practices": "Practices",
+      "assignments": "Assignments",
+      "mockTests": "Mock Tests",
+      "mockSections": "Mock Sections",
+      "pendingSubmissions": "Pending Submissions",
+      "promos": "Promos",
+      "testimonials": "Testimonials",
+      "createCourse": "Create Course",
+      "createLesson": "Create Lesson",
+      "editLesson": "Edit Lesson",
+      "createPractices": "Create Practices",
+      "viewPractice": "View Practice",
+      "createMockTest": "Create Mock Test",
+      "mockTestDetail": "Mock Test Detail",
+      "mockTestSectionManagement": "Mock Test Section Management",
+      "submissionDetail": "Submission Detail"    }
+  },
   "home": {
     "hero": {
       "trustedBy": "Trusted by 50,000+ Students",
@@ -225,6 +273,21 @@
       "invalidLinkMessage": "This password reset link is invalid or has expired. Please request a new one.",
       "requestNewLink": "Request New Link",
       "protectedBy": "Protected by industry-standard encryption"
+    }
+  },
+  "assignment": {
+    "filters": {
+      "searchPlaceholder": "Search assignments, students, or submissions",
+      "status": "Status",
+      "type": "Submission Type",
+      "course": "Course",
+      "lesson": "Lesson",
+      "allCourses": "All Courses",
+      "allLessons": "All Lessons",
+      "reset": "Reset Filters"
+    },
+    "pagination": {
+      "showing": "Showing {{start}}–{{end}} of {{total}} assignments"
     }
   },
   "logout": {
