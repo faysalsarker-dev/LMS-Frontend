@@ -4,4 +4,5 @@ export interface ICategory {
   description?: string;
   thumbnail?: string | null;
   totalCourse?: number;
+  isInternational?: boolean;
 }

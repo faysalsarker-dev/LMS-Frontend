@@ -173,6 +173,7 @@ export interface IMockTest {
   writing?: string | IMockTestSection;
   speaking?: string | IMockTestSection;
   isActive: boolean;
+  isInternational?: boolean;
   createdAt: string;
   updatedAt: string;
 }

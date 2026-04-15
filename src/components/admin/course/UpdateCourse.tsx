@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import FileUpload from "@/components/ui/FileUpload";
 import { FormSection } from "@/components/form/FormSection";
 import { FieldArray } from "@/components/form/FieldArray";
@@ -56,6 +57,7 @@ type FormValues = {
   duration: string;
   totalLectures: number;
   isFeatured: boolean;
+  isInternational: boolean;
 };
 
 const defaultValues: FormValues = {
@@ -76,6 +78,7 @@ const defaultValues: FormValues = {
   duration: "",
   totalLectures: 0,
   isFeatured: false,
+  isInternational: true,
 };
 
 // Helper function to convert string array to FieldObject array
@@ -132,6 +135,7 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
           duration: course.duration || "",
           totalLectures: course.totalLectures || 0,
           isFeatured: course.isFeatured || false,
+          isInternational: course.isInternational ?? true,
         });
         // Reset thumbnail file when course changes
         setThumbnailFile(null);
@@ -168,6 +172,7 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
       formData.append("isDiscounted", data.isDiscounted.toString());
       formData.append("discountPrice", data.discountPrice.toString());
       formData.append("isFeatured", data.isFeatured.toString());
+      formData.append("isInternational", data.isInternational.toString());
       formData.append("duration", data.duration.trim());
       formData.append("totalLectures", data.totalLectures.toString());
       formData.append("certificateAvailable", data.certificateAvailable.toString());
@@ -286,6 +291,22 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
                   <Checkbox disabled={isUpdating} checked={field.value} onCheckedChange={field.onChange} />
                 )}/>
                 <Label>Feature this course</Label>
+              </div>
+
+              <div className="flex items-center justify-between gap-3 rounded-lg border border-border/20 bg-muted p-4 mt-4">
+                <div>
+                  <Label className="text-sm font-medium">International Storage</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Use the international storage path for course uploads.
+                  </p>
+                </div>
+                <Controller
+                  name="isInternational"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  )}
+                />
               </div>
             </FormSection>
 

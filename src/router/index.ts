@@ -15,12 +15,14 @@ import StudentLayout from "@/layout/student/Student";
 import withAuth from "./withAuth";
 import MockTestDetailPage from "@/pages/StudentsPages/Mock-test/MockTestDetailPage";
 import MockTestExamPage from "@/pages/StudentsPages/Mock-test/MockTestExamPage";
+import { createElement } from "react";
 
 
 export const router = createBrowserRouter([
   {
     Component: Home,
     path: "/",
+    errorElement: createElement(NotFoundPage),
     children: [
       ...generateRoutes(publicRoutes),
       ...generateRoutes(invisibleRoutes),

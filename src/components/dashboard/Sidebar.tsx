@@ -50,16 +50,7 @@ export function AppSidebar() {
          <Logo/>
             </div>
 
-            {/* {open && (
-              <div className="text-left leading-tight animate-fade-in">
-                <h1 className="font-bold text-lg text-foreground">
-                  EduDashboard
-                </h1>
-                <p className="text-xs text-muted-foreground">
-                  Admin Portal
-                </p>
-              </div>
-            )} */}
+        
           </div>
         </SidebarHeader>
 

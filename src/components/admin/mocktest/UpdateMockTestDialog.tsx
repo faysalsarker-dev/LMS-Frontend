@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Loader2, X, ImagePlus } from "lucide-react";
 import { useUpdateMockTestMutation } from "@/redux/features/mockTest/mockTest.api";
 import type { IMockTest } from "@/interface/mockTest.types";
@@ -29,6 +30,7 @@ export const UpdateMockTestDialog = ({
     const [title, setTitle] = useState("");
     const [thumbnail, setThumbnail] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
+    const [isInternational, setIsInternational] = useState(true);
 
     const [updateMockTest, { isLoading }] = useUpdateMockTestMutation();
 
@@ -37,6 +39,7 @@ export const UpdateMockTestDialog = ({
         if (mockTest) {
             setTitle(mockTest.title);
             setPreview(mockTest.thumbnail ?? null);
+            setIsInternational(mockTest.isInternational ?? true);
         }
     }, [mockTest]);
 
@@ -49,6 +52,7 @@ export const UpdateMockTestDialog = ({
 
     const handleClose = () => {
         setThumbnail(null);
+        setIsInternational(true);
         onOpenChange(false);
     };
 
@@ -60,6 +64,7 @@ export const UpdateMockTestDialog = ({
         try {
             const formData = new FormData();
             formData.append("title", title.trim());
+            formData.append("isInternational", String(isInternational));
             if (thumbnail) formData.append("thumbnail", thumbnail);
 
             await updateMockTest({ id: mockTest._id, data: formData }).unwrap();
@@ -91,6 +96,16 @@ export const UpdateMockTestDialog = ({
                             onChange={(e) => setTitle(e.target.value)}
                             className="rounded-xl"
                         />
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4 rounded-lg border border-border/20 bg-muted p-4">
+                        <div>
+                            <Label className="text-sm font-medium">International Storage</Label>
+                            <p className="text-xs text-muted-foreground">
+                                Choose international storage for mock test files.
+                            </p>
+                        </div>
+                        <Switch checked={isInternational} onCheckedChange={setIsInternational} />
                     </div>
 
                     {/* Thumbnail */}

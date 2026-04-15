@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { useForm, Controller } from "react-hook-form";
 import toast from "react-hot-toast";
 import {
@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Loader2, X, ImagePlus } from "lucide-react";
 import {
     useCreateMockTestMutation,
@@ -64,21 +65,21 @@ export const CreateMockTestDialog = ({
             preview: null,
         },
     });
-
     const preview = watch("preview");
-
-    const { data: coursesData } = useGetCourseForSelectQuery(undefined);
+    const [isInternational, setIsInternational] = useState(true);
     const [createMockTest, { isLoading: isCreating }] = useCreateMockTestMutation();
     const [createSection] = useCreateSectionMutation();
+    const { data: coursesData } = useGetCourseForSelectQuery({});
 
-    // Cleanup blob URL on unmount / when preview changes
     useEffect(() => {
         return () => {
-            if (preview) URL.revokeObjectURL(preview);
+            if (preview) {
+                URL.revokeObjectURL(preview as string);
+            }
         };
     }, [preview]);
 
-    const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleThumbnailChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
         setValue("thumbnail", file, { shouldDirty: true });
@@ -87,6 +88,7 @@ export const CreateMockTestDialog = ({
 
     const handleClose = () => {
         reset();
+        setIsInternational(true);
         onOpenChange(false);
     };
 
@@ -94,6 +96,7 @@ export const CreateMockTestDialog = ({
         const formData = new FormData();
         formData.append("title", data.title.trim());
         formData.append("course", data.courseId);
+        formData.append("isInternational", String(isInternational));
         if (data.thumbnail) formData.append("thumbnail", data.thumbnail);
 
         await toast.promise(
@@ -182,6 +185,16 @@ export const CreateMockTestDialog = ({
                         {errors.courseId && (
                             <p className="text-xs text-destructive">{errors.courseId.message}</p>
                         )}
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4 rounded-lg border border-border/20 bg-muted p-4">
+                        <div>
+                            <Label className="text-sm font-medium">International Storage</Label>
+                            <p className="text-xs text-muted-foreground">
+                                Use the international provider for mock test uploads.
+                            </p>
+                        </div>
+                        <Switch checked={isInternational} onCheckedChange={setIsInternational} />
                     </div>
 
                     {/* Thumbnail */}

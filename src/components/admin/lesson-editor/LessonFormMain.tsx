@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
@@ -37,6 +38,7 @@ const lessonSchema = z.object({
   status: z.enum(['draft', 'published', 'archived']),
   courseId: z.string().min(1, 'Course is required'),
   milestoneId: z.string().min(1, 'Milestone is required'),
+  isInternational: z.boolean(),
 });
 
 type LessonFormData = z.infer<typeof lessonSchema>;
@@ -95,6 +97,7 @@ export default function LessonFormMain() {
       status: 'draft' as LessonStatus,
       courseId: '',
       milestoneId: '',
+      isInternational: true,
     },
   });
 
@@ -143,10 +146,8 @@ export default function LessonFormMain() {
 
 const onSubmit = async (data: LessonFormData) => {
   try {
-    // Build FormData for Multer compatibility
     const formData = new FormData();
-    
-    // Common fields
+
     formData.append('title', data.title);
     formData.append('description', data.description || '');
     formData.append('type', lessonType);
@@ -154,8 +155,8 @@ const onSubmit = async (data: LessonFormData) => {
     formData.append('status', status);
     formData.append('course', data.courseId);
     formData.append('milestone', data.milestoneId);
+    formData.append('isInternational', String(data.isInternational));
 
-    // Type-specific fields
     switch (lessonType) {
       case 'video':
         if (videoFile) {
@@ -163,87 +164,70 @@ const onSubmit = async (data: LessonFormData) => {
         } else if (videoUrl) {
           formData.append('videoUrl', videoUrl);
         }
-        formData.append('videoDuration', String(videoDuration));
+        if (videoDuration) {
+          formData.append('videoDuration', String(videoDuration));
+        }
         break;
-        
+
       case 'audio':
         if (audioFile) {
-          formData.append('audioFile', audioFile);
+          formData.append('audio', audioFile);
         } else if (audioUrl) {
           formData.append('audioUrl', audioUrl);
         }
-        formData.append('transcripts', JSON.stringify(transcripts));
+        if (transcripts.length > 0) {
+          formData.append('transcripts', JSON.stringify(transcripts));
+        }
         break;
-        
-      case 'doc':
-        formData.append('doc', docContent);
-        break;
-        
-      case 'quiz': {
-      const audioQuestion = questions.find(q => q.type === 'audio' && q.audioFile);
 
-if (audioQuestion?.audioFile) {
-  formData.append('audioFile', audioQuestion.audioFile);
-}
-        formData.append('questions', JSON.stringify(questions));
+      case 'doc':
+        if (docContent) {
+          formData.append('doc', docContent);
+        }
+        break;
+
+      case 'quiz': {
+        const audioQuestion = questions.find((q) => q.type === 'audio' && q.audioFile);
+        if (audioQuestion?.audioFile) {
+          formData.append('audioFile', audioQuestion.audioFile);
+        }
+        if (questions.length > 0) {
+          formData.append('questions', JSON.stringify(questions));
+        }
         break;
       }
-        
-   
 
-        case 'assignment': {
-  const assignment = {
-    instruction: assignmentInstruction,
-    maxMarks,
-    ...(deadline && { deadline: deadline.toISOString() }),
-  };
+      case 'assignment': {
+        const assignment = {
+          instruction: assignmentInstruction,
+          maxMarks,
+          ...(deadline && { deadline: deadline.toISOString() }),
+        };
+        formData.append('assignment', JSON.stringify(assignment));
+        break;
+      }
 
-  formData.append('assignment', JSON.stringify(assignment));
-  break;
-}
-
-
-
+      default:
+        break;
     }
 
-    
-
-    // Debug log in development
-  
-
     await createLesson(formData).unwrap();
-    
     toast.success(t('lesson.lessonSavedSuccessfully'));
 
-    // Reset form and state
     reset();
     setSelectedCourseId('');
     setSelectedMilestoneId('');
     setQuestions([]);
-    navigate('/dashboard/lesson')
-    
+    navigate('/dashboard/lesson');
   } catch (error) {
     console.error('Error saving lesson:', error);
-    
-    // More detailed error handling
+
     let errorMessage = t('common.pleaseTryAgain');
-    
     if (error instanceof Error) {
       errorMessage = error.message;
-    } else if (typeof error === 'object' && error !== null) {
-      // Handle RTK Query error format
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const rtkError = error as any;
-      if (rtkError.data?.message) {
-        errorMessage = rtkError.data.message;
-      } else if (rtkError.error) {
-        errorMessage = rtkError.error;
-      }
     }
-    
-    toast.error(t('lesson.failedToSaveLesson'), {
-      description: errorMessage,
-    });
+
+    toast.error(errorMessage);
   }
 };
 
@@ -394,6 +378,22 @@ if (audioQuestion?.audioFile) {
                 placeholder={t('lesson.orderPlaceholder')}
               />
             </div>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 rounded-lg border border-border/20 bg-muted p-4">
+            <div>
+              <Label className="text-sm font-medium">International Storage</Label>
+              <p className="text-xs text-muted-foreground">
+                Store uploaded lesson media on the international provider.
+              </p>
+            </div>
+            <Controller
+              name="isInternational"
+              control={control}
+              render={({ field }) => (
+                <Switch checked={field.value} onCheckedChange={field.onChange} />
+              )}
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

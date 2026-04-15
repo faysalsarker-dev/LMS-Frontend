@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -40,7 +40,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import NoDataFound from '@/components/shared/NoDataFound';
@@ -56,6 +55,7 @@ const lessonSchema = z.object({
   order: z.number().min(1, 'Order must be at least 1'),
   course: z.string().min(1, 'Please select a course'),
   milestone: z.string().min(1, 'Please select a milestone'),
+  isInternational: z.boolean(),
 });
 
 type LessonFormValues = z.infer<typeof lessonSchema>;
@@ -111,6 +111,7 @@ export default function EditLessonPage() {
       order: 1,
       course: '',
       milestone: '',
+      isInternational: true,
     },
   });
 
@@ -123,14 +124,9 @@ export default function EditLessonPage() {
         order: Number(lessonData.order),
         course: lessonData.course,
         milestone: lessonData?.milestone || lessonData?.milestone,
+        isInternational: lessonData.isInternational ?? true,
       });
 
-
-      // Set content-specific data
-      if (lessonData.type === 'video' && lessonData.video) {
-        setVideoDuration(lessonData.video.duration);
-      }
-      
       if (lessonData.type === 'audio' && lessonData.audio) {
         setAudioDuration(lessonData.audio.duration);
         setTranscripts(lessonData.audio.transcripts || []);
@@ -164,6 +160,7 @@ export default function EditLessonPage() {
       formData.append('order', values.order.toString());
       formData.append('course', values.course);
       formData.append('milestone', values.milestone);
+      formData.append('isInternational', String(values.isInternational));
 
       // Handle type-specific content
       if (lessonData?.type === 'video') {
@@ -457,88 +454,97 @@ handleApiError(err);
 
                        
                         </div>
-
-                  
                       </div>
 
-                      <Separator />
+                        <div className="flex items-center justify-between gap-3 rounded-lg border border-border/20 bg-muted p-4">
+                          <div>
+                            <label className="text-sm font-medium">International Storage</label>
+                            <p className="text-xs text-muted-foreground">
+                              Upload lesson files using the international storage provider.
+                            </p>
+                          </div>
+                          <Controller
+                            name="isInternational"
+                            control={form.control}
+                            render={({ field }) => (
+                              <Switch checked={field.value} onCheckedChange={field.onChange} />
+                            )}
+                          />
+                        </div>
 
-                      {/* Content-Specific Sections */}
-                      <AnimatePresence mode="wait">
-                        {lessonData?.type === 'video' && (
-                          <motion.div
+                        <AnimatePresence mode="wait">
+                          {lessonData?.type === 'video' && (
+                            <motion.div
                             key="video"
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="space-y-4"
+                            className="space-y-6"
                           >
-                            <div>
-                              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                                <Video className="h-5 w-5 text-primary" />
-                                Video Content
-                              </h3>
-                              
-                              <div className="space-y-4">
-                                <div>
-                                  <label className="block text-sm font-medium mb-2">
-                                    Current Video
-                                  </label>
-                                  {lessonData.video?.url && (
-                                    <div className="bg-muted/50 p-4 rounded-lg mb-3">
-                                      <p className="text-sm text-muted-foreground">
-                                        {lessonData.video.url}
-                                      </p>
-                                      {lessonData.video.duration && (
-                                        <p className="text-xs text-muted-foreground mt-1">
-                                          Duration: {Math.floor(lessonData.video.duration / 60)}m {lessonData.video.duration % 60}s
-                                        </p>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
+                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                              <Video className="h-5 w-5 text-primary" />
+                              Video Content
+                            </h3>
 
-                                <div>
-                                  <label className="block text-sm font-medium mb-2">
-                                    Upload New Video (optional)
-                                  </label>
-                                  <div className="flex items-center gap-4">
-                                    <Input
-                                      type="file"
-                                      accept="video/*"
-                                      onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
-                                      className="h-11"
-                                    />
-                                    {videoFile && (
-                                      <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => setVideoFile(null)}
-                                      >
-                                        <X className="h-4 w-4" />
-                                      </Button>
+                            <div className="space-y-4">
+                              <div>
+                                <label className="block text-sm font-medium mb-2">
+                                  Current Video
+                                </label>
+                                {lessonData.video?.url && (
+                                  <div className="bg-muted/50 p-4 rounded-lg mb-3">
+                                    <p className="text-sm text-muted-foreground">
+                                      {lessonData.video.url}
+                                    </p>
+                                    {lessonData.video.duration && (
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        Duration: {Math.floor(lessonData.video.duration / 60)}m {lessonData.video.duration % 60}s
+                                      </p>
                                     )}
                                   </div>
-                                  {videoFile && (
-                                    <p className="text-sm text-muted-foreground mt-2">
-                                      Selected: {videoFile.name}
-                                    </p>
-                                  )}
-                                </div>
+                                )}
+                              </div>
 
-                                <div>
-                                  <label className="block text-sm font-medium mb-2">
-                                    Duration (seconds)
-                                  </label>
+                              <div>
+                                <label className="block text-sm font-medium mb-2">
+                                  Upload New Video (optional)
+                                </label>
+                                <div className="flex items-center gap-4">
                                   <Input
-                                    type="number"
-                                    value={videoDuration || ''}
-                                    onChange={(e) => setVideoDuration(Number(e.target.value) || null)}
-                                    placeholder="Auto-detect or enter manually"
+                                    type="file"
+                                    accept="video/*"
+                                    onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
                                     className="h-11"
                                   />
+                                  {videoFile && (
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() => setVideoFile(null)}
+                                    >
+                                      <X className="h-4 w-4" />
+                                    </Button>
+                                  )}
                                 </div>
+                                {videoFile && (
+                                  <p className="text-sm text-muted-foreground mt-2">
+                                    Selected: {videoFile.name}
+                                  </p>
+                                )}
+                              </div>
+
+                              <div>
+                                <label className="block text-sm font-medium mb-2">
+                                  Duration (seconds)
+                                </label>
+                                <Input
+                                  type="number"
+                                  value={videoDuration || ''}
+                                  onChange={(e) => setVideoDuration(Number(e.target.value) || null)}
+                                  placeholder="Auto-detect or enter manually"
+                                  className="h-11"
+                                />
                               </div>
                             </div>
                           </motion.div>

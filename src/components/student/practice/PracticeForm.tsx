@@ -35,6 +35,7 @@ const practiceSchema = z.object({
   course: z.string().min(1, 'Course is required'),
   thumbnail: z.string().optional(),
   isActive: z.boolean(),
+  isInternational: z.boolean(),
 });
 
 type PracticeFormData = z.infer<typeof practiceSchema>;
@@ -65,6 +66,7 @@ export const PracticeForm = ({
       course: initialData?.course?._id || '',
       thumbnail: initialData?.thumbnail || '',
       isActive: initialData?.isActive ?? true,
+      isInternational: initialData?.isInternational ?? true,
     },
   });
 
@@ -97,6 +99,7 @@ export const PracticeForm = ({
       formData.append('description', data.description);
     }
 
+    formData.append('isInternational', String(data.isInternational));
     if (thumbnailFile) {
       formData.append('file', thumbnailFile);
     } else if (data.thumbnail && !data.thumbnail.startsWith('blob:')) {
@@ -227,6 +230,24 @@ export const PracticeForm = ({
                             checked={field.value}
                             onCheckedChange={field.onChange}
                           />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="isInternational"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center justify-between rounded-lg border p-3">
+                        <div className="space-y-0.5">
+                          <FormLabel>International Storage</FormLabel>
+                          <FormDescription className="text-xs">
+                            Store practice thumbnail in the international provider.
+                          </FormDescription>
+                        </div>
+                        <FormControl>
+                          <Switch checked={field.value} onCheckedChange={field.onChange} />
                         </FormControl>
                       </FormItem>
                     )}
