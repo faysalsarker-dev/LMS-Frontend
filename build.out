@@ -1,0 +1,114 @@
+
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+[36mvite v7.1.5 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 4107 modules transformed.
+rendering chunks...
+[33m[plugin vite:reporter] 
+(!) E:/RTP ( Real Time Project )/LMS/Frontend/src/pages/PublicPages/course/CourseDetails.tsx is dynamically imported by E:/RTP ( Real Time Project )/LMS/Frontend/src/router/allRoutes.ts but also statically imported by E:/RTP ( Real Time Project )/LMS/Frontend/src/router/routes/public.ts, dynamic import will not move module into another chunk.
+[39m
+computing gzip size...
+[2mdist/[22m[32mindex.html                                  [39m[1m[2m    0.48 kB[22m[1m[22m[2m │ gzip:   0.31 kB[22m
+[2mdist/[22m[32massets/bg_mobile-BM2scoxM.png               [39m[1m[2m  426.01 kB[22m[1m[22m
+[2mdist/[22m[32massets/bg-wl9suZdM.png                      [39m[1m[2m  809.98 kB[22m[1m[22m
+[2mdist/[22m[35massets/index-DTUy7WgF.css                   [39m[1m[2m  244.49 kB[22m[1m[22m[2m │ gzip:  31.00 kB[22m
+[2mdist/[22m[36massets/isBefore-DS_po3qI.js                 [39m[1m[2m    0.09 kB[22m[1m[22m[2m │ gzip:   0.10 kB[22m
+[2mdist/[22m[36massets/endOfMonth-BE9gBntq.js               [39m[1m[2m    0.31 kB[22m[1m[22m[2m │ gzip:   0.22 kB[22m
+[2mdist/[22m[36massets/plus-B-TFh52X.js                     [39m[1m[2m    0.33 kB[22m[1m[22m[2m │ gzip:   0.26 kB[22m
+[2mdist/[22m[36massets/dollar-sign-Dh4Rkyh0.js              [39m[1m[2m    0.39 kB[22m[1m[22m[2m │ gzip:   0.30 kB[22m
+[2mdist/[22m[36massets/music-D7Kc6C3n.js                    [39m[1m[2m    0.39 kB[22m[1m[22m[2m │ gzip:   0.29 kB[22m
+[2mdist/[22m[36massets/target-BSRvOl5Y.js                   [39m[1m[2m    0.40 kB[22m[1m[22m[2m │ gzip:   0.27 kB[22m
+[2mdist/[22m[36massets/upload-J5amcAz-.js                   [39m[1m[2m    0.40 kB[22m[1m[22m[2m │ gzip:   0.29 kB[22m
+[2mdist/[22m[36massets/activity-CwOLscgb.js                 [39m[1m[2m    0.41 kB[22m[1m[22m[2m │ gzip:   0.30 kB[22m
+[2mdist/[22m[36massets/ellipsis-vertical-DGo2OatG.js        [39m[1m[2m    0.41 kB[22m[1m[22m[2m │ gzip:   0.27 kB[22m
+[2mdist/[22m[36massets/copy-B_KlgrK0.js                     [39m[1m[2m    0.41 kB[22m[1m[22m[2m │ gzip:   0.31 kB[22m
+[2mdist/[22m[36massets/arrow-up-down-BwxVtkOv.js            [39m[1m[2m    0.42 kB[22m[1m[22m[2m │ gzip:   0.30 kB[22m
+[2mdist/[22m[36massets/video-lxFtKNm3.js                    [39m[1m[2m    0.42 kB[22m[1m[22m[2m │ gzip:   0.32 kB[22m
+[2mdist/[22m[36massets/funnel-BdRmjUhN.js                   [39m[1m[2m    0.43 kB[22m[1m[22m[2m │ gzip:   0.32 kB[22m
+[2mdist/[22m[36massets/image-NLJVse-q.js                    [39m[1m[2m    0.44 kB[22m[1m[22m[2m │ gzip:   0.33 kB[22m
+[2mdist/[22m[36massets/pencil-DPobeVJu.js                   [39m[1m[2m    0.45 kB[22m[1m[22m[2m │ gzip:   0.33 kB[22m
+[2mdist/[22m[36massets/arrow-up-narrow-wide-BcK3Jp8S.js     [39m[1m[2m    0.46 kB[22m[1m[22m[2m │ gzip:   0.31 kB[22m
+[2mdist/[22m[36massets/save-Be8NPxR7.js                     [39m[1m[2m    0.50 kB[22m[1m[22m[2m │ gzip:   0.33 kB[22m
+[2mdist/[22m[36massets/trash-2--m2Q4kFw.js                  [39m[1m[2m    0.50 kB[22m[1m[22m[2m │ gzip:   0.32 kB[22m
+[2mdist/[22m[36massets/file-text-BKIPceYZ.js                [39m[1m[2m    0.51 kB[22m[1m[22m[2m │ gzip:   0.32 kB[22m
+[2mdist/[22m[36massets/key-round-BKRVHash.js                [39m[1m[2m    0.53 kB[22m[1m[22m[2m │ gzip:   0.36 kB[22m
+[2mdist/[22m[36massets/image-plus-CN12AoIK.js               [39m[1m[2m    0.54 kB[22m[1m[22m[2m │ gzip:   0.36 kB[22m
+[2mdist/[22m[36massets/clipboard-list-D0uitcsA.js           [39m[1m[2m    0.58 kB[22m[1m[22m[2m │ gzip:   0.36 kB[22m
+[2mdist/[22m[36massets/textarea-D2D5HHwF.js                 [39m[1m[2m    0.61 kB[22m[1m[22m[2m │ gzip:   0.38 kB[22m
+[2mdist/[22m[36massets/settings-nT8kC7Xm.js                 [39m[1m[2m    0.66 kB[22m[1m[22m[2m │ gzip:   0.36 kB[22m
+[2mdist/[22m[36massets/CreatePracticePage-CgxdQB_9.js       [39m[1m[2m    0.93 kB[22m[1m[22m[2m │ gzip:   0.55 kB[22m
+[2mdist/[22m[36massets/progress.api-C7fEA1R3.js             [39m[1m[2m    0.99 kB[22m[1m[22m[2m │ gzip:   0.53 kB[22m
+[2mdist/[22m[36massets/lesson.api-DIvIc2dP.js               [39m[1m[2m    1.06 kB[22m[1m[22m[2m │ gzip:   0.47 kB[22m
+[2mdist/[22m[36massets/milestone.api-ewN1xb9A.js            [39m[1m[2m    1.10 kB[22m[1m[22m[2m │ gzip:   0.46 kB[22m
+[2mdist/[22m[36massets/table-2DOXnWDa.js                    [39m[1m[2m    1.19 kB[22m[1m[22m[2m │ gzip:   0.47 kB[22m
+[2mdist/[22m[36massets/Progress-D9fSvqcb.js                 [39m[1m[2m    1.25 kB[22m[1m[22m[2m │ gzip:   0.73 kB[22m
+[2mdist/[22m[36massets/assignmentSubmissionApi-DiAbAFaw.js  [39m[1m[2m    1.40 kB[22m[1m[22m[2m │ gzip:   0.45 kB[22m
+[2mdist/[22m[36massets/UpdateSectionDialog-8M5MqxtY.js      [39m[1m[2m    1.47 kB[22m[1m[22m[2m │ gzip:   0.79 kB[22m
+[2mdist/[22m[36massets/Preview-D1KYjCaM.js                  [39m[1m[2m    1.51 kB[22m[1m[22m[2m │ gzip:   0.83 kB[22m
+[2mdist/[22m[36massets/form-7q6dMusc.js                     [39m[1m[2m    1.58 kB[22m[1m[22m[2m │ gzip:   0.69 kB[22m
+[2mdist/[22m[36massets/currency-CC7fpvEb.js                 [39m[1m[2m    1.84 kB[22m[1m[22m[2m │ gzip:   0.79 kB[22m
+[2mdist/[22m[36massets/progress-D9Vou7kz.js                 [39m[1m[2m    1.92 kB[22m[1m[22m[2m │ gzip:   0.94 kB[22m
+[2mdist/[22m[36massets/EnrolledCourseCard-CbJFkqOs.js       [39m[1m[2m    1.92 kB[22m[1m[22m[2m │ gzip:   0.86 kB[22m
+[2mdist/[22m[36massets/MyCourses-DAMvNOph.js                [39m[1m[2m    2.27 kB[22m[1m[22m[2m │ gzip:   0.98 kB[22m
+[2mdist/[22m[36massets/practice.api-BlAyYUIM.js             [39m[1m[2m    2.50 kB[22m[1m[22m[2m │ gzip:   0.69 kB[22m
+[2mdist/[22m[36massets/switch-D0ix_jJl.js                   [39m[1m[2m    2.54 kB[22m[1m[22m[2m │ gzip:   1.26 kB[22m
+[2mdist/[22m[36massets/MockTestsPage-D6DwQjO0.js            [39m[1m[2m    3.33 kB[22m[1m[22m[2m │ gzip:   1.31 kB[22m
+[2mdist/[22m[36massets/PracticeTasksPage-CNed1O21.js        [39m[1m[2m    3.34 kB[22m[1m[22m[2m │ gzip:   1.33 kB[22m
+[2mdist/[22m[36massets/FieldArray-BM1gjXx3.js               [39m[1m[2m    3.81 kB[22m[1m[22m[2m │ gzip:   1.46 kB[22m
+[2mdist/[22m[36massets/react-C1JG2wmH.js                    [39m[1m[2m    3.88 kB[22m[1m[22m[2m │ gzip:   1.90 kB[22m
+[2mdist/[22m[36massets/ForgotPassword-4Ud-XPPr.js           [39m[1m[2m    4.54 kB[22m[1m[22m[2m │ gzip:   1.66 kB[22m
+[2mdist/[22m[36massets/PracticeForm-2eRFMlka.js             [39m[1m[2m    5.23 kB[22m[1m[22m[2m │ gzip:   1.85 kB[22m
+[2mdist/[22m[36massets/UpdateMockTestDialog-ZcQvrNer.js     [39m[1m[2m    5.39 kB[22m[1m[22m[2m │ gzip:   2.08 kB[22m
+[2mdist/[22m[36massets/CreateMockTestPage-DIcw6yOG.js       [39m[1m[2m    5.46 kB[22m[1m[22m[2m │ gzip:   2.19 kB[22m
+[2mdist/[22m[36massets/PracticeDetail-D_mU6p9F.js           [39m[1m[2m    6.03 kB[22m[1m[22m[2m │ gzip:   2.18 kB[22m
+[2mdist/[22m[36massets/ResetPassword-C18OP90l.js            [39m[1m[2m    6.38 kB[22m[1m[22m[2m │ gzip:   1.87 kB[22m
+[2mdist/[22m[36massets/react-CFe8h7hD.js                    [39m[1m[2m    6.53 kB[22m[1m[22m[2m │ gzip:   2.78 kB[22m
+[2mdist/[22m[36massets/PendingSubmissionsPage-CN4Zyp9o.js   [39m[1m[2m    6.78 kB[22m[1m[22m[2m │ gzip:   2.13 kB[22m
+[2mdist/[22m[36massets/CategoryPage-C9lBRujC.js             [39m[1m[2m    7.16 kB[22m[1m[22m[2m │ gzip:   2.47 kB[22m
+[2mdist/[22m[36massets/react-Dz2ZQCez.js                    [39m[1m[2m    7.32 kB[22m[1m[22m[2m │ gzip:   3.17 kB[22m
+[2mdist/[22m[36massets/MockTestSectionsPage-DvYMwrHr.js     [39m[1m[2m    7.55 kB[22m[1m[22m[2m │ gzip:   2.66 kB[22m
+[2mdist/[22m[36massets/react-_-VN0_tP.js                    [39m[1m[2m    7.87 kB[22m[1m[22m[2m │ gzip:   3.17 kB[22m
+[2mdist/[22m[36massets/MockTestDetailPageAdmin-BoiJ-836.js  [39m[1m[2m    7.88 kB[22m[1m[22m[2m │ gzip:   2.66 kB[22m
+[2mdist/[22m[36massets/TestimonialPage-frpRDlYJ.js          [39m[1m[2m    8.37 kB[22m[1m[22m[2m │ gzip:   3.03 kB[22m
+[2mdist/[22m[36massets/react-BjPRmGCF.js                    [39m[1m[2m    8.88 kB[22m[1m[22m[2m │ gzip:   3.62 kB[22m
+[2mdist/[22m[36massets/MockTestsPage-iD2JrcEW.js            [39m[1m[2m    9.01 kB[22m[1m[22m[2m │ gzip:   3.05 kB[22m
+[2mdist/[22m[36massets/Milestone-wyIXPKU4.js                [39m[1m[2m    9.28 kB[22m[1m[22m[2m │ gzip:   3.05 kB[22m
+[2mdist/[22m[36massets/react-C-9fSNV1.js                    [39m[1m[2m    9.61 kB[22m[1m[22m[2m │ gzip:   3.81 kB[22m
+[2mdist/[22m[36massets/EnrolmentPage-D2ScSiaM.js            [39m[1m[2m   10.87 kB[22m[1m[22m[2m │ gzip:   3.36 kB[22m
+[2mdist/[22m[36massets/react-DdzUD-Dy.js                    [39m[1m[2m   11.10 kB[22m[1m[22m[2m │ gzip:   4.24 kB[22m
+[2mdist/[22m[36massets/PracticesPage-C83167n3.js            [39m[1m[2m   11.75 kB[22m[1m[22m[2m │ gzip:   3.67 kB[22m
+[2mdist/[22m[36massets/CreateCourse-DbQYzXx8.js             [39m[1m[2m   13.56 kB[22m[1m[22m[2m │ gzip:   3.54 kB[22m
+[2mdist/[22m[36massets/StudentDashboard-JeB0XtOc.js         [39m[1m[2m   14.37 kB[22m[1m[22m[2m │ gzip:   4.18 kB[22m
+[2mdist/[22m[36massets/LessonPage-6PC6g811.js               [39m[1m[2m   14.56 kB[22m[1m[22m[2m │ gzip:   4.35 kB[22m
+[2mdist/[22m[36massets/mixin-D3UDm--6.js                    [39m[1m[2m   15.08 kB[22m[1m[22m[2m │ gzip:   3.83 kB[22m
+[2mdist/[22m[36massets/AssignmentPage-UIAHc_H-.js           [39m[1m[2m   16.25 kB[22m[1m[22m[2m │ gzip:   4.66 kB[22m
+[2mdist/[22m[36massets/OtpVerify-DaBjN3hv.js                [39m[1m[2m   17.10 kB[22m[1m[22m[2m │ gzip:   6.09 kB[22m
+[2mdist/[22m[36massets/AllCourses-DqYlTHkk.js               [39m[1m[2m   18.30 kB[22m[1m[22m[2m │ gzip:   5.10 kB[22m
+[2mdist/[22m[36massets/EditLessonPage-DUPwfAwk.js           [39m[1m[2m   19.45 kB[22m[1m[22m[2m │ gzip:   4.91 kB[22m
+[2mdist/[22m[36massets/MockTestSectionPage-7z0ErZQe.js      [39m[1m[2m   21.70 kB[22m[1m[22m[2m │ gzip:   6.10 kB[22m
+[2mdist/[22m[36massets/purify.es-B9ZVCkUG.js                [39m[1m[2m   22.64 kB[22m[1m[22m[2m │ gzip:   8.75 kB[22m
+[2mdist/[22m[36massets/FileUpload-BIIZADnK.js               [39m[1m[2m   23.23 kB[22m[1m[22m[2m │ gzip:   7.75 kB[22m
+[2mdist/[22m[36massets/ViewPracticePage-Cu_uActG.js         [39m[1m[2m   23.80 kB[22m[1m[22m[2m │ gzip:   5.42 kB[22m
+[2mdist/[22m[36massets/SubmissionDetailPage-CkArtFDG.js     [39m[1m[2m   25.40 kB[22m[1m[22m[2m │ gzip:   6.74 kB[22m
+[2mdist/[22m[36massets/Users-BTGxNfYu.js                    [39m[1m[2m   26.42 kB[22m[1m[22m[2m │ gzip:   6.54 kB[22m
+[2mdist/[22m[36massets/Profile-BgjzxlyX.js                  [39m[1m[2m   38.40 kB[22m[1m[22m[2m │ gzip:  10.10 kB[22m
+[2mdist/[22m[36massets/react-CzeaMxV0.js                    [39m[1m[2m   50.07 kB[22m[1m[22m[2m │ gzip:  15.72 kB[22m
+[2mdist/[22m[36massets/popover-Cou5oQry.js                  [39m[1m[2m   53.79 kB[22m[1m[22m[2m │ gzip:  16.94 kB[22m
+[2mdist/[22m[36massets/LessonFormMain-CQHduNqy.js           [39m[1m[2m   54.70 kB[22m[1m[22m[2m │ gzip:  16.13 kB[22m
+[2mdist/[22m[36massets/AdminPromoPage-DSNh1tV7.js           [39m[1m[2m   89.95 kB[22m[1m[22m[2m │ gzip:  31.68 kB[22m
+[2mdist/[22m[36massets/index.es-uzc-Bfpb.js                 [39m[1m[2m  159.69 kB[22m[1m[22m[2m │ gzip:  53.59 kB[22m
+[2mdist/[22m[36massets/html2canvas.esm-B0tyYwQk.js          [39m[1m[2m  202.36 kB[22m[1m[22m[2m │ gzip:  48.04 kB[22m
+[2mdist/[22m[36massets/AdminDashboardOverview-CTpMY4Dp.js   [39m[1m[2m  411.37 kB[22m[1m[22m[2m │ gzip: 112.78 kB[22m
+[2mdist/[22m[36massets/index-BnEyM_7l.js                    [39m[1m[2m  485.73 kB[22m[1m[22m[2m │ gzip: 127.03 kB[22m
+[2mdist/[22m[36massets/CoursePlayer-HsiK2Y8B.js             [39m[1m[2m  494.63 kB[22m[1m[22m[2m │ gzip: 157.67 kB[22m
+[2mdist/[22m[36massets/hls-Bm3F2dIq.js                      [39m[1m[33m  520.14 kB[39m[22m[2m │ gzip: 161.11 kB[22m
+[2mdist/[22m[36massets/dash.all.min-c_ldjLP4.js             [39m[1m[33m  965.84 kB[39m[22m[2m │ gzip: 297.68 kB[22m
+[2mdist/[22m[36massets/index-CdqNStch.js                    [39m[1m[33m1,547.32 kB[39m[22m[2m │ gzip: 445.66 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 29.30s[39m

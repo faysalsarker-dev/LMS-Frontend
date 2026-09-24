@@ -1,9 +1,11 @@
 import { Link, useLocation } from "react-router";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { studentRoutes } from "@/router/routes/student";
 
 export function StudentMobileNavbar() {
   const location = useLocation();
+  const { t } = useTranslation();
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-t border-border px-4 py-2">
       <div className="flex justify-between items-center max-w-md mx-auto">
@@ -21,7 +23,7 @@ export function StudentMobileNavbar() {
               {route.icon && (
                 <route.icon className={cn("w-5 h-5", isActive && "animate-pulse")} />
               )}
-              <span className="text-[10px] font-medium">{route.name}</span>
+              <span className="text-[10px] font-medium">{t(route.name)}</span>
             </Link>
           );
         })}

@@ -23,9 +23,8 @@ import { Switch } from "@/components/ui/switch";
 import FileUpload from "@/components/ui/FileUpload";
 import { FormSection } from "@/components/form/FormSection";
 import { FieldArray } from "@/components/form/FieldArray";
-import { BookOpen, Clock, DollarSign, FileText, Save, Tag, Award, CheckSquare, Users, Copy } from "lucide-react";
+import { BookOpen, Clock, DollarSign, FileText, Save, Tag, Award, CheckSquare, Copy } from "lucide-react";
 import { toast } from "react-hot-toast";
-import NoDataFound from "@/components/shared/NoDataFound";
 import { useGetCourseBySlugQuery, useUpdateCourseMutation } from "@/redux/features/course/course.api";
 import { currencies } from "@/utils/currency";
 import { handleApiError } from "@/utils/errorHandler";
@@ -103,7 +102,7 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
   const [updateCourse, { isLoading: isUpdating }] = useUpdateCourseMutation();
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const { register, handleSubmit, control, reset, watch } = useForm<FormValues>({ defaultValues });
-
+console.log("Course data for update:", course);
   // Field arrays
   const tagFieldArray = useFieldArray({ control, name: "tags" });
   const skillFieldArray = useFieldArray({ control, name: "skills" });
@@ -375,25 +374,7 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
               </div>
             </FormSection>
 
-            {/* Enrolled Students */}
-            <FormSection title="Enrolled Students" description="List of enrolled students" icon={<Users className="h-6 w-6" />}>
-              {course?.enrolledStudents?.length ? (
-                <ul className="list-disc pl-6 space-y-1">
-                  {course.enrolledStudents.map((s: any) => (
-                    <li key={s._id}>
-                      {s.name} <span className="text-muted-foreground">({s.email})</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="border border-dashed rounded-lg bg-background p-2">
-                  <NoDataFound 
-                    message="No students enrolled yet." 
-                    className="min-h-[100px] p-2"
-                  />
-                </div>
-              )}
-            </FormSection>
+         
 
             <Button type="submit" disabled={isUpdating} className="w-full h-12">
               {isUpdating ? "Updating..." : <><Save className="mr-2 h-4 w-4" /> Update Course</>}

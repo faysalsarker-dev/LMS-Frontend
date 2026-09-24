@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
@@ -44,6 +45,7 @@ export const CategoryDialog: React.FC<Props> = ({
   const [updateCategory] = useUpdateCategoryMutation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [pickedFile, setPickedFile] = useState<File | null>(null);
+  const [isInternational, setIsInternational] = useState(initial?.isInternational ?? true);
 
   const {
     register,
@@ -63,8 +65,10 @@ export const CategoryDialog: React.FC<Props> = ({
         title: initial.title,
         description: initial.description || "",
       });
+      setIsInternational(initial.isInternational ?? true);
     } else {
       reset({ title: "", description: "", totalCourse: 0 });
+      setIsInternational(true);
     }
     setPickedFile(null);
   }, [initial, reset, open]);
@@ -73,6 +77,7 @@ export const CategoryDialog: React.FC<Props> = ({
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("description", data.description || "");
+    formData.append("isInternational", String(isInternational));
     if (pickedFile) formData.append("file", pickedFile);
 
     setIsSubmitting(true);
@@ -126,6 +131,16 @@ export const CategoryDialog: React.FC<Props> = ({
                 />
               </div>
             )}
+          </div>
+
+          <div className="flex items-center justify-between gap-4 rounded-lg border border-border/20 bg-muted p-4">
+            <div>
+              <Label className="text-sm font-medium">International Storage</Label>
+              <p className="text-xs text-muted-foreground">
+                Upload this category thumbnail to the international storage provider.
+              </p>
+            </div>
+            <Switch checked={isInternational} onCheckedChange={setIsInternational} />
           </div>
 
           {/* Title */}

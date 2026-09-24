@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
-import {  User } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import { getRoutesByRole } from "@/router/routeFilter";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -27,8 +27,7 @@ export function AppSidebar() {
       const { data, isLoading } = useUserInfoQuery({});
   
       const user = data?.data;
-
-
+      const { t } = useTranslation();
 
     const allowedRoutes = getRoutesByRole(user?.role);
 
@@ -44,13 +43,17 @@ export function AppSidebar() {
     >
       <SidebarContent className="flex flex-col h-full">
         {/* Header */}
-        <SidebarHeader className="border-b border-sidebar-border p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex-shrink-0">
-         <Logo/>
-            </div>
-
-        
+        <SidebarHeader className="border-b border-sidebar-border px-3 py-4">
+          <div className="flex items-center justify-start w-full">
+            {open ? (
+              <Logo className="w-full max-w-[140px]" />
+            ) : (
+              <Logo
+                src="/humanistic.png"
+                alt="Humanistic icon"
+                className="w-full max-w-[40px]"
+              />
+            )}
           </div>
         </SidebarHeader>
 
@@ -59,7 +62,7 @@ export function AppSidebar() {
           <ScrollArea className="h-full py-4">
             <SidebarGroup>
               <SidebarGroupContent>
-                <SidebarMenu className="space-y-1 px-3">
+                <SidebarMenu className={`space-y-1 ${open ? "px-2" : "px-0"}`}>
 
 
 
@@ -104,29 +107,22 @@ export function AppSidebar() {
                           )}
                           asChild
                         >
-                          <Link to={item.path} className="flex items-center gap-3">
-                            <item.icon
-                              className={cn(
-                                "w-5 h-5 transition-colors",
-                                isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
-                              )}
-                            />
+                          <Link to={item.path} className="  gap-3">
+                      
+                              <item.icon
+                                className={cn(
+                                  "w-6 h-6 transition-colors",
+                                  isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                                )}
+                              />
+                      
                             {open && (
                               <span className="font-medium">
-                                {item.name}
+                                {t(item.name)}
                               </span>
                             )}
-                            {/* Notification badges for specific routes */}
-                            {open && item.name === "Messages" && (
-                              <Badge variant="destructive" className="ml-auto h-5 w-5 flex items-center justify-center text-xs p-0">
-                                3
-                              </Badge>
-                            )}
-                            {open && item.name === "Students" && (
-                              <Badge variant="secondary" className="ml-auto h-5 px-2 text-xs">
-                                142
-                              </Badge>
-                            )}
+                            
+                           
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
@@ -138,38 +134,65 @@ export function AppSidebar() {
           </ScrollArea>
         </div>
 
-        {/* Footer */}
-        <SidebarFooter className="border-t border-sidebar-border p-4 mt-auto">
-          {open ? (
-            <div className="text-center animate-fade-in">
-              <p className="text-xs text-muted-foreground">
-                Built with 💙 by{" "}
-                <a
-                  href="https://faysal-sarker.netlify.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:text-primary-hover font-medium transition-colors"
-                >
-                  Faysal Sarker
-                </a>
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                v2.0.0
-              </p>
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              <a
-                href="https://faysal-sarker.netlify.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 bg-gradient-to-br from-primary to-primary-hover rounded-lg flex items-center justify-center hover:shadow-lg transition-all duration-200 hover:scale-105"
-              >
-                <User className="w-4 h-4 text-white" />
-              </a>
-            </div>
-          )}
-        </SidebarFooter>
+
+<SidebarFooter className={`${open ? "p-4" : "p-2"} mt-auto border-t border-sidebar-border/50 `}>
+  {open ? (
+    /* Expanded State: Premium Card Look */
+    <div className="group relative overflow-hidden rounded-xl  bg-gradient-to-b from-primary/[0.03] to-transparent px-3 transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
+      <div className="flex items-center gap-3">
+        {/* Logo Container */}
+        <div className="relative flex h-10 w-10 shrink-0 items-center justify-center   shadow-sm ">
+          <img 
+            src="/Developer_faysal_sarker.png" 
+            alt="Logo" 
+            className="w-full h-full rounded-lg bg-black object-contain transition-transform duration-300 " 
+          />
+        </div>
+
+        {/* Text Details */}
+        <div className="flex flex-col truncate">
+          <span className="text-xs font-medium text-muted-foreground/80 uppercase tracking-wider">
+            Developed by
+          </span>
+          <p className="text-sm font-bold text-primary from-foreground to-foreground/70 bg-clip-text ">
+            Faysal Sarker
+          </p>
+        </div>
+
+        {/* Subtle External Link Icon */}
+        <a 
+          href="https://faysalsarker.me" 
+          target="_blank" 
+          className="ml-auto opacity-0 transition-opacity group-hover:opacity-100"
+        >
+          <ExternalLink className="h-3 w-3 text-muted-foreground hover:text-primary" />
+        </a>
+      </div>
+    </div>
+  ) : (
+    /* Collapsed State: Minimalist Icon */
+    <div className="flex justify-center">
+      <a
+        href="https://faysalsarker.me"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="relative group flex h-11 w-11 items-center justify-center  bg-background border border-sidebar-border shadow-sm transition-all duration-300 hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5"
+      >
+        <img 
+          src="/Developer_faysal_sarker.png" 
+          alt="FS" 
+          className="w-full h-full rounded-lg bg-black  transition-all duration-300 group-hover:grayscale-0 group-hover:scale-110" 
+        />
+        {/* Tooltip-like effect (Optional) */}
+        <span className="absolute left-14 hidden rounded-md bg-zinc-900 px-2 py-1 text-[10px] text-white group-hover:block">
+          Faysal
+        </span>
+      </a>
+    </div>
+  )}
+</SidebarFooter>
+
+
       </SidebarContent>
     </Sidebar>
   );

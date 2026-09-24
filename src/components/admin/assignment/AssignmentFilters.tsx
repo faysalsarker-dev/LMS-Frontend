@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Search, RotateCcw } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -22,18 +23,18 @@ interface AssignmentFiltersProps {
   isLoadingLessons: boolean;
 }
 
-const statusOptions: { value: SubmissionStatus | 'all'; label: string }[] = [
-  { value: 'all', label: 'All Status' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'reviewed', label: 'Reviewed' },
-  { value: 'graded', label: 'Graded' },
+const statusOptions: { value: SubmissionStatus | 'all'; labelKey: string }[] = [
+  { value: 'all', labelKey: 'assignment.filters.statusOptions.all' },
+  { value: 'pending', labelKey: 'assignment.filters.statusOptions.pending' },
+  { value: 'reviewed', labelKey: 'assignment.filters.statusOptions.reviewed' },
+  { value: 'graded', labelKey: 'assignment.filters.statusOptions.graded' },
 ];
 
-const typeOptions: { value: SubmissionType | 'all'; label: string }[] = [
-  { value: 'all', label: 'All Types' },
-  { value: 'file', label: 'File' },
-  { value: 'text', label: 'Text' },
-  { value: 'link', label: 'Link' },
+const typeOptions: { value: SubmissionType | 'all'; labelKey: string }[] = [
+  { value: 'all', labelKey: 'assignment.filters.typeOptions.all' },
+  { value: 'file', labelKey: 'assignment.filters.typeOptions.file' },
+  { value: 'text', labelKey: 'assignment.filters.typeOptions.text' },
+  { value: 'link', labelKey: 'assignment.filters.typeOptions.link' },
 ];
 
 export const AssignmentFilters = ({
@@ -45,6 +46,8 @@ export const AssignmentFilters = ({
   isLoadingCourses,
   isLoadingLessons,
 }: AssignmentFiltersProps) => {
+  const { t } = useTranslation();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -57,7 +60,7 @@ export const AssignmentFilters = ({
         <div className="relative lg:col-span-2">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search by student name or email..."
+            placeholder={t('assignment.filters.searchPlaceholder')}
             value={filters.search || ''}
             onChange={(e) => onFilterChange('search', e.target.value)}
             className="pl-10"
@@ -70,12 +73,12 @@ export const AssignmentFilters = ({
           onValueChange={(value) => onFilterChange('status', value)}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Status" />
+            <SelectValue placeholder={t('assignment.filters.status')} />
           </SelectTrigger>
           <SelectContent>
             {statusOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
-                {option.label}
+                {t(option.labelKey)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -87,12 +90,12 @@ export const AssignmentFilters = ({
           onValueChange={(value) => onFilterChange('submissionType', value)}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Type" />
+            <SelectValue placeholder={t('assignment.filters.type')} />
           </SelectTrigger>
           <SelectContent>
             {typeOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
-                {option.label}
+                {t(option.labelKey)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -105,10 +108,10 @@ export const AssignmentFilters = ({
           disabled={isLoadingCourses}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Course" />
+            <SelectValue placeholder={t('assignment.filters.course')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Courses</SelectItem>
+            <SelectItem value="all">{t('assignment.filters.allCourses')}</SelectItem>
             {courses.map((course) => (
               <SelectItem key={course._id} value={course._id}>
                 {course.title}
@@ -124,10 +127,10 @@ export const AssignmentFilters = ({
           disabled={isLoadingLessons || filters.course === 'all'}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Lesson" />
+            <SelectValue placeholder={t('assignment.filters.lesson')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Lessons</SelectItem>
+            <SelectItem value="all">{t('assignment.filters.allLessons')}</SelectItem>
             {lessons.map((lesson) => (
               <SelectItem key={lesson._id} value={lesson._id}>
                 {lesson.title}
@@ -141,7 +144,7 @@ export const AssignmentFilters = ({
       <div className="mt-4 flex justify-end">
         <Button variant="ghost" size="sm" onClick={onReset} className="gap-2">
           <RotateCcw className="h-4 w-4" />
-          Reset Filters
+          {t('assignment.filters.reset')}
         </Button>
       </div>
     </motion.div>

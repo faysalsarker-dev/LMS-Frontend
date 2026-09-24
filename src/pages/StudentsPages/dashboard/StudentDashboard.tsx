@@ -122,7 +122,7 @@ const StudentDashboard = () => {
         <MockTestCards progress={progressData?.data} isLoading={isLoadingProgressState} />
 
         {/* Progress Section */}
-        <ProgressSection progress={progressData?.data} isLoading={isLoadingProgressState} />
+        <ProgressSection progress={progressData?.data} isLoading={isLoadingProgressState} courseId={selectedCourseId} />
 
         {/* Assignments Table */}
         <AssignmentsTable progress={progressData?.data} isLoading={isLoadingProgressState} />

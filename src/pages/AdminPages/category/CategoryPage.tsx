@@ -31,6 +31,7 @@ import {
 import type { ICategory } from "@/interface/category.types";
 import { handleApiError } from "@/utils/errorHandler";
 import NoDataFound from '@/components/shared/NoDataFound';
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
  const CategoryPage: React.FC = () => {
   const { data, isLoading, refetch } = useGetAllCategorysQuery({});
@@ -130,8 +131,17 @@ import NoDataFound from '@/components/shared/NoDataFound';
                         </span>
                       )}
                     </TableCell>
-                    <TableCell className="font-medium text-foreground">
-                      {c.title}
+                    <TableCell className="font-medium ">
+                      <Tooltip>
+                        <TooltipContent>
+                          <p>{c.title}</p>
+                        </TooltipContent>
+                        <TooltipTrigger className="w-full text-left">
+                          <p  className="h-auto p-0">
+                            {c.title.slice(0, 30)}....
+                          </p>
+                        </TooltipTrigger>
+                      </Tooltip>
                     </TableCell>
                     <TableCell className="max-w-xs truncate text-muted-foreground">
                       {c.description || "-"}

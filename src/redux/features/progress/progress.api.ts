@@ -31,7 +31,16 @@ export const progressApi = baseApi.injectEndpoints({
       },
       providesTags: (_result, _error, params) => [{ type: "PROGRESS", id: params }],
     }),
-
+   
+    getCertificate: builder.mutation({
+      query: (id) => ({
+        url: `/progress/certificate/${id}`,         
+        method: "POST",                 
+      }),
+      invalidatesTags: (_result, _error, id) => [
+        { type: "PROGRESS", id },
+      ],
+    }),
 
   }),
 });
@@ -39,5 +48,6 @@ export const progressApi = baseApi.injectEndpoints({
 export const {
 useGetProgressQuery,
 useCreateProgressMutation,
-useCreateQuizProgressMutation
+useCreateQuizProgressMutation,
+useGetCertificateMutation,
 } = progressApi;

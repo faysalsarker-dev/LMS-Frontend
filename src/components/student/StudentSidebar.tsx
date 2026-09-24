@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { studentRoutes } from "@/router/routes/student";
 import Logo from "@/components/shared/Logo";
@@ -15,16 +16,25 @@ import {
 
 export function StudentSidebar() {
   const location = useLocation();
+  const { t } = useTranslation();
   const { open } = useSidebar();
   
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar-bg transition-all duration-300">
-      <SidebarHeader className="border-b border-sidebar-border p-4">
-        <div className="flex items-center gap-3">
-          <Logo />
-        </div>
-      </SidebarHeader>
+       <SidebarHeader className="border-b border-sidebar-border px-3 py-4">
+          <div className="flex items-center justify-start w-full">
+            {open ? (
+              <Logo className="w-full max-w-[140px]" />
+            ) : (
+              <Logo
+                src="/humanistic.png"
+                alt="Humanistic icon"
+                className="w-full max-w-[40px]"
+              />
+            )}
+          </div>
+        </SidebarHeader>
 
       <SidebarContent>
         <ScrollArea className="h-full py-4">
@@ -45,7 +55,7 @@ export function StudentSidebar() {
                       {route.icon && (
                         <route.icon className={cn("w-5 h-5", isActive ? "text-primary" : "text-muted-foreground")} />
                       )}
-                      {open && <span>{route.name}</span>}
+                      {open && <span>{t(route.name)}</span>}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

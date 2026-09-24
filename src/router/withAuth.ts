@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useUserInfoQuery } from "@/redux/features/auth/auth.api";
-import {LoadingSkeleton} from "@/components/admin/course/LoadingSkeleton"
+import { LoadingSkeleton } from "@/components/admin/course/LoadingSkeleton";
 import { useNavigate, useParams } from "react-router";
 
 type TRole = "student" | "instructor" | "admin" | "super_admin";
@@ -11,47 +11,54 @@ const withAuth = <P extends object>(
   course?: boolean
 ) => {
   const AuthWrapper: React.FC<P> = (props) => {
-    const {id} = useParams()
-const navigate = useNavigate()
-const { data, isLoading } = useUserInfoQuery(undefined);
-
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const { data, isLoading } = useUserInfoQuery(undefined);
 
     const user = data?.data;
 
-   
+    useEffect(() => {
+      if (isLoading) return;
 
-    if (isLoading) return React.createElement(LoadingSkeleton);
+      if (!user) {
+        navigate("/login", { replace: true });
+        return;
+      }
 
-if(!user && !isLoading){
-  navigate('/login')
-}
+      if (!user.isActive || !user.isVerified) {
+        navigate("/access-denied", { replace: true });
+        return;
+      }
 
+      if (requiredRole?.length && !requiredRole.includes(user.role)) {
+        navigate("/unauthorized", { replace: true });
+        return;
+      }
 
-if (
-  !user.isActive ||
-  !user.isVerified
-) {
-  navigate('/access-denied')
-}
+      if (course && id) {
+        const check = user.courses?.includes(id as string);
+        if (!check) {
+          navigate("/unauthorized", { replace: true });
+          return;
+        }
+      }
+    }, [user, isLoading, navigate, id]);
 
+    if (isLoading || !user) {
+      return React.createElement(LoadingSkeleton);
+    }
 
-if(requiredRole?.length && !requiredRole.includes(user.role)){
-    navigate('/unauthorized')
+    if (!user.isActive || !user.isVerified) {
+      return null;
+    }
 
-}
+    if (requiredRole?.length && !requiredRole.includes(user.role)) {
+      return null;
+    }
 
-
-
-
-if(course && id){
-  const check = user?.courses.includes(id as string);
-  if(!check){
-   navigate('/unauthorized')
-
-  } 
-}
-
-
+    if (course && id && !user.courses?.includes(id as string)) {
+      return null;
+    }
 
     return React.createElement(WrappedComponent, props);
   };

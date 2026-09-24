@@ -5,8 +5,8 @@ import CourseDetails from "@/pages/PublicPages/course/CourseDetails";
 import AboutPage from "@/pages/PublicPages/abouts/About";
 
 export const publicRoutes = [
-  { Component: Home, path: "/", name: "Home" },
-  { Component: Courses, path: "/courses", name: "Courses" },
-  { Component: CourseDetails, path: "/courses/:slug", name: "Course Details" },
-  { Component: AboutPage, path: "/About-us", name: "About" },
+  { Component: Home, path: "/", name: "routes.public.home" },
+  { Component: Courses, path: "/courses", name: "routes.public.courses" },
+  { Component: CourseDetails, path: "/courses/:slug", name: "routes.public.courseDetails" },
+  { Component: AboutPage, path: "/About-us", name: "routes.public.about" },
 ];

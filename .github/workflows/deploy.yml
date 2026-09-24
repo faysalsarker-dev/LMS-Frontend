@@ -1,28 +1,31 @@
-name: CI/CD Pipeline
+name: Frontend CI/CD
 
 on:
   push:
-    branches: [deploy]
-  pull_request:
-    branches: [deploy]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: frontend-production
+  cancel-in-progress: true
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
-
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          node-version: 20
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
@@ -31,35 +34,30 @@ jobs:
         run: npm run lint
 
       - name: Build project
-        run: npm run build
+        run: npm run buildF
 
-      - name: Upload build artifacts
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dist-${{ matrix.node-version }}
+          name: frontend-dist
           path: dist/
+          if-no-files-found: error
           retention-days: 5
 
   deploy:
+    name: Deploy to Hostinger VPS
     needs: build-and-test
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/deploy'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Deploy to VPS via SSH
-        uses: appleboy/ssh-action@master
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           port: ${{ secrets.VPS_PORT }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          script_stop: true
           script: |
-            cd ${{ secrets.VPS_PROJECT_PATH }}
-            git pull origin deploy
-            npm ci
-            npm run build
-            # Restart your application service (example with pm2)
-            pm2 restart humanistic-frontend || pm2 start npm --name "humanistic-frontend" -- start
+            /usr/local/sbin/deploy-lms-frontend
