@@ -15,13 +15,8 @@ createRoot(document.getElementById("root")!).render(
     <ReduxProvider store={store}>
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <RouterProvider router={router} />
-<Toaster
-  position="top-right"
-  reverseOrder={false}
-
-/>
-
+        <Toaster position="top-right" reverseOrder={false} />
       </ThemeProvider>
     </ReduxProvider>
-  </StrictMode>
+  </StrictMode>,
 );
