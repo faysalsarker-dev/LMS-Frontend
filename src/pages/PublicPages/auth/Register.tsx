@@ -10,7 +10,7 @@ import { User, Mail, Lock, Eye, EyeOff, Phone, BookOpen, Sparkles, Headphones, G
 import AnimatedLines from "@/components/public/auth/AnimatedLines";
 import FloatingLetter from "@/components/public/auth/FloatingLetter";
 import FloatingIcon from "@/components/public/auth/FloatingIcon";
-import { useRegisterMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
+import { useLoginMutation, useRegisterMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api";
 import toast from "react-hot-toast";
 import { handleApiError } from "@/utils/errorHandler";
 import { useTranslation } from "react-i18next";
@@ -30,6 +30,8 @@ const Register = () => {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [registerMutation] = useRegisterMutation();
+    const [login] = useLoginMutation();
+  
   const navigate = useNavigate()
   const {
     register,
@@ -79,9 +81,28 @@ useEffect(() => {
 
     toast.success(res?.message || t("auth.accountCreated"));
 
-    if (res?.success) {
-      return navigate(`/verify-account/${data.email}`);
-    }
+    // if (res?.success) {
+    //   return navigate(`/verify-account/${data.email}`);
+    // }
+
+if(res?.success) {
+    const result =  await login({
+        email: data.email,
+        password: data.password,
+        remember: true,
+      }).unwrap();
+
+      if(result?.success) {
+        navigate("/");
+      }
+
+
+
+}
+
+
+
+
   } catch (err: unknown) {
     const apiError = err as { data?: { message?: string } };
 
