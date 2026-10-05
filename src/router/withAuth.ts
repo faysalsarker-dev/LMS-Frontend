@@ -17,6 +17,9 @@ const withAuth = <P extends object>(
 
     const user = data?.data;
 
+
+
+
     useEffect(() => {
       if (isLoading) return;
 
@@ -35,6 +38,8 @@ const withAuth = <P extends object>(
         return;
       }
 
+
+  
       if (course && id) {
         const check = user.courses?.includes(id as string);
         if (!check) {
