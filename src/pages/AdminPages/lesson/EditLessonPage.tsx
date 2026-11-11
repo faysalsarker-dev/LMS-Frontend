@@ -206,6 +206,7 @@ export default function EditLessonPage() {
         }));
       }
 
+      
       await updateLesson({ id, data: formData }).unwrap();
       toast.success('Lesson updated successfully!');
       navigate('/dashboard/lesson');

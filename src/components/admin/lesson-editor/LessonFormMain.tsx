@@ -210,6 +210,7 @@ const onSubmit = async (data: LessonFormData) => {
       default:
         break;
     }
+      console.log('Lesson form data:', Array.from(formData.entries()));
 
     await createLesson(formData).unwrap();
     toast.success(t('lesson.lessonSavedSuccessfully'));
