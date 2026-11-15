@@ -54,6 +54,7 @@ export interface ILesson {
 
   status?: "published" | "draft" | "archived";
   viewCount?: number;
+isInternational: boolean;
 
   createdAt?: Date;
   updatedAt?: Date;

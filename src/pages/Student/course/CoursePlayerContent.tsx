@@ -18,10 +18,11 @@ export function CoursePlayerContent({ lesson ,isLoading , setQuizResult}: Course
 if(isLoading){
   return <div>Loading...</div>
 }
+console.log('lesson',lesson)
 
   switch (lesson?.type) {
     case "video":
-      return <VideoPlayer url={lesson.video?.url as string} />;
+      return <VideoPlayer type={lesson.isInternational} url={lesson.video?.url as string} />;
     case "doc":
       return <DocLesson doc={lesson?.doc} />;
     case "audio":
