@@ -37,31 +37,56 @@ const PracticeDetail = lazy(() => import("@/pages/StudentsPages/Practice/Practic
 
 export const studentRoutes = [
   {
-    Component: withAuth(StudentDashboard, [UserRoles.STUDENT]),
+    Component: withAuth(StudentDashboard, [
+        UserRoles.STUDENT,
+        UserRoles.INSTRUCTOR,
+        UserRoles.ADMIN,
+        UserRoles.SUPER_ADMIN,
+      ],),
     path: "/my-dashboard",
     name: "routes.student.overview",
     icon: LayoutDashboard,
   },
   {
-    Component: withAuth(MyCourses, [UserRoles.STUDENT]),
+    Component: withAuth(MyCourses, [
+        UserRoles.STUDENT,
+        UserRoles.INSTRUCTOR,
+        UserRoles.ADMIN,
+        UserRoles.SUPER_ADMIN,
+      ],),
     path: "/my-dashboard/my-courses",
     name: "routes.student.myCourses",
     icon: BookOpen,
   },
   {
-    Component: withAuth(PracticeTasksPage, [UserRoles.STUDENT]),
+    Component: withAuth(PracticeTasksPage, [
+        UserRoles.STUDENT,
+        UserRoles.INSTRUCTOR,
+        UserRoles.ADMIN,
+        UserRoles.SUPER_ADMIN,
+      ],),
     path: "/my-dashboard/my-practice",
     name: "routes.student.practiceTasks",
     icon: Trophy,
   },
   {
-    Component: withAuth(MockTestsPage, [UserRoles.STUDENT]),
+    Component: withAuth(MockTestsPage, [
+        UserRoles.STUDENT,
+        UserRoles.INSTRUCTOR,
+        UserRoles.ADMIN,
+        UserRoles.SUPER_ADMIN,
+      ],),
     path: "/my-dashboard/my-mock-tests",
     name: "routes.student.mockTests",
     icon: ClipboardCheck,
   },
   {
-    Component: withAuth(Profile, [UserRoles.STUDENT]),
+    Component: withAuth(Profile, [
+        UserRoles.STUDENT,
+        UserRoles.INSTRUCTOR,
+        UserRoles.ADMIN,
+        UserRoles.SUPER_ADMIN,
+      ],),
     path: "/my-dashboard/profile",
     name: "routes.student.profile",
     icon: User,
@@ -86,7 +111,12 @@ export const studentInvicibleRoutes = [
     hidden: true,
   },
   {
-    Component: withAuth(PracticeDetail, [UserRoles.STUDENT]),
+    Component: withAuth(PracticeDetail, [
+        UserRoles.STUDENT,
+        UserRoles.INSTRUCTOR,
+        UserRoles.ADMIN,
+        UserRoles.SUPER_ADMIN,
+      ],),
     path: "/my-dashboard/practice/:id",
     name: "routes.student.practiceDetails",
   },

@@ -18,6 +18,7 @@ export const PracticeItemCard = ({
 }: PracticeItemCardProps) => {
   return (
     <motion.button
+      type="button"
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{
@@ -26,24 +27,24 @@ export const PracticeItemCard = ({
         type: "spring",
         stiffness: 200,
       }}
-      whileHover={{ scale: 1.05, y: -4 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.03, y: -2 }}
+      whileTap={{ scale: 0.97 }}
       onClick={onPlay}
       aria-label={`Play pronunciation of letter ${item.content}`}
       className={cn(
-        "relative flex flex-col items-center justify-center p-4 sm:p-6",
-        "bg-card rounded-2xl border-2 transition-all duration-300",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-        "cursor-pointer group",
+        "group relative flex aspect-square w-full min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-2xl border p-3 sm:gap-2 sm:p-4",
+        "bg-gradient-to-br from-card via-card to-primary/5 text-card-foreground shadow-sm transition-all duration-300",
+        "hover:border-primary/50 hover:shadow-lg",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         isPlaying
-          ? "border-primary shadow-playing"
-          : "border-letter-border hover:border-primary/50 shadow-card hover:shadow-card-hover"
+          ? "border-primary bg-primary/10 shadow-md"
+          : "border-border"
       )}
     >
       {/* Playing indicator ring */}
       {isPlaying && (
         <motion.div
-          className="absolute inset-0 rounded-2xl border-2 border-primary"
+          className="pointer-events-none absolute inset-0 rounded-2xl border-2 border-primary"
           initial={{ scale: 1, opacity: 1 }}
           animate={{ scale: 1.1, opacity: 0 }}
           transition={{ duration: 1, repeat: Infinity }}
@@ -51,11 +52,13 @@ export const PracticeItemCard = ({
       )}
 
       {/* Letter display */}
-      <div className="relative mb-2">
+      <div className="relative flex min-h-0 flex-1 items-center justify-center">
         <span
           className={cn(
-            "text-4xl sm:text-5xl lg:text-6xl font-bold transition-colors duration-300",
-            isPlaying ? "text-primary" : "text-letter-text group-hover:text-primary"
+            "break-words text-4xl font-bold leading-none tracking-tight transition-colors duration-300 sm:text-5xl lg:text-6xl",
+            isPlaying
+              ? "text-primary"
+              : "text-foreground group-hover:text-primary"
           )}
         >
           {item.content}
@@ -64,7 +67,7 @@ export const PracticeItemCard = ({
 
       {/* Pronunciation text */}
       {item.pronunciation && (
-        <span className="text-xs sm:text-sm text-muted-foreground font-medium mb-2">
+        <span className="line-clamp-2 w-full break-words px-1 text-center text-sm font-medium leading-tight text-muted-foreground sm:text-base">
           {item.pronunciation}
         </span>
       )}
@@ -72,13 +75,13 @@ export const PracticeItemCard = ({
       {/* Play icon */}
       <div
         className={cn(
-          "flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full transition-all duration-300",
+          "absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-300",
           isPlaying
-            ? "bg-primary text-primary-foreground animate-bounce-soft"
-            : "bg-muted text-muted-foreground group-hover:bg-primary group-hover:text-primary-foreground"
+            ? "bg-primary text-primary-foreground"
+            : "bg-muted/80 text-muted-foreground group-hover:bg-primary group-hover:text-primary-foreground"
         )}
       >
-        <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />
+        <Volume2 aria-hidden="true" className="h-3.5 w-3.5" />
       </div>
     </motion.button>
   );

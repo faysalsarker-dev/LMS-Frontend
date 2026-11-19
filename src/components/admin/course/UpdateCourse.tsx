@@ -44,7 +44,7 @@ type FormValues = {
   tags: FieldObject[];
   skills: FieldObject[];
   level: "Beginner" | "Intermediate" | "Advanced";
-  status: "draft" | "archived";
+  status: "draft" | "published" | "archived";
   prerequisites: FieldObject[];
   requirements: FieldObject[];
   resources: FieldObject[];
@@ -102,7 +102,6 @@ const UpdateCourse: React.FC<UpdateCourseSheetProps> = ({ courseId, open, onClos
   const [updateCourse, { isLoading: isUpdating }] = useUpdateCourseMutation();
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const { register, handleSubmit, control, reset, watch } = useForm<FormValues>({ defaultValues });
-console.log("Course data for update:", course);
   // Field arrays
   const tagFieldArray = useFieldArray({ control, name: "tags" });
   const skillFieldArray = useFieldArray({ control, name: "skills" });
@@ -122,7 +121,7 @@ console.log("Course data for update:", course);
           tags: convertToFieldObjects(course.tags),
           skills: convertToFieldObjects(course.skills),
           level: course.level || "Beginner",
-          status: course.status || "draft",
+          status: course.status,
           prerequisites: convertToFieldObjects(course.prerequisites),
           requirements: convertToFieldObjects(course.requirements),
           resources: convertToFieldObjects(course.resources),
@@ -192,9 +191,12 @@ console.log("Course data for update:", course);
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent className="overflow-y-auto max-h-screen w-full sm:max-w-3xl">
-        <SheetHeader>
-          <SheetTitle className="text-xl font-semibold">Update Course</SheetTitle>
+      <SheetContent className="max-h-screen w-full overflow-y-auto sm:max-w-4xl">
+        <SheetHeader className="border-b bg-muted/30 px-6 py-5">
+          <SheetTitle className="text-2xl font-bold tracking-tight">Update Course</SheetTitle>
+          <p className="text-sm text-muted-foreground">
+            Edit course details, publishing status, pricing, and resources.
+          </p>
         </SheetHeader>
 
         {isLoading || !course ? (
@@ -206,7 +208,7 @@ console.log("Course data for update:", course);
             <Skeleton className="h-10 w-full" />
           </div>
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 p-6 text-sm">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4 text-sm sm:space-y-8 sm:p-6">
             {/* Fundamentals */}
             <FormSection title="Course Fundamentals" description="Update course basics" icon={<BookOpen className="h-6 w-6" />}>
               <div className="space-y-3">
@@ -266,22 +268,26 @@ console.log("Course data for update:", course);
                   />
                 </div>
                 <div>
-                  <Label>Course Status</Label>
+                  <Label htmlFor="course-status">Course Status</Label>
                   <Controller
                     name="status"
                     control={control}
                     render={({ field }) => (
                       <Select disabled={isUpdating} value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger>
-                          <SelectValue />
+                        <SelectTrigger id="course-status" className="mt-2 h-11">
+                          <SelectValue placeholder="Select course status" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="draft">Draft</SelectItem>
+                          <SelectItem value="published">Published</SelectItem>
                           <SelectItem value="archived">Archived</SelectItem>
                         </SelectContent>
                       </Select>
                     )}
                   />
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    Choose whether students can access this course.
+                  </p>
                 </div>
               </div>
 

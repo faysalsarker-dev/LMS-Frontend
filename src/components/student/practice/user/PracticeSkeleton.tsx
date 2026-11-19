@@ -15,7 +15,7 @@ export const PracticeSkeleton = () => {
       <Skeleton className="h-6 w-48 mb-4" />
 
       {/* Grid skeleton */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         {Array.from({ length: 12 }).map((_, i) => (
           <Skeleton
             key={i}
