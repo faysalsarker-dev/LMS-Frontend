@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Volume2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { PracticeItem } from "../practice.types";
 
 interface PracticeItemCardProps {
@@ -67,9 +68,11 @@ export const PracticeItemCard = ({
 
       {/* Pronunciation text */}
       {item.pronunciation && (
-        <span className="line-clamp-2 w-full break-words px-1 text-center text-sm font-medium leading-tight text-muted-foreground sm:text-base">
-          {item.pronunciation}
-        </span>
+        <ScrollArea className="h-16 w-full rounded-md sm:h-20">
+          <span className="block w-full break-words px-3 py-1 text-center text-sm font-medium leading-relaxed text-muted-foreground sm:text-base">
+            {item.pronunciation}
+          </span>
+        </ScrollArea>
       )}
 
       {/* Play icon */}
